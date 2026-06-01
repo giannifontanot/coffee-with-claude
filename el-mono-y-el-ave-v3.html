@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>El mono que se viste, el ave que se muestra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5eee2;--paper-deep:#efe5d4;--ink:#2b2620;--ink-soft:#5f564a;--ink-faint:#8a7f70;
+    --gold:#a9762f;--gold-bright:#c79a51;--teal:#1d524b;--rule:rgba(43,38,32,0.14);--measure:40rem;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background-color:var(--paper);
+    background-image:radial-gradient(120% 80% at 50% -10%, rgba(199,154,81,0.10), transparent 60%),radial-gradient(100% 60% at 100% 100%, rgba(29,82,75,0.07), transparent 55%);
+    color:var(--ink);font-family:'Spectral',Georgia,serif;font-weight:400;font-size:1.12rem;line-height:1.78;
+    -webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden;
+  }
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  #progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));z-index:50;transition:width .12s ease-out;}
+  .wrap{position:relative;z-index:1;max-width:var(--measure);margin:0 auto;padding:0 1.5rem;}
+
+  header.hero{max-width:46rem;margin:0 auto;padding:7.5rem 1.5rem 2.5rem;text-align:center;position:relative;z-index:1;}
+  .eyebrow{font-family:'Fraunces',serif;font-style:italic;letter-spacing:.04em;color:var(--gold);font-size:1rem;opacity:0;animation:rise .9s ease .1s forwards;}
+  h1.title{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(2.4rem,7vw,4.3rem);line-height:1.03;letter-spacing:-0.015em;margin:.6rem 0 1.1rem;opacity:0;animation:rise 1s ease .25s forwards;}
+  h1.title em{font-style:italic;color:var(--teal);font-weight:400;}
+  .dek{font-family:'Spectral',serif;font-style:italic;font-weight:300;font-size:1.22rem;color:var(--ink-soft);max-width:34rem;margin:0 auto;opacity:0;animation:rise 1s ease .45s forwards;}
+  .thesis{margin:1.8rem auto 0;max-width:31rem;font-size:1.02rem;color:var(--ink-soft);opacity:0;animation:rise 1s ease .6s forwards;}
+  .hero-sub{margin-top:1.4rem;font-size:.92rem;color:var(--ink-faint);opacity:0;animation:rise 1s ease .72s forwards;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  .feather{display:block;margin:2.4rem auto .5rem;width:46px;height:auto;color:var(--gold);opacity:0;animation:rise 1s ease .85s forwards;}
+
+  nav.toc{max-width:36rem;margin:1rem auto 5.5rem;padding:1.8rem 1.8rem 2rem;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);opacity:0;animation:rise 1s ease 1s forwards;}
+  nav.toc h2{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1rem;color:var(--ink-faint);text-align:center;margin:0 0 1.4rem;letter-spacing:.02em;}
+  nav.toc ol.parts{list-style:none;margin:0;padding:0;}
+  nav.toc ol.parts > li{margin:0 0 1.1rem;}
+  nav.toc .part-link{display:flex;align-items:baseline;gap:.6rem;text-decoration:none;color:var(--ink);font-family:'Fraunces',serif;font-size:1.12rem;font-weight:500;}
+  nav.toc .part-link .pn{font-style:italic;color:var(--gold);min-width:1.8rem;text-align:right;font-weight:400;font-size:.95rem;}
+  nav.toc .part-link:hover{color:var(--gold);}
+  nav.toc ul.subs{list-style:none;margin:.35rem 0 0 2.4rem;padding:0;}
+  nav.toc ul.subs li{margin:.2rem 0;}
+  nav.toc ul.subs a{text-decoration:none;color:var(--ink-soft);font-size:.98rem;transition:color .2s;}
+  nav.toc ul.subs a:hover{color:var(--gold);}
+
+  .rail{position:fixed;top:50%;left:2.2rem;transform:translateY(-50%);width:12rem;z-index:40;padding-left:1rem;border-left:1px solid var(--rule);opacity:0;visibility:hidden;transition:opacity .5s ease;}
+  .rail.visible{opacity:1;visibility:visible;}
+  .rail .rail-title{font-family:'Fraunces',serif;font-style:italic;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 .9rem;}
+  .rail ol{list-style:none;margin:0;padding:0;}
+  .rail li{margin:.25rem 0;}
+  .rail a{display:flex;align-items:baseline;gap:.55rem;text-decoration:none;color:var(--ink-faint);font-size:.88rem;line-height:1.3;padding:.12rem 0;transition:color .25s ease,transform .25s ease;}
+  .rail a .rn{font-family:'Fraunces',serif;font-style:italic;font-size:.82rem;color:var(--gold);opacity:.5;min-width:1.6rem;transition:opacity .25s ease;}
+  .rail a:hover{color:var(--ink-soft);}
+  .rail a:hover .rn{opacity:1;}
+  .rail a.active{color:var(--teal);transform:translateX(3px);}
+  .rail a.active .rn{opacity:1;}
+  .rail a.active .rl{border-bottom:1px solid rgba(29,82,75,.35);}
+  @media (max-width:1180px){ .rail{display:none;} }
+
+  section.part{padding-top:2rem;}
+  .part-head{text-align:center;padding:4.5rem 0 2.5rem;position:relative;}
+  .part-num{display:block;font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:clamp(3.2rem,11vw,5.2rem);line-height:.9;color:var(--gold);opacity:.4;letter-spacing:-0.02em;}
+  .part-title{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.1;margin:.4rem 0 .9rem;color:var(--ink);}
+  .part-epi{font-family:'Spectral',serif;font-style:italic;font-weight:300;color:var(--teal);font-size:1.12rem;max-width:28rem;margin:0 auto;}
+  .part-rule{width:42px;height:1px;background:var(--gold);opacity:.5;margin:1.6rem auto 0;}
+
+  article.movement{padding:1.8rem 0;}
+  article.movement + article.movement{border-top:1px solid var(--rule);margin-top:.4rem;}
+  h3.mov-title{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.4rem,4vw,1.85rem);line-height:1.14;letter-spacing:-0.01em;margin:0 0 1rem;color:var(--ink);}
+  article.movement p{margin:1.1rem 0;}
+  .lede::first-letter{font-family:'Fraunces',serif;font-weight:500;color:var(--gold);float:left;font-size:3.4rem;line-height:.78;padding:.35rem .55rem 0 0;}
+  em{font-style:italic;}
+  strong{font-weight:500;color:var(--teal);}
+  blockquote.pull{margin:2.2rem 0;padding-left:1.4rem;border-left:2px solid var(--gold);font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:clamp(1.4rem,3.6vw,1.8rem);line-height:1.3;color:var(--teal);}
+  aside.shelf{margin:1.9rem 0;padding:1.3rem 1.5rem;background:var(--paper-deep);border:1px solid var(--rule);border-radius:2px;}
+  aside.shelf .shelf-title{font-family:'Fraunces',serif;font-style:italic;color:var(--gold);font-size:1.02rem;margin:0 0 .7rem;display:block;}
+  aside.shelf ul{margin:0;padding:0;list-style:none;}
+  aside.shelf li{font-size:1rem;margin:.5rem 0;color:var(--ink-soft);line-height:1.5;}
+  aside.shelf li b{font-weight:500;color:var(--ink);}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  .coda{text-align:center;padding:4.5rem 0 2rem;border-top:1px solid var(--rule);margin-top:2rem;}
+  .cross{width:30px;height:auto;color:var(--gold);opacity:.7;margin:0 auto 1.6rem;display:block;}
+  .coda p{font-family:'Fraunces',serif;font-style:italic;font-size:1.2rem;line-height:1.5;color:var(--ink-soft);max-width:32rem;margin:0 auto;}
+  footer.sources{padding:2.5rem 0 5rem;border-top:1px solid var(--rule);}
+  footer.sources h2{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1.1rem;color:var(--ink-faint);margin:0 0 1rem;}
+  footer.sources ul{margin:0;padding:0;list-style:none;font-size:.96rem;color:var(--ink-soft);}
+  footer.sources li{margin:.5rem 0;line-height:1.5;}
+  footer.sources a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(169,118,47,.3);}
+  footer.sources a:hover{border-bottom-color:var(--gold);}
+  .stamp{margin-top:2.2rem;font-size:.85rem;color:var(--ink-faint);font-style:italic;text-align:center;}
+  .stamp .dot{color:var(--gold);}
+
+  @media (max-width:540px){ body{font-size:1.06rem;} header.hero{padding-top:4.5rem;} }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="hero">
+  <div class="eyebrow">Una meditación en siete partes</div>
+  <h1 class="title">El mono que se viste,<br><em>el ave que se muestra</em></h1>
+  <p class="dek">Sobre la fragilidad, las máscaras que nos ponemos y el coraje de mostrarnos tal como somos — a través de un pájaro, un caballero oxidado y una canción.</p>
+  <p class="thesis">Todo gira sobre un solo error y su remedio: medimos la belleza del ser humano con la regla de otra especie — y descubrimos, al final, que nuestra gloria no está en lo que mostramos por fuera, sino en lo que nos atrevemos a entregar.</p>
+  <div class="hero-sub">Documento vivo · edición ampliada</div>
+  <svg class="feather" viewBox="0 0 40 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M20 4 C20 4 8 28 8 60 C8 88 20 116 20 116 C20 116 32 88 32 60 C32 28 20 4 20 4 Z" stroke="currentColor" stroke-width="1.1"/>
+    <line x1="20" y1="10" x2="20" y2="114" stroke="currentColor" stroke-width="0.9"/>
+    <path d="M20 26 L11 36 M20 26 L29 36 M20 44 L9 56 M20 44 L31 56 M20 64 L10 76 M20 64 L30 76 M20 84 L12 94 M20 84 L28 94" stroke="currentColor" stroke-width="0.7"/>
+  </svg>
+</header>
+
+<nav class="toc wrap">
+  <h2>El recorrido</h2>
+  <ol class="parts">
+    <li>
+      <a class="part-link" href="#p1"><span class="pn">I</span><span>El disfraz</span></a>
+      <ul class="subs"><li><a href="#s1">Por qué nos cubrimos</a></li></ul>
+    </li>
+    <li>
+      <a class="part-link" href="#p2"><span class="pn">II</span><span>El maestro de plumas</span></a>
+      <ul class="subs">
+        <li><a href="#s2">El ave del paraíso</a></li>
+        <li><a href="#s3">Parecerse al ave no es retroceder</a></li>
+        <li><a href="#s4">La especie equivocada</a></li>
+      </ul>
+    </li>
+    <li>
+      <a class="part-link" href="#p3"><span class="pn">III</span><span>Dejarse ver</span></a>
+      <ul class="subs">
+        <li><a href="#s5">Si nos mostráramos tal como somos</a></li>
+        <li><a href="#s6">La belleza del ser humano</a></li>
+        <li><a href="#s7">¿Qué nos hace humanos?</a></li>
+      </ul>
+    </li>
+    <li>
+      <a class="part-link" href="#p4"><span class="pn">IV</span><span>Lo que se hereda</span></a>
+      <ul class="subs">
+        <li><a href="#s8">¿Para qué sirve esa belleza?</a></li>
+        <li><a href="#s9">Genes y memes</a></li>
+      </ul>
+    </li>
+    <li>
+      <a class="part-link" href="#p5"><span class="pn">V</span><span>La armadura y su caída</span></a>
+      <ul class="subs">
+        <li><a href="#s10">El caballero de la armadura oxidada</a></li>
+        <li><a href="#s11">Cuando muchos bajan la guardia</a></li>
+        <li><a href="#s12">¿Viven los cantautores sin coraza?</a></li>
+      </ul>
+    </li>
+    <li>
+      <a class="part-link" href="#p6"><span class="pn">VI</span><span>La intemperie</span></a>
+      <ul class="subs">
+        <li><a href="#sChisme1">El murmurador</a></li>
+        <li><a href="#sChisme2">Mostrarse con sabiduría</a></li>
+        <li><a href="#sChisme3">Un lugar donde el chisme no respira</a></li>
+      </ul>
+    </li>
+    <li>
+      <a class="part-link" href="#p7"><span class="pn">VII</span><span>El rostro</span></a>
+      <ul class="subs"><li><a href="#sImagen">No te harás imagen del ave</a></li><li><a href="#s13">El rostro de quien se muestra</a></li></ul>
+    </li>
+  </ol>
+</nav>
+
+<nav class="rail" aria-label="Índice flotante">
+  <p class="rail-title">Las partes</p>
+  <ol>
+    <li><a href="#p1"><span class="rn">I</span><span class="rl">El disfraz</span></a></li>
+    <li><a href="#p2"><span class="rn">II</span><span class="rl">El maestro de plumas</span></a></li>
+    <li><a href="#p3"><span class="rn">III</span><span class="rl">Dejarse ver</span></a></li>
+    <li><a href="#p4"><span class="rn">IV</span><span class="rl">Lo que se hereda</span></a></li>
+    <li><a href="#p5"><span class="rn">V</span><span class="rl">La armadura y su caída</span></a></li>
+    <li><a href="#p6"><span class="rn">VI</span><span class="rl">La intemperie</span></a></li>
+    <li><a href="#p7"><span class="rn">VII</span><span class="rl">El rostro</span></a></li>
+  </ol>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ PARTE I ============ -->
+  <section class="part" id="p1">
+    <header class="part-head reveal">
+      <span class="part-num">I</span>
+      <h2 class="part-title">El disfraz</h2>
+      <p class="part-epi">«Nos cubrimos para parecer más fáciles de amar.»</p>
+      <div class="part-rule"></div>
+    </header>
+
+    <article class="movement reveal" id="s1">
+      <h3 class="mov-title">Por qué nos cubrimos</h3>
+      <p class="lede">Desde muy temprano aprendemos a presentar al mundo una versión arreglada de nosotros mismos. Aprendemos a responder «bien, gracias» cuando por dentro no estamos bien; a mostrar seguridad en una reunión donde temblamos por dentro; a publicar la foto buena y guardar las otras cincuenta. Nadie nos enseñó esto con palabras: lo absorbimos como una intuición de supervivencia. En algún momento de la niñez sacamos una conclusión silenciosa — que tal como somos, con nuestros miedos, torpezas y heridas, quizá no alcanzamos para que alguien nos quiera y se quede. Así que, por las dudas, nos pusimos un disfraz.</p>
+      <p>El disfraz tiene mil formas. A veces es la fuerza («yo puedo con todo, no necesito a nadie»). A veces es la simpatía constante, la broma que desvía, el currículum que se recita. A veces es el silencio. Pero debajo de todas esas formas late el mismo motor: <em>el miedo a que lo que de verdad somos no sea suficiente para ser amados</em>. Y aquí está lo conmovedor — el disfraz no nace de la vanidad, sino del amor. Nos cubrimos justamente porque queremos ser elegidos.</p>
+      <p>El problema es que el disfraz hace exactamente lo contrario de lo que promete. Si alguien me quiere mientras llevo la máscara puesta, una parte de mí siempre lo sabrá: <em>no me aman a mí, aman al personaje</em>. Y eso deja más solo, no menos. Porque el amor verdadero necesita una sola cosa que la máscara prohíbe: poder ver lo que hay detrás. Solo se puede amar lo que se puede ver.</p>
+      <blockquote class="pull">La máscara que nos ponemos para ser amados es justo lo que impide el amor.</blockquote>
+      <p>Esa es la paradoja que abre todo este ensayo, y para entenderla vamos a mirarnos desde afuera, a través de dos animales. El primero somos nosotros: el mono que aprendió a vestirse — y no solo de ropa, sino de apariencias. El segundo es un pájaro que, como veremos, hace lo contrario y por eso tiene mucho que enseñarnos. Entre los dos se esconde una verdad sobre dónde está, en realidad, la belleza de una persona.</p>
+      <aside class="shelf">
+        <span class="shelf-title">Tres guías para este camino</span>
+        <ul>
+          <li><b>Brené Brown — <em>El poder de ser vulnerable.</em></b> Tras años investigando la vergüenza y la conexión humana, muestra cómo confundimos la vulnerabilidad con la debilidad, y por qué mostrarse sin armadura es en realidad un acto de valentía.</li>
+          <li><b>Octavio Paz — «Máscaras mexicanas», en <em>El laberinto de la soledad.</em></b> Describe al ser humano como alguien que se encierra y se preserva detrás de máscaras, porque abrirse se vive como un riesgo.</li>
+          <li><b>Alfred R. Mele — <em>El autoengaño desenmascarado.</em></b> La pregunta de fondo: qué es engañarnos a nosotros mismos, cómo lo hacemos y por qué.</li>
+        </ul>
+      </aside>
+    </article>
+  </section>
+
+  <!-- ============ PARTE II ============ -->
+  <section class="part" id="p2">
+    <header class="part-head reveal">
+      <span class="part-num">II</span>
+      <h2 class="part-title">El maestro de plumas</h2>
+      <p class="part-epi">«El ave aparenta mucho porque no aparenta nada.»</p>
+      <div class="part-rule"></div>
+    </header>
+
+    <article class="movement reveal" id="s2">
+      <h3 class="mov-title">El ave del paraíso</h3>
+      <p class="lede">A primera vista, el ave del paraíso parece el colmo de la vanidad: plumas imposibles, danzas elaboradas, colores que gritan «mírenme». Si buscáramos en la naturaleza un símbolo del puro presumir, ahí estaría. Y, sin embargo, la biología nos cuenta justo lo contrario — y ese giro es la llave de todo lo que sigue.</p>
+      <p>Los biólogos hablan de algo llamado <em>señal honesta</em>. La idea es sencilla: en la naturaleza, ciertas señales no se pueden falsificar porque son demasiado caras de producir. Solo un animal verdaderamente sano, fuerte y bien alimentado puede darse el lujo de fabricarlas y sostenerlas. El plumaje del ave del paraíso es una de ellas. A un macho le toma años desarrollarlo; un pájaro débil o enfermo simplemente no puede producir ese espectáculo ni mantenerlo. Por eso las hembras se fían de él: la extravagancia no es un adorno, es una <em>prueba</em> de salud real.</p>
+      <p>Y el ave lleva su honestidad aún más lejos. Antes de bailar, limpia obsesivamente el escenario —retira hojas y ramas para que su color contraste mejor—, y muchas especies guardan incluso un brillo oculto que solo se revela bajo luz ultravioleta. No hay una capa hermosa por fuera y vacío por dentro: hay verdad por fuera, y todavía más verdad escondida adentro.</p>
+      <blockquote class="pull">El ave del paraíso aparenta mucho porque no aparenta nada.</blockquote>
+      <p>Ese es el punto que cambia todo. Lo que parecía un disfraz es exactamente lo contrario de un disfraz: es un anuncio que dice «no tengo nada que esconder». El ave no puede mentir con su belleza. Y nosotros — esto es lo extraño — somos el único animal que aprendió a producir la señal <em>sin</em> tener por fuerza la sustancia detrás. Podemos brillar sin estar sanos. Podemos sonreír sin estar enteros.</p>
+    </article>
+
+    <article class="movement reveal" id="s3">
+      <h3 class="mov-title">Parecerse al ave no es retroceder</h3>
+      <p class="lede">Aquí surge una objeción natural: «pero parecerme a un animal suena a retroceder, a volverme más primitivo». Es lo que casi todos pensaríamos. Y es justo al revés — vale la pena detenerse, porque entender esto cambia la manera de vernos.</p>
+      <p>Preguntémonos qué fue lo que de verdad <em>evolucionó</em> en el ser humano. No la honestidad: esa la tenían los animales desde mucho antes que nosotros. Lo que se desarrolló en nuestra especie, y en ninguna otra con esta potencia, fue la capacidad de mentir — y, sobre todo, de mentirnos a nosotros mismos. Engañar requiere imaginar lo que el otro piensa, construir una versión falsa de uno, sostenerla en el tiempo y hasta creérsela. Eso es sofisticadísimo. Un pájaro no puede hacer nada de eso. De modo que la máscara es lo <em>moderno</em>; la transparencia es lo <em>antiguo</em>.</p>
+      <p>Por eso conviene afinar qué clase de honestidad tiene el ave. El ave es sincera porque <strong>no puede mentir</strong>: su sinceridad no es una virtud, es una imposibilidad. Es honesta como el agua es mojada. En cambio, un ser humano que se muestra tal como es —<em>pudiendo</em> esconderse— hace algo que el ave jamás podrá: toma una honestidad que en el animal era automática y la convierte en una decisión libre.</p>
+      <p>Y ahí está la grandeza. Lo que en el ave es naturaleza, en la persona es coraje. Mostrarse cuando uno tiene la opción de fingir ya no es instinto: es carácter. Así que parecerse al ave en su transparencia no nos baja un escalón en la escala de la vida — nos sube uno. No es volver al animal; es tomar lo mejor del animal y hacerlo nuestro, por elección.</p>
+    </article>
+
+    <article class="movement reveal" id="s4">
+      <h3 class="mov-title">La especie equivocada</h3>
+      <p class="lede">Y aquí aparece, quizá, la raíz de todo nuestro problema. El ave nos dio una lección verdadera —«no escondas nada»— pero nosotros copiamos lo que <em>no</em> se podía traducir a nuestra especie. Nos quedamos con su <em>método</em> y descartamos su <em>lección</em>.</p>
+      <p>¿Qué quiere decir esto? Que admiramos del ave su color, su despliegue, su superficie brillante — y quisimos eso para nosotros: vernos espectaculares por fuera. Pero en el ave la superficie y la verdad son la misma cosa, mientras que en nosotros la superficie es justamente el lugar donde sabemos mentir. Así que terminamos haciendo lo único que el pájaro no puede hacer: fabricar colores falsos. Imitamos su exterior y traicionamos su honestidad. Aprendimos la lección equivocada del maestro correcto.</p>
+      <p>Dicho de otro modo: estamos midiendo la belleza humana con la regla de otra especie. Queremos ser hermosos como los pájaros —llamativos, vistosos, admirados de lejos— cuando no somos pájaros. Tal vez ese sea nuestro mayor error: estar mirando al animal equivocado para saber qué nos hace bellos. Hay aquí, además, el eco de un mandamiento muy antiguo —no te harás imagen de las aves ni de las fieras para inclinarte ante ellas— que recogeremos al final, porque le da a todo esto una hondura inesperada.</p>
+    </article>
+  </section>
+
+  <!-- ============ PARTE III ============ -->
+  <section class="part" id="p3">
+    <header class="part-head reveal">
+      <span class="part-num">III</span>
+      <h2 class="part-title">Dejarse ver</h2>
+      <p class="part-epi">«Si nos mostráramos tal como somos, ¿sería hermoso?»</p>
+      <div class="part-rule"></div>
+    </header>
+
+    <article class="movement reveal" id="s5">
+      <h3 class="mov-title">Si nos mostráramos tal como somos</h3>
+      <p class="lede">Llegamos a la pregunta incómoda. Si dejáramos caer el disfraz y nos mostráramos de verdad, ¿lo que apareciera sería hermoso? La respuesta honesta es: sí, pero no de la manera en que el disfraz parecía hermoso.</p>
+      <p>Hay que decirlo sin adornos: lo primero que aparece cuando alguien baja la máscara no suele ser belleza. Es lo que estaba escondido — la herida, el miedo, la sospecha de no ser suficiente. Por un instante parece todo lo contrario de hermoso, y por eso mostrarse da tanto pánico: la primera capa que cae deja ver justo lo que no queríamos que nadie viera.</p>
+      <p>Pero recordemos lo que nos enseñó el ave. Su belleza nunca fue el disfraz; era la verdad que el disfraz no podía falsear. Con la persona pasa lo mismo, solo que la verdad es otra: la belleza de mostrarse no está en ser perfecto por dentro, sino en el <em>acto</em> de dejarse ver pudiendo esconderse. Es una belleza que el ave no puede tener, porque el ave no eligió nada. Mostrarse, en el ser humano, es confianza, es coraje, es amor ofrecido sin garantía de que el otro se quede.</p>
+      <p>Y hay una condición: esa belleza solo se completa cuando alguien la recibe sin apartar la mirada. Mostrarse en el vacío es nada más frío. Pero mostrarse ante unos ojos que no se espantan — ahí ocurre el milagro que buscábamos desde el principio, debajo de todos los disfraces: <strong>ser conocidos por completo, y aun así no ser rechazados</strong>. La historia más antigua que tenemos sobre nosotros lo dice con todas sus letras: <em>«estaban ambos desnudos… y no se avergonzaban»</em> (Génesis 2:25). Sin nada que ocultar, sin nada de qué cubrirse. La vergüenza vino después, y con ella el primer escondite. Mostrarnos, entonces, no es retroceder ni avanzar: es volver a casa.</p>
+    </article>
+
+    <article class="movement reveal" id="s6">
+      <h3 class="mov-title">La belleza del ser humano</h3>
+      <p class="lede">Pongamos las dos bellezas lado a lado, porque son opuestas. La belleza del pájaro son sus plumas: algo que lleva puesto, que le fue dado, que no escogió y que no puede ni perder ni fingir. La belleza de una persona es exactamente lo contrario — no es algo que se lleva puesto, es algo que se quita.</p>
+      <p>La del pájaro es una posesión; la nuestra, una entrega. La del pájaro es dejarse mirar; la nuestra, dejarse conocer. La del pájaro es un espectáculo que resulta ser verdad; la nuestra es soltar todo espectáculo. Y hay un detalle que lo vuelve aún más grande: las plumas se marchitan. Mudan, envejecen, pierden el brillo — el ave es más hermosa de joven.</p>
+      <p>La belleza de una persona, en cambio, puede <em>crecer</em> justo mientras el cuerpo se apaga, porque no vive en la piel sino en lo que decide dar. Un anciano que ya no tiene nada del brillo de la juventud puede ser la persona más hermosa de la habitación, si por el camino aprendió a mostrarse sin miedo y a amar sin coraza. Esa belleza no le costó nada al pájaro; a la persona le cuesta todo — el riesgo de ser rechazada, el soltar la máscara, el confiar. Por eso vale más, aunque parezca menos vistosa.</p>
+      <blockquote class="pull">El pájaro luce su gloria. El ser humano la entrega.</blockquote>
+    </article>
+
+    <article class="movement reveal" id="s7">
+      <h3 class="mov-title">¿Qué nos hace humanos?</h3>
+      <p class="lede">Si la belleza de una persona no es el color, ¿dónde está? Si dejamos de mirar al ave y nos miramos a nosotros mismos, la respuesta se vuelve clara: nuestra belleza está en las facultades que ninguna pluma tiene. En lo que nos hace propiamente humanos.</p>
+      <p>Empecemos por la fragilidad — y, más aún, por <em>saber</em> que somos frágiles: el ave no contempla su propia muerte, nosotros sí, y esa conciencia nos da una hondura que ningún animal alcanza. Sigamos con la honestidad como elección; con la búsqueda de sentido, esa necesidad de que la vida signifique algo; con la conciencia, ese sentido íntimo del «debería» y el anhelo de ser buenos.</p>
+      <p>Y hay más: el perdón, esa rara capacidad de soltar una deuda en lugar de devolver el golpe; la misericordia, dolerse del dolor ajeno y moverse por él; el amor que se escoge, que llega hasta el enemigo y no solo hasta la pareja; el arrepentimiento, poder volverse y empezar otra vez; la esperanza, vivir hacia un futuro que no se ve; la gratitud, recordar y dar gracias; el asombro, poder arrodillarse ante algo más grande que uno; y la creación —que cantamos, contamos historias y componemos belleza donde antes no había nada—.</p>
+      <p>Fíjate en algo: ninguna de estas cosas es color. Ninguna se ve de lejos. Todas son interiores, y todas, curiosamente, brillan más cuando la persona se muestra que cuando se cubre. Ahí está nuestra verdadera gloria — no en parecer, sino en ser, y en atrevernos a que se note.</p>
+    </article>
+  </section>
+
+  <!-- ============ PARTE IV ============ -->
+  <section class="part" id="p4">
+    <header class="part-head reveal">
+      <span class="part-num">IV</span>
+      <h2 class="part-title">Lo que se hereda</h2>
+      <p class="part-epi">«El pájaro pasa sus genes; el ser humano, sus memes.»</p>
+      <div class="part-rule"></div>
+    </header>
+
+    <article class="movement reveal" id="s8">
+      <h3 class="mov-title">¿Para qué sirve esa belleza?</h3>
+      <p class="lede">El ave tiene un uso muy concreto para su belleza: atraer una pareja, reproducirse, continuar la especie. Cumple su función y ahí se agota. Es una belleza al servicio de seguir existiendo — el ave se adorna para <em>conseguir</em>. ¿Y la persona? ¿Para qué le sirve la suya?</p>
+      <p>Para lo contrario: para <em>dar</em>. Mira lo que ocurre cuando alguien se muestra sin máscara y la otra persona no se aparta. El que se mostró descubre que era mentira lo que siempre creyó —que si lo conocían de verdad, lo abandonarían—. Y al descubrirlo queda libre. Pero pasa algo todavía más grande: el que mira aprende que también él puede bajar la suya. La apertura de uno le da permiso al otro.</p>
+      <p>Eso es lo que una persona hace con su belleza: <strong>libera</strong>. El esposo que deja ver su miedo en lugar de fingir fuerza. El padre que pide perdón en vez de aparentar que nunca se equivoca. El amigo que se anima a decir «yo también estoy roto». Ninguno de esos momentos produce crías; producen algo más raro y más necesario — personas que dejan de estar solas. El ave usa su belleza para sobrevivir; la persona, para sanar. Y al final, el que aprendió a mostrarse se convierte en otra cosa: en los ojos que no se apartan, en el lugar seguro donde el próximo, todavía cubierto de miedo, por fin se atreve a salir.</p>
+    </article>
+
+    <article class="movement reveal" id="s9">
+      <h3 class="mov-title">Genes y memes</h3>
+      <p class="lede">Hay otra diferencia entre lo que deja el pájaro y lo que deja la persona, y tiene nombre. El pájaro transmite sus <em>genes</em>; el ser humano transmite además sus <em>memes</em>. La palabra es del biólogo Richard Dawkins, en su libro <em>El gen egoísta</em> (1976): un meme es la unidad mínima de cultura —una idea, una melodía, una creencia, una manera de hacer las cosas— que salta de una mente a otra, igual que un gen salta de un cuerpo a otro.</p>
+      <p>Las diferencias son enormes, y todas señalan hacia lo humano. El gen no se elige; el meme sí — decidimos qué ideas pasamos adelante. El gen necesita sangre y descendencia; el meme viaja hacia desconocidos, salta siglos, llega a gente que jamás conoceremos. Una persona sin hijos puede dejar, en este sentido, más herencia que una con doce. Y el gen muta a ciegas, mientras que el meme se puede mejorar a propósito: lo recibo, lo refino y lo entrego más afilado de lo que me llegó.</p>
+      <p>Pero aquí está el filo que no conviene olvidar: <strong>la máscara también es un meme</strong>. «Esconde tu fragilidad», «no llores», «muéstrate fuerte aunque te duela» — todo eso se hereda de padres a hijos y de cultura a persona, igual que se puede heredar lo contrario: «es seguro dejarte ver». El mismo canal transmite la coraza o la libertad. Por eso el ser humano no solo replica lo que es: <em>elige qué replica</em>. Somos el único animal que escoge qué parte de sí mismo sobrevive — y esa elección, hecha bien, es una de las cosas más hermosas que podemos hacer.</p>
+    </article>
+  </section>
+
+  <!-- ============ PARTE V ============ -->
+  <section class="part" id="p5">
+    <header class="part-head reveal">
+      <span class="part-num">V</span>
+      <h2 class="part-title">La armadura y su caída</h2>
+      <p class="part-epi">«No se rompe con la espada, sino con las lágrimas.»</p>
+      <div class="part-rule"></div>
+    </header>
+
+    <article class="movement reveal" id="s10">
+      <h3 class="mov-title">El caballero de la armadura oxidada</h3>
+      <p class="lede">Hay una pequeña novela que cuenta todo esto al revés, y conviene tenerla a mano. Es <em>El caballero de la armadura oxidada</em>, de Robert Fisher (1989), una fábula breve sobre un caballero bueno, generoso y valiente — y, sin embargo, atrapado. Vivía deslumbrado por el brillo de su propia armadura, yendo de batalla en batalla para ser siempre el número uno, hasta que un día quiso quitársela y descubrió que se le había oxidado pegada al cuerpo. Ya no podía sacársela.</p>
+      <p>La razón por la que la dejaba puesta es lo más revelador de la historia: con la visera baja, ya no escuchaba la voz triste de su esposa. El traje que lo hacía brillar era exactamente el mismo que lo aislaba de todos los que amaba. Eso es lo que pasa cuando la máscara se usa demasiado tiempo — deja de ser algo que uno lleva puesto y se convierte en algo que uno <em>cree que es</em>.</p>
+      <blockquote class="pull">No se rompe con la espada, sino con las lágrimas.</blockquote>
+      <p>¿Y con qué se libera por fin? No con más batallas ni con más brillo. El acero solo empieza a ceder cuando el caballero se conoce, se acepta y llora de verdad — y son sus lágrimas, no su espada, las que oxidan y resquebrajan la armadura hasta hacerla caer. Por el camino encuentra un manzano con una lección sencilla: el árbol no ambiciona nada para sí, simplemente crece y entrega su fruto. La armadura ambiciona ser vista; el árbol solo da.</p>
+    </article>
+
+    <article class="movement reveal" id="s11">
+      <h3 class="mov-title">Cuando muchos bajan la guardia</h3>
+      <p class="lede">¿Y qué pasa cuando no es uno, sino muchos, los que se atreven a quitarse la coraza? Que por fin pueden hacer juntos lo que solos era imposible. Porque un grupo de personas blindadas no es un equipo — es soledad multiplicada. Puedes ponerlas en la misma sala y seguir teniendo a cada una defendiendo lo suyo, cuidando que nadie vea su grieta. El acero que protege es el mismo que aísla.</p>
+      <p>La confianza —único material con el que se construye un equipo de verdad— necesita justo lo que la armadura prohíbe: dejarse ver. Por eso el propósito compartido nunca llega primero; es lo que <em>brota</em> después, cuando la gente se anima a reconocerse frágil ante los demás. Solo entonces puede un grupo cargar algo más grande que cada uno por separado.</p>
+      <p>La canción <em>Africa</em>, de Toto, deja ver ese horizonte. Su autor, David Paich, se inspiró en sus maestros de un colegio católico, misioneros que le contaban cómo «bendecían» todo en aquel continente: a la gente, los libros, las cosechas, y la lluvia cuando caía. No es, como muchos creen, una canción de amor a una mujer, sino el amor a todo un lugar y a una vida entregada a servir. Y en uno de sus versos el narrador confiesa el miedo a aquello en lo que se había convertido — el caballero otra vez, asustado de su propia coraza. La diferencia lo dice todo: el caballero blande la espada para conquistar; el misionero levanta las manos para bendecir. Eso una persona sola y armada no puede hacerlo. Pero muchos que ya bajaron la guardia, sí: pueden arrodillarse juntos bajo el mismo cielo y bendecir la misma lluvia.</p>
+    </article>
+
+    <article class="movement reveal" id="s12">
+      <h3 class="mov-title">¿Viven los cantautores sin coraza?</h3>
+      <p class="lede">Surge una pregunta tentadora: si las canciones que más nos llegan están hechas de honestidad, ¿serán los cantautores personas que viven permanentemente sin coraza? En parte sí, y en parte es más interesante todavía.</p>
+      <p>Es cierto que la buena canción nace de decir algo verdadero. Una pieza técnicamente perfecta pero blindada suena bien y no engancha; le falta la grieta por donde el oyente entra y se reconoce. Hay, en el centro de toda gran canción, un gesto de quitarse la máscara. Pero —y este es el matiz— la canción misma puede ser el único lugar donde el autor se atreve a hacerlo: un espacio protegido, ensayado, editado, escondido detrás de la melodía y de un personaje.</p>
+      <p>Joni Mitchell, autora de algunas de las canciones más íntimas que existen, era frágil y nerviosísima frente al público: temblaba de pánico en el escenario. La mujer más abierta en sus letras era de las más asustadas frente a la gente; la música le daba una especie de «manta de seguridad», un permiso para ser honesta dentro de un marco que ella controlaba. Y el propio Paich escribió una de las canciones más resonantes de la historia sobre un lugar donde nunca había estado, sacando las imágenes de documentales. Lo cual prueba algo importante: la resonancia, por sí sola, no demuestra que la persona esté abierta — a veces hasta se actúa la vulnerabilidad.</p>
+      <p>Lo que el cantautor sí logra es tallar una grieta lo bastante honesta como para que haga algo más grande que mostrarlo a él: <em>te muestra a ti</em>. Cuando una canción resuena, te da permiso, por tres minutos, de sentir «alguien más sintió esto, entonces no estoy solo ni roto por sentirlo». No hace falta que el autor sea valiente para siempre; basta con que haya dejado una sola cosa verdadera, y que tú la recibas con la guardia baja.</p>
+      <blockquote class="pull">La canción es el meme que carga el permiso de dejarse ver.</blockquote>
+    </article>
+  </section>
+
+  <!-- ============ PARTE VI ============ -->
+  <section class="part" id="p6">
+    <header class="part-head reveal">
+      <span class="part-num">VI</span>
+      <h2 class="part-title">La intemperie</h2>
+      <p class="part-epi">«Dejarse ver es quedar a la intemperie — y el aire no siempre es seguro.»</p>
+      <div class="part-rule"></div>
+    </header>
+
+    <article class="movement reveal" id="sChisme1">
+      <h3 class="mov-title">El murmurador</h3>
+      <p class="lede">Hasta aquí hemos invitado a mostrarse, a bajar la guardia, como si el aire alrededor siempre fuera seguro. No lo es — y sería deshonesto no decirlo. El que se muestra queda expuesto, y entre los peligros que lo esperan hay uno especialmente venenoso: la burla y el chisme. Conviene entenderlo de frente, porque solo lo que se entiende se puede sanar.</p>
+      <p>Lo primero, una idea que sorprende: el chisme no es un defecto de gente mala, es una herramienta de gente con armadura. Piénsalo con todo lo anterior. Si mi valor depende de parecer mejor de lo que soy, entonces la fragilidad que tú acabas de mostrar es, para mí, una oportunidad de oro: tu caída me sube a mí. Por eso el chisme casi siempre apunta hacia abajo — hacia el que tropezó, el que confesó, el que se atrevió a mostrar la grieta. El que todavía tiene el disfraz puesto necesita compararse para sentirse a salvo.</p>
+      <p>Visto así, el murmurador da menos rabia y más lástima: en el fondo está aterrado de que un día le toque a él. Habla de la herida ajena precisamente para que nadie mire la propia. Y hace algo más sutil todavía — <strong>finge intimidad sin pagar su precio</strong>. La cercanía verdadera cuesta, porque exige que yo también me muestre; el chisme, en cambio, regala una sensación de cercanía («mira lo que te cuento, tú y yo somos de los que saben») sin que nadie se arriesgue. Es plumaje otra vez: una conexión de apariencia, hueca por dentro. Dos personas que chismean no se están acercando entre sí; se están aliando contra una tercera.</p>
+      <blockquote class="pull">El murmurador habla de la herida ajena para que nadie mire la propia.</blockquote>
+      <p>¿Y cómo se sana? Por la raíz, que es el miedo a no ser suficiente. El día en que el murmurador es visto y amado tal como es, la caída del otro deja de hacerle falta. La gracia recibida le quita el hambre que alimentaba la lengua.</p>
+    </article>
+
+    <article class="movement reveal" id="sChisme2">
+      <h3 class="mov-title">Mostrarse con sabiduría</h3>
+      <p class="lede">Entonces, si mostrarse es tan riesgoso, ¿la respuesta es abrirse ante todo el mundo, sin filtro, contándolo todo a cualquiera? No — y este matiz es importante, porque sin él el mensaje se vuelve ingenuo y hasta peligroso. Mostrarse con sabiduría no es lo mismo que exhibirse.</p>
+      <p>La vulnerabilidad sana no es entregarse indiscriminadamente; es entregarse a quien ha <em>ganado</em> el derecho de verte. Brené Brown lo advierte con claridad: abrirse sin medida ante cualquiera no es valentía, es otra cosa, y muchas veces termina lastimando al que se abrió. Hay una diferencia fina con el ave que conviene recordar: el pájaro muestra su verdad a todos porque no puede hacer otra cosa, y nada pierde en ello. La persona, en cambio, <em>elige</em> ante quién y dónde. El frágil sabio no se blinda contra el mundo entero, pero tampoco se abre ante quien sea: escoge testigos confiables, los pocos que ya han probado que cuidan lo que se les entrega.</p>
+      <blockquote class="pull">La vulnerabilidad no es exhibición: es entregarse a quien ha ganado el derecho de verte.</blockquote>
+      <p>Y hay una última trampa que evitar, tal vez la más triste: dejar que la traición de una persona te empuje a volver a la coraza para siempre. Que alguien abuse de tu confianza no prueba que mostrarte fue un error; prueba que esa persona no era el lugar. La cura no es cerrarse a todos — es aprender a elegir mejor, y seguir creyendo que en algún sitio el aire sí es seguro.</p>
+    </article>
+
+    <article class="movement reveal" id="sChisme3">
+      <h3 class="mov-title">Un lugar donde el chisme no respira</h3>
+      <p class="lede">Y aquí lo más punzante: el mayor peligro para quien se muestra no suele estar afuera de la comunidad de fe, sino adentro — justo en el lugar que <em>promete</em> ser seguro para abrirse. Por eso el chisme ahí hiere doble: traiciona precisamente donde alguien bajó la guardia. No es casualidad que los apóstoles del primer siglo lo nombraran tanto y con tanta dureza. No lo trataban como un pecadillo social, sino como un incendio.</p>
+      <aside class="shelf">
+        <span class="shelf-title">La iglesia del primer siglo y la lengua</span>
+        <ul>
+          <li><b>Pablo</b> incluye la murmuración junto a faltas que solemos considerar mucho «peores» (Romanos 1).</li>
+          <li><b>Santiago</b> dedica todo un capítulo a la lengua, comparándola con una chispa que incendia un bosque entero (Santiago 3).</li>
+          <li><b>Pablo, escribiendo a Timoteo,</b> advierte sobre quienes aprenden a ir «de casa en casa» diciendo lo que no deben (1 Timoteo 5).</li>
+        </ul>
+      </aside>
+      <p>¿Cómo se construye, entonces, un lugar donde el chisme no respira? El primer secreto sorprende: el antídoto no es el silencio, es la valentía. El murmurador habla <em>del</em> ausente; la persona valiente habla <em>con</em> el presente. Por eso Jesús, justo en el pasaje donde enseña sobre el perdón, dejó un protocolo exacto: si tu hermano falla, ve y háblalo a solas con él primero (Mateo 18). Es brillante — protege al frágil de la exposición pública y le da una oportunidad de corregir antes de que el asunto se vuelva espectáculo. El chisme rompe esa secuencia: va a todos menos al implicado.</p>
+      <p>Lo demás es quitarle oxígeno al fuego. Un incendio necesita combustible; si nadie recibe la chispa, se apaga sola. Y casi siempre basta una sola pregunta para no recibirla: <em>«¿Ya hablaste con él de esto?»</em> El que deja de ser un buen lugar para descargar chismes, sencillamente deja de recibirlos.</p>
+      <blockquote class="pull">El fuego del chisme se apaga donde nadie recibe la chispa.</blockquote>
+      <p>Y aquí se enlaza todo lo que venimos diciendo. Una comunidad de personas que ya saben que son amadas no necesita la caída de nadie para sentirse en pie. El que de verdad se dejó ver y fue recibido —el que descubrió que era seguro— es justamente el que ya no chismea. La gracia, otra vez, seca la raíz; y solo entonces la intemperie se vuelve, por fin, un lugar donde se puede vivir.</p>
+    </article>
+  </section>
+
+  <!-- ============ PARTE VII ============ -->
+  <section class="part" id="p7">
+    <header class="part-head reveal">
+      <span class="part-num">VII</span>
+      <h2 class="part-title">El rostro</h2>
+      <p class="part-epi">«No el plumaje en su esplendor: el amor en su entrega total.»</p>
+      <div class="part-rule"></div>
+    </header>
+
+    <article class="movement reveal" id="sImagen">
+      <h3 class="mov-title">No te harás imagen del ave</h3>
+      <p class="lede">Recogemos ahora aquel mandamiento antiguo que dejamos sembrado, porque leído desde aquí suena distinto. Cuando Dios entrega su ley, prohíbe hacerse una imagen de criatura alguna para adorarla — y el texto casi hace una lista: ni de varón ni de hembra, ni de bestia, ni de <em>ave que vuela</em>, ni de pez ni de reptil (Deuteronomio 4:15-18). Prohíbe, en palabras llanas, tallar un pájaro y arrodillarse ante él.</p>
+      <p>Y eso es, en el fondo, lo mismo que veníamos diciendo de otra manera. Querer la belleza del ave —sus colores, su despliegue— es una forma sutil de inclinarse ante una imagen más baja de la que fuimos hechos. Porque al ser humano no se le hizo a imagen del ave, sino <em>a imagen de Dios</em> (Génesis 1). Ese es el espejo correcto. El error de mirar a la especie equivocada tiene, entonces, un nombre muy viejo: idolatría — no la de las estatuas, sino la del corazón que se modela según lo que admira. Nos volvemos aquello que contemplamos; si contemplamos plumaje, fabricamos plumaje.</p>
+      <p>Pero hay que afinar, porque «ser semejantes a Dios» se puede entender de dos maneras opuestas, y una de ellas es justo la trampa. Existe una semejanza falsa —querer su poder, su autosuficiencia, no necesitar a nadie, bastarse a sí mismo—, y esa fue, de hecho, la primera mentira de todas: <em>«seréis como Dios»</em> (Génesis 3). Esa supuesta divinidad de no depender ni mostrarse es, mirada de cerca, la armadura: el dios falso que toda máscara intenta imitar.</p>
+      <p>La semejanza verdadera es otra, y solo se conoció del todo cuando Dios mismo se hizo ver: aquel que, <em>siendo en forma de Dios, se despojó a sí mismo y tomó forma de siervo</em> (Filipenses 2). Ahí está la sorpresa que lo cambia todo — la característica más divina, revelada en Cristo, no es el blindaje, sino el despojo.</p>
+      <blockquote class="pull">Ser semejante a Dios no es armarse hasta volverse invulnerable; es amar hasta hacerse vulnerable.</blockquote>
+      <p>De modo que el ave nunca fue el enemigo: fue un buen maestro que señalaba más allá de sí mismo. El error no está en mirarla, sino en detenerse en ella y querer su gloria prestada — en vez de levantar los ojos al único rostro al que de verdad fuimos hechos para parecernos.</p>
+    </article>
+
+    <article class="movement reveal" id="s13">
+      <h3 class="mov-title">El rostro de quien se muestra</h3>
+      <p class="lede">Hay un guiño que lo reúne todo. Jesús <em>también</em> señaló a las aves y a los lirios — «miren las aves del cielo… ni Salomón con toda su gloria se vistió como uno de estos lirios» — pero no dijo «imítenles el color». Dijo lo contrario: <em>dejen de afanarse por su cubierta, que el Padre los viste</em>. Usó al pájaro para curarnos del error de querer ser pájaros. La gloria no se fabrica: se recibe.</p>
+      <p>Y si la belleza del ser humano son esas facultades interiores que vimos —el amor, el perdón, la misericordia, la verdad, la entrega—, entonces las enseñanzas de Cristo son casi su retrato exacto, porque cada una le da vuelta a la lógica del pájaro: la grandeza no está en lucir sino en servir, no en subir sino en bajar, no en guardar sino en dar.</p>
+      <aside class="shelf">
+        <span class="shelf-title">El retrato de quien se muestra — enseñanzas de Cristo</span>
+        <ul>
+          <li><b>El gran mandamiento.</b> Amar a Dios con todo, y al prójimo como a uno mismo (Mateo 22): toda la belleza humana en una sola frase.</li>
+          <li><b>El mandamiento nuevo.</b> «Ámense unos a otros como yo los he amado» (Juan 13) — y por ese amor, no por el plumaje, se reconoce a los suyos.</li>
+          <li><b>Las Bienaventuranzas.</b> Dichosos los pobres de espíritu, los que lloran, los mansos, los misericordiosos (Mateo 5): la belleza declarada bendita justo donde el mundo ve debilidad.</li>
+          <li><b>No hacer el bien para ser visto</b> (Mateo 6): la enseñanza directa contra la máscara.</li>
+          <li><b>El perdón sin límite.</b> Setenta veces siete (Mateo 18): soltar la deuda en vez de devolver el golpe.</li>
+          <li><b>La grandeza invertida.</b> El primero, servidor de todos; vino a servir, no a ser servido (Marcos 10).</li>
+          <li><b>Perder la vida para hallarla</b> (Mateo 16): el grano de trigo que cae a tierra y muere para dar mucho fruto.</li>
+          <li><b>La misericordia con los últimos.</b> «Lo que hicieron con el más pequeño, conmigo lo hicieron» (Mateo 25).</li>
+        </ul>
+      </aside>
+      <p>¿Hay más? Muchas — el reino comparado con una semilla de mostaza, pequeña y escondida; la verdad que hace libres (Juan 8); el hijo que vuelve a casa y el padre que <em>corre</em> a recibirlo (Lucas 15). Pero si todo tuviera que reducirse a una sola imagen, sería la cruz: una persona completamente expuesta —despojada de fuerza, de defensa, de todo refugio— y, ahí donde ya no queda nada que ocultar ni nada que aparentar, lo más hermoso que la fe cristiana ha contemplado. No el plumaje en su esplendor, sino el amor en su entrega total.</p>
+      <blockquote class="pull">Si nos mostráramos del todo, ¿sería hermoso? El evangelio entero responde que sí — y que ahí está toda la gloria.</blockquote>
+    </article>
+  </section>
+
+  <div class="coda reveal">
+    <svg class="cross" viewBox="0 0 40 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="20" y1="3" x2="20" y2="61" stroke="currentColor" stroke-width="1.1"/>
+      <line x1="7" y1="20" x2="33" y2="20" stroke="currentColor" stroke-width="1.1"/>
+    </svg>
+    <p>Del mono que se viste para esconderse, al ave que se muestra sin saberlo, a la persona cuya belleza no es lo que enseña por fuera sino lo que se anima a entregar — y, al final, un rostro: el del amor que se dejó ver del todo.</p>
+  </div>
+
+  <footer class="sources reveal">
+    <h2>Fuentes y lecturas</h2>
+    <ul>
+      <li>Brené Brown, <em>El poder de ser vulnerable</em> — <a href="https://radika.org/recursos-gratuitos/temas/vulnerabilidad-fragilidad-o-fortaleza" target="_blank" rel="noopener">Fundación Radika</a></li>
+      <li>Octavio Paz, <em>El laberinto de la soledad</em> — <a href="https://es.wikipedia.org/wiki/El_laberinto_de_la_soledad" target="_blank" rel="noopener">Wikipedia</a></li>
+      <li>Alfred R. Mele, <em>El autoengaño desenmascarado</em> — <a href="https://www.marcialpons.es/libros/el-autoengano-desenmascarado/9788437635927/" target="_blank" rel="noopener">Marcial Pons</a></li>
+      <li>El ave del paraíso y la señal honesta — <a href="https://animalesbiologia.com/aves/temas/aves-del-paraiso" target="_blank" rel="noopener">Animales y Biología</a></li>
+      <li>Richard Dawkins, <em>El gen egoísta</em> (1976) y el concepto de meme — <a href="https://es.wikipedia.org/wiki/El_gen_ego%C3%ADsta" target="_blank" rel="noopener">Wikipedia</a></li>
+      <li>Robert Fisher, <em>El caballero de la armadura oxidada</em> (1989) — <a href="https://es.wikipedia.org/wiki/El_caballero_de_la_armadura_oxidada" target="_blank" rel="noopener">Wikipedia</a></li>
+      <li>Toto, <em>Africa</em> — sentido y origen — <a href="https://www.smoothradio.com/features/the-story-of/toto-africa-lyrics-meaning-facts-video/" target="_blank" rel="noopener">Smooth Radio</a>, <a href="https://extrachill.com/toto-africa-meaning/" target="_blank" rel="noopener">Extra Chill</a></li>
+      <li>La vulnerabilidad del cantautor — <a href="https://jonimitchell.com/library/view.cfm?id=3509" target="_blank" rel="noopener">Joni Mitchell Library</a>, <a href="https://blog.reverbnation.com/why-vulnerability-is-vital-for-songwriters/" target="_blank" rel="noopener">ReverbNation</a></li>
+    </ul>
+    <p class="stamp">Conversación entre Gianni y Claude <span class="dot">·</span> edición ampliada en siete partes <span class="dot">·</span> hecho para seguir creciendo</p>
+  </footer>
+
+</main>
+
+<script>
+  const bar = document.getElementById('progress');
+  const onScroll = () => {
+    const h = document.documentElement;
+    bar.style.width = ((h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  };
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  const rail = document.querySelector('.rail');
+  const heroEl = document.querySelector('header.hero');
+  const railLinks = Array.from(document.querySelectorAll('.rail a'));
+  const linkById = {};
+  railLinks.forEach(a => { linkById[a.getAttribute('href').slice(1)] = a; });
+  const toggleRail = () => {
+    const threshold = heroEl ? heroEl.offsetHeight * 0.55 : 400;
+    rail.classList.toggle('visible', window.scrollY > threshold);
+  };
+  document.addEventListener('scroll', toggleRail, {passive:true});
+  toggleRail();
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        railLinks.forEach(a => a.classList.remove('active'));
+        const id = e.target.getAttribute('id');
+        if (linkById[id]) linkById[id].classList.add('active');
+      }
+    });
+  }, {rootMargin:'-40% 0px -55% 0px', threshold:0});
+  document.querySelectorAll('section.part').forEach(s => spy.observe(s));
+</script>
+</body>
+</html>
