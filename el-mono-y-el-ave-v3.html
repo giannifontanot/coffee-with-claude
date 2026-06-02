@@ -47,8 +47,7 @@
   nav.toc ul.subs a{text-decoration:none;color:var(--ink-soft);font-size:.98rem;transition:color .2s;}
   nav.toc ul.subs a:hover{color:var(--gold);}
 
-  .rail{position:fixed;top:50%;left:2.2rem;transform:translateY(-50%);width:12rem;z-index:40;padding-left:1rem;border-left:1px solid var(--rule);opacity:0;visibility:hidden;transition:opacity .5s ease;}
-  .rail.visible{opacity:1;visibility:visible;}
+  .rail{position:fixed;top:50%;left:2.2rem;transform:translateY(-50%);width:12rem;z-index:40;padding-left:1rem;border-left:1px solid var(--rule);opacity:1;visibility:visible;transition:opacity .4s ease;}
   .rail .rail-title{font-family:'Fraunces',serif;font-style:italic;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 .9rem;}
   .rail ol{list-style:none;margin:0;padding:0;}
   .rail li{margin:.25rem 0;}
@@ -461,28 +460,21 @@
   }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  const rail = document.querySelector('.rail');
-  const heroEl = document.querySelector('header.hero');
   const railLinks = Array.from(document.querySelectorAll('.rail a'));
-  const linkById = {};
-  railLinks.forEach(a => { linkById[a.getAttribute('href').slice(1)] = a; });
-  const toggleRail = () => {
-    const threshold = heroEl ? heroEl.offsetHeight * 0.55 : 400;
-    rail.classList.toggle('visible', window.scrollY > threshold);
-  };
-  document.addEventListener('scroll', toggleRail, {passive:true});
-  toggleRail();
-
-  const spy = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting){
-        railLinks.forEach(a => a.classList.remove('active'));
-        const id = e.target.getAttribute('id');
-        if (linkById[id]) linkById[id].classList.add('active');
-      }
-    });
-  }, {rootMargin:'-40% 0px -55% 0px', threshold:0});
-  document.querySelectorAll('section.part').forEach(s => spy.observe(s));
+  if (railLinks.length) {
+    const linkById = {};
+    railLinks.forEach(a => { linkById[a.getAttribute('href').slice(1)] = a; });
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting){
+          railLinks.forEach(a => a.classList.remove('active'));
+          const id = e.target.getAttribute('id');
+          if (linkById[id]) linkById[id].classList.add('active');
+        }
+      });
+    }, {rootMargin:'-40% 0px -55% 0px', threshold:0});
+    document.querySelectorAll('section.part').forEach(s => spy.observe(s));
+  }
 </script>
 </body>
 </html>
