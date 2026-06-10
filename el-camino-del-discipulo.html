@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Camino del Discípulo — Plan de 12 Semanas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f1e6;
+  --paper-deep:#efe7d6;
+  --card:#fbf7ee;
+  --ink:#2c2620;
+  --ink-soft:#5c5247;
+  --line:#d9cdb6;
+  --clay:#8a4b2a;
+  --gold:#b08d4f;
+  --cabeza:#52688a;
+  --corazon:#a04434;
+  --manos:#67793f;
+  --rail-w:230px;
+  font-size:17px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  font-family:'Spectral',Georgia,serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.7;
+}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;line-height:1.2}
+
+/* ===== Layout ===== */
+.wrap{display:flex;max-width:1180px;margin:0 auto}
+main{flex:1;min-width:0;padding:0 2.2rem 5rem}
+
+/* ===== Side rail ===== */
+nav.rail{
+  width:var(--rail-w);flex-shrink:0;
+  position:sticky;top:0;align-self:flex-start;
+  height:100vh;overflow-y:auto;
+  padding:2.5rem 1.2rem 2rem 1.6rem;
+  border-right:1px solid var(--line);
+}
+.rail .brand{
+  font-family:'Fraunces',serif;font-weight:900;font-size:1.05rem;
+  color:var(--clay);margin-bottom:1.6rem;letter-spacing:.02em;
+}
+.rail ul{list-style:none}
+.rail a{
+  display:block;padding:.4rem .6rem;margin:.1rem 0;
+  text-decoration:none;color:var(--ink-soft);font-size:.85rem;
+  border-left:2px solid transparent;border-radius:0 6px 6px 0;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.rail a:hover{color:var(--clay)}
+.rail a.active{
+  color:var(--clay);border-left-color:var(--clay);
+  background:rgba(138,75,42,.07);font-weight:600;
+}
+.rail .group{
+  font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--gold);margin:1.1rem 0 .25rem .6rem;font-weight:600;
+}
+
+/* ===== Hamburger (mobile) ===== */
+.menu-btn{
+  display:none;position:fixed;top:.9rem;right:.9rem;z-index:60;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  width:46px;height:46px;cursor:pointer;
+  box-shadow:0 2px 10px rgba(44,38,32,.12);
+}
+.menu-btn span{
+  display:block;width:20px;height:2px;background:var(--clay);
+  margin:4px auto;transition:transform .25s,opacity .25s;
+}
+.menu-btn.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.menu-btn.open span:nth-child(2){opacity:0}
+.menu-btn.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* ===== Hero ===== */
+header.hero{
+  padding:4.5rem 0 2.6rem;border-bottom:1px solid var(--line);
+  margin-bottom:2.8rem;
+}
+.hero .eyebrow{
+  font-size:.75rem;text-transform:uppercase;letter-spacing:.22em;
+  color:var(--gold);font-weight:600;margin-bottom:1rem;
+}
+.hero h1{
+  font-size:clamp(2.2rem,5vw,3.4rem);font-weight:900;
+  color:var(--ink);margin-bottom:1rem;
+}
+.hero h1 em{font-style:italic;color:var(--clay)}
+.hero .lede{
+  font-size:1.12rem;color:var(--ink-soft);max-width:42rem;
+  font-weight:300;
+}
+.hero .verse{
+  margin-top:1.8rem;padding-left:1.1rem;border-left:3px solid var(--gold);
+  font-style:italic;color:var(--ink-soft);max-width:38rem;font-size:.98rem;
+}
+.hero .verse cite{display:block;font-style:normal;font-size:.8rem;margin-top:.4rem;letter-spacing:.08em;color:var(--gold)}
+
+/* ===== Sections ===== */
+section{padding:2.4rem 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+section > h2{
+  font-size:1.7rem;font-weight:700;margin-bottom:.4rem;color:var(--ink);
+}
+.kicker{
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.2em;
+  color:var(--clay);font-weight:600;margin-bottom:.5rem;
+}
+section > p{max-width:46rem;margin-bottom:1rem}
+strong{font-weight:600;color:var(--clay)}
+
+/* ===== Pillars legend ===== */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.6rem 0 .6rem}
+.pillar{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:1.2rem 1.1rem;border-top:4px solid;
+}
+.pillar h3{font-size:1.05rem;margin-bottom:.3rem}
+.pillar p{font-size:.88rem;color:var(--ink-soft);line-height:1.55}
+.pillar.p-cabeza{border-top-color:var(--cabeza)}
+.pillar.p-corazon{border-top-color:var(--corazon)}
+.pillar.p-manos{border-top-color:var(--manos)}
+.pillar .tag{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.p-cabeza .tag{color:var(--cabeza)}
+.p-corazon .tag{color:var(--corazon)}
+.p-manos .tag{color:var(--manos)}
+
+/* ===== Week cards ===== */
+.bloque-intro{
+  font-size:1.02rem;color:var(--ink-soft);max-width:44rem;
+  font-style:italic;margin-bottom:1.4rem;
+}
+.week{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:1.5rem 1.6rem 1.4rem;margin-bottom:1.2rem;
+  position:relative;overflow:hidden;
+}
+.week::before{
+  content:attr(data-num);
+  position:absolute;top:-.6rem;right:.8rem;
+  font-family:'Fraunces',serif;font-weight:900;font-size:4.6rem;
+  color:var(--paper-deep);z-index:0;line-height:1;
+}
+.week > *{position:relative;z-index:1}
+.week .w-head{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;margin-bottom:.5rem}
+.week h3{font-size:1.25rem;font-weight:700}
+.badge{
+  font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+  padding:.18rem .6rem;border-radius:999px;color:#fff;white-space:nowrap;
+}
+.b-cabeza{background:var(--cabeza)}
+.b-corazon{background:var(--corazon)}
+.b-manos{background:var(--manos)}
+.week .texto{
+  font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:.6rem;
+}
+.week .idea{margin-bottom:.9rem;max-width:44rem}
+.week .fila{
+  display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-top:.4rem;
+}
+.week .celda{
+  background:var(--paper);border:1px dashed var(--line);border-radius:10px;
+  padding:.8rem .95rem;font-size:.92rem;
+}
+.week .celda .lbl{
+  display:block;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--clay);font-weight:600;margin-bottom:.3rem;
+}
+
+/* ===== Accordion (voces) ===== */
+.acc{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:.8rem;overflow:hidden}
+.acc button.acc-h{
+  width:100%;display:flex;justify-content:space-between;align-items:center;
+  background:none;border:none;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:600;font-size:1.02rem;color:var(--ink);
+  padding:1rem 1.2rem;text-align:left;
+}
+.acc button.acc-h .rol{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:block;font-family:'Spectral',serif;font-weight:600;margin-bottom:.15rem}
+.acc .chev{
+  flex-shrink:0;margin-left:1rem;width:10px;height:10px;
+  border-right:2px solid var(--clay);border-bottom:2px solid var(--clay);
+  transform:rotate(45deg);transition:transform .25s;
+}
+.acc.open .chev{transform:rotate(-135deg)}
+.acc .acc-b{
+  max-height:0;overflow:hidden;transition:max-height .35s ease;
+}
+.acc .acc-b-inner{padding:0 1.2rem 1.2rem;font-size:.95rem;color:var(--ink-soft);max-width:46rem}
+.acc .acc-b-inner p{margin-bottom:.7rem}
+
+/* ===== Iteration cycle ===== */
+.ciclo{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin:1.4rem 0}
+.paso{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:1rem;text-align:center;font-size:.88rem;color:var(--ink-soft);
+}
+.paso b{display:block;font-family:'Fraunces',serif;color:var(--clay);font-size:1rem;margin-bottom:.25rem}
+
+/* ===== Fuentes ===== */
+.fuentes{font-size:.92rem;max-width:46rem}
+.fuentes a{color:var(--clay);text-decoration:none;border-bottom:1px solid var(--gold)}
+.fuentes a:hover{color:var(--gold)}
+.fuentes li{margin-bottom:.5rem;margin-left:1.2rem}
+.cita-pie{
+  margin-top:.6rem;font-size:.85rem;color:var(--ink-soft);
+}
+.cita-pie a{color:var(--clay);text-decoration:none;border-bottom:1px solid var(--gold)}
+.cita-pie a:hover{color:var(--gold)}
+
+footer{
+  text-align:center;padding:2.2rem 1rem;font-size:.82rem;color:var(--ink-soft);
+  font-style:italic;
+}
+
+/* ===== Responsive ===== */
+@media (max-width:880px){
+  .menu-btn{display:block}
+  nav.rail{
+    position:fixed;left:0;top:0;z-index:50;height:100vh;
+    background:var(--paper);transform:translateX(-105%);
+    transition:transform .3s ease;box-shadow:4px 0 24px rgba(44,38,32,.15);
+    width:min(78vw,300px);
+  }
+  nav.rail.open{transform:translateX(0)}
+  main{padding:0 1.2rem 4rem}
+  .pillars{grid-template-columns:1fr}
+  .week .fila{grid-template-columns:1fr}
+  .ciclo{grid-template-columns:1fr 1fr}
+  header.hero{padding-top:3.4rem}
+}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="wrap">
+
+<nav class="rail" id="rail" aria-label="Navegación del estudio">
+  <div class="brand">El Camino del Discípulo</div>
+  <ul>
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#principio">El principio pedagógico</a></li>
+    <li class="group">Los cuatro bloques</li>
+    <li><a href="#bloque1">1 · El llamado</a></li>
+    <li><a href="#bloque2">2 · El Reino en parábolas</a></li>
+    <li><a href="#bloque3">3 · La mesa de Hechos 2</a></li>
+    <li><a href="#bloque4">4 · La toalla</a></li>
+    <li class="group">Profundizar</li>
+    <li><a href="#voces">Panel de cinco voces</a></li>
+    <li><a href="#iteracion">El ciclo no termina</a></li>
+    <li><a href="#fuentes">Fuentes</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<header class="hero" id="inicio">
+  <div class="eyebrow">Plan de enseñanza · 12 semanas · 4 bloques</div>
+  <h1>El Camino del <em>Discípulo</em></h1>
+  <p class="lede">Un plan semana por semana para aprender las parábolas, vivir como la primera iglesia y tomar la toalla del servicio. No es un curso que se aprueba: es un camino que se camina — con la cabeza, el corazón y las manos.</p>
+  <blockquote class="verse">
+    «Y perseveraban en la doctrina de los apóstoles, en la comunión unos con otros, en el partimiento del pan y en las oraciones.»
+    <cite>Hechos 2:42</cite>
+  </blockquote>
+</header>
+
+<section id="principio">
+  <div class="kicker">Antes de la semana 1</div>
+  <h2>El principio pedagógico: tres pilares que se alternan</h2>
+  <p>El error clásico de los planes de discipulado es hacer doce semanas de pura <strong>cabeza</strong>. Pero el discipulado de Jesús nunca fue solo información: era seguimiento, mesa y toalla. Por eso, cada semana de este plan combina tres elementos: un <strong>texto</strong> que se estudia, una <strong>pregunta</strong> que se conversa en la mesa, y una <strong>práctica</strong> concreta que se hace antes de la próxima reunión.</p>
+  <p>La regla de oro del grupo: la pregunta de apertura de cada reunión no es <em>«¿qué les pareció el texto?»</em> sino <strong>«¿cómo te fue con la práctica?»</strong>. Eso es lo que separa un grupo de estudio de un grupo de discípulos.</p>
+  <div class="pillars">
+    <div class="pillar p-cabeza">
+      <span class="tag">Cabeza</span>
+      <h3>Entender</h3>
+      <p>Las parábolas del Reino. Jesús enseñó en historias que exigen rumiarse — la comprensión es parte del seguimiento.</p>
+    </div>
+    <div class="pillar p-corazon">
+      <span class="tag">Corazón</span>
+      <h3>Convivir</h3>
+      <p>La vida de Hechos 2: comer juntos, orar juntos, compartir lo que se tiene. La comunidad no se estudia: se habita.</p>
+    </div>
+    <div class="pillar p-manos">
+      <span class="tag">Manos</span>
+      <h3>Servir</h3>
+      <p>El lavamiento de pies de Juan 13. El Maestro de rodillas como ejemplo explícito: «vosotros también debéis lavaros los pies los unos a los otros».</p>
+    </div>
+  </div>
+</section>
+
+<section id="bloque1">
+  <div class="kicker">Bloque 1 · Semanas 1–3</div>
+  <h2>El llamado: ¿qué es un discípulo?</h2>
+  <p class="bloque-intro">Antes de las parábolas y antes de la mesa, la pregunta fundacional: un discípulo no aprueba un curso — sigue a una persona.</p>
+
+  <article class="week" data-num="1">
+    <div class="w-head"><h3>«Sígueme»</h3><span class="badge b-cabeza">Cabeza</span></div>
+    <div class="texto">Marcos 1:16-20</div>
+    <p class="idea">Jesús no reparte un temario; dice «venid en pos de mí». Los primeros discípulos dejan las redes <em>antes</em> de entender a dónde van. El seguimiento precede a la comprensión total.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Qué diferencia hay entre admirar a Jesús y seguirlo?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Cada uno escribe en privado: ¿qué dejaría yo «en la barca»? Se comparte (voluntariamente) la próxima semana.</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="2">
+    <div class="w-head"><h3>La parábola del sembrador</h3><span class="badge b-cabeza">Cabeza</span></div>
+    <div class="texto">Marcos 4:1-20</div>
+    <p class="idea">La meta-parábola: antes de enseñar contenido, Jesús enseña <strong>cómo escuchar</strong>. Las cuatro tierras no son cuatro tipos de personas — son cuatro estados del corazón que todos visitamos. Esta parábola es la puerta de entrada a todas las demás.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Qué «espinos» (afanes, distracciones) están ahogando la semilla en mi vida esta temporada?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Leer una parábola a solas cada día y anotar una sola línea: ¿qué tierra fui hoy?</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="3">
+    <div class="w-head"><h3>El costo</h3><span class="badge b-manos">Manos</span></div>
+    <div class="texto">Lucas 14:25-33</div>
+    <p class="idea">Calcular la torre, contar el ejército. Jesús espanta a las multitudes a propósito: el discipulado barato no existe. Pero el costo no se entiende en abstracto — se entiende renunciando a algo real.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Por qué Jesús hace <em>más difícil</em> seguirlo justo cuando más gente lo sigue?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Una renuncia pequeña y concreta: tiempo, dinero o comodidad. Específica, medible, esta semana.</div>
+    </div>
+  </article>
+</section>
+
+<section id="bloque2">
+  <div class="kicker">Bloque 2 · Semanas 4–6</div>
+  <h2>El Reino en parábolas</h2>
+  <p class="bloque-intro">Con los oídos ya entrenados por el sembrador, ahora sí: tres parábolas que dibujan el Reino — su tamaño, su valor y su rostro.</p>
+
+  <article class="week" data-num="4">
+    <div class="w-head"><h3>La mostaza y la levadura</h3><span class="badge b-cabeza">Cabeza</span></div>
+    <div class="texto">Mateo 13:31-33</div>
+    <p class="idea">El Reino crece en lo pequeño y lo escondido. Contra toda expectativa mesiánica de espectáculo, Jesús compara el Reino con una semilla minúscula y con levadura invisible en la masa.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Dónde he visto a Dios obrar en algo que parecía insignificante?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Hacer una «obra de levadura»: un acto de bien deliberadamente invisible, que nadie pueda descubrir ni agradecer.</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="5">
+    <div class="w-head"><h3>El tesoro y la perla</h3><span class="badge b-cabeza">Cabeza</span></div>
+    <div class="texto">Mateo 13:44-46</div>
+    <p class="idea">El Reino vale el todo — pero nótese el detalle que casi siempre se pierde: el hombre vende todo <strong>con gozo</strong>. La renuncia del discípulo no es amarga; es la alegría de quien encontró algo mejor.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Mi fe se parece más a una obligación que cargo o a un tesoro que encontré?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Inventario de gozo: anotar cada día una evidencia concreta de que el Reino vale la pena.</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="6">
+    <div class="w-head"><h3>El buen samaritano</h3><span class="badge b-manos">Manos</span></div>
+    <div class="texto">Lucas 10:25-37</div>
+    <p class="idea">El Reino se ve en el camino. Jesús invierte la pregunta del intérprete de la ley: no «¿quién es mi prójimo?» sino «¿quién se hizo prójimo?». La parábola no se entiende hasta que se practica — por eso esta semana cierra el bloque con manos.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿A quién paso de largo habitualmente «por el otro lado del camino»?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Identificar a «mi herido en el camino» y hacer algo tangible por él o ella antes de la próxima reunión.</div>
+    </div>
+  </article>
+</section>
+
+<section id="bloque3">
+  <div class="kicker">Bloque 3 · Semanas 7–9</div>
+  <h2>La mesa de Hechos 2</h2>
+  <p class="bloque-intro">Aquí el grupo deja de <em>estudiar</em> la primera iglesia y empieza a <em>serla</em>. Tres semanas, tres prácticas del resumen de Lucas: oración, mesa y bienes en común.</p>
+
+  <article class="week" data-num="7">
+    <div class="w-head"><h3>Perseveraban en las oraciones</h3><span class="badge b-corazon">Corazón</span></div>
+    <div class="texto">Hechos 2:42 · Hechos 4:23-31</div>
+    <p class="idea">Semana de oración real, no de teoría sobre orar: la reunión es 50% oración. Se estudia brevemente cómo oraba la comunidad de Hechos 4 (con la Escritura en los labios y bajo presión) y luego se hace exactamente eso.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Por qué la primera reacción de la iglesia ante la amenaza fue orar juntos y no estrategizar?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Cada miembro recibe el nombre de otro miembro y ora por él o ella cada día, por algo específico que esa persona compartió.</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="8">
+    <div class="w-head"><h3>Partían el pan en las casas</h3><span class="badge b-corazon">Corazón</span></div>
+    <div class="texto">Hechos 2:46</div>
+    <p class="idea">Esta semana la reunión <strong>es</strong> una cena completa en una casa — «con alegría y sencillez de corazón». No hay estudio formal: la mesa misma es la lección. La comunión de los primeros cristianos giraba alrededor de comida real compartida en hogares reales.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>(Durante la cena, sin libreta:) ¿Qué tiene la mesa compartida que no tiene el auditorio?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Invitar a comer a alguien de fuera del grupo — especialmente alguien que come solo.</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="9">
+    <div class="w-head"><h3>Tenían en común todas las cosas</h3><span class="badge b-manos">Manos</span></div>
+    <div class="texto">Hechos 2:44-45 · Hechos 4:32-35</div>
+    <p class="idea">La generosidad de Hechos no era un impuesto sino un reflejo: «vendían sus propiedades... según la necesidad de cada uno». La necesidad mandaba, no el porcentaje. El grupo lo practica en miniatura.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Qué me cuesta más compartir: mi dinero, mi tiempo o mi casa? ¿Por qué?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>El grupo detecta una necesidad real y concreta (dentro o fuera del grupo) y la cubre <em>juntos</em> esta semana.</div>
+    </div>
+  </article>
+</section>
+
+<section id="bloque4">
+  <div class="kicker">Bloque 4 · Semanas 10–12</div>
+  <h2>La toalla: Juan 13</h2>
+  <p class="bloque-intro">El clímax del plan no es un examen sino una toalla. En la última cena, el Maestro se quita el manto, se ciñe la toalla y se arrodilla — y luego dice: «ejemplo os he dado».</p>
+
+  <article class="week" data-num="10">
+    <div class="w-head"><h3>El Maestro de rodillas</h3><span class="badge b-cabeza">Cabeza</span></div>
+    <div class="texto">Juan 13:1-17</div>
+    <p class="idea">Estudio del lavamiento de pies: Juan dice que Jesús, «sabiendo que el Padre le había dado todas las cosas en las manos», se levantó a lavar pies. La seguridad de identidad no lo eximió del servicio — lo habilitó para servir. Y la resistencia de Pedro («no me lavarás los pies jamás») es la nuestra: nos cuesta más dejarnos servir que servir.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Por qué a Pedro le resulta tan ofensivo que Jesús le lave los pies? ¿En qué me parezco?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Dejarse servir: pedir ayuda a alguien esta semana en algo donde normalmente diría «no, yo puedo solo».</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="11">
+    <div class="w-head"><h3>Lavarse los pies hoy</h3><span class="badge b-manos">Manos</span></div>
+    <div class="texto">Juan 13:14-15 · Filipenses 2:5-8</div>
+    <p class="idea">«Vosotros también debéis lavaros los pies los unos a los otros.» La pregunta de esta semana es de traducción: ¿cuál es el equivalente actual del pie sucio — la tarea que da vergüenza, que nadie quiere, que queda por debajo de mi dignidad? Cada miembro lo identifica y lo hace.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>¿Cuál es el servicio que evito no por falta de tiempo sino por orgullo?</div>
+      <div class="celda"><span class="lbl">Práctica de la semana</span>Hacer ese servicio incómodo — el que identificaste en la mesa. Sin anunciarlo en redes, sin esperar gracias.</div>
+    </div>
+  </article>
+
+  <article class="week" data-num="12">
+    <div class="w-head"><h3>Envío y retrospectiva</h3><span class="badge b-corazon">Corazón</span></div>
+    <div class="texto">Mateo 28:18-20</div>
+    <p class="idea">La gran comisión dice «haced discípulos» — el discípulo termina haciendo discípulos. La última reunión combina celebración (una cena, claro) con retrospectiva honesta: ¿qué practicamos, qué nos transformó, qué seguimos haciendo? No es graduación: es el fin del <strong>primer ciclo</strong>.</p>
+    <div class="fila">
+      <div class="celda"><span class="lbl">Pregunta para la mesa</span>De las doce prácticas, ¿cuál se quedó conmigo? ¿Cuál abandoné a los tres días — y por qué?</div>
+      <div class="celda"><span class="lbl">Práctica de cierre</span>Cada miembro nombra a una persona que invitaría al próximo ciclo. El plan se reinicia — con una silla más en la mesa.</div>
+    </div>
+  </article>
+</section>
+
+<section id="voces">
+  <div class="kicker">Profundizar</div>
+  <h2>Panel de cinco voces: ¿por qué Hechos 2:42-47 funciona como currículo?</h2>
+  <p>El corazón del plan está en el bloque 3. Cinco voces examinan el texto fundacional desde sus ángulos.</p>
+
+  <div class="acc">
+    <button class="acc-h" aria-expanded="false"><span><span class="rol">El Exégeta</span>Un resumen programático, no una postal</span><span class="chev"></span></button>
+    <div class="acc-b"><div class="acc-b-inner">
+      <p>Hechos 2:42-47 no es una foto nostálgica: funciona narrativamente como la conclusión del relato de Pentecostés y a la vez inaugura una serie de sumarios programáticos (4:32-35; 5:12-16; 9:31) con los que Lucas destila el ethos de la comunidad. Los cuatro elementos del versículo 42 — enseñanza apostólica, comunión, partimiento del pan, oraciones — articulan la visión teológica de Lucas: una comunidad estructurada alrededor de prácticas concretas.</p>
+      <p>Dicho de otro modo: el texto mismo ya es un currículo. Lucas no dice «creían correctamente»; dice «perseveraban» — un verbo de práctica sostenida, no de comprensión puntual.</p>
+      <p class="cita-pie">Fuente: <a href="https://unasp.emnuvens.com.br/kerygma/article/download/1975/1719" target="_blank" rel="noopener">Revista Kerygma (UNASP)</a></p>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-h" aria-expanded="false"><span><span class="rol">El Teólogo</span>Prácticas constitutivas, no devociones opcionales</span><span class="chev"></span></button>
+    <div class="acc-b"><div class="acc-b-inner">
+      <p>Las cuatro prácticas no son accesorios piadosos sino elementos constitutivos del cristianismo: beber de los testigos directos (enseñanza), participar de la vida común y la fracción del pan, y las oraciones como balanza de lo comunitario. Quitarle una pata a la mesa no deja una mesa más sencilla — deja una mesa que se cae.</p>
+      <p>Por eso un plan de discipulado que sea solo estudio bíblico es teológicamente incompleto: omite tres de las cuatro prácticas que Lucas presenta como fundamento.</p>
+      <p class="cita-pie">Fuente: <a href="https://revistas.uniclaretiana.edu.co/index.php/Biblia/issue/download/0%20Clave%20hermen%C3%A9utica/Cuaderno%207" target="_blank" rel="noopener">Cuadernos Bíblicos Claretianos</a></p>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-h" aria-expanded="false"><span><span class="rol">El Historiador</span>De casa en casa</span><span class="chev"></span></button>
+    <div class="acc-b"><div class="acc-b-inner">
+      <p>La iglesia del primer siglo no tenía templos propios: se reunía «en el templo» (espacio público) y «de casa en casa» (espacio doméstico). El partimiento del pan ocurría en hogares, alrededor de comida real. La casa no era el plan B de la iglesia — era su célula básica durante casi tres siglos.</p>
+      <p>Esto valida la decisión de la semana 8: hacer que la reunión sea literalmente una cena en una casa no es una dinámica creativa, es arqueología viva.</p>
+      <p class="cita-pie">Fuente: <a href="https://revivalministries.org.au/documents/Spanish%20Material/Booklet/La_iglesia_en_las_Casas.pdf" target="_blank" rel="noopener">La Iglesia en las Casas</a></p>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-h" aria-expanded="false"><span><span class="rol">El Pastor</span>El crecimiento no era el proyecto — era el resultado</span><span class="chev"></span></button>
+    <div class="acc-b"><div class="acc-b-inner">
+      <p>El versículo 47 cierra con «el Señor añadía cada día a la iglesia los que habían de ser salvos». David Guzik lo llama la prescripción de Dios para el crecimiento: si la comunidad cuida las prácticas del 42 al 47a, Dios mismo se encarga de hacerla crecer.</p>
+      <p>Esto libera al líder del grupo de la presión de producir resultados. Tu trabajo es diseñar y sostener las prácticas; el fruto no es tu departamento.</p>
+      <p class="cita-pie">Fuente: <a href="https://www.blueletterbible.org/Comm/guzik_david/spanish/StudyGuide_Act/Act_2.cfm" target="_blank" rel="noopener">Enduring Word — David Guzik</a></p>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-h" aria-expanded="false"><span><span class="rol">El Escéptico Honesto</span>La trampa de las doce charlas</span><span class="chev"></span></button>
+    <div class="acc-b"><div class="acc-b-inner">
+      <p>Seamos francos: el 90% de los planes como este se degradan a doce charlas con preguntas retóricas. La práctica semanal se vuelve «tarea opcional», nadie la hace, nadie pregunta, y a la semana 6 el grupo es un club de lectura con oración de cierre.</p>
+      <p>La única defensa es estructural: que la reunión <em>empiece</em> por la práctica de la semana anterior, siempre, sin excepción. Si la práctica no se revisa, no existe. Y una segunda honestidad: ¿comunidad de bienes en el siglo XXI? La semana 9 será incómoda. Bien — si no incomoda, no se parece a Hechos.</p>
+    </div></div>
+  </div>
+</section>
+
+<section id="iteracion">
+  <div class="kicker">Después de la semana 12</div>
+  <h2>El ciclo no termina: discipulado iterativo</h2>
+  <p>La semana 12 no es graduación sino retrospectiva. El discipulado funciona como un ciclo de mejora continua: se planifica el camino, se camina, se revisa con honestidad y se ajusta — y el ciclo se reinicia con una silla más en la mesa. Cada vuelta de la espiral pasa por los mismos pilares, pero más hondo.</p>
+  <div class="ciclo">
+    <div class="paso"><b>Planificar</b>Diseñar el ciclo: textos, preguntas, prácticas.</div>
+    <div class="paso"><b>Practicar</b>Doce semanas de cabeza, corazón y manos.</div>
+    <div class="paso"><b>Revisar</b>Retrospectiva honesta: ¿qué transformó y qué no?</div>
+    <div class="paso"><b>Ajustar</b>Afinar el plan y volver a empezar — con alguien nuevo.</div>
+  </div>
+  <p>La medida del éxito del ciclo no es cuánto aprendió el grupo, sino esta: ¿el discípulo está empezando a hacer discípulos?</p>
+</section>
+
+<section id="fuentes">
+  <div class="kicker">Para seguir leyendo</div>
+  <h2>Fuentes</h2>
+  <ul class="fuentes">
+    <li><a href="https://unasp.emnuvens.com.br/kerygma/article/download/1975/1719" target="_blank" rel="noopener">Revista Kerygma (UNASP)</a> — Hechos 2:42-47 como resumen programático y teología narrativa de Lucas.</li>
+    <li><a href="https://revistas.uniclaretiana.edu.co/index.php/Biblia/issue/download/0%20Clave%20hermen%C3%A9utica/Cuaderno%207" target="_blank" rel="noopener">Cuadernos Bíblicos Claretianos — Primeras comunidades cristianas</a> — las prácticas como elementos constitutivos, no devociones.</li>
+    <li><a href="https://www.blueletterbible.org/Comm/guzik_david/spanish/StudyGuide_Act/Act_2.cfm" target="_blank" rel="noopener">Enduring Word (David Guzik) — Hechos 2</a> — comentario versículo por versículo en español.</li>
+    <li><a href="https://revivalministries.org.au/documents/Spanish%20Material/Booklet/La_iglesia_en_las_Casas.pdf" target="_blank" rel="noopener">La Iglesia en las Casas</a> — la reunión doméstica y el partimiento del pan en los hogares.</li>
+  </ul>
+</section>
+
+<footer>
+  «Ejemplo os he dado, para que como yo os he hecho, vosotros también hagáis.» — Juan 13:15
+</footer>
+
+</main>
+</div>
+
+<script>
+// ===== Hamburger =====
+const btn = document.getElementById('menuBtn');
+const rail = document.getElementById('rail');
+btn.addEventListener('click', () => {
+  const open = rail.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
+});
+rail.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  rail.classList.remove('open');
+  btn.classList.remove('open');
+  btn.setAttribute('aria-expanded', 'false');
+}));
+
+// ===== Scroll-spy =====
+const links = [...rail.querySelectorAll('a[href^="#"]')];
+const byId = {};
+links.forEach(l => byId[l.getAttribute('href').slice(1)] = l);
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const link = byId[e.target.id];
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+document.querySelectorAll('main section, header.hero').forEach(s => {
+  if (s.id) observer.observe(s);
+});
+
+// ===== Accordions =====
+document.querySelectorAll('.acc').forEach(acc => {
+  const head = acc.querySelector('.acc-h');
+  const body = acc.querySelector('.acc-b');
+  head.addEventListener('click', () => {
+    const isOpen = acc.classList.toggle('open');
+    head.setAttribute('aria-expanded', isOpen);
+    body.style.maxHeight = isOpen ? body.scrollHeight + 'px' : '0';
+  });
+});
+</script>
+
+</body>
+</html>

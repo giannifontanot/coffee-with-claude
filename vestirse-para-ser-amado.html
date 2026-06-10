@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vestirse para ser amado — El joven rico y el rey que danzó</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel:#f6f1e7;
+    --papel-hondo:#efe7d8;
+    --tinta:#33302a;
+    --tinta-suave:#5d574c;
+    --terracota:#b3552e;
+    --terracota-honda:#8e4124;
+    --oro-viejo:#9c7c3c;
+    --linea:#d9cfba;
+    --sombra:rgba(60,50,35,.12);
+    --base:1.2rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    font-family:'Spectral',Georgia,serif;
+    font-size:var(--base);
+    line-height:1.75;
+    color:var(--tinta);
+    background:var(--papel);
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+    pointer-events:none;z-index:1;
+  }
+
+  /* ---------- barra de progreso ---------- */
+  #progreso{
+    position:fixed;top:0;left:0;height:4px;width:0;
+    background:linear-gradient(90deg,var(--terracota),var(--oro-viejo));
+    z-index:100;transition:width .1s linear;
+  }
+
+  /* ---------- riel lateral ---------- */
+  .riel{
+    position:fixed;top:50%;left:1.4rem;transform:translateY(-50%);
+    z-index:50;max-width:230px;
+  }
+  .riel ul{list-style:none}
+  .riel a{
+    display:block;padding:.32rem .6rem .32rem .9rem;
+    font-size:.78rem;letter-spacing:.02em;
+    color:var(--tinta-suave);text-decoration:none;
+    border-left:2px solid var(--linea);
+    transition:color .25s,border-color .25s;
+    line-height:1.35;
+  }
+  .riel a:hover{color:var(--terracota)}
+  .riel a.activo{
+    color:var(--terracota-honda);
+    border-left-color:var(--terracota);
+    font-weight:600;
+  }
+
+  /* ---------- hamburguesa ---------- */
+  #btnMenu{
+    display:none;position:fixed;top:1rem;left:1rem;z-index:90;
+    background:var(--papel);border:1px solid var(--linea);
+    border-radius:8px;width:46px;height:46px;
+    font-size:1.4rem;color:var(--terracota-honda);cursor:pointer;
+    box-shadow:0 2px 8px var(--sombra);
+  }
+  #panelMovil{
+    position:fixed;top:0;left:0;bottom:0;width:min(310px,84vw);
+    background:var(--papel-hondo);z-index:95;
+    transform:translateX(-105%);transition:transform .3s ease;
+    padding:4.2rem 1.4rem 2rem;overflow-y:auto;
+    box-shadow:4px 0 18px var(--sombra);
+  }
+  #panelMovil.abierto{transform:translateX(0)}
+  #panelMovil ul{list-style:none}
+  #panelMovil a{
+    display:block;padding:.55rem .4rem;
+    color:var(--tinta);text-decoration:none;
+    font-size:.95rem;border-bottom:1px solid var(--linea);
+  }
+  #panelMovil a:active{color:var(--terracota)}
+  #cerrarMenu{
+    position:absolute;top:.9rem;right:.9rem;
+    background:none;border:none;font-size:1.5rem;
+    color:var(--tinta-suave);cursor:pointer;
+  }
+  @media (max-width:1179px){
+    .riel{display:none}
+    #btnMenu{display:block}
+  }
+  @media (min-width:1180px){
+    #btnMenu,#panelMovil{display:none}
+  }
+
+  /* ---------- estructura ---------- */
+  main{
+    max-width:760px;margin:0 auto;
+    padding:0 1.4rem 6rem;position:relative;z-index:2;
+  }
+  @media (min-width:1180px){ main{margin-left:max(290px,calc(50% - 380px))} }
+  @media (min-width:1500px){ main{margin:0 auto} }
+
+  /* ---------- portada ---------- */
+  header.portada{
+    min-height:78vh;display:flex;flex-direction:column;
+    justify-content:center;padding:5rem 0 3rem;
+    border-bottom:1px solid var(--linea);
+  }
+  .sobre{
+    font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--oro-viejo);margin-bottom:1.3rem;font-weight:500;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:clamp(2.3rem,5.6vw,3.7rem);
+    font-weight:560;line-height:1.12;
+    letter-spacing:-.012em;color:var(--tinta);
+  }
+  h1 em{font-style:italic;color:var(--terracota-honda)}
+  .bajada{
+    margin-top:1.6rem;font-size:1.12rem;
+    color:var(--tinta-suave);max-width:38rem;
+    font-weight:300;line-height:1.7;
+  }
+  .versos-portada{
+    margin-top:2.4rem;display:flex;gap:1.2rem;flex-wrap:wrap;
+  }
+  .verso-chip{
+    font-size:.82rem;letter-spacing:.05em;
+    border:1px solid var(--linea);border-radius:999px;
+    padding:.3rem .95rem;color:var(--tinta-suave);
+    background:rgba(255,255,255,.35);
+  }
+
+  /* ---------- secciones ---------- */
+  section{padding:3.6rem 0 1rem;border-bottom:1px solid var(--linea)}
+  section:last-of-type{border-bottom:none}
+  h2{
+    font-family:'Fraunces',serif;
+    font-size:clamp(1.55rem,3.4vw,2.15rem);
+    font-weight:540;line-height:1.22;margin-bottom:.4rem;
+    color:var(--tinta);letter-spacing:-.008em;
+  }
+  .num{
+    display:block;font-family:'Fraunces',serif;font-style:italic;
+    font-size:.95rem;color:var(--terracota);margin-bottom:.5rem;
+    letter-spacing:.08em;
+  }
+  h3{
+    font-family:'Fraunces',serif;font-weight:560;
+    font-size:1.22rem;margin:2.2rem 0 .7rem;color:var(--terracota-honda);
+  }
+  p{margin:1.05rem 0}
+  em{font-style:italic}
+  strong{font-weight:600;color:var(--tinta)}
+
+  .capital::first-letter{
+    font-family:'Fraunces',serif;
+    float:left;font-size:3.9rem;line-height:.82;
+    padding:.36rem .6rem 0 0;color:var(--terracota);
+    font-weight:600;
+  }
+
+  blockquote.pull{
+    font-family:'Fraunces',serif;font-style:italic;
+    font-size:clamp(1.25rem,2.8vw,1.55rem);line-height:1.45;
+    color:var(--terracota-honda);
+    margin:2.2rem 0;padding:0 0 0 1.4rem;
+    border-left:3px solid var(--terracota);
+    font-weight:480;
+  }
+
+  /* ---------- repisa de escritura ---------- */
+  .repisa{
+    background:var(--papel-hondo);
+    border:1px solid var(--linea);
+    border-radius:12px;
+    padding:1.3rem 1.5rem;margin:1.8rem 0;
+    box-shadow:inset 0 2px 6px rgba(60,50,35,.07);
+  }
+  .repisa .cita-texto{
+    font-style:italic;font-size:1.05rem;line-height:1.7;
+    color:var(--tinta);
+  }
+  .repisa .cita-ref{
+    display:block;margin-top:.7rem;font-size:.82rem;
+    letter-spacing:.12em;text-transform:uppercase;
+    color:var(--oro-viejo);font-style:normal;font-weight:500;
+  }
+
+  /* ---------- tabla de contraste ---------- */
+  .contraste{
+    display:grid;grid-template-columns:1fr 1fr;gap:0;
+    border:1px solid var(--linea);border-radius:12px;
+    overflow:hidden;margin:2rem 0;font-size:.98rem;
+  }
+  .contraste>div{padding:1rem 1.2rem;line-height:1.55}
+  .contraste .cab{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;
+    background:var(--papel-hondo);color:var(--terracota-honda);
+    border-bottom:1px solid var(--linea);
+  }
+  .contraste .celda{border-bottom:1px solid var(--linea)}
+  .contraste .celda:nth-child(odd){border-right:1px solid var(--linea)}
+  .contraste .cab:first-child{border-right:1px solid var(--linea)}
+  .contraste .celda:nth-last-child(-n+2){border-bottom:none}
+  @media (max-width:560px){
+    .contraste{font-size:.9rem}
+    .contraste>div{padding:.75rem .8rem}
+  }
+
+  /* ---------- acordeones ---------- */
+  details.voz{
+    border:1px solid var(--linea);border-radius:12px;
+    margin:1rem 0;background:rgba(255,255,255,.4);
+    overflow:hidden;
+  }
+  details.voz summary{
+    list-style:none;cursor:pointer;
+    padding:1.05rem 1.3rem;
+    font-family:'Fraunces',serif;font-weight:560;font-size:1.08rem;
+    color:var(--tinta);display:flex;align-items:center;gap:.7rem;
+    transition:background .2s;
+  }
+  details.voz summary::-webkit-details-marker{display:none}
+  details.voz summary:hover{background:var(--papel-hondo)}
+  details.voz summary::before{
+    content:"+";font-family:'Fraunces',serif;
+    color:var(--terracota);font-size:1.3rem;font-weight:400;
+    width:1.1rem;flex-shrink:0;text-align:center;
+    transition:transform .25s;
+  }
+  details.voz[open] summary::before{content:"−"}
+  details.voz .rol{
+    font-family:'Spectral',serif;font-weight:400;font-style:italic;
+    font-size:.85rem;color:var(--tinta-suave);margin-left:auto;
+    text-align:right;
+  }
+  details.voz .cuerpo{padding:0 1.3rem 1.2rem;font-size:1.02rem}
+
+  /* ---------- pregunta de grupo ---------- */
+  .pregunta{
+    background:linear-gradient(135deg,rgba(179,85,46,.08),rgba(156,124,60,.08));
+    border:1px solid var(--linea);border-left:4px solid var(--terracota);
+    border-radius:0 12px 12px 0;
+    padding:1.4rem 1.6rem;margin:2.2rem 0;
+  }
+  .pregunta .etiqueta{
+    font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--terracota-honda);font-weight:600;margin-bottom:.5rem;
+  }
+  .pregunta p{
+    font-family:'Fraunces',serif;font-style:italic;
+    font-size:1.18rem;line-height:1.5;margin:0;color:var(--tinta);
+  }
+
+  /* ---------- citas finales ---------- */
+  .fuentes{
+    margin-top:1.6rem;font-size:.85rem;color:var(--tinta-suave);
+    border-top:1px dashed var(--linea);padding-top:.8rem;
+  }
+  .fuentes span{letter-spacing:.04em}
+
+  /* ---------- cierre ---------- */
+  footer.cierre{
+    text-align:center;padding:3.5rem 0 1rem;
+    color:var(--tinta-suave);font-size:.9rem;font-style:italic;
+  }
+  footer.cierre .orn{
+    font-size:1.4rem;color:var(--terracota);
+    font-style:normal;letter-spacing:.4em;margin-bottom:.8rem;
+  }
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:none}
+
+  /* ---------- responsive texto ---------- */
+  @media (max-width:760px){
+    body{font-size:1.12rem}
+    main{padding:0 1.15rem 4.5rem}
+    header.portada{min-height:64vh;padding-top:4.5rem}
+  }
+
+  /* ---------- impresión ---------- */
+  @media print{
+    body::before,#progreso,.riel,#btnMenu,#panelMovil{display:none!important}
+    body{background:#fff;font-size:11.5pt;color:#000}
+    main{max-width:100%;margin:0;padding:0}
+    section{page-break-inside:avoid;border-bottom:none;padding:1.2rem 0}
+    details.voz{border:1px solid #999}
+    details.voz .cuerpo{display:block;padding:0 1rem 1rem}
+    .reveal{opacity:1;transform:none}
+    header.portada{min-height:auto;padding:1rem 0 2rem}
+    a{color:#000;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+
+<div id="progreso"></div>
+
+<button id="btnMenu" aria-label="Abrir índice">☰</button>
+<nav id="panelMovil" aria-label="Índice móvil">
+  <button id="cerrarMenu" aria-label="Cerrar índice">✕</button>
+  <ul>
+    <li><a href="#s1">1 · Dos hombres, dos vestuarios</a></li>
+    <li><a href="#s2">2 · El disfraz que nace del amor</a></li>
+    <li><a href="#s3">3 · La mirada que atraviesa la ropa</a></li>
+    <li><a href="#s4">4 · ¿Y si me visto para Dios?</a></li>
+    <li><a href="#s5">5 · David: el rey que se desvestía</a></li>
+    <li><a href="#s6">6 · Cinco voces alrededor de la mesa</a></li>
+    <li><a href="#s7">7 · ¿Y el domingo en la mañana?</a></li>
+    <li><a href="#s8">8 · Entrar ya recibido</a></li>
+  </ul>
+</nav>
+
+<nav class="riel" aria-label="Índice">
+  <ul>
+    <li><a href="#s1">1 · Dos hombres, dos vestuarios</a></li>
+    <li><a href="#s2">2 · El disfraz que nace del amor</a></li>
+    <li><a href="#s3">3 · La mirada que atraviesa la ropa</a></li>
+    <li><a href="#s4">4 · ¿Y si me visto para Dios?</a></li>
+    <li><a href="#s5">5 · David: el rey que se desvestía</a></li>
+    <li><a href="#s6">6 · Cinco voces alrededor de la mesa</a></li>
+    <li><a href="#s7">7 · ¿Y el domingo en la mañana?</a></li>
+    <li><a href="#s8">8 · Entrar ya recibido</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<header class="portada">
+  <div class="sobre">Estudio bíblico · Marcos 10 · 1 y 2 Samuel</div>
+  <h1>Vestirse para ser amado<br><em>El joven rico y el rey que danzó</em></h1>
+  <p class="bajada">Dos hombres delante de Dios. Uno llegó con todo puesto — la riqueza, el currículum, la ropa fina — y se fue triste. El otro se quitó hasta el manto real y danzó. Este estudio pregunta por qué, y qué dice eso de nosotros cada domingo en la mañana.</p>
+  <div class="versos-portada">
+    <span class="verso-chip">Marcos 10:17–22</span>
+    <span class="verso-chip">1 Samuel 16:7</span>
+    <span class="verso-chip">2 Samuel 6:14–22</span>
+  </div>
+</header>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <span class="num">Primera parte</span>
+  <h2>Dos hombres, dos vestuarios</h2>
+  <p class="capital reveal">Hay dos maneras de pararse delante de Dios, y la Escritura nos dejó un retrato de cada una. La primera es la del joven rico: llegó corriendo, se arrodilló, y traía puesto todo lo que un hombre puede ponerse — fortuna, posición, una vida entera de mandamientos cumplidos desde la juventud. Llegó <em>vestido</em>. La segunda es la de David: el día más glorioso de su reinado, cuando el arca de Dios entraba por fin a Jerusalén, el rey se quitó las vestiduras reales y danzó delante del Señor con un simple efod de lino — la ropa de un siervo cualquiera. Llegó <em>desvestido</em>.</p>
+  <p class="reveal">Uno se cubrió y se fue triste. El otro se descubrió y danzó con toda su fuerza. Esa diferencia no es un detalle de vestuario: es la diferencia entre dos teologías del amor, dos maneras de creer cómo se consigue ser amado por Dios. Y casi todos nosotros, sin darnos cuenta, vivimos en una de las dos.</p>
+  <blockquote class="pull reveal">Uno llegó con todo puesto y se fue vacío. El otro se quitó todo y se fue lleno.</blockquote>
+  <div class="fuentes"><span>Escrituras: Marcos 10:17–22 · 2 Samuel 6:14</span></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <span class="num">Segunda parte</span>
+  <h2>El disfraz que nace del amor</h2>
+  <p class="capital reveal">En algún momento de la niñez, casi todos sacamos una conclusión silenciosa: que tal como somos — con nuestros miedos, torpezas y cicatrices — quizá no alcanzamos para que alguien nos quiera y se quede. Así que, por las dudas, nos pusimos un disfraz. Y aquí está lo conmovedor: el disfraz no nace de la vanidad, sino del amor. Nos cubrimos justamente porque queremos ser elegidos. La ropa cara no es soberbia pura; muchas veces es una súplica bien planchada: <em>«así, tal vez, sea más fácil amarme»</em>.</p>
+  <p class="reveal">El joven rico es el retrato bíblico de ese disfraz. Mira su entrada en escena: corre, se arrodilla, dice «Maestro bueno» — y enseguida presenta su currículum: «todo esto lo he guardado desde mi juventud». Es el comportamiento de alguien que busca aprobación, que necesita ser visto y validado. Su riqueza hacía lo mismo que hace nuestra mejor ropa: cubrir las cicatrices, las dudas, la sospecha de no ser suficiente. Capas y capas puestas para hacer menos difícil ser amado.</p>
+  <p class="reveal">Pero el disfraz tiene una trampa cruel: hace exactamente lo contrario de lo que promete. Si alguien me quiere mientras llevo la máscara puesta, una parte de mí siempre lo sabrá — <em>no me aman a mí, aman al personaje</em>. Y eso deja más solo, no menos. Porque el amor verdadero necesita una sola cosa que la máscara prohíbe: poder ver lo que hay detrás.</p>
+  <blockquote class="pull reveal">La máscara que nos ponemos para ser amados es justo lo que impide el amor.</blockquote>
+  <div class="fuentes"><span>Escrituras: Marcos 10:17, 20 · Génesis 3:7–10</span></div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <span class="num">Tercera parte</span>
+  <h2>La mirada que atraviesa la ropa</h2>
+  <p class="capital reveal">Y entonces el Evangelio de Marcos nos regala uno de sus versículos más devastadores. Antes de pedirle nada, antes de que el joven respondiera nada, el texto dice:</p>
+  <div class="repisa reveal">
+    <p class="cita-texto">«Entonces Jesús, mirándole, le amó, y le dijo: Una cosa te falta: anda, vende todo lo que tienes, y dalo a los pobres, y tendrás tesoro en el cielo; y ven, sígueme, tomando tu cruz.»</p>
+    <span class="cita-ref">Marcos 10:21 · RVR1960</span>
+  </div>
+  <p class="reveal">Detente en eso: es la <strong>única persona en todo el Evangelio de Marcos</strong> de quien se dice explícitamente que Jesús la amó. El hombre que se vestía para ser amado <em>ya tenía el amor que buscaba</em>. Jesús lo miró — a través de la ropa fina, a través del currículum, a través de toda la cobertura — y lo amó. No después de que vendiera todo. No a condición de nada. Lo amó mientras todavía estaba disfrazado.</p>
+  <p class="reveal">Por eso la petición de Jesús no era un castigo, era una invitación: «vende todo lo que tienes» significaba, en el fondo, <em>quítate la coraza — ya no la necesitas, ya eres amado</em>. Jesús no le estaba quitando su seguridad; le estaba ofreciendo la única seguridad que la ropa nunca pudo darle: ser conocido del todo y no ser rechazado.</p>
+  <p class="reveal">Y aquí está la tragedia exquisita del pasaje: el que se cubría para ser amado no soportó la idea de ser amado sin cobertura. Llevaba tanto tiempo <em>ganándose</em> el amor que no supo qué hacer cuando se lo <em>regalaron</em>. Se fue triste — vestido y solo.</p>
+  <blockquote class="pull reveal">No se fue triste solo por sus riquezas; se fue triste porque eligió seguir ganándose lo que se le estaba regalando.</blockquote>
+  <div class="fuentes"><span>Escrituras: Marcos 10:21–22 · Lucas 22:35</span></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <span class="num">Cuarta parte</span>
+  <h2>¿Y si me visto para Dios?</h2>
+  <p class="capital reveal">Aquí surge una pregunta honesta, y vale la pena hacerla sin miedo: si vestirse caro para aparentar delante de las personas es un disfraz que sale mal… ¿qué tal vestirse bien para Dios? ¿Qué tal si uno se arregla el domingo para ir al servicio? ¿No es eso también vestirse para ser amado — pero ahora con la Persona correcta?</p>
+  <p class="reveal">La pregunta tiene una trampa hermosa escondida, y la respuesta nos la dio Dios mismo el día que escogió a David. Samuel había llegado a Belén buscando al próximo rey entre los hijos de Isaí. Vio a Eliab — alto, presentable, con porte de rey — y pensó que era él. Y Dios lo corrigió:</p>
+  <div class="repisa reveal">
+    <p class="cita-texto">«No mires a su parecer, ni a lo grande de su estatura, porque yo lo desecho; porque Jehová no mira lo que mira el hombre; pues el hombre mira lo que está delante de sus ojos, pero Jehová mira el corazón.»</p>
+    <span class="cita-ref">1 Samuel 16:7 · RVR1960</span>
+  </div>
+  <p class="reveal">Esto cambia todo el problema. Con las personas, el disfraz <em>funciona a medias</em> — engaña por un tiempo, consigue admiración prestada. Pero con Dios el disfraz ni siquiera existe como opción: <strong>la ropa es opaca para los hombres, pero transparente para Él</strong>. No se puede impresionar a quien ya vio el corazón. No se puede cubrir una cicatriz ante Aquel que estaba presente cuando se hizo la herida.</p>
+  <p class="reveal">Y nota la ironía del contexto: ese versículo se pronunció el día que Dios escogió a David — el hijo que ni siquiera habían invitado a la mesa, el menor, el que olía a oveja y llegó directo del campo. David fue elegido precisamente <em>sin</em> el vestuario. Su historia con Dios empezó con esa lección: <em>a mí no me conquistas con ropa</em>.</p>
+  <div class="fuentes"><span>Escrituras: 1 Samuel 16:1–13 · Salmo 139:1–4 · Hebreos 4:13</span></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <span class="num">Quinta parte</span>
+  <h2>David: el rey que se desvestía delante de Dios</h2>
+  <p class="capital reveal">Y David aprendió la lección de por vida. Si sigues su historia, descubres un patrón asombroso que se repite en sus momentos decisivos: <strong>delante de Dios, David se quitaba ropa, no se la ponía</strong>. Tres escenas lo demuestran.</p>
+
+  <h3 class="reveal">Escena 1 · Elegido sin vestuario</h3>
+  <p class="reveal">Ya la vimos: el día de su unción, David no estaba ni presente. No hubo preparación, ni ropa de gala, ni discurso ensayado. Llegó del campo tal como era — y así, tal como era, fue ungido rey (1 Samuel 16:11–13). Su relación con Dios nació sin disfraz, y él nunca lo olvidó.</p>
+
+  <h3 class="reveal">Escena 2 · La armadura prestada</h3>
+  <p class="reveal">Antes de enfrentar a Goliat, Saúl vistió a David con su propia armadura real: casco de bronce, coraza, espada del rey. Era la cobertura más prestigiosa del reino — el equivalente de la ropa más cara. Y David se la quitó:</p>
+  <div class="repisa reveal">
+    <p class="cita-texto">«Y David dijo a Saúl: Yo no puedo andar con esto, porque nunca lo practiqué. Y David echó de sí aquellas cosas.»</p>
+    <span class="cita-ref">1 Samuel 17:39 · RVR1960</span>
+  </div>
+  <p class="reveal">«Echó de sí aquellas cosas.» David entendió algo que el joven rico nunca entendió: la cobertura prestada no protege — estorba. Fue a la batalla como lo que era, un pastor con una honda, y la victoria fue de Dios. El joven rico no pudo soltar su armadura ni cuando el mismo Jesús se lo pidió; David soltó la del rey sin que nadie se lo pidiera.</p>
+
+  <h3 class="reveal">Escena 3 · El efod de lino</h3>
+  <p class="reveal">Y la escena culminante. Años después, ya rey consolidado, David trae el arca de Dios a Jerusalén — el día más glorioso de su reinado, el momento perfecto para el vestuario completo: corona, manto, todo el protocolo real. Y David hace exactamente lo contrario:</p>
+  <div class="repisa reveal">
+    <p class="cita-texto">«Y David danzaba con toda su fuerza delante de Jehová; y estaba David vestido con un efod de lino.»</p>
+    <span class="cita-ref">2 Samuel 6:14 · RVR1960</span>
+  </div>
+  <p class="reveal">El efod de lino era ropa de siervo del templo — lo que vestía un levita cualquiera, no un monarca. David se despojó de las vestiduras reales para adorar. Y su esposa Mical, hija de Saúl, lo despreció por eso: «¡Cuán honrado ha quedado hoy el rey de Israel, descubriéndose hoy delante de las criadas… como se descubre cualquiera de los vulgares!» (2 Samuel 6:20). Mical pensaba como el joven rico: la dignidad está en la cobertura. Y la respuesta de David es la tesis entera de este estudio:</p>
+  <div class="repisa reveal">
+    <p class="cita-texto">«Fue delante de Jehová… Por tanto, danzaré delante de Jehová. Y aun me haré más vil que esta vez, y seré bajo ante mis propios ojos; y delante de las criadas que has dicho, delante de ellas seré honrado.»</p>
+    <span class="cita-ref">2 Samuel 6:21–22 · RVR1960</span>
+  </div>
+  <p class="reveal">¿Reconoces el verbo que le falta al español? David se <em>humildó</em>: eligió bajarse, eligió quedar visible delante de Aquel que ya lo veía. No fue humillado por otros — se humildó él mismo, como acto libre de adoración. Lo que en el joven rico fue imposible («no puedo soltar mis capas»), en David fue danza.</p>
+
+  <div class="contraste reveal">
+    <div class="cab">El joven rico</div>
+    <div class="cab">David</div>
+    <div class="celda">Llegó con todo puesto: riqueza, currículum, posición</div>
+    <div class="celda">Fue elegido recién llegado del campo, oliendo a oveja</div>
+    <div class="celda">No pudo soltar su cobertura ni a pedido de Jesús</div>
+    <div class="celda">Echó de sí la armadura del rey sin que nadie se lo pidiera</div>
+    <div class="celda">Se vestía para hacerse digno de amor</div>
+    <div class="celda">Se desvestía porque ya se sabía amado</div>
+    <div class="celda">Quedó anónimo: «un hombre rico»</div>
+    <div class="celda">Su nombre quedó escrito: «un hombre conforme al corazón de Dios»</div>
+    <div class="celda">Se fue triste, vestido y solo</div>
+    <div class="celda">Danzó con toda su fuerza, descubierto y lleno</div>
+  </div>
+  <div class="fuentes"><span>Escrituras: 1 Samuel 16:11–13 · 1 Samuel 17:38–40 · 2 Samuel 6:14–22 · Hechos 13:22</span></div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <span class="num">Sexta parte</span>
+  <h2>Cinco voces alrededor de la mesa</h2>
+  <p class="reveal">Como en nuestros otros estudios, invitamos al panel de cinco a examinar la tesis: <em>el joven rico se vestía para ser amado; David se desvestía porque ya se sabía amado.</em></p>
+
+  <details class="voz reveal">
+    <summary>El exégeta <span class="rol">el texto en su idioma</span></summary>
+    <div class="cuerpo">
+      <p>Dos detalles del griego y el hebreo sostienen la lectura. En Marcos 10:21, el verbo es <em>ēgapēsen</em> (ἠγάπησεν) — amor <em>ágape</em>, el amor de entrega, y en aoristo: un acto puntual y deliberado de Jesús, no un sentimiento difuso. Marcos, el evangelio más austero en emociones, se detiene a registrarlo solo aquí. Y en 2 Samuel 6:22, David dice <em>unqalloti</em> — «me haré aún más ligero, más pequeño» — de la raíz <em>qalal</em>, lo opuesto exacto de <em>kavod</em>, la palabra para «gloria» que literalmente significa «peso». David renuncia voluntariamente al peso de la gloria humana delante del Dios cuya gloria llenaba el arca. El contraste léxico es deliberado en el texto: Mical habla de honra; David habla de hacerse liviano.</p>
+    </div>
+  </details>
+
+  <details class="voz reveal">
+    <summary>El teólogo <span class="rol">la doctrina detrás</span></summary>
+    <div class="cuerpo">
+      <p>Lo que está en juego es la diferencia entre justicia propia y gracia. El joven rico opera bajo lógica de mérito: el amor de Dios como salario («¿qué haré para heredar?»). David opera bajo lógica de elección previa: fue ungido antes de toda hazaña, amado antes de todo logro. Por eso uno acumula coberturas y el otro puede soltarlas. La ropa del domingo plantea la misma disyuntiva en miniatura: si me visto para <em>obtener</em> aceptación, sigo en Marcos 10; si me visto para <em>honrar</em> a quien ya me aceptó, estoy en 2 Samuel 6. La prenda puede ser idéntica; el evangelio que hay debajo es opuesto. Romanos 5:8 es la línea divisoria: «siendo aún pecadores, Cristo murió por nosotros» — el amor llega antes que el vestuario.</p>
+    </div>
+  </details>
+
+  <details class="voz reveal">
+    <summary>El historiador <span class="rol">el mundo de entonces</span></summary>
+    <div class="cuerpo">
+      <p>En el mundo antiguo, la ropa <em>era</em> identidad pública de un modo que hoy apenas imaginamos. El manto real, el efod, la túnica del rico: cada prenda declaraba rango, y cambiarse de ropa era cambiar de estatus social ante todos. Por eso el gesto de David escandalizó a Mical — hija de un rey que entendía la monarquía al estilo de las naciones vecinas, donde el monarca jamás se rebajaba en público. Y por eso la riqueza del joven era más que dinero: en la Judea del siglo I se leía como señal visible del favor de Dios. De ahí el asombro de los discípulos cuando Jesús dijo que era difícil que un rico entrara al reino: Jesús estaba diciendo que el vestuario que todos leían como aprobación divina podía ser exactamente lo que estorbaba.</p>
+    </div>
+  </details>
+
+  <details class="voz reveal">
+    <summary>El pastor <span class="rol">la vida de la congregación</span></summary>
+    <div class="cuerpo">
+      <p>Cuidado con convertir esta enseñanza en una nueva ley de vestimenta — en ambas direcciones. He visto congregaciones donde el traje es obligatorio y la pobreza se siente juzgada; y he visto otras donde lo informal se volvió otro uniforme, y el que llega de corbata es el mirado raro. Ambas cometieron el error de Mical: leer el corazón por la ropa. La aplicación pastoral es interior: que cada uno se pregunte el domingo en la mañana, frente al armario, <em>¿para quién me estoy vistiendo, y qué creo que voy a conseguir con esto?</em> Y la segunda aplicación es comunitaria: ser una iglesia donde alguien pueda llegar sin coberturas — con su cicatriz visible — y encuentre ojos que no se espantan. Si el que se descubre es despreciado, hacemos de Mical; si es recibido, hacemos de Cristo.</p>
+    </div>
+  </details>
+
+  <details class="voz reveal">
+    <summary>El escéptico honesto <span class="rol">las preguntas incómodas</span></summary>
+    <div class="cuerpo">
+      <p>Tres objeciones de buena fe. Primera: ¿no es esto leer demasiado? El texto no dice que el joven «se vestía para ser amado»; eso es inferencia psicológica. Respuesta justa: es inferencia, sí, pero anclada en conducta textual — la carrera, la rodilla, el currículum recitado son señales de búsqueda de aprobación que el propio relato registra. Segunda: David también falló — el mismo rey del efod luego usó su poder para cubrir su pecado con Betsabé, y mandó al frente a Urías para tapar la cicatriz. Cierto, y eso fortalece la tesis: cuando David se cubrió, se pudrió por dentro (Salmo 32:3–4), y solo sanó cuando volvió a descubrirse: «mi pecado te declaré, y no encubrí mi iniquidad» (Salmo 32:5). Tercera: ¿entonces da igual ir al culto en piyama? No — la conclusión no es que la ropa dé igual, sino que la ropa no es moneda. La reverencia existe; lo que no existe es la compra.</p>
+    </div>
+  </details>
+  <div class="fuentes"><span>Escrituras: Marcos 10:23–27 · Salmo 32:3–5 · Romanos 5:8 · 2 Samuel 11–12</span></div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <span class="num">Séptima parte</span>
+  <h2>¿Y el domingo en la mañana?</h2>
+  <p class="capital reveal">Entonces, ¿vestirse bien para ir al servicio está mal? No — pero la pregunta correcta nunca fue sobre la prenda, sino sobre el motivo. La misma camisa planchada puede ser dos cosas opuestas:</p>
+  <p class="reveal"><strong>Puede ser reverencia.</strong> Como quien se arregla para una cita con alguien que ama — no para conseguir su amor, sino para celebrarlo. Esa ropa no cubre nada; honra algo. David también la entendía: el mismo rey que danzó en efod organizó con esplendor el culto del templo. La reverencia adorna la fiesta sin pretender comprar la entrada.</p>
+  <p class="reveal"><strong>O puede ser cobertura.</strong> Si en el fondo me visto para que Dios — o la congregación — me apruebe; si la ropa del domingo es la versión religiosa del currículum del joven rico, entonces llegué al único lugar del universo donde el truco no funciona. Dios ya vio las cicatrices. Estaba presente cuando se hicieron. Y aun viéndolas todas, amó primero.</p>
+  <div class="repisa reveal">
+    <p class="cita-texto">«Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros.»</p>
+    <span class="cita-ref">Romanos 5:8 · RVR1960</span>
+  </div>
+  <blockquote class="pull reveal">En la casa de Dios uno no se viste para entrar — entra porque ya fue recibido.</blockquote>
+  <div class="pregunta reveal">
+    <div class="etiqueta">Para conversar en grupo</div>
+    <p>El domingo en la mañana, frente al armario: ¿qué me estoy poniendo para ser amado — y qué necesitaría creer del amor de Dios para poder quitármelo?</p>
+  </div>
+  <div class="fuentes"><span>Escrituras: Romanos 5:8 · Santiago 2:1–5 · Isaías 61:10</span></div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <span class="num">Octava parte</span>
+  <h2>Entrar ya recibido</h2>
+  <p class="capital reveal">Queda un último giro, y es el más hermoso. La Biblia no termina diciendo que la ropa es mala — termina diciendo que hay una ropa que no se compra ni se plancha: se regala. «Me vistió con vestiduras de salvación, me rodeó de manto de justicia» (Isaías 61:10). El padre del hijo pródigo no esperó a que el muchacho se aseara: lo abrazó oliendo a chiquero, y <em>después</em> pidió el mejor vestido — no como condición del abrazo, sino como consecuencia (Lucas 15:20–22).</p>
+  <p class="reveal">Ese es el orden del evangelio, y es exactamente el orden que el joven rico no pudo creer: primero la mirada que ama, después el vestido. Él quiso traer el vestido puesto para merecer la mirada — y se perdió las dos cosas. David lo entendió al revés y por eso pudo danzar: el que ya fue mirado con amor no necesita capas; puede hacerse liviano.</p>
+  <p class="reveal">Y quizá por eso la historia más antigua que tenemos sobre nosotros empieza donde empieza: <em>«estaban ambos desnudos, y no se avergonzaban»</em> (Génesis 2:25). La vergüenza vino después; la ropa llegó con el esconderse. Quitarse el disfraz delante de Dios no es perder dignidad. Es volver a casa.</p>
+  <div class="fuentes"><span>Escrituras: Isaías 61:10 · Lucas 15:20–22 · Génesis 2:25 · Apocalipsis 3:17–18</span></div>
+</section>
+
+<footer class="cierre">
+  <div class="orn">❧ ❧ ❧</div>
+  <p>Serie de estudios · «El muro invisible» y «El mono que se viste, el ave que se muestra» son sus compañeros de lectura.</p>
+</footer>
+
+</main>
+
+<script>
+(function(){
+  // barra de progreso
+  var prog = document.getElementById('progreso');
+  function actualizarProgreso(){
+    var h = document.documentElement;
+    var total = h.scrollHeight - h.clientHeight;
+    prog.style.width = (total>0 ? (h.scrollTop/total)*100 : 0) + '%';
+  }
+  window.addEventListener('scroll', actualizarProgreso, {passive:true});
+  actualizarProgreso();
+
+  // scroll-spy del riel
+  var enlaces = document.querySelectorAll('.riel a');
+  var secciones = document.querySelectorAll('section[id]');
+  var mapa = {};
+  enlaces.forEach(function(a){ mapa[a.getAttribute('href').slice(1)] = a; });
+  var spy = new IntersectionObserver(function(entradas){
+    entradas.forEach(function(e){
+      if(e.isIntersecting){
+        enlaces.forEach(function(a){ a.classList.remove('activo'); });
+        var a = mapa[e.target.id];
+        if(a) a.classList.add('activo');
+      }
+    });
+  }, {rootMargin:'-35% 0px -55% 0px'});
+  secciones.forEach(function(s){ spy.observe(s); });
+
+  // reveal al hacer scroll
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reveals = document.querySelectorAll('.reveal');
+  if(reduceMotion){
+    reveals.forEach(function(el){ el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function(entradas){
+      entradas.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+      });
+    }, {threshold:.12});
+    reveals.forEach(function(el){ obs.observe(el); });
+  }
+
+  // menú móvil
+  var btn = document.getElementById('btnMenu');
+  var panel = document.getElementById('panelMovil');
+  var cerrar = document.getElementById('cerrarMenu');
+  btn.addEventListener('click', function(){ panel.classList.add('abierto'); });
+  cerrar.addEventListener('click', function(){ panel.classList.remove('abierto'); });
+  panel.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ panel.classList.remove('abierto'); });
+  });
+})();
+</script>
+
+</body>
+</html>
