@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ver antes de arreglar — Marcos 2 y el arte de mirar a una persona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3e8cf;
+    --paper-2:#eee0c1;
+    --paper-card:#fbf5e7;
+    --paper-card-2:#f7eedb;
+    --ink:#2f2620;
+    --ink-soft:#5b4d40;
+    --ink-faint:#8c7c69;
+    --clay:#b5532b;
+    --clay-deep:#8e3f1f;
+    --clay-soft:#dfa180;
+    --gold:#a87d31;
+    --gold-soft:#c8a458;
+    --gold-wash:#f0e3bf;
+    --line:#dcc8a0;
+    --line-soft:#e6d7b6;
+    --espresso:#28201a;
+    --espresso-2:#352b22;
+    --shadow:rgba(58,42,28,.10);
+    --shadow-2:rgba(58,42,28,.18);
+    --maxw:760px;
+    --rail:248px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation:none !important;transition:none !important;}
+  }
+  body{
+    margin:0;
+    background:
+      radial-gradient(120% 80% at 80% -10%, #f7eed4 0%, rgba(247,238,212,0) 55%),
+      radial-gradient(120% 90% at -10% 110%, #ecdcb9 0%, rgba(236,220,185,0) 50%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Spectral",Georgia,serif;
+    font-weight:400;
+    font-size:19px;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  /* grano de papel */
+  body::before{
+    content:"";
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    opacity:.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  a{color:var(--clay-deep);text-decoration-thickness:1px;text-underline-offset:3px;}
+
+  /* ====== LAYOUT ====== */
+  .shell{position:relative;z-index:1;display:flex;gap:0;max-width:1180px;margin:0 auto;}
+  .rail{
+    width:var(--rail);flex:0 0 var(--rail);
+    padding:48px 28px 48px 32px;
+    position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;
+  }
+  .rail-title{
+    font-family:"Fraunces",serif;font-weight:700;font-size:.95rem;letter-spacing:.02em;
+    color:var(--clay-deep);margin:0 0 4px;
+  }
+  .rail-sub{font-size:.78rem;color:var(--ink-faint);font-style:italic;margin:0 0 26px;}
+  #railnav{display:flex;flex-direction:column;gap:2px;border-left:2px solid var(--line);}
+  #railnav a{
+    display:block;padding:7px 0 7px 14px;font-size:.82rem;line-height:1.35;
+    color:var(--ink-soft);text-decoration:none;border-left:2px solid transparent;margin-left:-2px;
+    transition:color .2s,border-color .2s;
+  }
+  #railnav a:hover{color:var(--clay-deep);}
+  #railnav a.active{color:var(--clay-deep);border-left-color:var(--clay);font-weight:600;}
+  #railnav .grp{
+    font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-faint);
+    padding:16px 0 4px 14px;font-family:"Fraunces",serif;font-weight:600;
+  }
+
+  main{flex:1;min-width:0;padding:0 32px 80px;}
+  .col{max-width:var(--maxw);margin:0 auto;}
+
+  /* ====== MOBILE NAV ====== */
+  .burger{
+    display:none;position:fixed;top:16px;right:16px;z-index:60;
+    width:46px;height:46px;border-radius:12px;border:1px solid var(--line);
+    background:var(--paper-card);box-shadow:0 4px 14px var(--shadow);cursor:pointer;
+  }
+  .burger span{
+    display:block;width:20px;height:2px;background:var(--ink);margin:4px auto;border-radius:2px;
+    transition:transform .25s,opacity .25s;
+  }
+  .burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .burger.open span:nth-child(2){opacity:0;}
+  .burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+  .mobnav{
+    display:none;position:fixed;top:0;right:0;bottom:0;z-index:55;width:min(300px,84vw);
+    background:var(--paper-card);border-left:1px solid var(--line);
+    padding:84px 26px 40px;overflow-y:auto;
+    transform:translateX(100%);transition:transform .3s ease;
+  }
+  .mobnav.open{transform:translateX(0);}
+  .mobnav a{display:block;padding:9px 0;font-size:.92rem;color:var(--ink-soft);text-decoration:none;border-bottom:1px dashed var(--line-soft);}
+  .mobnav a:hover{color:var(--clay-deep);}
+  .mobnav .grp{font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-faint);padding:18px 0 6px;font-family:"Fraunces",serif;font-weight:600;border:none;}
+  .scrim{
+    display:none;position:fixed;inset:0;z-index:50;background:rgba(47,38,32,.32);
+    opacity:0;pointer-events:none;transition:opacity .3s;
+  }
+  .scrim.open{opacity:1;pointer-events:auto;}
+
+  /* ====== HERO ====== */
+  header.hero{padding:84px 0 30px;}
+  .kicker{
+    font-family:"Fraunces",serif;font-size:.78rem;font-weight:600;
+    text-transform:uppercase;letter-spacing:.22em;color:var(--gold);margin:0 0 18px;
+  }
+  h1{
+    font-family:"Fraunces",serif;font-weight:800;font-size:clamp(2.3rem,5.4vw,3.4rem);
+    line-height:1.08;letter-spacing:-.015em;margin:0 0 10px;color:var(--ink);
+  }
+  h1 em{font-style:italic;font-weight:600;color:var(--clay-deep);}
+  .hero-sub{
+    font-size:1.12rem;font-style:italic;color:var(--ink-soft);max-width:600px;margin:14px 0 0;
+  }
+  .hero-rule{
+    height:3px;width:96px;background:linear-gradient(90deg,var(--clay),var(--gold-soft));
+    border:none;border-radius:3px;margin:34px 0 0;
+  }
+
+  /* ====== SECTIONS ====== */
+  section{padding:46px 0 8px;scroll-margin-top:24px;}
+  .eyebrow{
+    font-family:"Fraunces",serif;font-size:.72rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.2em;color:var(--clay);margin:0 0 10px;display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::after{content:"";flex:1;height:1px;background:var(--line);}
+  h2{
+    font-family:"Fraunces",serif;font-weight:700;font-size:clamp(1.55rem,3.4vw,2.1rem);
+    line-height:1.15;margin:0 0 18px;letter-spacing:-.01em;
+  }
+  h3{
+    font-family:"Fraunces",serif;font-weight:700;font-size:1.18rem;margin:30px 0 10px;color:var(--ink);
+  }
+  p{margin:0 0 18px;}
+  strong{font-weight:600;color:var(--ink);}
+  .lead{font-size:1.13rem;color:var(--ink-soft);}
+
+  /* cita bíblica */
+  .scripture{
+    background:linear-gradient(180deg,var(--paper-card),var(--paper-card-2));
+    border:1px solid var(--line);border-radius:18px;
+    padding:30px 34px;margin:30px 0;box-shadow:0 8px 26px var(--shadow);
+    scroll-margin-top:24px;position:relative;overflow:hidden;
+  }
+  .scripture::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:linear-gradient(180deg,var(--clay),var(--gold-soft));
+  }
+  .scripture .ref{
+    font-family:"Fraunces",serif;font-size:.74rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.18em;color:var(--gold);margin:0 0 10px;
+  }
+  .scripture .txt{
+    font-family:"Fraunces",serif;font-size:1.22rem;font-style:italic;font-weight:500;
+    line-height:1.55;color:var(--ink);margin:0;
+  }
+  .scripture .txt b{font-weight:700;color:var(--clay-deep);font-style:normal;}
+
+  /* callout */
+  .callout{
+    background:var(--gold-wash);border:1px solid var(--gold-soft);border-radius:14px;
+    padding:20px 24px;margin:26px 0;font-size:.98rem;
+  }
+  .callout .tag{
+    font-family:"Fraunces",serif;font-size:.7rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.18em;color:var(--gold);display:block;margin-bottom:6px;
+  }
+  .callout p{margin:0;}
+
+  /* línea relacional (timeline) */
+  .arc{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:28px 0;}
+  .arc-item{
+    background:var(--paper-card);border:1px solid var(--line);border-radius:16px;
+    padding:22px 22px 18px;box-shadow:0 6px 18px var(--shadow);position:relative;
+  }
+  .arc-item .where{
+    font-family:"Fraunces",serif;font-size:.72rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.16em;color:var(--clay);margin:0 0 8px;
+  }
+  .arc-item .quote{
+    font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.06rem;
+    color:var(--ink);margin:0 0 8px;line-height:1.4;
+  }
+  .arc-item p{font-size:.92rem;color:var(--ink-soft);margin:0;line-height:1.55;}
+
+  /* ====== ACORDEONES (panel de expertos) ====== */
+  .acc{
+    border:1px solid var(--line);border-radius:16px;background:var(--paper-card);
+    margin:0 0 14px;box-shadow:0 5px 16px var(--shadow);overflow:hidden;
+  }
+  .acc-btn{
+    width:100%;display:flex;align-items:center;gap:16px;text-align:left;
+    background:none;border:none;cursor:pointer;padding:18px 22px;
+    font-family:"Spectral",serif;color:var(--ink);
+  }
+  .acc-btn:focus-visible{outline:3px solid var(--gold-soft);outline-offset:-3px;border-radius:16px;}
+  .acc-ico{
+    flex:0 0 46px;width:46px;height:46px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold-wash),var(--paper-2));
+    border:1px solid var(--gold-soft);display:flex;align-items:center;justify-content:center;
+    font-size:1.3rem;
+  }
+  .acc-meta{flex:1;min-width:0;}
+  .acc-name{
+    font-family:"Fraunces",serif;font-weight:700;font-size:1.05rem;display:block;line-height:1.25;
+  }
+  .acc-role{font-size:.82rem;color:var(--ink-faint);font-style:italic;display:block;margin-top:2px;}
+  .acc-chev{
+    flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;color:var(--clay-deep);
+    transition:transform .25s;font-size:.8rem;background:var(--paper-card-2);
+  }
+  .acc.open .acc-chev{transform:rotate(180deg);}
+  .acc-body{
+    max-height:0;overflow:hidden;transition:max-height .35s ease;
+  }
+  .acc-inner{padding:4px 24px 22px;border-top:1px dashed var(--line-soft);}
+  .acc-inner p{font-size:.97rem;margin:14px 0 0;}
+  .acc-inner .keyline{
+    font-family:"Fraunces",serif;font-style:italic;font-weight:600;color:var(--clay-deep);
+    font-size:1.04rem;border-left:3px solid var(--clay-soft);padding-left:14px;margin:16px 0 0;
+  }
+
+  /* síntesis (tarjeta oscura) */
+  .verdict{
+    background:linear-gradient(160deg,var(--espresso),var(--espresso-2));
+    color:#efe3c8;border-radius:20px;padding:34px 36px;margin:36px 0 10px;
+    box-shadow:0 16px 40px var(--shadow-2);
+  }
+  .verdict .tag{
+    font-family:"Fraunces",serif;font-size:.72rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.2em;color:var(--gold-soft);display:block;margin-bottom:14px;
+  }
+  .verdict h3{color:#f6ecd6;margin:0 0 14px;font-size:1.3rem;}
+  .verdict p{color:#e4d5b4;font-size:.99rem;margin:0 0 12px;}
+  .verdict p:last-child{margin:0;}
+  .verdict b{color:#f6ecd6;}
+  .verdict ol{margin:0 0 12px;padding-left:22px;color:#e4d5b4;font-size:.99rem;}
+  .verdict ol li{margin:0 0 10px;padding-left:4px;}
+  .verdict ol li::marker{color:var(--gold-soft);font-weight:700;}
+
+  /* los cuatro movimientos */
+  .moves{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:28px 0;}
+  .move{
+    background:var(--paper-card);border:1px solid var(--line);border-radius:16px;
+    padding:22px;box-shadow:0 6px 18px var(--shadow);
+  }
+  .move .n{
+    font-family:"Fraunces",serif;font-weight:800;font-size:1.7rem;color:var(--clay-soft);
+    line-height:1;display:block;margin-bottom:8px;
+  }
+  .move h4{
+    font-family:"Fraunces",serif;font-weight:700;font-size:1.04rem;margin:0 0 6px;color:var(--ink);
+  }
+  .move .who{font-size:.76rem;font-style:italic;color:var(--gold);display:block;margin-bottom:8px;}
+  .move p{font-size:.91rem;color:var(--ink-soft);margin:0;line-height:1.55;}
+
+  /* preguntas */
+  .questions{
+    background:var(--paper-card);border:1px solid var(--line);border-radius:18px;
+    padding:28px 32px;margin:30px 0;box-shadow:0 8px 26px var(--shadow);
+  }
+  .questions h3{margin-top:0;}
+  .questions ol{margin:0;padding-left:22px;}
+  .questions li{margin:0 0 14px;padding-left:6px;}
+  .questions li::marker{font-family:"Fraunces",serif;font-weight:700;color:var(--clay);}
+  .questions li:last-child{margin-bottom:0;}
+
+  footer.page{
+    margin-top:60px;padding-top:26px;border-top:1px solid var(--line);
+    font-size:.82rem;color:var(--ink-faint);text-align:center;font-style:italic;
+  }
+  footer.page .dot{color:var(--gold-soft);margin:0 8px;}
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 980px){
+    .rail{display:none;}
+    .burger{display:block;}
+    .mobnav{display:block;}
+    .scrim{display:block;}
+    main{padding:0 22px 60px;}
+    header.hero{padding:64px 0 22px;}
+    .arc{grid-template-columns:1fr;}
+    .moves{grid-template-columns:1fr;}
+    .scripture{padding:24px 22px;}
+    .verdict{padding:28px 24px;}
+  }
+</style>
+</head>
+<body>
+
+<button class="burger" id="burger" aria-label="Abrir menú">
+  <span></span><span></span><span></span>
+</button>
+<div class="scrim" id="scrim"></div>
+<nav class="mobnav" id="mobnav" aria-label="Navegación móvil">
+  <span class="grp">El punto de partida</span>
+  <a href="#orden">El orden del amor</a>
+  <a href="#relacion">Un Dios que busca relación</a>
+  <span class="grp">Panel 1 · Aprender</span>
+  <a href="#panel1">¿Qué tenemos que aprender?</a>
+  <a href="#sintesis1">Síntesis del panel 1</a>
+  <span class="grp">Panel 2 · Ver</span>
+  <a href="#panel2">¿Qué significa «ver»?</a>
+  <a href="#movimientos">Los cuatro movimientos</a>
+  <span class="grp">Cierre</span>
+  <a href="#respuesta">¿Se alegró de verlo?</a>
+  <a href="#preguntas">Para conversar</a>
+</nav>
+
+<div class="shell">
+
+  <aside class="rail" aria-label="Navegación">
+    <p class="rail-title">Ver antes de arreglar</p>
+    <p class="rail-sub">Marcos 2 · un estudio en dos paneles</p>
+    <nav id="railnav">
+      <span class="grp">El punto de partida</span>
+      <a href="#orden">El orden del amor</a>
+      <a href="#relacion">Un Dios que busca relación</a>
+      <span class="grp">Panel 1 · Aprender</span>
+      <a href="#panel1">¿Qué tenemos que aprender?</a>
+      <a href="#sintesis1">Síntesis del panel 1</a>
+      <span class="grp">Panel 2 · Ver</span>
+      <a href="#panel2">¿Qué significa «ver»?</a>
+      <a href="#movimientos">Los cuatro movimientos</a>
+      <span class="grp">Cierre</span>
+      <a href="#respuesta">¿Se alegró de verlo?</a>
+      <a href="#preguntas">Para conversar</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="col">
+
+      <header class="hero">
+        <p class="kicker">Marcos 2 · 1–12 — segunda capa</p>
+        <h1>Ver antes de arreglar<br><em>el arte de mirar a una persona</em></h1>
+        <p class="hero-sub">Jesús no vio primero un problema médico. Vio un hijo. Este estudio pregunta qué tenemos que aprender de ese orden — y qué significa, en serio, «ver» a alguien.</p>
+        <hr class="hero-rule">
+      </header>
+
+      <!-- ============ SECCIÓN 1: EL ORDEN ============ -->
+      <section id="orden">
+        <p class="eyebrow">01 · El punto de partida</p>
+        <h2>El orden del amor</h2>
+        <p class="lead">Cuatro hombres rompen un techo para traer un problema médico. Todos los presentes esperan un milagro físico. Y Jesús mira hacia abajo y ve… un hijo.</p>
+
+        <div class="scripture">
+          <p class="ref">Marcos 2 · 5</p>
+          <p class="txt">Al ver Jesús la fe de ellos, dijo al paralítico: <b>«Hijo, tus pecados te son perdonados».</b></p>
+        </div>
+
+        <p>No un caso. No una oportunidad de demostrar poder. No un cuerpo roto. Una persona. La sanidad física sí llega — pero llega <em>después</em>, casi como nota al pie. Como diciendo: «esto que todos vinieron a ver es lo de menos; lo que este hombre necesitaba primero era saber que pertenece, que está perdonado, que es amado». Jesús atiende la herida que nadie en la habitación podía ver — quizás ni el paralítico mismo la tenía del todo identificada.</p>
+
+        <p>Y eso revela algo del carácter de Dios que va contra nuestra intuición de «arreglar»: nosotros vemos a la gente como proyectos pendientes — el amigo que necesita dejar tal hábito, el hijo que necesita enderezarse, nosotros mismos como lista de defectos por corregir. Jesús invierte el orden. <strong>Primero la identidad y el amor; la transformación viene como fruto, no como condición.</strong></p>
+
+        <div class="callout">
+          <span class="tag">La tesis de esta página</span>
+          <p>Dios nos ve primero como personas necesitadas de su amor, más que como problemas que necesitan ser solucionados. El orden no es decorativo: es causal.</p>
+        </div>
+      </section>
+
+      <!-- ============ SECCIÓN 2: RELACIÓN ============ -->
+      <section id="relacion">
+        <p class="eyebrow">02 · El hilo de toda la Escritura</p>
+        <h2>Un Dios que busca relación</h2>
+        <p>La línea que atraviesa toda la Biblia, de principio a fin, es relacional. Los mandamientos llegan <em>después</em> del rescate, no antes. La obediencia nunca fue el precio de entrada a la relación; es la respuesta natural de quien ya fue amado.</p>
+
+        <div class="arc">
+          <div class="arc-item">
+            <p class="where">Edén · Génesis 3</p>
+            <p class="quote">«¿Dónde estás?»</p>
+            <p>La primera pregunta de Dios tras la caída no es una acusación: es una búsqueda. No porque no supiera dónde estaba Adán, sino porque la relación se había roto y Él salió a buscarla.</p>
+          </div>
+          <div class="arc-item">
+            <p class="where">Sinaí · Éxodo 20</p>
+            <p class="quote">«Yo soy el Señor tu Dios, que te sacó de Egipto»</p>
+            <p>Primero el rescate, luego la ley. Primero el «tu», primero la pertenencia. La ley se da a un pueblo ya liberado, no como condición para liberarlo.</p>
+          </div>
+          <div class="arc-item">
+            <p class="where">Capernaúm · Marcos 2</p>
+            <p class="quote">«Hijo» — téknon</p>
+            <p>Antes de que el paralítico haga nada — no ha confesado, no ha prometido cambiar, ni siquiera ha hablado — Jesús ya lo llama hijo. La relación es punto de partida, no premio final.</p>
+          </div>
+          <div class="arc-item">
+            <p class="where">La meta · Apocalipsis 21</p>
+            <p class="quote">«El tabernáculo de Dios con los hombres»</p>
+            <p>La historia no termina con humanos perfeccionados en abstracto, sino con Dios habitando <em>con</em> su pueblo. La meta de todo es la relación misma.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="tag">El contraste</span>
+          <p>La religión dice: «pórtate bien y Dios te aceptará». El evangelio dice: «Dios ya te buscó; ahora vive desde esa aceptación». <strong>El orden lo cambia todo.</strong></p>
+        </div>
+      </section>
+
+      <!-- ============ SECCIÓN 3: PANEL 1 ============ -->
+      <section id="panel1">
+        <p class="eyebrow">03 · Panel de expertos · primera sesión</p>
+        <h2>¿Qué tenemos que aprender nosotros?</h2>
+        <p class="lead">Convocamos a cinco pensadores de primer nivel — y les pedimos dejar la diplomacia en la puerta. Lo que sigue es lo que cada uno <em>podría</em> decir, desde su propia obra. Toca cada panel para abrirlo.</p>
+
+        <div class="acc open" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🪑</span>
+            <span class="acc-meta">
+              <span class="acc-name">Martin Buber</span>
+              <span class="acc-role">filósofo del diálogo · Yo y Tú</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«El problema de ustedes es que viven en el modo <em>Yo-Ello</em>. Tratan a las personas como objetos con función: el empleado que produce, el hijo que debe enderezarse, el cónyuge que debe cambiar. Jesús en Marcos 2 opera en modo <em>Yo-Tú</em>: encuentra a la persona entera antes de tocar su circunstancia.»</p>
+              <p class="keyline">Nadie se transforma mientras es tratado como un Ello.</p>
+              <p>«El paralítico fue visto como Tú — <em>téknon</em> — y solo entonces caminó. Ustedes quieren arreglar gente que jamás se ha sentido vista. Es como querer cosechar sin haber sembrado.»</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🛋️</span>
+            <span class="acc-meta">
+              <span class="acc-name">Sigmund Freud</span>
+              <span class="acc-role">psicoanálisis · el amor condicionado</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Yo sería más incómodo. La mayoría de ustedes aprendió en la infancia que el amor era <em>condicional</em>: te quiero si te portas bien, si sacas buenas notas, si no das problemas. Esa estructura psíquica no desaparece; se proyecta. Por eso construyen un Dios-superyó que vigila y castiga, y luego tratan a otros exactamente igual — porque uno da el amor que recibió.»</p>
+              <p class="keyline">Lo que tienen que aprender no es una idea: es un desaprendizaje.</p>
+              <p>«Detecten cuándo están repitiendo con sus hijos, alumnos y hermanos el guion del amor condicionado que les tocó vivir. Mientras no lo hagan consciente, lo van a repetir. Y lo llamarán “disciplina” o “amor exigente” para no mirarlo de frente.»</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">👶</span>
+            <span class="acc-meta">
+              <span class="acc-name">John Bowlby</span>
+              <span class="acc-role">teoría del apego · la base segura</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Freud tiene razón y yo tengo los datos. Décadas de investigación en apego muestran lo mismo: el niño <em>no explora el mundo</em> hasta que tiene una base segura. Primero la seguridad del vínculo; después el riesgo, el aprendizaje, el crecimiento. El orden es innegociable — y es exactamente el orden de Marcos 2: primero “hijo”, después “levántate y anda”.»</p>
+              <p class="keyline">Dejen de exigir caminata a gente que no tiene base segura.</p>
+              <p>«En su iglesia, en su casa, en su clase: la persona insegura del vínculo no puede crecer; solo puede <em>fingir</em> que crece para no perder el amor. Y eso ustedes lo premian, que es lo más triste.»</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🧩</span>
+            <span class="acc-meta">
+              <span class="acc-name">Jean Piaget</span>
+              <span class="acc-role">epistemología genética · cómo se aprende</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Permítanme el ángulo del aprendizaje. Nadie asimila información nueva que amenaza su estructura. El niño — y el adulto — solo acomoda ideas nuevas cuando el entorno es lo bastante seguro para tolerar el desequilibrio. Si tu corrección llega antes que tu aceptación, el otro no aprende: <em>se defiende</em>. Toda su energía cognitiva se va en protegerse, no en cambiar.»</p>
+              <p class="keyline">El perdón primero desarma la defensa; recién entonces se puede recibir algo nuevo.</p>
+              <p>«Jesús lo entendió pedagógicamente. Ustedes enseñan al revés y luego se quejan de que nadie cambia.»</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🌱</span>
+            <span class="acc-meta">
+              <span class="acc-name">Carl Rogers</span>
+              <span class="acc-role">psicología humanista · la aceptación incondicional</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Yo pasé mi vida demostrando esto en terapia y lo resumo en mi paradoja favorita:»</p>
+              <p class="keyline">La curiosa paradoja es que cuando me acepto tal como soy, entonces puedo cambiar.</p>
+              <p>«La aceptación incondicional no es el premio del cambio; es su <em>combustible</em>. Marcos 2 es mi tesis con dos mil años de anticipación. Cada vez que condicionan su calidez al comportamiento del otro — cada vez que su cara dice “te apruebo menos hasta que mejores” — están congelando a esa persona en el lugar exacto del que quieren que salga.»</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- síntesis 1 -->
+      <section id="sintesis1">
+        <div class="verdict">
+          <span class="tag">Síntesis del moderador · panel 1</span>
+          <h3>Nada ñoño. Más bien quirúrgico.</h3>
+          <ol>
+            <li><b>El orden no es decorativo, es causal.</b> Relación → transformación. Invertirlo no es «más exigente»: es simplemente ineficaz.</li>
+            <li><b>Lo que llamamos «ayudar» suele ser modo Yo-Ello disfrazado.</b> Ver problemas en vez de personas es más rápido, más cómodo — y completamente estéril.</li>
+            <li><b>El examen incómodo es personal:</b> ¿de quién aprendiste tú el amor condicional, y con quién lo estás repitiendo hoy?</li>
+          </ol>
+          <p>La tarea no es <b>creer</b> que Dios nos ve como hijos. Es <b>tratarnos</b> — a nosotros mismos y a los demás — como si eso fuera verdad. Que es mucho más difícil.</p>
+        </div>
+      </section>
+
+      <!-- ============ SECCIÓN 4: PANEL 2 ============ -->
+      <section id="panel2">
+        <p class="eyebrow">04 · Panel de expertos · segunda sesión</p>
+        <h2>¿Qué significa «ver» a una persona?</h2>
+        <p class="lead">Si Cristo primero <em>vio</em> al hombre como persona — ¿qué es ese «ver»? El panel vuelve a sentarse, y esta pregunta los emociona más que la anterior.</p>
+
+        <div class="scripture">
+          <p class="ref">Marcos 10 · 21 — la pista del griego</p>
+          <p class="txt"><b>Emblepsas autō ēgapēsen auton</b> — «mirándolo fijamente, lo amó». El mirar y el amar en una sola respiración.</p>
+        </div>
+
+        <div class="acc open" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🕯️</span>
+            <span class="acc-meta">
+              <span class="acc-name">Emmanuel Levinas</span>
+              <span class="acc-role">filósofo del rostro · la ética primera</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Ver a una persona es dejar que su rostro te interrumpa. El rostro del otro no es un objeto entre los objetos: es una <em>demanda</em>. Cuando realmente miras a alguien, antes de toda palabra, su rostro te dice “no me reduzcas, no me uses, respóndeme”. La mayoría de ustedes no ve rostros — ve roles, ve categorías: “el paralítico”, “el mendigo”, “el difícil de la familia”.»</p>
+              <p class="keyline">Ver es aceptar quedar en deuda con lo que miras. Por eso casi nadie ve: ver compromete.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">✍️</span>
+            <span class="acc-meta">
+              <span class="acc-name">Simone Weil</span>
+              <span class="acc-role">mística y filósofa · la atención</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Yo lo digo más simple: la atención es la forma más rara y más pura de la generosidad. Atención plena — no esa mirada que ya está preparando la respuesta, el consejo, el diagnóstico. Ver a alguien es vaciarte de ti por un instante para que el otro quepa entero.»</p>
+              <p class="keyline">Es preguntar con todo el ser: ¿cuál es tu tormento? — y quedarte ahí, sin huir hacia la solución.</p>
+              <p>«Noten que Jesús no abre con el milagro: abre con una palabra que demuestra que vio el tormento invisible, el que nadie más en la sala había notado. Eso es atención. Lo demás es eficiencia disfrazada de amor.»</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🪞</span>
+            <span class="acc-meta">
+              <span class="acc-name">Donald Winnicott</span>
+              <span class="acc-role">pediatra y psicoanalista · el rostro-espejo</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«El dato del consultorio: el bebé descubre que existe <em>en el rostro de su madre</em>. Cuando ella lo mira con deleite, el niño aprende: “soy alguien, soy bienvenido, mi existencia produce alegría”. Cuando esa mirada falta — o solo aparece condicionada — la persona pasa la vida entera buscándola.»</p>
+              <p class="keyline">Ser visto sin deleite es ser inspeccionado. Ser visto con deleite es nacer otra vez.</p>
+              <p>«¿Que si Jesús se alegró de verlo? Tuvo que haber deleite, porque la palabra <em>téknon</em> es de cuna, es de hogar. Aquel hombre bajó por el techo como un bulto cargado por cuatro, y la primera mirada que recibió lo trató como alguien que valía la pena mirar.»</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🛋️</span>
+            <span class="acc-meta">
+              <span class="acc-name">Sigmund Freud</span>
+              <span class="acc-role">de vuelta, escéptico de oficio · la proyección</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Concedo el punto, pero agrego la advertencia: mucho de lo que ustedes llaman “ver al otro” es proyección. Miran a alguien y ven sus propias expectativas, sus miedos, su necesidad de ser necesitados. El “ayudador” compulsivo no ve al ayudado: se ve a sí mismo siendo bueno.»</p>
+              <p class="keyline">Ver de verdad exige primero el trabajo sucio de distinguir qué es del otro y qué es tuyo.</p>
+              <p>«Los escribas en esa sala son mi ejemplo perfecto: miraban la misma escena y solo veían una amenaza a su sistema — es decir, se miraban a sí mismos. El paralítico estaba ahí y nadie lo veía, excepto uno.»</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc" data-acc>
+          <button class="acc-btn" type="button">
+            <span class="acc-ico">🔦</span>
+            <span class="acc-meta">
+              <span class="acc-name">Viktor Frankl</span>
+              <span class="acc-role">logoterapia · ver el futuro de la persona</span>
+            </span>
+            <span class="acc-chev">▾</span>
+          </button>
+          <div class="acc-body">
+            <div class="acc-inner">
+              <p>«Falta la dimensión del tiempo. Ver a una persona no es solo ver lo que <em>es</em>: es ver lo que <em>puede llegar a ser</em> — y tratarla desde ahí. Yo lo aprendí donde nadie debería aprenderlo.»</p>
+              <p class="keyline">Si tomas al hombre como es, lo haces peor; si lo tomas como puede ser, lo conviertes en lo que puede ser.</p>
+              <p>«Jesús llama “hijo” a un hombre que todavía no ha caminado, no ha cambiado, no ha demostrado nada. Lo nombra desde su futuro, no desde su camilla. Y fíjense en el detalle final: no le dijo “deja la camilla” — le dijo “cárgala”. El que era cargado ahora carga. Eso es lo que ve el amor: la versión de ti que tú todavía no puedes ver.»</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ LOS CUATRO MOVIMIENTOS ============ -->
+      <section id="movimientos">
+        <p class="eyebrow">05 · Síntesis del panel 2</p>
+        <h2>«Ver» en cuatro movimientos</h2>
+        <p>Destilado del panel: ver a una persona significa cuatro gestos concretos, en este orden.</p>
+
+        <div class="moves">
+          <div class="move">
+            <span class="n">1</span>
+            <h4>Dejarse interrumpir</h4>
+            <span class="who">Levinas</span>
+            <p>El otro no es un punto de tu agenda; su rostro te reclama respuesta antes de toda palabra.</p>
+          </div>
+          <div class="move">
+            <span class="n">2</span>
+            <h4>Atender sin resolver</h4>
+            <span class="who">Weil</span>
+            <p>Preguntar «¿cuál es tu tormento?» antes de ofrecer la salida — y quedarse ahí.</p>
+          </div>
+          <div class="move">
+            <span class="n">3</span>
+            <h4>Mirar con deleite</h4>
+            <span class="who">Winnicott</span>
+            <p>Que tu cara le diga al otro «me alegra que existas» — porque en esa mirada la gente literalmente se constituye.</p>
+          </div>
+          <div class="move">
+            <span class="n">4</span>
+            <h4>Ver el futuro, no la camilla</h4>
+            <span class="who">Frankl</span>
+            <p>Nombrar a la persona desde lo que puede ser, no desde su peor momento.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ RESPUESTA DIRECTA ============ -->
+      <section id="respuesta">
+        <p class="eyebrow">06 · Las dos preguntas directas</p>
+        <h2>¿Se alegró de verlo? ¿Quiso lo mejor para él?</h2>
+
+        <div class="verdict">
+          <span class="tag">Respuesta del estudio</span>
+          <h3>Sí — y más que «lo mejor».</h3>
+          <p><b>¿Se alegró?</b> Todo indica que sí: <i>téknon</i> no se le dice a un expediente. Es palabra de cuna, de hogar, de deleite. La primera mirada que recibió aquel hombre lo trató como alguien que valía la pena mirar.</p>
+          <p><b>¿Quiso lo mejor?</b> Quiso algo más radical: <b>al hombre completo</b> — perdonado, de pie, cargando él mismo la camilla que antes lo cargaba a él. Los presentes querían que caminara; Él quería que supiera <b>de quién era hijo</b> primero.</p>
+          <p>Lo segundo sostiene lo primero. Nunca al revés.</p>
+        </div>
+      </section>
+
+      <!-- ============ PREGUNTAS ============ -->
+      <section id="preguntas">
+        <p class="eyebrow">07 · Para conversar</p>
+        <h2>Preguntas para el grupo</h2>
+
+        <div class="questions">
+          <h3>Llevarlo a la vida</h3>
+          <ol>
+            <li>¿A quién en tu vida estás tratando como <strong>problema por resolver</strong>, cuando Jesús lo trataría primero como <em>téknon</em>?</li>
+            <li>Piensa en la última vez que alguien te <strong>vio de verdad</strong> — con atención, sin apurarse a aconsejarte. ¿Qué produjo eso en ti?</li>
+            <li>Freud lanza el examen incómodo: ¿de quién aprendiste tú el <strong>amor condicional</strong>? ¿Con quién lo estás repitiendo hoy — quizás llamándolo «disciplina»?</li>
+            <li>De los cuatro movimientos del «ver» (interrumpirse, atender, deleitarse, ver el futuro), ¿cuál te cuesta más? ¿Por qué?</li>
+            <li>Jesús no le dijo al hombre «deja la camilla» sino «cárgala». ¿Qué «camilla» de tu pasado podrías empezar a cargar tú — como testimonio, no como peso?</li>
+          </ol>
+        </div>
+
+        <p style="font-style:italic;color:var(--ink-soft);">La religión dice «pórtate bien y serás aceptado». El evangelio dice «ya fuiste visto, ya fuiste llamado hijo — ahora levántate». El orden lo cambia todo. Y aprender a ver así — dejarse interrumpir, atender, deleitarse, nombrar futuros — es quizás la forma más concreta de parecernos a Cristo.</p>
+      </section>
+
+      <footer class="page">
+        Marcos 2 · 1–12 <span class="dot">•</span> Ver antes de arreglar <span class="dot">•</span> dos paneles, cuatro movimientos
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // ===== ACORDEONES (toggles independientes) =====
+  document.querySelectorAll('[data-acc] .acc-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var acc = btn.closest('.acc');
+      var body = acc.querySelector('.acc-body');
+      var isOpen = acc.classList.contains('open');
+      if(isOpen){
+        body.style.maxHeight = body.scrollHeight + 'px';
+        requestAnimationFrame(function(){ body.style.maxHeight = '0px'; });
+        acc.classList.remove('open');
+      } else {
+        acc.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+        body.addEventListener('transitionend', function te(){
+          if(acc.classList.contains('open')) body.style.maxHeight = 'none';
+          body.removeEventListener('transitionend', te);
+        });
+      }
+    });
+  });
+  // abrir los paneles default-open al cargar
+  window.addEventListener('load', function(){
+    document.querySelectorAll('.acc.open .acc-body').forEach(function(b){ b.style.maxHeight = 'none'; });
+  });
+
+  // ===== SCROLL-SPY (IntersectionObserver) =====
+  var sections = document.querySelectorAll('section[id]');
+  var railLinks = document.querySelectorAll('#railnav a');
+  function setActive(id){
+    railLinks.forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('href') === '#'+id);
+    });
+  }
+  var spy = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting) setActive(e.target.id);
+    });
+  }, {rootMargin:'-40% 0px -55% 0px', threshold:0});
+  sections.forEach(function(s){ spy.observe(s); });
+
+  // ===== NAV MÓVIL =====
+  var burger = document.getElementById('burger');
+  var mobnav = document.getElementById('mobnav');
+  var scrim = document.getElementById('scrim');
+  function closeNav(){ burger.classList.remove('open'); mobnav.classList.remove('open'); scrim.classList.remove('open'); }
+  if(burger){
+    burger.addEventListener('click', function(){
+      var open = mobnav.classList.toggle('open');
+      burger.classList.toggle('open', open);
+      scrim.classList.toggle('open', open);
+    });
+    scrim.addEventListener('click', closeNav);
+    mobnav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeNav); });
+  }
+</script>
+</body>
+</html>
