@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La risa — Un panel de expertos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f7f1e3;
+    --parchment-deep: #efe6d2;
+    --ink: #2b2118;
+    --ink-soft: #5a4a3a;
+    --terracotta: #b85c38;
+    --amber: #c9962e;
+    --olive: #6b7a3f;
+    --slate-blue: #4a6274;
+    --plum: #7a4a63;
+    --teal: #3d7068;
+    --rule: #d8cbb0;
+    --card: #fdfaf2;
+    --maxw: 720px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Spectral', Georgia, serif;
+    font-size: 1.075rem;
+    line-height: 1.75;
+    font-weight: 400;
+  }
+
+  /* ---------- Layout: side rail + content ---------- */
+  .layout { display: flex; min-height: 100vh; }
+  nav.rail {
+    position: sticky; top: 0; align-self: flex-start;
+    width: 250px; min-width: 250px; height: 100vh;
+    padding: 3rem 1.5rem 2rem 2rem;
+    border-right: 1px solid var(--rule);
+    overflow-y: auto;
+  }
+  nav.rail .rail-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700; font-size: 1.05rem;
+    letter-spacing: 0.01em; margin-bottom: 0.25rem;
+  }
+  nav.rail .rail-sub {
+    font-size: 0.78rem; color: var(--ink-soft);
+    font-style: italic; margin-bottom: 1.5rem;
+  }
+  nav.rail ol { list-style: none; }
+  nav.rail li { margin-bottom: 0.15rem; }
+  nav.rail a {
+    display: block; padding: 0.35rem 0.6rem;
+    font-size: 0.85rem; color: var(--ink-soft);
+    text-decoration: none; border-left: 2px solid transparent;
+    border-radius: 0 4px 4px 0;
+    transition: all 0.2s ease;
+  }
+  nav.rail a:hover { color: var(--terracotta); background: var(--parchment-deep); }
+  nav.rail a.active {
+    color: var(--terracotta); border-left-color: var(--terracotta);
+    background: var(--parchment-deep); font-weight: 500;
+  }
+  main { flex: 1; padding: 0 2rem; }
+  .content { max-width: var(--maxw); margin: 0 auto; padding-bottom: 6rem; }
+
+  /* ---------- Hamburger (mobile) ---------- */
+  .hamburger {
+    display: none; position: fixed; top: 1rem; right: 1rem; z-index: 60;
+    background: var(--card); border: 1px solid var(--rule);
+    border-radius: 8px; padding: 0.55rem 0.7rem; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.12);
+  }
+  .hamburger span {
+    display: block; width: 20px; height: 2px; background: var(--ink);
+    margin: 4px 0; transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  /* ---------- Hero ---------- */
+  header.hero { padding: 5rem 0 3rem; text-align: left; }
+  .hero .eyebrow {
+    font-family: 'Spectral', serif; font-size: 0.8rem;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 800;
+    font-size: clamp(2.6rem, 6vw, 4.2rem); line-height: 1.05;
+    letter-spacing: -0.015em; margin-bottom: 1.4rem;
+  }
+  .hero h1 .ja {
+    display: inline-block; font-style: italic; font-weight: 300;
+    color: var(--terracotta);
+  }
+  .hero .lede {
+    font-size: 1.2rem; font-weight: 300; color: var(--ink-soft);
+    max-width: 56ch; font-style: italic;
+  }
+  .hero .panel-roster {
+    margin-top: 2.2rem; display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .chip {
+    font-size: 0.78rem; padding: 0.25rem 0.75rem;
+    border-radius: 999px; border: 1px solid currentColor;
+    background: var(--card); white-space: nowrap;
+  }
+  .c-filosofo { color: var(--slate-blue); }
+  .c-psicoanalista { color: var(--plum); }
+  .c-piagetiana { color: var(--olive); }
+  .c-neuro { color: var(--teal); }
+  .c-pastor { color: var(--amber); }
+  .c-esceptico { color: var(--terracotta); }
+
+  /* ---------- Sections ---------- */
+  section { padding-top: 3.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem); line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+  section .sec-sub {
+    font-style: italic; color: var(--ink-soft);
+    font-size: 0.95rem; margin-bottom: 1.6rem;
+  }
+  section p { margin-bottom: 1.15rem; }
+  section p strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  .divider {
+    text-align: center; margin: 3.5rem 0 0;
+    font-family: 'Fraunces', serif; font-style: italic;
+    color: var(--rule); font-size: 1rem; letter-spacing: 0.5em;
+    user-select: none;
+  }
+
+  /* ---------- Dialogue ---------- */
+  .dialogue { margin: 1.6rem 0; }
+  .turn {
+    background: var(--card); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 1.1rem 1.3rem; margin-bottom: 0.9rem;
+    box-shadow: 0 1px 3px rgba(43,33,24,0.05);
+  }
+  .turn .who {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.86rem; letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .turn .who::before {
+    content: ""; width: 9px; height: 9px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  .turn p { margin-bottom: 0.7rem; font-size: 1.02rem; }
+  .turn p:last-child { margin-bottom: 0; }
+  .turn.t-filosofo .who { color: var(--slate-blue); }
+  .turn.t-psicoanalista .who { color: var(--plum); }
+  .turn.t-piagetiana .who { color: var(--olive); }
+  .turn.t-neuro .who { color: var(--teal); }
+  .turn.t-pastor .who { color: var(--amber); }
+  .turn.t-esceptico .who { color: var(--terracotta); }
+  .turn.t-moderador {
+    background: transparent; border: none; box-shadow: none;
+    padding: 0.4rem 1.3rem;
+  }
+  .turn.t-moderador .who { color: var(--ink-soft); }
+  .turn.t-moderador p { font-style: italic; color: var(--ink-soft); }
+
+  /* ---------- Callouts & quotes ---------- */
+  blockquote {
+    border-left: 3px solid var(--amber);
+    padding: 0.4rem 0 0.4rem 1.3rem; margin: 1.6rem 0;
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 1.15rem; font-weight: 400; color: var(--ink-soft);
+  }
+  blockquote .cite-line {
+    display: block; font-family: 'Spectral', serif; font-style: normal;
+    font-size: 0.82rem; margin-top: 0.5rem; letter-spacing: 0.04em;
+  }
+  .keybox {
+    background: var(--parchment-deep); border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 1.6rem 0;
+    border: 1px solid var(--rule);
+  }
+  .keybox h3 {
+    font-family: 'Fraunces', serif; font-size: 1rem;
+    font-weight: 700; margin-bottom: 0.5rem; color: var(--terracotta);
+  }
+  .keybox ul { list-style: none; }
+  .keybox li {
+    padding-left: 1.3rem; position: relative; margin-bottom: 0.5rem;
+    font-size: 0.98rem;
+  }
+  .keybox li::before {
+    content: "✳"; position: absolute; left: 0; color: var(--amber);
+    font-size: 0.8rem; top: 0.25rem;
+  }
+
+  /* ---------- Theory cards ---------- */
+  .theory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; margin: 1.8rem 0; }
+  .theory-card {
+    background: var(--card); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 1.1rem;
+  }
+  .theory-card h3 {
+    font-family: 'Fraunces', serif; font-size: 1.02rem; font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .theory-card .patron { font-size: 0.78rem; color: var(--ink-soft); font-style: italic; margin-bottom: 0.55rem; }
+  .theory-card p { font-size: 0.92rem; line-height: 1.55; margin: 0; }
+  .theory-card:nth-child(1) h3 { color: var(--terracotta); }
+  .theory-card:nth-child(2) h3 { color: var(--slate-blue); }
+  .theory-card:nth-child(3) h3 { color: var(--plum); }
+
+  /* ---------- Timeline (desarrollo infantil) ---------- */
+  .timeline { margin: 1.8rem 0; border-left: 2px solid var(--rule); padding-left: 1.6rem; }
+  .tl-item { position: relative; margin-bottom: 1.4rem; }
+  .tl-item::before {
+    content: ""; position: absolute; left: calc(-1.6rem - 6px); top: 0.5rem;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--olive); border: 2px solid var(--parchment);
+  }
+  .tl-item .tl-age {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 0.92rem; color: var(--olive);
+  }
+  .tl-item p { font-size: 0.96rem; margin: 0.15rem 0 0; }
+
+  /* ---------- Sources ---------- */
+  .sources { font-size: 0.92rem; }
+  .sources ul { list-style: none; }
+  .sources li { margin-bottom: 0.6rem; padding-left: 1.2rem; position: relative; }
+  .sources li::before { content: "↗"; position: absolute; left: 0; color: var(--terracotta); font-size: 0.85rem; }
+  a { color: var(--terracotta); text-decoration: none; border-bottom: 1px dotted var(--terracotta); transition: border-color 0.2s; }
+  a:hover { border-bottom-style: solid; }
+  .src-inline {
+    font-size: 0.84rem; color: var(--ink-soft); margin-top: -0.4rem;
+    margin-bottom: 1.4rem;
+  }
+  .src-inline a { font-size: inherit; }
+
+  footer {
+    border-top: 1px solid var(--rule); margin-top: 4rem; padding-top: 1.6rem;
+    font-size: 0.85rem; color: var(--ink-soft); font-style: italic;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    nav.rail {
+      position: fixed; top: 0; right: 0; height: 100vh; width: 280px;
+      background: var(--card); z-index: 50;
+      transform: translateX(100%); transition: transform 0.28s ease;
+      border-left: 1px solid var(--rule); border-right: none;
+      box-shadow: -8px 0 24px rgba(43,33,24,0.12);
+      padding-top: 4.5rem;
+    }
+    nav.rail.open { transform: translateX(0); }
+    .hamburger { display: block; }
+    main { padding: 0 1.3rem; }
+    header.hero { padding-top: 4rem; }
+    .theory-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger" aria-label="Abrir menú de navegación" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="layout">
+
+<nav class="rail" id="rail" aria-label="Índice del estudio">
+  <div class="rail-title">La risa</div>
+  <div class="rail-sub">Un panel de expertos</div>
+  <ol>
+    <li><a href="#obertura">Obertura: el enigma</a></li>
+    <li><a href="#sospechosos">Los tres sospechosos</a></li>
+    <li><a href="#bergson">El Filósofo: lo mecánico</a></li>
+    <li><a href="#freud">El Psicoanalista: la válvula</a></li>
+    <li><a href="#piaget">La Piagetiana: el bebé que ríe</a></li>
+    <li><a href="#neuro">La Neurocientífica: en la acera</a></li>
+    <li><a href="#pastor">El Pastor: Sara rió</a></li>
+    <li><a href="#esceptico">El Escéptico: objeciones</a></li>
+    <li><a href="#sintesis">Mesa redonda final</a></li>
+    <li><a href="#fuentes">Fuentes</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="content">
+
+<header class="hero">
+  <div class="eyebrow">Cuaderno de estudio · Café con Claude</div>
+  <h1>La risa<br><span class="ja">ja, ja, ja</span> — pero ¿por qué?</h1>
+  <p class="lede">Seis voces se sientan a la mesa para examinar el comportamiento humano más universal y menos comprendido: un filósofo bergsoniano, un psicoanalista freudiano, una psicóloga del desarrollo en la tradición de Piaget, una neurocientífica de campo, un pastor con la Biblia abierta en Génesis 21, y —cómo no— el escéptico honesto que ya está levantando la ceja.</p>
+  <div class="panel-roster">
+    <span class="chip c-filosofo">El Filósofo</span>
+    <span class="chip c-psicoanalista">El Psicoanalista</span>
+    <span class="chip c-piagetiana">La Piagetiana</span>
+    <span class="chip c-neuro">La Neurocientífica</span>
+    <span class="chip c-pastor">El Pastor</span>
+    <span class="chip c-esceptico">El Escéptico Honesto</span>
+  </div>
+</header>
+
+<!-- ============ 1. OBERTURA ============ -->
+<section id="obertura">
+  <h2>Obertura: el enigma de lo obvio</h2>
+  <p class="sec-sub">Donde el moderador plantea la pregunta y el panel descubre que nadie tiene la respuesta completa</p>
+
+  <p>Empecemos por lo extraño de lo familiar. Ríes todos los días. Lo hacías antes de poder hablar. Lo hace cada cultura humana sobre la tierra, con la misma estructura acústica básica, y sin que nadie te haya enseñado jamás cómo se hace. Y sin embargo, si te pregunto <em>por qué</em> ríes —qué es exactamente lo que la risa hace, de dónde viene, para qué sirve— la respuesta honesta es un encogimiento de hombros. Durante siglos, la risa fue la gran ignorada de la ciencia: demasiado frívola para los serios, demasiado escurridiza para los rigurosos.</p>
+
+  <div class="dialogue">
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Panel: una sola pregunta para abrir. ¿Qué es la risa? Tienen una frase cada uno. Una.</p>
+    </div>
+    <div class="turn t-filosofo">
+      <div class="who">El Filósofo</div>
+      <p>Un correctivo social: la sociedad riéndose de quien se ha vuelto máquina.</p>
+    </div>
+    <div class="turn t-psicoanalista">
+      <div class="who">El Psicoanalista</div>
+      <p>Una válvula de escape: energía psíquica reprimida que encuentra por fin la puerta.</p>
+    </div>
+    <div class="turn t-piagetiana">
+      <div class="who">La Piagetiana</div>
+      <p>La señal sonora de que una mente pequeña acaba de dominar una sorpresa.</p>
+    </div>
+    <div class="turn t-neuro">
+      <div class="who">La Neurocientífica</div>
+      <p>Una vocalización de juego, anterior al lenguaje, que pega a los grupos humanos con endorfinas.</p>
+    </div>
+    <div class="turn t-pastor">
+      <div class="who">El Pastor</div>
+      <p>El eco de Isaac: el nombre que Dios eligió para el hijo de la promesa significa, literalmente, «él ríe».</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Cinco definiciones distintas en treinta segundos. Esto va a ser divertido — y conste que no sé bajo cuál de sus teorías cae mi comentario.</p>
+    </div>
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>(risas en la sala — lo cual, señala la Neurocientífica, ya es un dato)</p>
+    </div>
+  </div>
+
+  <p>Esa es la mesa. Seis lentes, un solo fenómeno. Y como en tus mejores estudios, Gianni, la apuesta es que ninguna lente basta sola: la risa es a la vez filosófica, psicológica, evolutiva, neurológica y —sostendrá el Pastor— teológica. Vamos por partes.</p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 2. LOS TRES SOSPECHOSOS ============ -->
+<section id="sospechosos">
+  <h2>Los tres sospechosos clásicos</h2>
+  <p class="sec-sub">Superioridad, incongruencia, alivio: dos mil años de teoría en tres tarjetas</p>
+
+  <p>Antes de que cada panelista despliegue su artillería, conviene mapear el terreno. La tradición filosófica occidental ha producido esencialmente tres grandes teorías de la risa. La <strong>teoría de la superioridad</strong> —la más antigua— sostiene que reímos al sentirnos por encima de otro: la defendieron Platón, Aristóteles y, con especial crudeza, Hobbes. La <strong>teoría de la incongruencia</strong>, desarrollada por Kant y Schopenhauer a partir de intuiciones que ya estaban en Aristóteles y Cicerón, dice que la risa estalla cuando la realidad traiciona de golpe nuestras expectativas. Y la <strong>teoría del alivio</strong>, asociada a Herbert Spencer y a Freud, ve en la risa la descarga de una energía nerviosa o psíquica sobrante. <span class="src-inline-anchor"></span></p>
+  <p class="src-inline">Fuentes: <a href="https://sunypress.edu/Books/T/The-Philosophy-of-Laughter-and-Humor" target="_blank" rel="noopener">The Philosophy of Laughter and Humor (SUNY Press)</a>, <a href="https://iep.utm.edu/humor/" target="_blank" rel="noopener">Internet Encyclopedia of Philosophy</a></p>
+
+  <div class="theory-grid">
+    <div class="theory-card">
+      <h3>Superioridad</h3>
+      <div class="patron">Platón · Hobbes</div>
+      <p>Reímos porque, por un instante, nos descubrimos «más»: menos torpes, menos engañados, menos caídos que el otro. La risa como pequeño canto de triunfo.</p>
+    </div>
+    <div class="theory-card">
+      <h3>Incongruencia</h3>
+      <div class="patron">Kant · Schopenhauer</div>
+      <p>Reímos cuando el concepto y la realidad chocan de repente: la expectativa tensada se disuelve en nada, y ese cortocircuito nos sacude el cuerpo.</p>
+    </div>
+    <div class="theory-card">
+      <h3>Alivio</h3>
+      <div class="patron">Spencer · Freud</div>
+      <p>Reímos para descargar energía acumulada: tensión nerviosa o material reprimido que encuentra en el chiste una salida socialmente aceptable.</p>
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Observación incómoda número uno: tres teorías que llevan siglos conviviendo es la señal clásica de que ninguna funciona del todo. Si una bastara, las otras dos habrían muerto. La crítica estándar a la incongruencia, por ejemplo, es que resulta demasiado amplia: hay miles de incongruencias que no dan ninguna risa. Una factura inesperada es incongruente. Nadie ríe.</p>
+    </div>
+    <div class="turn t-filosofo">
+      <div class="who">El Filósofo</div>
+      <p>Cierto. Y por eso mi maestro Bergson, en 1900, decidió que el problema merecía algo más que digresiones bien escritas. Si me permiten la siguiente sección…</p>
+    </div>
+  </div>
+  <p class="src-inline">Sobre las críticas a cada teoría: <a href="https://iep.utm.edu/humor/" target="_blank" rel="noopener">IEP — Humor</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 3. BERGSON ============ -->
+<section id="bergson">
+  <h2>El Filósofo: lo mecánico incrustado en lo vivo</h2>
+  <p class="sec-sub">Henri Bergson y la risa como correctivo social</p>
+
+  <div class="dialogue">
+    <div class="turn t-filosofo">
+      <div class="who">El Filósofo</div>
+      <p>Piensen en el hombre que camina por la calle, tropieza y cae. ¿Por qué da risa? Bergson responde: porque por un instante dejó de ser persona y se comportó como cosa. Siguió su trayectoria por inercia, como un muñeco, cuando la vida exigía flexibilidad, atención, adaptación. Su fórmula célebre lo condensa: lo cómico es <em>«algo mecánico incrustado en lo vivo»</em>. Reímos de la rigidez donde esperábamos elasticidad.</p>
+      <p>Y aquí viene lo profundo: para Bergson la risa es un <strong>gesto social</strong>. La sociedad necesita miembros despiertos, flexibles, presentes. Cuando alguien se anquilosa —en sus hábitos, en su vanidad, en su distracción— la risa del grupo funciona como un correctivo suave: una humillación pequeña que dice «despierta, vuelve a la vida». Por eso, observa Bergson, la risa «parece necesitar un eco»: no reímos de verdad en soledad; la risa es de la tribu.</p>
+    </div>
+    <div class="turn t-pastor">
+      <div class="who">El Pastor</div>
+      <p>Me fascina que el filósofo francés llegue por la vía secular a algo que la teología de la comunidad ya intuía: la risa no es un fenómeno del individuo sino del «nosotros». Tomo nota para mi turno.</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Y yo tomo nota de que la teoría de Bergson explica de maravilla la comedia de Molière y bastante mal por qué un bebé de cuatro meses se carcajea con un «¿dónde está? ¡aquí está!». El bebé no está corrigiendo la rigidez social de nadie.</p>
+    </div>
+    <div class="turn t-filosofo">
+      <div class="who">El Filósofo</div>
+      <p>…touché. Cedo la palabra antes de que empeore.</p>
+    </div>
+  </div>
+
+  <p>El aporte duradero de Bergson es doble: la risa como respuesta a la <em>rigidez</em> (la persona convertida en mecanismo) y la risa como <em>institución social</em> con función correctiva, casi disciplinaria. Su ensayo de 1900, <em>La risa</em>, retiene elementos de la superioridad y de la incongruencia, pero abre una perspectiva nueva: la del grupo que se mantiene elástico y libre riéndose de sus propios automatismos.</p>
+  <p class="src-inline">Fuente principal: <a href="https://aeon.co/essays/for-henri-bergson-laughter-is-what-keeps-us-elastic-and-free" target="_blank" rel="noopener">Aeon — For Henri Bergson, laughter is what keeps us elastic and free</a>; sobre la rigidez como clave de lo cómico: <a href="https://www.tandfonline.com/doi/abs/10.1080/2040610X.2023.2149220" target="_blank" rel="noopener">Comedy Studies — Bergson's theory of comedy</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 4. FREUD ============ -->
+<section id="freud">
+  <h2>El Psicoanalista: la válvula del inconsciente</h2>
+  <p class="sec-sub">Freud, el chiste, y la energía que busca salida</p>
+
+  <div class="dialogue">
+    <div class="turn t-psicoanalista">
+      <div class="who">El Psicoanalista</div>
+      <p>Freud publicó en 1905 <em>El chiste y su relación con lo inconsciente</em>, y su tesis es elegante: vivimos gastando energía psíquica en reprimir —deseos agresivos, deseos sexuales, pensamientos socialmente inaceptables. El chiste es un contrabandista: disfraza el contenido prohibido con ingenio, lo cuela por la aduana de la censura interna, y la energía que estábamos usando para reprimir queda de pronto <em>desempleada</em>. Esa energía sobrante se descarga… como risa.</p>
+      <p>Por eso los chistes más explosivos rondan justo los temas más cargados: la muerte, el sexo, el poder, lo escatológico. Y por eso el alivio explica tan bien la risa nerviosa en el funeral, o la carcajada desproporcionada tras un susto. La tensión estaba ahí, esperando puerta.</p>
+    </div>
+    <div class="turn t-piagetiana">
+      <div class="who">La Piagetiana</div>
+      <p>Curiosamente, hasta el juego más inocente confirma algo de esto: en el «cucú-tras» el bebé acumula una micro-tensión —¿desapareció el rostro?— y la libera en carcajada cuando el rostro reaparece. Tensión y descarga, en miniatura.</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Concedo la elegancia. Pero la crítica de los filósofos sigue en pie: la «energía psíquica ahorrada» de Freud no se puede medir ni distinguir perceptualmente de ninguna otra energía. Es una metáfora hidráulica del siglo XIX vestida de mecanismo. Útil como intuición; indemostrable como física de la mente.</p>
+    </div>
+    <div class="turn t-psicoanalista">
+      <div class="who">El Psicoanalista</div>
+      <p>Le concedo la hidráulica. Pero observe que un siglo después, la neurociencia hablará de descargas de opioides endógenos al reír. Freud erró el mecanismo y acertó la silueta: en la risa, algo retenido se suelta.</p>
+    </div>
+  </div>
+  <p class="src-inline">Sobre Freud y la teoría del alivio: <a href="https://open.ocolearnok.org/whatsfunny/chapter/introduction-the-three-theories-and-beyond/" target="_blank" rel="noopener">What is Funny? — The Three Theories</a>; la crítica a la energía freudiana: <a href="https://iep.utm.edu/humor/" target="_blank" rel="noopener">IEP — Humor</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 5. PIAGET ============ -->
+<section id="piaget">
+  <h2>La Piagetiana: el bebé que ríe antes de hablar</h2>
+  <p class="sec-sub">Desarrollo cognitivo, cucú-tras, y la risa como termómetro de la mente</p>
+
+  <div class="dialogue">
+    <div class="turn t-piagetiana">
+      <div class="who">La Piagetiana</div>
+      <p>Mi punto de partida es un hecho que debería asombrarnos más: el bebé sonríe socialmente hacia las seis semanas y ríe hacia los tres o cuatro meses — mucho antes de sus primeros gestos (seis a ocho meses) y de su primera palabra (doce meses). La risa llega antes que el lenguaje. Eso solo ya sugiere que es un canal de comunicación de enorme peso evolutivo y de desarrollo.</p>
+      <p>Y aquí entra el juego favorito de Piaget para estudiar la mente infantil: el <strong>cucú-tras</strong> (peekaboo). Piaget concluyó que la <em>permanencia del objeto</em> —entender que las cosas siguen existiendo cuando no las vemos— se consolida hacia los ocho o nueve meses. Antes de eso, el rostro que desaparece tras las manos literalmente <em>deja de existir</em> para el bebé, y su reaparición es un pequeño milagro. La carcajada del cucú-tras es la banda sonora de una mente construyendo el mundo.</p>
+    </div>
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Es decir: cada vez que un abuelo juega al cucú-tras, está dirigiendo un experimento piagetiano sin saberlo.</p>
+    </div>
+    <div class="turn t-piagetiana">
+      <div class="who">La Piagetiana</div>
+      <p>Exactamente. Y la investigación posterior afinó la cronología de la risa como una escalera del desarrollo:</p>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-age">5–9 semanas</div>
+      <p>Sonrisa social: el bebé sonríe en respuesta a rostros y voces.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-age">3–4 meses</div>
+      <p>Primera risa, sobre todo ante estimulación física: cosquillas, balanceo, sonidos exagerados.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-age">5 meses</div>
+      <p>Risa ante juegos sociales: ya a los 4 meses los bebés participan del cucú-tras tomando turnos, y su participación crece a los 6 meses.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-age">7–9 meses</div>
+      <p>Risa ante eventos visuales incongruentes: mamá caminando como pato, papá con el biberón en la cabeza.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-age">9–11 meses</div>
+      <p>Creación de humor y «payasadas»: el bebé fabrica deliberadamente lo absurdo para hacer reír a otros. Nace el comediante.</p>
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="turn t-piagetiana">
+      <div class="who">La Piagetiana</div>
+      <p>Noten el patrón profundo, porque conecta con la incongruencia de Kant: investigadores como Sroufe y Wunsch observaron que la risa mantiene al bebé <em>orientado hacia el evento incongruente</em>, maximizando su oportunidad de comprenderlo. La risa infantil es cognición en acto: el niño ríe en la frontera exacta entre lo que ya domina y lo que todavía lo sorprende. Demasiado familiar: aburre. Demasiado extraño: asusta. La risa vive en el borde justo.</p>
+    </div>
+    <div class="turn t-filosofo">
+      <div class="who">El Filósofo</div>
+      <p>«La risa vive en el borde justo entre lo dominado y lo sorprendente.» Eso es casi una definición de aprendizaje. Su bebé y mi Bergson están más cerca de lo que pensé.</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Y para ser justos con la Piagetiana: la investigación moderna matiza a Piaget —los bebés participan activamente del cucú-tras a los 4 meses, antes de lo que su cronología clásica sugería. Como buen modelo, Piaget es un mapa excelente que la realidad ha ido corrigiendo. Lo digo con cariño: es lo mejor que le puede pasar a una teoría.</p>
+    </div>
+  </div>
+  <p class="src-inline">Hitos de sonrisa, risa y humor infantil: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3494749/" target="_blank" rel="noopener">Infant Humor Perception (PMC)</a>; Piaget y permanencia del objeto: <a href="https://en.wikipedia.org/wiki/Peekaboo" target="_blank" rel="noopener">Peekaboo — Wikipedia</a>; participación temprana en el cucú-tras: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5641350/" target="_blank" rel="noopener">Peekaboo Routines (PMC)</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 6. NEUROCIENCIA ============ -->
+<section id="neuro">
+  <h2>La Neurocientífica: ciencia de acera y química del vínculo</h2>
+  <p class="sec-sub">Provine, Dunbar, y lo que la risa hace en el cerebro y en el grupo</p>
+
+  <div class="dialogue">
+    <div class="turn t-neuro">
+      <div class="who">La Neurocientífica</div>
+      <p>Mis colegas teorizan en sillones; yo les traigo datos de la calle. Robert Provine, el gran pionero del estudio científico de la risa, hizo algo radical en su simplicidad: salió a observar cuándo y cómo ríe la gente real, en lo que llamó «neurociencia de acera». Sus hallazgos demolieron varias intuiciones del panel:</p>
+    </div>
+  </div>
+
+  <div class="keybox">
+    <h3>Lo que Provine encontró en la calle</h3>
+    <ul>
+      <li><strong>La risa casi nunca responde a chistes.</strong> La inmensa mayoría de la risa cotidiana sigue a comentarios banales en conversación. La risa es social antes que humorística.</li>
+      <li><strong>Es una vocalización innata y estereotipada</strong>, un «canto de juego» humano comparable, como sistema de estudio, al canto de las aves.</li>
+      <li><strong>Tenemos mínimo control voluntario sobre ella</strong>: por eso la risa fingida suena fingida, y la genuina nos «toma» más que producirla nosotros.</li>
+      <li><strong>Es contagiosa</strong>: la risa misma es estímulo suficiente para provocar risa — la base neurológica de las pistas de risas en TV.</li>
+      <li><strong>El «efecto puntuación»</strong>: la risa no interrumpe el habla, sino que cae en los puntos y comas naturales de la frase. El habla domina; la risa puntúa.</li>
+    </ul>
+  </div>
+
+  <div class="dialogue">
+    <div class="turn t-neuro">
+      <div class="who">La Neurocientífica</div>
+      <p>Y luego está la química. El equipo de Robin Dunbar en Oxford realizó una serie de seis experimentos —en laboratorio y en espectáculos reales— midiendo umbrales de dolor antes y después de reír, como indicador indirecto de liberación de endorfinas. Resultado: tras la risa compartida y genuina (la risa «Duchenne», la que arruga los ojos), el umbral de dolor sube significativamente, y el efecto se debe a la risa misma, no al simple buen humor. Estudios posteriores con neuroimagen confirmaron que la risa social dispara la liberación de opioides endógenos en el cerebro.</p>
+      <p>La hipótesis de Dunbar es preciosa: en primates, el vínculo grupal se construye espulgándose unos a otros —el <em>grooming</em>—, pero eso solo funciona de uno en uno. La risa sería nuestro <em>grooming a distancia y en grupo</em>: un mecanismo endorfínico que nos permite «acicalar» a varios a la vez, sosteniendo los grupos grandes que caracterizan a nuestra especie. Reír juntos pega.</p>
+    </div>
+    <div class="turn t-psicoanalista">
+      <div class="who">El Psicoanalista</div>
+      <p>«Algo retenido se suelta», dije yo. Opioides endógenos, dice ella. Insisto en mi cuarto de victoria póstuma para Freud.</p>
+    </div>
+    <div class="turn t-pastor">
+      <div class="who">El Pastor</div>
+      <p>Y yo subrayo lo otro: la ciencia más dura del panel acaba de decir que la risa existe <em>para el vínculo</em>. Que su función no es el chiste sino el «nosotros». Sostengan ese pensamiento un minuto.</p>
+    </div>
+  </div>
+  <p class="src-inline">Provine y la «neurociencia de acera»: <a href="https://pubmed.ncbi.nlm.nih.gov/26131571/" target="_blank" rel="noopener">Laughter as a Scientific Problem (J Comp Neurol)</a>, <a href="https://royalsocietypublishing.org/rstb/article/377/1863/20210178/109041/Robert-Provine-the-critical-human-importance-of" target="_blank" rel="noopener">Royal Society — tributo a Provine</a>, <a href="https://books.google.com/books/about/Laughter.html?id=-7WIQgAACAAJ" target="_blank" rel="noopener">Provine, Laughter: A Scientific Investigation</a>; endorfinas y umbral de dolor: <a href="https://royalsocietypublishing.org/rspb/article/279/1731/1161/73984/Social-laughter-is-correlated-with-an-elevated" target="_blank" rel="noopener">Dunbar et al., Proc. R. Soc. B (2012)</a>; opioides y neuroimagen: <a href="https://www.jneurosci.org/content/37/25/6125" target="_blank" rel="noopener">J. Neuroscience (2017)</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 7. PASTOR ============ -->
+<section id="pastor">
+  <h2>El Pastor: Sara rió, y Dios le puso nombre a la risa</h2>
+  <p class="sec-sub">Una teología breve de la carcajada</p>
+
+  <div class="dialogue">
+    <div class="turn t-pastor">
+      <div class="who">El Pastor</div>
+      <p>Gracias por guardarme el pensamiento. Abro la Biblia donde la risa entra por primera vez con todo su peso: Génesis. Sara, anciana y estéril, escucha la promesa de un hijo y ríe — primero la risa amarga de la incredulidad, escondida tras la puerta de la tienda (Génesis 18). Pero cuando el niño nace, su risa se transfigura:</p>
+    </div>
+  </div>
+
+  <blockquote>
+    «Dios me ha hecho reír, y cualquiera que lo oiga se reirá conmigo.»
+    <span class="cite-line">— Génesis 21:6 (RVR1960)</span>
+  </blockquote>
+
+  <div class="dialogue">
+    <div class="turn t-pastor">
+      <div class="who">El Pastor</div>
+      <p>Y noten el detalle que ningún lector hebreo podía perderse: el niño se llama <strong>Isaac</strong> — <em>Yitsjaq</em>, «él ríe». El hijo de la promesa, el eslabón del pacto del que descenderá el Mesías, lleva la risa en el nombre. Dios inscribió una carcajada en la genealogía de la redención. La risa de Sara pasa de la incredulidad («¿a mi edad?») al asombro gozoso («¿quién le hubiera dicho a Abraham…?»): es la incongruencia de Kant, sí, pero resuelta por la fidelidad de Dios. Lo imposible se volvió cuna.</p>
+      <p>Y fíjense cómo el resto de la Escritura sostiene el tema. El salmista, al volver del cautiverio: «entonces nuestra boca se llenó de risa» (Salmo 126:2) — la risa como memoria corporal de la liberación. El sabio: «el corazón alegre constituye buen remedio» (Proverbios 17:22) — ¡y la doctora Dunbar acaba de mostrarnos las endorfinas del remedio! El Predicador: hay «tiempo de llorar, y tiempo de reír» (Eclesiastés 3:4) — la risa como estación legítima de la vida bajo el sol. Y Jesús, en el llano: «Bienaventurados los que ahora lloráis, porque reiréis» (Lucas 6:21) — la risa como promesa escatológica, el destino final de los que hoy lloran.</p>
+      <p>Mi síntesis pastoral: la risa compartida es un anticipo del banquete. Si la Neurocientífica tiene razón y reír juntos teje el vínculo del grupo, entonces la risa en la mesa de la iglesia no es una distracción de lo sagrado — es un ensayo de la fiesta a la que fuimos invitados. El Dios que llamó «Él-ríe» al hijo de la promesa no es un Dios al que la carcajada le resulte ajena.</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Reconozco que «Dios inscribió una carcajada en la genealogía de la redención» es una buena frase. La anoto antes de proceder a aguarles la fiesta a todos.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 8. ESCÉPTICO ============ -->
+<section id="esceptico">
+  <h2>El Escéptico Honesto: lo que todavía no sabemos</h2>
+  <p class="sec-sub">Objeciones, cabos sueltos, y la rana de la disección</p>
+
+  <div class="dialogue">
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Primero, el chiste obligatorio sobre este panel: analizar el humor se parece a disecar una rana — se aprende algo, pero el paciente no suele sobrevivir. Llevamos una hora explicando la risa y nadie se ha reído de las explicaciones. Eso también es un dato.</p>
+      <p>Segundo, las objeciones serias. <strong>Uno:</strong> ninguna teoría unifica el fenómeno. La superioridad no explica al bebé; Bergson no explica las cosquillas; el alivio no distingue la risa humorística de la nerviosa; la incongruencia no explica por qué <em>esta</em> incongruencia da risa y aquella da miedo. <strong>Dos:</strong> mucha de la evidencia es correlacional o indirecta — el umbral del dolor es un <em>proxy</em> de endorfinas, no una medición directa, aunque la neuroimagen posterior ayudó. <strong>Tres:</strong> Provine mismo advertía que la risa parece universal, pero que lo que <em>significa</em> en cada cultura requiere estudios transculturales que rara vez se hacen.</p>
+      <p>Y tercero, mi concesión honesta: que algo resista seis lentes sin agotarse no es señal de fracaso del panel. Es señal de que la risa es más grande que nuestras teorías. Lo cual, si lo piensan, es exactamente lo que diría el Pastor de su Dios y la Piagetiana de su bebé: lo más familiar es lo último que entendemos.</p>
+    </div>
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Un escéptico que termina en asombro. En esta mesa eso cuenta como conversión parcial.</p>
+    </div>
+  </div>
+  <p class="src-inline">Sobre las limitaciones de cada teoría: <a href="https://iep.utm.edu/humor/" target="_blank" rel="noopener">IEP — Humor</a>; sobre la necesidad de estudios transculturales: <a href="https://umbc.edu/stories/neuroscientist-robert-provine-says-new-study-could-help-explain-laughter-as-a-basic-aspect-of-human-nature/" target="_blank" rel="noopener">UMBC — Provine en NPR</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 9. SÍNTESIS ============ -->
+<section id="sintesis">
+  <h2>Mesa redonda final: una teoría en cuatro pisos</h2>
+  <p class="sec-sub">Donde el panel descubre que sus teorías no compiten — se apilan</p>
+
+  <p>El moderador propone el ejercicio de cierre: en lugar de votar una teoría ganadora, ¿pueden las seis voces ordenarse como pisos de un mismo edificio? El panel, sorprendentemente, acepta.</p>
+
+  <div class="keybox">
+    <h3>El edificio de la risa</h3>
+    <ul>
+      <li><strong>Planta baja — el cuerpo (Neurocientífica):</strong> la risa es una vocalización innata de juego, anterior al lenguaje, contagiosa, con química propia: endorfinas que pegan al grupo.</li>
+      <li><strong>Primer piso — la mente (Piagetiana):</strong> esa vocalización se dispara en la frontera cognitiva entre lo dominado y lo sorprendente; la risa acompaña y celebra la comprensión.</li>
+      <li><strong>Segundo piso — la psique (Psicoanalista):</strong> lo que la mente retiene y reprime encuentra en el humor una salida segura; la risa descarga lo que no podíamos decir.</li>
+      <li><strong>Tercer piso — la sociedad (Filósofo):</strong> el grupo usa la risa para mantenerse elástico, corrigiendo con suavidad la rigidez de sus miembros; la risa necesita eco.</li>
+      <li><strong>Azotea — el horizonte (Pastor):</strong> la risa compartida como anticipo: «entonces nuestra boca se llenó de risa», el nombre Isaac, los que lloran que reirán.</li>
+      <li><strong>El inspector de obra (Escéptico):</strong> recorre todos los pisos recordando que los planos son provisionales — y que eso está bien.</li>
+    </ul>
+  </div>
+
+  <div class="dialogue">
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Última palabra, una frase cada uno. Ahora sí, de verdad una.</p>
+    </div>
+    <div class="turn t-neuro">
+      <div class="who">La Neurocientífica</div>
+      <p>Ríe con alguien hoy: es el grooming más barato que existe.</p>
+    </div>
+    <div class="turn t-piagetiana">
+      <div class="who">La Piagetiana</div>
+      <p>Cuando un niño te haga reír a propósito, felicítalo: acaba de estrenar una mente.</p>
+    </div>
+    <div class="turn t-psicoanalista">
+      <div class="who">El Psicoanalista</div>
+      <p>Escucha de qué te ríes: ahí está el inventario de lo que cargas.</p>
+    </div>
+    <div class="turn t-filosofo">
+      <div class="who">El Filósofo</div>
+      <p>Si hace tiempo que nadie se ríe de ti con cariño, revisa si te has vuelto máquina.</p>
+    </div>
+    <div class="turn t-pastor">
+      <div class="who">El Pastor</div>
+      <p>La última risa de la historia no será irónica: será la de la mesa puesta.</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>No entendemos la risa — y mientras tanto, sospechosamente, ella nos sigue entendiendo a nosotros.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. FUENTES ============ -->
+<section id="fuentes" class="sources">
+  <h2>Fuentes</h2>
+  <p class="sec-sub">Para seguir tirando del hilo</p>
+  <ul>
+    <li><a href="https://aeon.co/essays/for-henri-bergson-laughter-is-what-keeps-us-elastic-and-free" target="_blank" rel="noopener">Emily Herring, «For Henri Bergson, laughter is what keeps us elastic and free» — Aeon</a></li>
+    <li><a href="https://sunypress.edu/Books/T/The-Philosophy-of-Laughter-and-Humor" target="_blank" rel="noopener">John Morreall (ed.), <em>The Philosophy of Laughter and Humor</em> — SUNY Press</a></li>
+    <li><a href="https://iep.utm.edu/humor/" target="_blank" rel="noopener">«Humor» — Internet Encyclopedia of Philosophy</a></li>
+    <li><a href="https://open.ocolearnok.org/whatsfunny/chapter/introduction-the-three-theories-and-beyond/" target="_blank" rel="noopener">«The Three Major Theories of Humor» — What is Funny? (OER)</a></li>
+    <li><a href="https://books.google.com/books/about/Laughter.html?id=-7WIQgAACAAJ" target="_blank" rel="noopener">Robert Provine, <em>Laughter: A Scientific Investigation</em></a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/26131571/" target="_blank" rel="noopener">Provine, «Laughter as a scientific problem: an adventure in sidewalk neuroscience» — J. Comp. Neurol. (2016)</a></li>
+    <li><a href="https://royalsocietypublishing.org/rstb/article/377/1863/20210178/109041/Robert-Provine-the-critical-human-importance-of" target="_blank" rel="noopener">Scott, Cai &amp; Billing, «Robert Provine: the critical human importance of laughter» — Phil. Trans. R. Soc. B (2022)</a></li>
+    <li><a href="https://royalsocietypublishing.org/rspb/article/279/1731/1161/73984/Social-laughter-is-correlated-with-an-elevated" target="_blank" rel="noopener">Dunbar et al., «Social laughter is correlated with an elevated pain threshold» — Proc. R. Soc. B (2012)</a></li>
+    <li><a href="https://www.jneurosci.org/content/37/25/6125" target="_blank" rel="noopener">Manninen et al., «Social Laughter Triggers Endogenous Opioid Release in Humans» — J. Neuroscience (2017)</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3494749/" target="_blank" rel="noopener">Mireault et al., «Infant Humor Perception from 3- to 6-months» — PMC</a></li>
+    <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5641350/" target="_blank" rel="noopener">Nomikou et al., «Emerging Participation in Peekaboo Routines» — PMC</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Peekaboo" target="_blank" rel="noopener">«Peekaboo» (Piaget y la permanencia del objeto) — Wikipedia</a></li>
+  </ul>
+  <p style="margin-top:1.4rem; font-size:0.88rem; font-style:italic; color:var(--ink-soft);">Citas bíblicas: Génesis 18:12–15; 21:1–7; Salmo 126:2; Proverbios 17:22; Eclesiastés 3:4; Lucas 6:21 (RVR1960).</p>
+</section>
+
+<footer>
+  Café con Claude · Cuaderno de estudio · «Dios me ha hecho reír» — Gn 21:6
+</footer>
+
+</div>
+</main>
+</div>
+
+<script>
+  // ---------- Hamburger ----------
+  const hamburger = document.getElementById('hamburger');
+  const rail = document.getElementById('rail');
+  hamburger.addEventListener('click', () => {
+    const open = rail.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  rail.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    rail.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ---------- Scroll-spy (IntersectionObserver) ----------
+  const links = Array.from(rail.querySelectorAll('a'));
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const link = map.get(entry.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+  document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
