@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La arquitectura de la risa — Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#f6f0e4;
+  --parchment-deep:#efe6d3;
+  --ink:#2c2418;
+  --ink-soft:#5a4d3a;
+  --ink-faint:#8a7a60;
+  --accent:#a4532c;        /* teja cálida */
+  --accent-soft:#c97f52;
+  --gold:#b58a3c;
+  --sage:#6f7d56;          /* zona cómica */
+  --danger:#9c3d32;        /* zona amenazante */
+  --calm:#7a8a99;          /* zona aburrida */
+  --card:#fbf7ee;
+  --line:#d9cdb4;
+  --shadow:0 2px 14px rgba(60,45,20,.10);
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  font-family:'Spectral',Georgia,serif;
+  background:var(--parchment);
+  color:var(--ink);
+  line-height:1.75;
+  font-size:1.05rem;
+}
+/* ---------- layout ---------- */
+.wrap{display:flex;max-width:1180px;margin:0 auto}
+nav.rail{
+  position:sticky;top:0;align-self:flex-start;
+  width:230px;min-width:230px;height:100vh;
+  padding:2.6rem 1.4rem 2rem 1.8rem;
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:.15rem;
+}
+nav.rail .brand{
+  font-family:'Fraunces',serif;font-weight:600;font-size:.95rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:1.6rem;
+}
+nav.rail a{
+  display:block;text-decoration:none;color:var(--ink-faint);
+  font-size:.88rem;padding:.42rem .65rem;border-left:2px solid transparent;
+  border-radius:0 8px 8px 0;transition:all .25s ease;line-height:1.35;
+}
+nav.rail a:hover{color:var(--ink);background:var(--parchment-deep)}
+nav.rail a.active{color:var(--accent);border-left-color:var(--accent);background:var(--parchment-deep);font-weight:500}
+main{flex:1;min-width:0;padding:0 2.6rem 5rem}
+/* ---------- hamburger / mobile ---------- */
+.menu-btn{
+  display:none;position:fixed;top:1rem;left:1rem;z-index:60;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  width:44px;height:44px;cursor:pointer;box-shadow:var(--shadow);
+}
+.menu-btn span{display:block;width:20px;height:2px;background:var(--ink);margin:4px auto;transition:transform .3s,opacity .3s}
+.menu-btn.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.menu-btn.open span:nth-child(2){opacity:0}
+.menu-btn.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:900px){
+  .menu-btn{display:block}
+  nav.rail{
+    position:fixed;left:0;top:0;z-index:50;background:var(--parchment);
+    transform:translateX(-105%);transition:transform .3s ease;box-shadow:6px 0 24px rgba(0,0,0,.12);
+  }
+  nav.rail.open{transform:translateX(0)}
+  main{padding:0 1.3rem 4rem}
+}
+/* ---------- hero ---------- */
+header.hero{
+  padding:5.5rem 0 3rem;border-bottom:1px solid var(--line);margin-bottom:3rem;
+}
+.eyebrow{
+  font-family:'Fraunces',serif;font-size:.82rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:1rem;
+}
+h1{
+  font-family:'Fraunces',serif;font-weight:560;font-size:clamp(2.3rem,5vw,3.6rem);
+  line-height:1.12;letter-spacing:-.01em;margin-bottom:1.2rem;
+}
+h1 em{font-style:italic;color:var(--accent)}
+.lede{font-size:1.18rem;color:var(--ink-soft);max-width:46ch;font-weight:300}
+/* ---------- sections ---------- */
+section{padding:2.8rem 0;border-bottom:1px solid var(--line);scroll-margin-top:1.5rem}
+section:last-of-type{border-bottom:none}
+h2{
+  font-family:'Fraunces',serif;font-weight:560;font-size:1.85rem;
+  margin-bottom:1.4rem;line-height:1.25;
+}
+h3{
+  font-family:'Fraunces',serif;font-weight:520;font-size:1.25rem;
+  margin:1.8rem 0 .7rem;color:var(--ink-soft);
+}
+p{margin-bottom:1.1rem;max-width:68ch}
+strong{font-weight:600;color:var(--ink)}
+em{color:var(--ink-soft)}
+/* ---------- panel voices ---------- */
+.panel{margin:1.8rem 0;display:flex;flex-direction:column;gap:1rem}
+.voice{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.1rem 1.3rem;box-shadow:var(--shadow);max-width:62ch;
+}
+.voice .who{
+  font-family:'Fraunces',serif;font-size:.85rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:.35rem;display:block;
+}
+.voice p{margin-bottom:.5rem}
+.voice p:last-child{margin-bottom:0}
+.v-neuro .who{color:#5b6c8f}
+.v-filo .who{color:var(--gold)}
+.v-psico .who{color:var(--sage)}
+.v-comed .who{color:var(--accent)}
+.v-escep .who{color:var(--danger)}
+.voice.shift{align-self:flex-end;background:var(--parchment-deep)}
+/* ---------- callouts & misc ---------- */
+.formula{
+  font-family:'Fraunces',serif;font-size:1.25rem;text-align:center;
+  background:var(--parchment-deep);border:1px dashed var(--accent-soft);
+  border-radius:var(--radius);padding:1.3rem 1.5rem;margin:1.8rem auto;max-width:60ch;
+  line-height:1.5;
+}
+.formula small{display:block;font-family:'Spectral',serif;font-size:.85rem;color:var(--ink-faint);margin-top:.5rem;letter-spacing:.04em}
+.note{
+  border-left:3px solid var(--gold);background:var(--card);
+  padding:.9rem 1.2rem;border-radius:0 10px 10px 0;margin:1.4rem 0;max-width:64ch;
+  font-size:.98rem;color:var(--ink-soft);
+}
+.sources{
+  margin-top:1.6rem;font-size:.88rem;color:var(--ink-faint);
+}
+.sources a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent-soft)}
+.sources a:hover{border-bottom-style:solid}
+table{border-collapse:collapse;margin:1.5rem 0;width:100%;max-width:66ch;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:.6rem .85rem;text-align:left;vertical-align:top}
+th{font-family:'Fraunces',serif;font-weight:600;background:var(--parchment-deep);font-size:.88rem;letter-spacing:.03em}
+td:first-child{font-weight:500}
+/* ---------- demo: doble golpe ---------- */
+.demo{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:1.6rem 1.6rem 1.8rem;margin:1.8rem 0;max-width:62ch;
+}
+.demo h4{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:600;margin-bottom:1rem}
+.gauge{
+  height:18px;background:var(--parchment-deep);border:1px solid var(--line);
+  border-radius:99px;overflow:hidden;margin:.8rem 0 1rem;
+}
+.gauge .fill{
+  height:100%;width:4%;border-radius:99px;
+  background:linear-gradient(90deg,var(--sage),var(--gold),var(--danger));
+  transition:width .9s cubic-bezier(.22,.9,.3,1);
+}
+.demo .stage{min-height:3.4rem;font-style:italic;color:var(--ink-soft);margin-bottom:.9rem}
+.demo .laugh{
+  font-family:'Fraunces',serif;font-size:1.7rem;color:var(--accent);
+  text-align:center;opacity:0;transform:scale(.6);transition:all .45s cubic-bezier(.34,1.6,.5,1);
+  height:2.4rem;
+}
+.demo .laugh.show{opacity:1;transform:scale(1)}
+button.btn{
+  font-family:'Fraunces',serif;font-size:.92rem;font-weight:600;
+  background:var(--accent);color:#fdf9f1;border:none;border-radius:10px;
+  padding:.6rem 1.2rem;cursor:pointer;margin-right:.6rem;transition:background .25s;
+}
+button.btn:hover{background:#8a4423}
+button.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent-soft)}
+button.btn.ghost:hover{background:var(--parchment-deep)}
+button.btn:disabled{opacity:.45;cursor:default}
+/* ---------- demo: mapa ---------- */
+.map-demo{max-width:62ch}
+.map-field{
+  position:relative;width:100%;aspect-ratio:1.45/1;
+  background:linear-gradient(135deg,#dfe5e9 0%,#e9ead9 50%,#ecd9d2 100%);
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  touch-action:none;cursor:crosshair;margin:1rem 0;
+}
+.map-field .zone-label{
+  position:absolute;font-family:'Fraunces',serif;font-size:.8rem;letter-spacing:.08em;
+  text-transform:uppercase;opacity:.6;pointer-events:none;
+}
+.zl-boring{left:4%;bottom:5%;color:var(--calm)}
+.zl-funny{left:50%;top:46%;transform:translate(-50%,-50%);color:var(--sage);font-size:.95rem;opacity:.75}
+.zl-threat{right:4%;top:5%;color:var(--danger)}
+.map-dot{
+  position:absolute;width:26px;height:26px;border-radius:50%;
+  background:var(--ink);border:3px solid #fdf9f1;box-shadow:0 2px 8px rgba(0,0,0,.3);
+  transform:translate(-50%,-50%);cursor:grab;
+}
+.map-dot:active{cursor:grabbing}
+.axis-x,.axis-y{position:absolute;font-size:.75rem;color:var(--ink-faint);letter-spacing:.05em;pointer-events:none}
+.axis-x{bottom:2%;left:50%;transform:translateX(-50%)}
+.axis-y{top:50%;left:1.5%;transform:rotate(-90deg) translateX(50%);transform-origin:left center}
+.map-read{
+  font-family:'Fraunces',serif;font-size:1.15rem;text-align:center;min-height:2.2rem;
+  margin-top:.4rem;transition:color .3s;
+}
+.map-sub{text-align:center;font-size:.88rem;color:var(--ink-faint);min-height:1.4rem}
+/* ---------- coda ---------- */
+.coda{
+  font-family:'Fraunces',serif;font-style:italic;font-size:1.25rem;line-height:1.6;
+  color:var(--ink-soft);border-left:3px solid var(--accent);padding-left:1.3rem;
+  margin:2rem 0;max-width:54ch;
+}
+footer{
+  padding:2.5rem 0 1rem;color:var(--ink-faint);font-size:.85rem;
+  font-style:italic;
+}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+
+<div class="wrap">
+
+<nav class="rail" id="rail">
+  <div class="brand">Café con Claude</div>
+  <a href="#hipotesis">La hipótesis del doble golpe</a>
+  <a href="#teorias">Tres teorías, una conversación</a>
+  <a href="#anatomia">Anatomía del doble golpe</a>
+  <a href="#mapa">Mapa interactivo</a>
+  <a href="#carcajada">¿Por qué algunos ríen más fuerte?</a>
+  <a href="#ira">La fórmula inversa: la ira</a>
+  <a href="#pulpito">El aula y el púlpito</a>
+  <a href="#coda">Coda</a>
+</nav>
+
+<main>
+
+<header class="hero">
+  <div class="eyebrow">Cuaderno de exploración · Junio 2026</div>
+  <h1>La arquitectura<br>de la <em>risa</em></h1>
+  <p class="lede">Gianni llegó con una corazonada: <em>para que alguien ría, hacen falta dos golpes</em>. Convocamos al panel para ponerla a prueba contra la ciencia del humor.</p>
+</header>
+
+<!-- ============ 1. HIPÓTESIS ============ -->
+<section id="hipotesis">
+  <h2>La hipótesis del doble golpe</h2>
+  <p>Todo empezó con una observación de campo, de esas que nacen viendo a la gente reír: algo no resulta gracioso con <em>una</em> sorpresa, sino cuando ocurren <strong>dos situaciones poco convencionales, una inmediatamente después de la otra</strong>. El primer golpe abre algo; el segundo lo cierra de un portazo inesperado, y ahí estalla la carcajada.</p>
+
+  <div class="panel">
+    <div class="voice v-comed">
+      <span class="who">🎭 El Comediante</span>
+      <p>Permítanme decirlo con orgullo gremial: Gianni acaba de redescubrir, sin manual, lo que en mi oficio llamamos <em>setup y punchline</em>. Siglos de comediantes muriendo en escenarios para aprender eso, y él lo dedujo observando tropezones.</p>
+    </div>
+    <div class="voice v-escep shift">
+      <span class="who">🦊 El Escéptico Honesto</span>
+      <p>Despacio. Una intuición que <em>suena</em> bien no es una teoría. Mi pregunta es concreta: ¿la ciencia exige realmente <strong>dos</strong> momentos, o basta con uno bien puesto? Porque si basta uno, la hipótesis se desinfla.</p>
+    </div>
+    <div class="voice v-neuro">
+      <span class="who">🧠 La Neurocientífica</span>
+      <p>Buena pregunta, zorro. Adelanto algo: el cerebro es una máquina de predicción, y la risa parece ser lo que ocurre cuando una predicción <em>falla sin peligro</em>. Para que una predicción falle… primero alguien tuvo que construirla. Ahí ya hay dos tiempos.</p>
+    </div>
+  </div>
+
+  <div class="formula">
+    Golpe 1: el cerebro apuesta. &nbsp;→&nbsp; Golpe 2: la apuesta colapsa… <em>a salvo</em>.
+    <small>La risa no es la violación; es la resolución segura de la incertidumbre.</small>
+  </div>
+</section>
+
+<!-- ============ 2. TEORÍAS ============ -->
+<section id="teorias">
+  <h2>Tres teorías, una conversación</h2>
+  <p>No existe una "teoría oficial" única del humor, pero tres marcos dominan la investigación moderna, y resultan sorprendentemente compatibles entre sí — y con la corazonada de Gianni.</p>
+
+  <h3>1 · Incongruencia y resolución</h3>
+  <p>La idea más antigua (ya rondaba en Kant y Schopenhauer): reímos cuando algo rompe una expectativa. La versión moderna añade el matiz decisivo: no basta el caos — la incongruencia debe poder <strong>resolverse</strong>. Estudios con resonancia magnética funcional han propuesto un <em>modelo de tres etapas</em>: el cerebro primero detecta la incongruencia, luego la resuelve reinterpretando el planteamiento, y solo entonces aparece el placer. Detectar, resolver, disfrutar: tres etapas con sustratos neuronales distinguibles. La carcajada es el premio por una reinterpretación exitosa.</p>
+
+  <h3>2 · Violación benigna</h3>
+  <p>La formulación contemporánea más influyente es la de Peter McGraw y Caleb Warren, construida sobre el trabajo del lingüista Tom Veatch: el humor ocurre <em>cuando y solo cuando</em> se cumplen tres condiciones — (1) la situación es una <strong>violación</strong> de cómo el mundo "debería" ser, (2) la situación es a la vez <strong>benigna</strong>, y (3) ambas percepciones ocurren <strong>simultáneamente</strong>. En sus experimentos, las personas reportaban más risa ante una transgresión moral inofensiva que ante la misma escena sin transgresión. Y la teoría también explica lo <em>no</em> gracioso: violación sin benignidad produce rechazo; benignidad sin violación produce bostezo.</p>
+
+  <h3>3 · El cerebro predictivo</h3>
+  <p>La capa neurocientífica actual lo traduce así: el cerebro apuesta sin descanso por "lo que viene después". Cuando la apuesta falla, registra un error de predicción; si además verifica que no hay amenaza, la tensión acumulada se libera — y esa liberación es la risa. Incluso hay hipótesis evolutivas: la risa habría surgido como <em>señal de seguridad</em> durante el juego — el cosquilleo y la pelea fingida son "ataques" físicamente amenazantes pero inofensivos, y la risa avisa a la manada: <em>falsa alarma, seguimos jugando</em>.</p>
+
+  <div class="panel">
+    <div class="voice v-filo">
+      <span class="who">📜 El Filósofo</span>
+      <p>No

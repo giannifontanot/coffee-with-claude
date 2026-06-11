@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dos golpes y una salida — Anatomía de la risa (y de su gemela furiosa)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#f8f3e7;
+    --parchment-deep:#f1e9d6;
+    --card:#fdfaf2;
+    --ink:#2c2620;
+    --ink-soft:#5a5045;
+    --ink-faint:#8a7d6d;
+    --terracotta:#b25b3e;
+    --ochre:#a8842f;
+    --olive:#6b6b3a;
+    --plum:#7a4a5e;
+    --slate:#4e5f6d;
+    --line:#d9cdb4;
+    --maxw:46rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    background:var(--parchment);
+    color:var(--ink);
+    font-family:'Spectral',Georgia,serif;
+    font-size:1.075rem;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;line-height:1.2;font-weight:600}
+  a{color:var(--terracotta);text-decoration:none;border-bottom:1px solid rgba(178,91,62,.35)}
+  a:hover{border-bottom-color:var(--terracotta)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--terracotta);outline-offset:3px}
+
+  /* ===== Side rail nav ===== */
+  .rail{
+    position:fixed;top:0;left:0;bottom:0;width:230px;
+    padding:2.5rem 1.5rem;
+    border-right:1px solid var(--line);
+    background:var(--parchment-deep);
+    overflow-y:auto;
+    z-index:40;
+  }
+  .rail .brand{
+    font-family:'Fraunces',serif;font-size:.95rem;font-weight:600;
+    letter-spacing:.04em;color:var(--ink-soft);
+    margin-bottom:2rem;display:block;border:none;
+  }
+  .rail nav{display:flex;flex-direction:column;gap:.15rem}
+  .rail nav a{
+    display:block;padding:.4rem .6rem;border:none;border-left:2px solid transparent;
+    font-size:.85rem;color:var(--ink-faint);line-height:1.35;border-radius:0 4px 4px 0;
+    transition:color .2s,border-color .2s,background .2s;
+  }
+  .rail nav a:hover{color:var(--ink)}
+  .rail nav a.active{
+    color:var(--terracotta);border-left-color:var(--terracotta);
+    background:rgba(178,91,62,.06);font-weight:500;
+  }
+  .menu-btn{
+    display:none;position:fixed;top:1rem;right:1rem;z-index:60;
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:.55rem .7rem;cursor:pointer;font-size:1.1rem;color:var(--ink);
+    box-shadow:0 2px 8px rgba(44,38,32,.08);
+  }
+  @media (max-width: 940px){
+    .rail{transform:translateX(-100%);transition:transform .25s ease;width:260px;box-shadow:4px 0 20px rgba(44,38,32,.12)}
+    .rail.open{transform:translateX(0)}
+    .menu-btn{display:block}
+    main{margin-left:0!important;padding:0 1.25rem!important}
+  }
+
+  main{margin-left:230px;padding:0 3rem}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+
+  /* ===== Hero ===== */
+  header.hero{padding:5.5rem 0 3.5rem;border-bottom:1px solid var(--line)}
+  .eyebrow{
+    font-family:'Spectral',serif;font-size:.78rem;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ochre);margin-bottom:1.1rem;font-weight:500;
+  }
+  header.hero h1{
+    font-size:clamp(2.1rem,5vw,3.1rem);font-weight:550;
+    font-variation-settings:'opsz' 144;
+    margin-bottom:1.2rem;
+  }
+  header.hero h1 em{font-style:italic;color:var(--terracotta)}
+  .lede{font-size:1.18rem;color:var(--ink-soft);font-weight:300;max-width:38rem}
+  .hero-meta{margin-top:1.6rem;font-size:.85rem;color:var(--ink-faint);font-style:italic}
+
+  /* ===== Sections ===== */
+  section{padding:3.2rem 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+  section h2{font-size:1.7rem;margin-bottom:.4rem}
+  .kicker{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.6rem}
+  section h3{font-size:1.18rem;margin:1.8rem 0 .6rem;color:var(--ink)}
+  section p{margin-bottom:1.1rem}
+  section p:last-child{margin-bottom:0}
+  strong{font-weight:600}
+  em{font-style:italic}
+
+  blockquote{
+    margin:1.5rem 0;padding:1rem 1.4rem;
+    border-left:3px solid var(--ochre);
+    background:var(--card);border-radius:0 8px 8px 0;
+    font-style:italic;color:var(--ink-soft);
+  }
+  blockquote .who{display:block;margin-top:.5rem;font-style:normal;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+
+  /* ===== Voices (panel) ===== */
+  .voice{
+    margin:1.4rem 0;padding:1.15rem 1.4rem;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    position:relative;
+  }
+  .voice .speaker{
+    font-family:'Fraunces',serif;font-weight:600;font-size:.82rem;
+    letter-spacing:.1em;text-transform:uppercase;
+    display:inline-block;margin-bottom:.45rem;
+  }
+  .voice p{margin-bottom:.7rem;font-size:1.02rem}
+  .voice p:last-child{margin-bottom:0}
+  .v-neuro .speaker{color:var(--slate)}      .v-neuro{border-top:3px solid var(--slate)}
+  .v-psico .speaker{color:var(--terracotta)} .v-psico{border-top:3px solid var(--terracotta)}
+  .v-comica .speaker{color:var(--ochre)}     .v-comica{border-top:3px solid var(--ochre)}
+  .v-escept .speaker{color:var(--plum)}      .v-escept{border-top:3px solid var(--plum)}
+  .v-pastor .speaker{color:var(--olive)}     .v-pastor{border-top:3px solid var(--olive)}
+
+  /* ===== Formula cards ===== */
+  .formula{
+    margin:1.6rem 0;padding:1.4rem 1.6rem;text-align:center;
+    background:linear-gradient(180deg,var(--card),var(--parchment-deep));
+    border:1px solid var(--line);border-radius:12px;
+  }
+  .formula .f-line{
+    font-family:'Fraunces',serif;font-size:1.15rem;font-weight:550;color:var(--ink);
+    display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.5rem .7rem;
+  }
+  .formula .f-tag{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.7rem}
+  .chip{
+    display:inline-block;padding:.25rem .7rem;border-radius:999px;
+    font-size:.92rem;border:1px solid var(--line);background:var(--parchment);
+  }
+  .chip.warm{border-color:rgba(178,91,62,.4);color:var(--terracotta)}
+  .chip.cool{border-color:rgba(78,95,109,.4);color:var(--slate)}
+  .chip.gold{border-color:rgba(168,132,47,.45);color:var(--ochre)}
+  .op{color:var(--ink-faint);font-weight:300}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.6rem 0}
+  @media (max-width:640px){.compare{grid-template-columns:1fr}}
+  .compare .col{padding:1.2rem 1.3rem;border-radius:10px;border:1px solid var(--line);background:var(--card)}
+  .compare .col h4{font-size:1rem;margin-bottom:.6rem;letter-spacing:.04em}
+  .compare .col ul{list-style:none}
+  .compare .col li{padding:.3rem 0;font-size:.97rem;border-bottom:1px dashed var(--line)}
+  .compare .col li:last-child{border-bottom:none}
+  .col.risa{border-top:3px solid var(--ochre)}
+  .col.enojo{border-top:3px solid var(--plum)}
+
+  /* ===== Interactive demo ===== */
+  .demo{
+    margin:2rem 0 .5rem;padding:1.8rem 1.6rem;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 3px 16px rgba(44,38,32,.05);
+  }
+  .demo h3{margin-top:0}
+  .gauge-wrap{margin:1.3rem 0 .9rem}
+  .gauge-label{display:flex;justify-content:space-between;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.4rem}
+  .gauge{height:14px;border-radius:999px;background:var(--parchment-deep);border:1px solid var(--line);overflow:hidden}
+  .gauge .fill{
+    height:100%;width:0%;border-radius:999px;
+    background:linear-gradient(90deg,var(--ochre),var(--terracotta));
+    transition:width .6s ease;
+  }
+  .demo .btn-row{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+  .demo button{
+    font-family:'Spectral',serif;font-size:.95rem;
+    padding:.55rem 1.1rem;border-radius:8px;cursor:pointer;
+    border:1px solid var(--line);background:var(--parchment);color:var(--ink);
+    transition:transform .15s,background .2s;
+  }
+  .demo button:hover:not(:disabled){background:var(--parchment-deep);transform:translateY(-1px)}
+  .demo button:disabled{opacity:.4;cursor:not-allowed}
+  .demo button.exit-benigna{border-color:rgba(168,132,47,.5);color:var(--ochre);font-weight:600}
+  .demo button.exit-culpa{border-color:rgba(122,74,94,.5);color:var(--plum);font-weight:600}
+  .demo .stage{
+    min-height:5.2rem;padding:1rem 1.2rem;border-radius:10px;
+    background:var(--parchment-deep);border:1px dashed var(--line);
+    font-size:1rem;color:var(--ink-soft);
+  }
+  .demo .stage .big{font-size:1.9rem;display:block;margin-bottom:.3rem;line-height:1}
+  .demo .note{font-size:.85rem;color:var(--ink-faint);font-style:italic;margin-top:.8rem}
+
+  /* ===== Sources ===== */
+  .src{
+    margin-top:1.4rem;padding-top:.8rem;border-top:1px dashed var(--line);
+    font-size:.85rem;color:var(--ink-faint);
+  }
+  .src a{font-size:.85rem}
+  .src .lbl{letter-spacing:.14em;text-transform:uppercase;font-size:.7rem;margin-right:.5rem}
+
+  ul.clean{list-style:none;margin-bottom:1.1rem}
+  ul.clean li{padding:.35rem 0 .35rem 1.4rem;position:relative}
+  ul.clean li::before{content:"—";position:absolute;left:0;color:var(--ochre)}
+
+  footer{padding:3rem 0 4rem;font-size:.85rem;color:var(--ink-faint);font-style:italic}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+<aside class="rail" id="rail">
+  <a href="#inicio" class="brand">Coffee with Claude · Estudio</a>
+  <nav id="railNav">
+    <a href="#hallazgo">El hallazgo de Gianni</a>
+    <a href="#panel">El panel se reúne</a>
+    <a href="#prediccion">La máquina de predicción</a>
+    <a href="#violacion">La violación benigna</a>
+    <a href="#matiz">¿Dos golpes… o uno y medio?</a>
+    <a href="#encrucijada">La encrucijada (demo)</a>
+    <a href="#intensidad">¿Por qué unos ríen más fuerte?</a>
+    <a href="#enojo">La gemela furiosa: el enojo</a>
+    <a href="#coda">Coda pastoral</a>
+    <a href="#fuentes">Fuentes</a>
+  </nav>
+</aside>
+
+<main>
+<div class="wrap">
+
+<header class="hero" id="inicio">
+  <div class="eyebrow">Anatomía de una emoción · Conversaciones analizadas</div>
+  <h1>Dos golpes y <em>una salida</em></h1>
+  <p class="lede">Gianni llegó con una hipótesis nacida de la observación: para provocar risa hacen falta dos situaciones inesperadas, una detrás de la otra. Este estudio examina esa intuición a la luz de la ciencia del humor — y descubre que estaba tocando, casi a ciegas, el corazón de tres teorías formales. Luego sigue el hilo hasta su pregunta más filosa: si esta es la fórmula de la risa, ¿cuál es la del enojo?</p>
+  <div class="hero-meta">Síntesis de dos conversaciones (una en español, una en inglés) · Rockwall, Texas · Junio 2026</div>
+</header>
+
+<!-- ============ 1. EL HALLAZGO ============ -->
+<section id="hallazgo">
+  <div class="kicker">Punto de partida</div>
+  <h2>El hallazgo de Gianni</h2>
+  <p>En la primera conversación, la pregunta fue tomando forma por aproximaciones: la risa surge de lo poco convencional… pero no de <em>una</em> sola cosa poco convencional. Hace falta una secuencia: el micrófono que se cae <em>y luego</em> el que tropieza al recogerlo; el pájaro que se posa en la cabeza <em>y luego</em> el otro que se lleva el sombrero. Un golpe solo es raro; dos golpes encadenados son cómicos.</p>
+  <p>En la segunda conversación, la hipótesis ya viajaba en inglés y con más músculo: <strong>"we need two punches to make people laugh, and both are awkward situations."</strong> Y de ahí brotaron tres preguntas en cascada, cada una más ambiciosa que la anterior:</p>
+  <ul class="clean">
+    <li>¿Por qué hacen falta <strong>dos</strong> golpes y no uno?</li>
+    <li>¿Por qué algunas personas <strong>ríen más fuerte</strong> que otras ante el mismo chiste?</li>
+    <li>Si esta es la fórmula de la risa… ¿cuál es la <strong>fórmula del enojo</strong>?</li>
+  </ul>
+  <p>Lo notable no es solo la hipótesis sino el <em>método</em>: observar un fenómeno cotidiano, formular un modelo, pedir ejemplos, rechazar los repetitivos ("estás usando puras situaciones donde la gente se tropieza"), y luego preguntar si la ciencia respalda el modelo. Eso es iteración empírica en miniatura — el mismo músculo del PDCA aplicado a la carcajada.</p>
+</section>
+
+<!-- ============ 2. EL PANEL ============ -->
+<section id="panel">
+  <div class="kicker">Las voces</div>
+  <h2>El panel se reúne</h2>
+  <p>Como es costumbre en esta sala de lectura, convocamos cinco voces alrededor de la mesa. El café ya está servido.</p>
+
+  <div class="voice v-neuro">
+    <span class="speaker">La Neurocientífica</span>
+    <p>Yo hablo del cerebro como máquina de predicción. Vine porque alguien dijo "error de predicción" y eso para mí es como oír mi nombre en una fiesta.</p>
+  </div>
+  <div class="voice v-psico">
+    <span class="speaker">El Psicólogo del Humor</span>
+    <p>Yo traigo las teorías formales: incongruencia, resolución, violación benigna. Sí, existe un laboratorio dedicado a estudiar por qué algo es chistoso. No, no es tan divertido como suena. Bueno… a veces sí.</p>
+  </div>
+  <div class="voice v-comica">
+    <span class="speaker">La Comediante</span>
+    <p>Yo soy la que tiene que pararse frente al público cuando las teorías de estos dos fallan. Hablo del oficio: del <em>timing</em>, del silencio antes del remate, de la noche en que nadie se rio.</p>
+  </div>
+  <div class="voice v-escept">
+    <span class="speaker">El Escéptico Honesto</span>
+    <p>Yo estoy aquí para que nadie salga de esta página creyendo que el humor ya está resuelto. Spoiler: la hipótesis de Gianni es buena, pero le voy a poner dos asteriscos. Con cariño, pero se los pongo.</p>
+  </div>
+  <div class="voice v-pastor">
+    <span class="speaker">El Pastor</span>
+    <p>Y yo me quedo callado casi toda la sesión… hasta la coda. Porque me parece que la risa, bien entendida, es teología en miniatura. Pero no adelantemos el sermón.</p>
+  </div>
+</section>
+
+<!-- ============ 3. PREDICCIÓN ============ -->
+<section id="prediccion">
+  <div class="kicker">Primer acto</div>
+  <h2>La máquina de predicción</h2>
+
+  <div class="voice v-neuro">
+    <span class="speaker">La Neurocientífica</span>
+    <p>Empecemos por el motor. El cerebro no espera pasivamente a que el mundo le llegue: <strong>apuesta constantemente sobre lo que viene después</strong>. Cada frase que escuchas, cada escena que ves, genera una predicción. Cuando la predicción acierta, nada especial ocurre. Cuando falla, se dispara una señal de error — y el cerebro tiene que decidir, muy rápido, qué significa ese error.</p>
+    <p>La respuesta de ChatGPT en la segunda conversación lo formuló con una frase que merece ser subrayada: <em>la gente no ríe porque algo sea gracioso; ríe porque su predicción falló de manera segura</em>. Es una buena compresión del modelo predictivo aplicado al humor.</p>
+  </div>
+
+  <div class="voice v-psico">
+    <span class="speaker">El Psicólogo del Humor</span>
+    <p>Y aquí es donde la intuición de Gianni se encuentra con un modelo con cincuenta años de historia. En 1972, Jerry Suls propuso el <strong>modelo de dos etapas</strong>: en la primera etapa, el oyente percibe la información del chiste y construye una expectativa; si la expectativa se cumple, no hay humor. Si <em>no</em> se cumple, comienza la segunda etapa: el oyente intenta <strong>resolver la incongruencia</strong> — encontrar la regla o perspectiva que hace que el remate, en retrospectiva, tenga sentido. La risa llega con la resolución, no con la sorpresa a secas.</p>
+    <p>Fíjense en la arquitectura: <em>dos etapas</em>. Montaje y ruptura. Es estructuralmente la misma forma que los "dos golpes" de Gianni. La tradición es incluso más vieja: desde Kant y Schopenhauer se sabía que reímos ante expectativas rotas, pero varios teóricos del siglo XX argumentaron que la incongruencia es <strong>necesaria pero no suficiente</strong> — también hace falta la resolución.</p>
+  </div>
+
+  <div class="voice v-comica">
+    <span class="speaker">La Comediante</span>
+    <p>En mi gremio a eso le llamamos <em>setup</em> y <em>punchline</em>, y nadie cita a Suls porque estamos ocupados sufriendo. Pero la regla de oro del escenario coincide: el remate no debe <em>añadir</em> al planteamiento, debe <strong>reescribirlo</strong>. El mejor chiste te obliga a releer mentalmente todo lo anterior bajo una luz nueva. Por eso, cuando funciona, el público dice "¡claro!" al mismo tiempo que se ríe.</p>
+  </div>
+
+  <div class="src"><span class="lbl">Fuentes</span><a href="https://homepages.abdn.ac.uk/g.ritchie/pages/papers/aisb99.pdf">Ritchie — Developing the Incongruity-Resolution Theory</a> · <a href="https://www.psychologytoday.com/us/blog/finding-new-home/201805/funny-how-what-s-funny-about-it">Psychology Today — Teorías del humor</a> · <a href="https://offscreen.com/view/humour-a-synthesis-pt2">Offscreen — Aspectos cognitivos del humor</a></div>
+</section>
+
+<!-- ============ 4. VIOLACIÓN BENIGNA ============ -->
+<section id="violacion">
+  <div class="kicker">Segundo acto</div>
+  <h2>La violación benigna</h2>
+
+  <div class="voice v-psico">
+    <span class="speaker">El Psicólogo del Humor</span>
+    <p>La segunda pieza del rompecabezas explica el adjetivo que Gianni usó con tanta precisión: situaciones <em>incómodas</em> (<em>awkward</em>). En 2010, Peter McGraw y Caleb Warren publicaron la <strong>teoría de la violación benigna</strong>, construida sobre el trabajo del lingüista Tom Veatch. El humor ocurre cuando — y solo cuando — se cumplen tres condiciones simultáneas: (1) la situación es una <strong>violación</strong> de cómo creemos que el mundo "debería" ser; (2) la situación es <strong>benigna</strong>, es decir, segura o aceptable; y (3) ambas percepciones ocurren <strong>al mismo tiempo</strong>.</p>
+    <p>El ejemplo fundacional es precioso: las cosquillas y las peleas de juego hacen reír a humanos y a otros primates porque son <em>ataques inofensivos</em> — amenaza y seguridad en el mismo instante. Y la teoría también explica lo que <em>no</em> es gracioso: una violación sin nada benigno produce rechazo o miedo; algo benigno sin violación produce… bostezo.</p>
+  </div>
+
+  <div class="formula">
+    <div class="f-tag">La fórmula de la risa</div>
+    <div class="f-line">
+      <span class="chip cool">Expectativa montada</span><span class="op">+</span>
+      <span class="chip warm">Violación</span><span class="op">+</span>
+      <span class="chip gold">Percepción de seguridad</span><span class="op">→</span>
+      <span class="chip">Tensión liberada: risa</span>
+    </div>
+  </div>
+
+  <div class="voice v-neuro">
+    <span class="speaker">La Neurocientífica</span>
+    <p>Ahora junten las dos teorías y verán por qué la incomodidad es el ingrediente exacto. La incomodidad es la señal fisiológica de que una norma está siendo <em>tocada</em> pero no <em>destrozada</em>. Demasiada seguridad: aburrimiento. Demasiada amenaza: ansiedad. La risa vive en la franja angosta del medio — el sistema nervioso declarando <strong>"falsa alarma"</strong> y liberando la energía que había movilizado.</p>
+  </div>
+
+  <div class="voice v-comica">
+    <span class="speaker">La Comediante</span>
+    <p>Por eso el humor envejece y viaja mal. Lo que es "benigno" depende del público, de la distancia, del momento. McGraw lo estudió con tragedias: hay un punto dulce de distancia psicológica — muy cerca duele, muy lejos no importa. Cada noche en el escenario es recalibrar dónde está esa franja para <em>esta</em> sala. El chiste no cambia; la frontera de lo benigno, sí.</p>
+  </div>
+
+  <div class="src"><span class="lbl">Fuentes</span><a href="https://journals.sagepub.com/doi/abs/10.1177/0956797610376073">McGraw &amp; Warren (2010) — Benign Violations, <em>Psychological Science</em></a> · <a href="https://humorresearchlab.com/benign-violation-theory/">Humor Research Lab — Benign Violation Theory</a> · <a href="https://petermcgraw.org/a-brief-introduction-to-the-benign-violation-theory-of-humor/">McGraw — Introducción a la teoría</a></div>
+</section>
+
+<!-- ============ 5. MATIZ ============ -->
+<section id="matiz">
+  <div class="kicker">Interrupción programada</div>
+  <h2>¿Dos golpes… o uno y medio?</h2>
+
+  <div class="voice v-escept">
+    <span class="speaker">El Escéptico Honesto</span>
+    <p>Llegó mi turno y traigo los dos asteriscos prometidos. <strong>Primer asterisco:</strong> la conversación con ChatGPT validó la hipótesis con entusiasmo, y en lo esencial tiene razón — pero hay que afinar una cosa. En el modelo de Suls, el primer "golpe" no necesita ser incómodo ni chusco. El planteamiento puede ser perfectamente <em>normal</em>; su trabajo es montar la expectativa, no romperla. Lo que sí es cierto es que un planteamiento que ya carga algo de tensión (un discurso muy solemne, una situación socialmente delicada) <em>amplifica</em> el remate, porque hay más energía acumulada. Entonces: dos golpes incómodos funcionan de maravilla, pero la condición mínima es más modesta — <strong>un marco más una ruptura</strong>. Los ejemplos de Gianni (micrófono + tropiezo, pájaro + sombrero) son en realidad la versión turbo: el primer golpe ya es una mini-violación que sirve de planteamiento para la segunda.</p>
+    <p><strong>Segundo asterisco</strong>, y este es el que casi nadie cuenta: Robert Provine, que se dedicó a observar la risa en la vida real (no en el laboratorio, sino en banquetas y centros comerciales), descubrió que <strong>la mayor parte de la risa humana no viene de chistes en absoluto</strong>. Viene de la conversación ordinaria, de comentarios nada graciosos, y — dato delicioso — quien más ríe en una conversación suele ser <em>quien está hablando</em>, no quien escucha. La risa es, antes que nada, un pegamento social: una señal de conexión, juego y seguridad entre personas. Es inmensamente contagiosa, y por eso funcionan las risas grabadas de las series: no porque sean graciosas, sino porque señalan que es seguro reír.</p>
+    <p>Conclusión del escéptico: la fórmula de los dos golpes describe muy bien la <em>comedia construida</em> — el chiste, la escena, el video. Pero la risa silvestre, la de la sobremesa, obedece más al vínculo que a la estructura. Las dos cosas son ciertas a la vez. Fin de los asteriscos; pueden volver a quererme.</p>
+  </div>
+
+  <div class="src"><span class="lbl">Fuentes</span><a href="https://royalsocietypublishing.org/doi/10.1098/rstb.2021.0178">Scott, Cai &amp; Billing (2022) — Provine y el contagio de la risa, <em>Phil. Trans. R. Soc. B</em></a> · <a href="https://www.thebritishacademy.ac.uk/podcasts/10-minute-talks-why-laughter-matters/">Sophie Scott — Why laughter matters</a></div>
+</section>
+
+<!-- ============ 6. DEMO ============ -->
+<section id="encrucijada">
+  <div class="kicker">Interludio interactivo</div>
+  <h2>La encrucijada de la tensión</h2>
+  <p>Risa y enojo comparten la primera mitad del camino: expectativa, violación, tensión. Lo que las separa es la <strong>salida</strong>. Carga la tensión con los dos golpes y elige por dónde escapa.</p>
+
+  <div class="demo">
+    <div class="gauge-wrap">
+      <div class="gauge-label"><span>Tensión acumulada</span><span id="gaugePct">0%</span></div>
+      <div class="gauge"><div class="fill" id="gaugeFill"></div></div>
+    </div>
+    <div class="btn-row">
+      <button id="btnGolpe1">Golpe 1 · Montar la expectativa</button>
+      <button id="btnGolpe2" disabled>Golpe 2 · Romper el marco</button>
+    </div>
+    <div class="btn-row" id="exitRow" hidden>
+      <button class="exit-benigna" id="btnBenigna">Salida A · "No pasó nada, es inofensivo"</button>
+      <button class="exit-culpa" id="btnCulpa">Salida B · "Alguien tiene la culpa de esto"</button>
+    </div>
+    <div class="stage" id="stage">El escenario está vacío. Presiona <strong>Golpe 1</strong> para empezar.</div>
+    <div class="btn-row"><button id="btnReset" hidden>↺ Reiniciar la escena</button></div>
+    <p class="note">La misma energía, dos destinos: la interpretación — no el evento — decide la emoción.</p>
+  </div>
+</section>
+
+<!-- ============ 7. INTENSIDAD ============ -->
+<section id="intensidad">
+  <div class="kicker">Tercer acto</div>
+  <h2>¿Por qué unos ríen más fuerte que otros?</h2>
+
+  <div class="voice v-neuro">
+    <span class="speaker">La Neurocientífica</span>
+    <p>La pregunta de Gianni — "¿la tensión creada es mayor en esas personas?" — apuntaba en la dirección correcta, y la respuesta que recibió la refinó bien: la intensidad de la risa depende de cuánta tensión se acumuló <em>y</em> de qué tan súbita es la liberación. Quien se compromete más con la predicción (quien "compra" la premisa del chiste), quien se inhibe más socialmente durante el día, quien siente la vergüenza ajena en el cuerpo — esa persona carga más presión en la caldera. Cuando la predicción colapsa de forma segura, la descarga es proporcional a lo acumulado. De ahí la paradoja conocida: los callados a veces sueltan las carcajadas más estruendosas.</p>
+  </div>
+
+  <div class="voice v-psico">
+    <span class="speaker">El Psicólogo del Humor</span>
+    <p>Añado el factor que la conversación tocó al final y que Provine convirtió en ciencia: <strong>el grupo</strong>. La risa es contagiosa a un grado que casi ninguna otra conducta humana alcanza. En grupo, la tensión se comparte, la liberación se sincroniza, y un solo reidor potente "autoriza" a los demás a soltarse. La carcajada colectiva es un sistema de retroalimentación, no una suma de risas individuales.</p>
+  </div>
+
+  <div class="voice v-comica">
+    <span class="speaker">La Comediante</span>
+    <p>Confirmado desde el oficio: el mismo chiste mata un viernes con sala llena y agoniza un martes con doce personas dispersas. No cambió el material; cambió la física del salón. Por eso los comediantes pedimos que junten al público al frente — estamos, literalmente, administrando un contagio.</p>
+  </div>
+
+  <div class="src"><span class="lbl">Fuentes</span><a href="https://royalsocietypublishing.org/doi/10.1098/rstb.2021.0178">Scott et al. (2022) — Laughter, connections and contagion</a> · <a href="https://www.bps.org.uk/psychologist/laughter-ordinary-and-extraordinary">The Psychologist — Laughter, the ordinary and the extraordinary</a></div>
+</section>
+
+<!-- ============ 8. ENOJO ============ -->
+<section id="enojo">
+  <div class="kicker">Cuarto acto</div>
+  <h2>La gemela furiosa: el enojo</h2>
+
+  <div class="voice v-psico">
+    <span class="speaker">El Psicólogo del Humor</span>
+    <p>Y llegamos a la pregunta más elegante de las dos conversaciones: invertir la fórmula. La respuesta que recibió Gianni — <em>expectativa + violación + atribución de culpa + sin salida segura = enojo</em> — coincide notablemente con la <strong>teoría de la valoración cognitiva</strong> (appraisal theory) de Richard Lazarus y Craig Smith. Según este marco, las emociones no brotan de los eventos sino de cómo los <em>evaluamos</em>. Y cada emoción tiene un "tema relacional central": el de la tristeza es la pérdida irreparable; el del miedo, el peligro inminente; y el del enojo es, con precisión quirúrgica, <strong>la culpa del otro</strong> (<em>other-blame</em>): algo relevante para mí salió mal, y otro agente es responsable.</p>
+    <p>Ahí está la bifurcación exacta. Si no hay agente, no hay enojo — por eso no nos enojamos con los huracanes (bueno, casi). Sin intención percibida, hay frustración. Con agente <em>e</em> intención, hay enojo. Y si además la violación queda sin resolver — la tensión no encuentra salida — el sistema permanece movilizado, exigiendo acción correctiva.</p>
+  </div>
+
+  <div class="compare">
+    <div class="col risa">
+      <h4>😄 Risa</h4>
+      <ul>
+        <li>Expectativa montada</li>
+        <li>Violación detectada</li>
+        <li>Lectura: <strong>"es benigno"</strong></li>
+        <li>Sin culpable necesario</li>
+        <li>Tensión <strong>descargada</strong></li>
+        <li>Mensaje: "falsa alarma, todo bien"</li>
+      </ul>
+    </div>
+    <div class="col enojo">
+      <h4>😠 Enojo</h4>
+      <ul>
+        <li>Expectativa montada</li>
+        <li>Violación detectada</li>
+        <li>Lectura: <strong>"esto está mal"</strong></li>
+        <li>Culpable identificado, con intención</li>
+        <li>Tensión <strong>movilizada</strong></li>
+        <li>Mensaje: "esto debe corregirse"</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="voice v-neuro">
+    <span class="speaker">La Neurocientífica</span>
+    <p>Mismo sistema de activación, distinta interpretación. La risa <em>descarga</em> la energía; el enojo la <em>recluta</em>. Y como comparten toda la primera mitad del proceso, la frontera entre ambas es de milímetros: un chiste que calcula mal la "benignidad" para su audiencia no cae en territorio neutral — cae directamente en ofensa. La risa y el enojo no son opuestos lejanos; son vecinos de pared que discuten sobre si la casa se está quemando.</p>
+  </div>
+
+  <div class="voice v-escept">
+    <span class="speaker">El Escéptico Honesto</span>
+    <p>Un milímetro de honestidad final: la conversación con ChatGPT presentó esto como "la fórmula", y las fórmulas siempre prometen más de lo que entregan. La valoración de culpa es rapidísima, sesgada y entrenable — las personas con alta ira de rasgo asignan culpa más fácilmente ante la misma escena ambigua. La fórmula describe el mecanismo; no determina a la persona. Eso, para quien enseña y pastorea, no es un detalle: es la puerta de entrada.</p>
+  </div>
+
+  <div class="src"><span class="lbl">Fuentes</span><a href="https://www.sciencedirect.com/science/article/abs/pii/S0191886900000076">Hazebroek et al. — Cognitive appraisals and trait anger</a> · <a href="https://psychologyfanatic.com/richard-lazarus-cognitive-appraisal-theory/">Lazarus — Teoría de la valoración cognitiva</a> · <a href="https://psychology.town/motivation-emotion/lazarus-cognitive-theory-emotions-appraisals/">Psychology Town — Emociones como valoraciones</a></div>
+</section>
+
+<!-- ============ 9. CODA ============ -->
+<section id="coda">
+  <div class="kicker">Sobremesa</div>
+  <h2>Coda pastoral: la risa como falsa alarma anunciada</h2>
+
+  <div class="voice v-pastor">
+    <span class="speaker">El Pastor</span>
+    <p>Prometí guardar silencio hasta el final, y aquí está lo que fui anotando en la servilleta. Si la ciencia tiene razón — si la risa es el sistema nervioso declarando <em>"falsa alarma: la amenaza era real en apariencia, pero estamos a salvo"</em> — entonces la risa es, en pequeño, la estructura misma del Evangelio. Una violación real (el mundo roto, la muerte misma) reinterpretada desde la seguridad última. No es casualidad que Sara llamara a su hijo <em>Isaac</em>, "él ríe", ni que dijera: «Dios me ha hecho reír, y todo el que lo oiga reirá conmigo» (Génesis 21:6). La promesa imposible cumplida es el remate que reescribe todo el planteamiento de su vida.</p>
+    <p>Y noten la simetría con el enojo: el enojo es tensión atrapada por la culpa — <em>alguien debe pagar esto</em>. El perdón, visto con estos lentes, es exactamente la operación que convierte la fórmula del enojo en otra cosa: no niega la violación (eso sería fingir que nada pasó), sino que <strong>renuncia a quedarse con la deuda</strong>, abriendo la salida que la ira mantenía cerrada. «Gran remedio es el corazón alegre» (Proverbios 17:22) deja de ser un refrán simpático y se vuelve fisiología: el corazón alegre es el que ha aprendido a encontrar la salida benigna.</p>
+    <p>Para el que enseña y discipula, esto es oro práctico: el humor en la enseñanza no es decoración — es el ensayo comunitario de la confianza. Cada vez que un grupo ríe junto, está practicando, en miniatura, la declaración de que el suelo es firme. Por eso la mesa donde se ríe es casi siempre la mesa donde después se puede llorar y confesar. La risa abre la puerta por donde luego entra lo serio.</p>
+  </div>
+
+  <div class="voice v-comica">
+    <span class="speaker">La Comediante</span>
+    <p>…¿Acaba el pastor de explicar mi trabajo mejor que yo? No le digan que lo admití.</p>
+  </div>
+  <div class="voice v-pastor">
+    <span class="speaker">El Pastor</span>
+    <p>Tranquila. Tu secreto es benigno. Por eso nos reímos.</p>
+  </div>
+</section>
+
+<!-- ============ 10. FUENTES ============ -->
+<section id="fuentes">
+  <div class="kicker">Para seguir leyendo</div>
+  <h2>Fuentes</h2>
+  <ul class="clean">
+    <li><a href="https://journals.sagepub.com/doi/abs/10.1177/0956797610376073">McGraw, A.P. &amp; Warren, C. (2010). <em>Benign Violations: Making Immoral Behavior Funny</em>. Psychological Science.</a></li>
+    <li><a href="https://humorresearchlab.com/benign-violation-theory/">Humor Research Lab (HuRL) — Benign Violation Theory.</a></li>
+    <li><a href="https://homepages.abdn.ac.uk/g.ritchie/pages/papers/aisb99.pdf">Ritchie, G. (1999). <em>Developing the Incongruity-Resolution Theory</em> (incluye el modelo de dos etapas de Suls, 1972).</a></li>
+    <li><a href="https://royalsocietypublishing.org/doi/10.1098/rstb.2021.0178">Scott, S.K., Cai, C.Q. &amp; Billing, A. (2022). <em>Robert Provine: the critical human importance of laughter, connections and contagion</em>. Phil. Trans. R. Soc. B.</a></li>
+    <li><a href="https://www.thebritishacademy.ac.uk/podcasts/10-minute-talks-why-laughter-matters/">Scott, S. — <em>Why laughter matters</em>. The British Academy.</a></li>
+    <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0191886900000076">Hazebroek, Howells &amp; Day (2001). <em>Cognitive appraisals associated with high trait anger</em> (sobre Smith &amp; Lazarus, 1993).</a></li>
+    <li><a href="https://www.psychologytoday.com/us/blog/finding-new-home/201805/funny-how-what-s-funny-about-it">Psychology Today — <em>Funny How? What's Funny About It?</em> (panorama de teorías del humor).</a></li>
+  </ul>
+</section>
+
+<footer>
+  Preparado para la sala de lectura «Coffee with Claude» · Donde las predicciones fallan de manera segura desde 2025.
+</footer>
+
+</div>
+</main>
+
+<script>
+(function(){
+  /* ===== Hamburger ===== */
+  var btn=document.getElementById('menuBtn'), rail=document.getElementById('rail');
+  btn.addEventListener('click',function(){
+    var open=rail.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+    btn.textContent=open?'✕':'☰';
+  });
+  rail.querySelectorAll('nav a').forEach(function(a){
+    a.addEventListener('click',function(){
+      rail.classList.remove('open');btn.textContent='☰';btn.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ===== Scroll-spy ===== */
+  var links=Array.prototype.slice.call(document.querySelectorAll('#railNav a'));
+  var map={};
+  links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.remove('active');});
+        var l=map[e.target.id]; if(l) l.classList.add('active');
+      }
+    });
+  },{rootMargin:'-35% 0px -55% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){obs.observe(s);});
+
+  /* ===== Demo: la encrucijada ===== */
+  var fill=document.getElementById('gaugeFill'),
+      pct=document.getElementById('gaugePct'),
+      g1=document.getElementById('btnGolpe1'),
+      g2=document.getElementById('btnGolpe2'),
+      exitRow=document.getElementById('exitRow'),
+      bBen=document.getElementById('btnBenigna'),
+      bCul=document.getElementById('btnCulpa'),
+      stage=document.getElementById('stage'),
+      reset=document.getElementById('btnReset');
+
+  function setGauge(v){fill.style.width=v+'%';pct.textContent=v+'%';}
+
+  g1.addEventListener('click',function(){
+    setGauge(55); g1.disabled=true; g2.disabled=false;
+    stage.innerHTML='<span class="big">🎤</span>El orador da un discurso solemnísimo. Todos guardan silencio respetuoso. Tu cerebro apuesta: <em>"sé exactamente cómo sigue esto"</em>. La predicción está comprometida; la tensión, montada.';
+  });
+
+  g2.addEventListener('click',function(){
+    setGauge(100); g2.disabled=true; exitRow.hidden=false; reset.hidden=false;
+    stage.innerHTML='<span class="big">🎈💥</span>El micrófono se cae… y quien corre a recogerlo arranca el mantel completo con todo y jarra de agua. La predicción <strong>colapsó</strong>. El sistema está al máximo y pregunta: <em>¿qué significa esto?</em> Elige una salida.';
+  });
+
+  bBen.addEventListener('click',function(){
+    setGauge(0); exitRow.hidden=true;
+    stage.innerHTML='<span class="big">😂</span><strong>Salida benigna.</strong> Nadie se lastimó, la norma rota era recuperable, y hasta el orador sonríe. El cerebro declara <em>"falsa alarma"</em> y descarga toda la energía acumulada de golpe: carcajada. Cuanta más tensión había, más fuerte suena. (McGraw &amp; Warren llamarían a esto una violación benigna de libro.)';
+  });
+
+  bCul.addEventListener('click',function(){
+    fill.style.background='linear-gradient(90deg,#7a4a5e,#5e3648)';
+    exitRow.hidden=true;
+    stage.innerHTML='<span class="big">😠</span><strong>Salida con culpa.</strong> "Era el discurso más importante de mi vida y <em>alguien</em> no aseguró el micrófono — y lo sabía." Hay agente, hay intención percibida, y la violación queda sin resolver. La tensión no se descarga: se <strong>moviliza</strong>, exigiendo corrección. (Lazarus lo llamaría <em>other-blame</em>: el tema central del enojo.)';
+  });
+
+  reset.addEventListener('click',function(){
+    setGauge(0); fill.style.background='';
+    g1.disabled=false; g2.disabled=true; exitRow.hidden=true; reset.hidden=true;
+    stage.innerHTML='El escenario está vacío otra vez. La misma energía espera un nuevo destino.';
+  });
+})();
+</script>
+</body>
+</html>
