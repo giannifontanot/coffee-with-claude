@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Consejo se Reúne · ¿Qué te falta aprender?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe2;
+    --paper-deep:#efe5d2;
+    --ink:#2b2117;
+    --ink-soft:#5a4a3a;
+    --rule:#d8c9ae;
+    --ing:#b3541e;   /* El Ingeniero */
+    --inv:#1e6b5c;   /* La Inversionista */
+    --epi:#5c4d8a;   /* El Epistemólogo */
+    --esc:#8a2e2e;   /* El Escéptico */
+    --may:#94660a;   /* La Mayordoma */
+    --max:72rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Spectral',Georgia,serif;
+    font-size:1.075rem;
+    line-height:1.75;
+    background-image:radial-gradient(circle at 12% 8%, rgba(179,84,30,.045), transparent 42%),
+                     radial-gradient(circle at 88% 92%, rgba(30,107,92,.05), transparent 40%);
+  }
+  a{color:var(--ing);text-decoration:none;border-bottom:1px solid rgba(179,84,30,.35)}
+  a:hover{border-bottom-color:var(--ing)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ing);outline-offset:3px;border-radius:2px}
+
+  /* ---------- Header ---------- */
+  header.hero{
+    max-width:var(--max);margin:0 auto;
+    padding:4.5rem 1.5rem 3rem;
+    text-align:center;
+  }
+  .eyebrow{
+    font-family:'Fraunces',serif;font-weight:600;font-size:.8rem;
+    letter-spacing:.32em;text-transform:uppercase;color:var(--ink-soft);
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:900;
+    font-size:clamp(2.4rem,6vw,4.4rem);
+    line-height:1.06;margin:.9rem 0 1.1rem;
+  }
+  h1 em{font-style:italic;font-weight:600;color:var(--ing)}
+  .hero p.lede{
+    max-width:42rem;margin:0 auto;color:var(--ink-soft);
+    font-size:1.15rem;
+  }
+  .hero-rule{
+    width:5.5rem;height:3px;background:var(--ing);
+    margin:2rem auto 0;border-radius:2px;
+  }
+
+  /* ---------- Panel seats (signature) ---------- */
+  .mesa{
+    max-width:var(--max);margin:2.4rem auto 0;padding:0 1.5rem;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:.9rem;
+  }
+  .seat{
+    background:var(--paper-deep);
+    border:1px solid var(--rule);
+    border-top:4px solid var(--seat,#999);
+    border-radius:0 0 14px 14px;
+    padding:1rem .85rem 1.05rem;
+    text-align:center;
+  }
+  .seat .icon{font-size:1.5rem;display:block;margin-bottom:.35rem}
+  .seat .name{
+    font-family:'Fraunces',serif;font-weight:700;font-size:.95rem;line-height:1.25;
+    display:block;color:var(--seat);
+  }
+  .seat .motto{font-size:.78rem;color:var(--ink-soft);font-style:italic;display:block;margin-top:.3rem;line-height:1.4}
+  .seat--ing{--seat:var(--ing)} .seat--inv{--seat:var(--inv)}
+  .seat--epi{--seat:var(--epi)} .seat--esc{--seat:var(--esc)}
+  .seat--may{--seat:var(--may)}
+  @media(max-width:860px){.mesa{grid-template-columns:repeat(2,1fr)}.seat--may{grid-column:1/-1}}
+
+  /* ---------- Layout: rail + content ---------- */
+  .shell{
+    max-width:var(--max);margin:3.2rem auto 0;
+    display:grid;grid-template-columns:230px minmax(0,1fr);
+    gap:2.8rem;padding:0 1.5rem 5rem;
+  }
+  nav.rail{position:sticky;top:1.6rem;align-self:start}
+  nav.rail .rail-title{
+    font-family:'Fraunces',serif;font-weight:700;font-size:.78rem;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);
+    margin-bottom:.9rem;padding-left:.85rem;
+  }
+  nav.rail ul{list-style:none}
+  nav.rail li{margin:.15rem 0}
+  nav.rail a{
+    display:block;border:none;border-left:3px solid transparent;
+    padding:.42rem .85rem;font-size:.92rem;color:var(--ink-soft);
+    line-height:1.35;border-radius:0 8px 8px 0;
+    transition:background .18s,color .18s,border-color .18s;
+  }
+  nav.rail a:hover{background:rgba(43,33,23,.05);color:var(--ink)}
+  nav.rail a.active{
+    border-left-color:var(--ing);color:var(--ink);font-weight:600;
+    background:rgba(179,84,30,.07);
+  }
+
+  /* ---------- Hamburger (mobile) ---------- */
+  .menu-btn{
+    display:none;position:fixed;top:1rem;right:1rem;z-index:60;
+    background:var(--ink);color:var(--paper);border:none;border-radius:10px;
+    padding:.6rem .8rem;font-family:'Fraunces',serif;font-weight:600;
+    font-size:.85rem;letter-spacing:.08em;cursor:pointer;
+    box-shadow:0 3px 12px rgba(43,33,23,.25);
+  }
+  @media(max-width:900px){
+    .shell{grid-template-columns:1fr;gap:0}
+    .menu-btn{display:block}
+    nav.rail{
+      position:fixed;inset:0 0 0 auto;width:min(78vw,320px);
+      background:var(--paper);border-left:1px solid var(--rule);
+      box-shadow:-12px 0 30px rgba(43,33,23,.18);
+      padding:4.5rem 1.2rem 2rem;z-index:50;
+      transform:translateX(105%);transition:transform .25s ease;
+      overflow-y:auto;top:0;align-self:auto;
+    }
+    nav.rail.open{transform:translateX(0)}
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:4.2rem;scroll-margin-top:1.5rem}
+  .kicker{
+    font-family:'Fraunces',serif;font-weight:600;font-size:.78rem;
+    letter-spacing:.28em;text-transform:uppercase;color:var(--accent,var(--ing));
+    display:flex;align-items:center;gap:.7rem;
+  }
+  .kicker::after{content:"";flex:1;height:1px;background:var(--rule)}
+  h2{
+    font-family:'Fraunces',serif;font-weight:700;
+    font-size:clamp(1.6rem,3.4vw,2.3rem);line-height:1.15;
+    margin:.55rem 0 1.2rem;
+  }
+  section p{margin-bottom:1.1rem;max-width:65ch}
+  strong{font-weight:600}
+
+  /* ---------- Dialogue turns ---------- */
+  .turn{
+    border-left:4px solid var(--voice,#999);
+    background:rgba(255,255,255,.42);
+    border-radius:0 12px 12px 0;
+    padding:1rem 1.25rem .9rem;
+    margin:0 0 1.15rem;
+    max-width:46rem;
+  }
+  .turn .who{
+    font-family:'Fraunces',serif;font-weight:700;font-size:.88rem;
+    letter-spacing:.06em;color:var(--voice);
+    display:flex;align-items:baseline;gap:.5rem;margin-bottom:.35rem;
+  }
+  .turn .who .tag{
+    font-family:'Spectral',serif;font-weight:400;font-style:italic;
+    font-size:.78rem;color:var(--ink-soft);letter-spacing:0;
+  }
+  .turn p{margin-bottom:.7rem;max-width:none}
+  .turn p:last-child{margin-bottom:0}
+  .v-ing{--voice:var(--ing)} .v-inv{--voice:var(--inv)}
+  .v-epi{--voice:var(--epi)} .v-esc{--voice:var(--esc)}
+  .v-may{--voice:var(--may)} .v-mod{--voice:#6b6157}
+  .aside{
+    font-size:.9rem;font-style:italic;color:var(--ink-soft);
+    margin:-.4rem 0 1.15rem 1.4rem;max-width:42rem;
+  }
+  .aside b{font-style:normal;font-weight:600;color:var(--ink)}
+
+  /* ---------- Practice card ---------- */
+  .practica{
+    background:var(--paper-deep);border:1px solid var(--rule);
+    border-radius:14px;padding:1.3rem 1.5rem;margin:1.6rem 0 1.2rem;
+    max-width:46rem;
+  }
+  .practica h3{
+    font-family:'Fraunces',serif;font-weight:700;font-size:1rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--accent,var(--ing));
+    margin-bottom:.6rem;
+  }
+  .practica ol,.practica ul{padding-left:1.3rem}
+  .practica li{margin-bottom:.5rem}
+  .practica li:last-child{margin-bottom:0}
+
+  /* ---------- Citations ---------- */
+  .fuentes{
+    font-size:.88rem;color:var(--ink-soft);
+    border-top:1px dashed var(--rule);
+    padding-top:.7rem;margin-top:1.4rem;max-width:46rem;
+  }
+  .fuentes span{font-style:italic;margin-right:.4rem}
+
+  /* ---------- Plan table ---------- */
+  .plan{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+    margin:1.5rem 0;max-width:52rem;
+  }
+  .plan .fase{
+    background:rgba(255,255,255,.5);border:1px solid var(--rule);
+    border-radius:12px;padding:1.1rem 1.15rem;
+  }
+  .plan .fase h3{
+    font-family:'Fraunces',serif;font-size:1.02rem;font-weight:700;margin-bottom:.5rem;
+  }
+  .plan .fase .dias{
+    font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-soft);display:block;margin-bottom:.3rem;font-family:'Fraunces',serif;font-weight:600;
+  }
+  .plan .fase ul{list-style:none}
+  .plan .fase li{font-size:.95rem;margin-bottom:.45rem;padding-left:1rem;position:relative}
+  .plan .fase li::before{content:"→";position:absolute;left:0;color:var(--ing)}
+  @media(max-width:760px){.plan{grid-template-columns:1fr}}
+
+  footer{
+    text-align:center;padding:2.5rem 1.5rem 3.5rem;color:var(--ink-soft);
+    font-size:.9rem;border-top:1px solid var(--rule);
+    max-width:var(--max);margin:0 auto;
+  }
+  footer .fin{font-family:'Fraunces',serif;font-weight:600;letter-spacing:.25em;text-transform:uppercase;font-size:.75rem}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="railNav">Índice ☰</button>
+
+<header class="hero">
+  <p class="eyebrow">Coffee with Claude · Sesión del Consejo</p>
+  <h1>Lo que te falta <em>aprender</em></h1>
+  <p class="lede">Cinco voces se sientan a la mesa para responder una sola pregunta: dado todo lo que Gianni ya sabe construir — código, páginas, estudios, discípulos — ¿cuál es el siguiente territorio que vale la pena conquistar?</p>
+  <div class="hero-rule"></div>
+</header>
+
+<div class="mesa" aria-label="Panel de voces">
+  <div class="seat seat--ing"><span class="icon">⚙️</span><span class="name">El Ingeniero de Primeros Principios</span><span class="motto">«Reduce el problema a física; lo demás es opinión.»</span></div>
+  <div class="seat seat--inv"><span class="icon">📈</span><span class="name">La Inversionista Pragmática</span><span class="motto">«Lo que no se distribuye, no existe.»</span></div>
+  <div class="seat seat--epi"><span class="icon">🧠</span><span class="name">El Epistemólogo del Aprendizaje</span><span class="motto">«El conocimiento no se transmite: se construye.»</span></div>
+  <div class="seat seat--esc"><span class="icon">🔥</span><span class="name">El Escéptico Brutalmente Honesto</span><span class="motto">«¿Y eso para qué te sirve, exactamente?»</span></div>
+  <div class="seat seat--may"><span class="icon">🕊️</span><span class="name">La Mayordoma del Sentido</span><span class="motto">«No todo lo que se puede aprender, conviene.»</span></div>
+</div>
+
+<div class="shell">
+
+<nav class="rail" id="railNav" aria-label="Índice de la sesión">
+  <p class="rail-title">La sesión</p>
+  <ul>
+    <li><a href="#apertura">0 · La mesa se sirve</a></li>
+    <li><a href="#agentes">1 · De usuario a arquitecto</a></li>
+    <li><a href="#distribucion">2 · El músculo de la distribución</a></li>
+    <li><a href="#aprendizaje">3 · Que el lector construya</a></li>
+    <li><a href="#esceptico">4 · El abogado del diablo</a></li>
+    <li><a href="#sentido">5 · La última palabra</a></li>
+    <li><a href="#plan">6 · El plan de 90 días</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ============ 0 ============ -->
+<section id="apertura" style="--accent:#6b6157">
+  <p class="kicker">Cero</p>
+  <h2>La mesa se sirve</h2>
+
+  <div class="turn v-mod">
+    <p class="who">Moderador <span class="tag">— sirviendo el café</span></p>
+    <p>Bienvenidos. El expediente sobre la mesa es conocido: un desarrollador que vive entre Spring Boot y Angular, que ha convertido Claude Code en un compañero de trabajo, que construye páginas de estudio bíblico con un sistema de diseño propio, que practica inglés repitiendo frases hasta la exactitud, y que sueña con discipulado en ciclos de iteración rápida. La pregunta de hoy no es <em>qué sabe</em>, sino <em>qué le falta</em>.</p>
+  </div>
+
+  <div class="turn v-esc">
+    <p class="who">El Escéptico</p>
+    <p>Antes de empezar: noto que nos convocó <em>él mismo</em> para que le digamos qué estudiar. Sospecho que aprender es su forma favorita de procrastinar. Lo dejo anotado.</p>
+  </div>
+
+  <p class="aside"><b>El Epistemólogo</b>, sin levantar la vista de sus notas: «Anotado queda. Pero la curiosidad no es un defecto; es el motor. El problema sería la curiosidad sin asimilación.»</p>
+
+  <div class="turn v-mod">
+    <p class="who">Moderador</p>
+    <p>Cada voz tendrá su turno. Una recomendación concreta por cabeza, una práctica para empezar esta semana, y permiso para interrumpirse con elegancia. Ingeniero, abre tú.</p>
+  </div>
+</section>
+
+<!-- ============ 1 ============ -->
+<section id="agentes" style="--accent:var(--ing)">
+  <p class="kicker">Uno · El Ingeniero</p>
+  <h2>De usuario de agentes a arquitecto de agentes</h2>
+
+  <div class="turn v-ing">
+    <p class="who">El Ingeniero de Primeros Principios</p>
+    <p>Vamos a los primeros principios. Hoy usas Claude Code como un operario excelente usa una máquina: con destreza, con scripts, con revisiones de PR automatizadas vía GitHub CLI. Bien. Pero la frontera ya se movió. La habilidad que separa al desarrollador de 2026 del de 2023 no es <em>usar</em> un agente, sino <strong>diseñar sistemas de agentes</strong>: definir sus herramientas, sus límites, sus criterios de éxito, y medir si de verdad funcionan.</p>
+    <p>Tres piezas concretas. Primero, <strong>MCP</strong> — el protocolo que estandariza cómo un agente descubre y llama herramientas externas; tú ya exploraste la diferencia entre CLI y servidores MCP, ahora toca <em>construir uno</em> para tu propio Go Epic. Segundo, <strong>Skills</strong> — carpetas de instrucciones que el agente carga bajo demanda; son exactamente tu instinto de "El Pizarrón del Mentor", pero versionado en Git y ejecutable. Tercero, y la más descuidada: <strong>evals</strong>. Si no puedes medir si tu agente revisó bien un PR, no tienes ingeniería, tienes superstición.</p>
+  </div>
+
+  <p class="aside"><b>La Inversionista</b> interrumpe: «Traducción para los mortales: deja de ser el que opera la grúa y conviértete en el que diseña el puerto.»</p>
+
+  <div class="turn v-ing">
+    <p class="who">El Ingeniero</p>
+    <p>Exacto, aunque yo habría dicho "la fábrica". El mejor proceso es el que no existe; la mejor intervención manual es la que eliminaste. Tu proyecto de vida — Epic Manager — es el laboratorio perfecto: cada flujo repetitivo de tu semana es un candidato a agente con herramientas acotadas y un eval que lo vigile.</p>
+  </div>
+
+  <div class="practica">
+    <h3>Práctica de esta semana</h3>
+    <ol>
+      <li>Escribe un <strong>SKILL.md</strong> con tus reglas de revisión de PR (las que hoy repites a mano en cada prompt) y úsalo en Claude Code durante una semana.</li>
+      <li>Crea un eval mínimo: 10 PRs viejos con veredicto conocido. Mide cuántos acierta tu flujo automatizado. Ese número es tu línea base; itera contra él.</li>
+      <li>Esboza un servidor MCP de juguete que exponga <em>una sola</em> herramienta de Go Epic (por ejemplo, "registrar hábito"). Que sea feo; que funcione.</li>
+    </ol>
+  </div>
+
+  <p class="fuentes"><span>Fuentes:</span> <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents — Anthropic</a>, <a href="https://doit.software/blog/ai-developer-skills" target="_blank" rel="noopener">AI Developer Skills 2026 — DOIT</a>, <a href="https://pinggy.io/blog/ai_agent_skills/" target="_blank" rel="noopener">Agent Skills Guide — Pinggy</a></p>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="distribucion" style="--accent:var(--inv)">
+  <p class="kicker">Dos · La Inversionista</p>
+  <h2>El músculo que nunca entrenas: distribución</h2>
+
+  <div class="turn v-inv">
+    <p class="who">La Inversionista Pragmática</p>
+    <p>Mi turno, y voy a ser directa porque para eso me sientan en estas mesas. Tienes una sala de lectura — "Coffee with Claude" — con ensayos sobre Marcos, sobre el joven rico, sobre el ave del paraíso, sobre cálculo. Material que a mucha gente de habla hispana le serviría de verdad. Y ahora dime: <strong>¿cuántas personas lo leyeron la semana pasada?</strong></p>
+  </div>
+
+  <p class="aside">Silencio incómodo en la mesa. <b>El Escéptico</b> sonríe por primera vez.</p>
+
+  <div class="turn v-inv">
+    <p class="who">La Inversionista</p>
+    <p>Eso pensé. Tu déficit no es de producción — produces como una imprenta — es de <strong>distribución</strong>. En los negocios el ciclo de vida lo resuelve la venta; en el ministerio y el contenido, lo resuelve que el material <em>llegue a alguien</em>. Un producto extraordinario que nadie ve pierde contra uno mediocre que todos encuentran. Es injusto, y es la realidad.</p>
+    <p>Lo que te falta aprender es un oficio, no un truco: <strong>cómo viaja el contenido</strong>. Una lista de correo aunque empiece con doce nombres de tu congregación. Una cadencia: una pieza nueva o pulida cada dos semanas, anunciada siempre por el mismo canal. Métricas humildes: aperturas, respuestas, una conversación que tu página provocó. Y el hábito que más cuesta a los constructores: <em>pedir feedback antes de construir la siguiente catedral</em>.</p>
+  </div>
+
+  <div class="turn v-ing">
+    <p class="who">El Ingeniero <span class="tag">— interrumpiendo</span></p>
+    <p>Objeción parcial: él ya tiene el marco. PDCA, MVP, ciclos de retroalimentación — lo aplicó al discipulado. Solo le falta aplicárselo a su propia sala de lectura.</p>
+  </div>
+
+  <div class="turn v-inv">
+    <p class="who">La Inversionista</p>
+    <p>Concedido, y eso lo hace peor: sabe iterar y elige no medir. Gianni, tu sala de lectura es tu MVP. El "cliente" es el hermano de tu iglesia que abre el enlace en el teléfono un martes por la noche. Aprende a servirlo a él antes de servir a un público imaginario de miles.</p>
+  </div>
+
+  <div class="practica" style="--accent:var(--inv)">
+    <h3>Práctica de esta semana</h3>
+    <ol>
+      <li>Comparte <strong>una</strong> página existente con cinco personas concretas y hazles dos preguntas: ¿qué entendiste? ¿dónde te perdiste?</li>
+      <li>Abre una lista de correo simple (cualquier herramienta gratuita sirve). Primera entrega: tu estudio de Marcos 2, con dos líneas personales de introducción.</li>
+      <li>Define tu métrica del trimestre. Sugerencia: <em>conversaciones reales que el material provocó</em>, no visitas.</li>
+    </ol>
+  </div>
+
+  <p class="fuentes"><span>Fuentes:</span> <a href="https://codeconductor.ai/blog/ai-skills-for-developers-creators/" target="_blank" rel="noopener">AI Skills for Developers &amp; Creators — CodeConductor</a></p>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="aprendizaje" style="--accent:var(--epi)">
+  <p class="kicker">Tres · El Epistemólogo</p>
+  <h2>Que el lector construya, no solo contemple</h2>
+
+  <div class="turn v-epi">
+    <p class="who">El Epistemólogo del Aprendizaje</p>
+    <p>Ahora me toca a mí, y voy a empezar elogiando para luego desarmar. Tus páginas son hermosas: tipografía Fraunces, pergamino cálido, navegación que acompaña el desplazamiento. Pero la belleza tiene un riesgo pedagógico: invita a <em>contemplar</em>, y la mente que contempla no es necesariamente la mente que <em>aprende</em>. El conocimiento no se transfiere del pergamino al lector como agua entre vasijas; el lector lo construye, esquema sobre esquema, o no lo posee en absoluto.</p>
+    <p>Lo que te falta aprender es la <strong>ciencia del aprendizaje</strong> aplicada a tu propio material. Tres principios bastan para empezar. <strong>Efecto de generación</strong>: lo que el lector produce — una respuesta, una predicción, un resumen propio — se retiene mucho mejor que lo que solo lee. <strong>Práctica de recuperación</strong>: preguntar después de enseñar consolida más que repetir la enseñanza. <strong>Dificultad deseable</strong>: si la página es demasiado fluida, la mente patina sobre ella; un obstáculo bien puesto obliga a pisar firme.</p>
+    <p>Y noto, con cierta ternura profesional, que ya lo intuyes: tu modelo de aprendizaje en espiral, tu "Echo English" donde repites hasta la exactitud — eso <em>es</em> práctica de recuperación. Solo te falta dársela a tus lectores con la misma generosidad con que te la das a ti.</p>
+  </div>
+
+  <p class="aside"><b>El Ingeniero</b>: «En mis términos: tus páginas son lectura secuencial; conviértelas en lectura-escritura.» <b>El Epistemólogo</b>: «Detesto admitir que esa metáfora es buena.»</p>
+
+  <div class="practica" style="--accent:var(--epi)">
+    <h3>Práctica de esta semana</h3>
+    <ol>
+      <li>Elige tu página de <em>El muro invisible</em> y añade, antes de cada sección clave, <strong>una pregunta de predicción</strong> («¿Qué crees que respondió Jesús?») que el lector contesta mentalmente antes de seguir.</li>
+      <li>Cierra cada estudio con <strong>tres preguntas de recuperación</strong> sin respuesta visible inmediata — un detalle de JavaScript que ya dominas: un botón "revelar".</li>
+      <li>Lee un solo libro este trimestre sobre el tema: <em>Make It Stick</em>. Es el puente perfecto entre la ciencia y tu instinto de maestro.</li>
+    </ol>
+  </div>
+
+  <p class="fuentes"><span>Fuentes:</span> <a href="https://www.hup.harvard.edu/books/9780674729018" target="_blank" rel="noopener">Make It Stick — Harvard University Press</a>, <a href="https://www.simplypsychology.org/piaget.html" target="_blank" rel="noopener">Teoría constructivista de Piaget — Simply Psychology</a>, <a href="https://gwern.net/spaced-repetition" target="_blank" rel="noopener">Spaced Repetition — Gwern</a></p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="esceptico" style="--accent:var(--esc)">
+  <p class="kicker">Cuatro · El Escéptico</p>
+  <h2>El abogado del diablo pide la palabra</h2>
+
+  <div class="turn v-esc">
+    <p class="who">El Escéptico Brutalmente Honesto</p>
+    <p>Llevo tres turnos escuchando a mis colegas añadir cosas a tu plato, así que mi recomendación va en sentido contrario: lo más importante que te falta aprender es <strong>qué no aprender</strong>. Eres un coleccionista de marcos: el consejo de cinco mentes, la red como iglesia, la espiral, el pizarrón del mentor, PDCA aplicado al discipulado. Marcos preciosos. ¿Cuántos sobrevivieron tres meses de uso real?</p>
+    <p>Mi diagnóstico, sin anestesia: usas el aprendizaje como un refugio elegante. Construir una página nueva es más cómodo que mostrarle la anterior a alguien que puede bostezar. Estudiar otro protocolo es más cómodo que terminar Go Epic y dárselo a un usuario. La Inversionista te lo dijo con números; yo te lo digo con carácter: <strong>te falta aprender a exponer lo incompleto</strong>.</p>
+    <p>Y un segundo golpe, ya que estoy de pie: tu "Echo English" es repetición de entrada. Repetir frases hasta la exactitud es calistenia, no conversación. El inglés que te falta es el de <em>producción bajo presión</em>: escribir un comentario técnico en un repositorio público, grabarte explicando Marcos 2 en inglés durante tres minutos, sostener una llamada. Ahí, donde te equivocas en vivo, es donde el idioma se vuelve tuyo.</p>
+  </div>
+
+  <p class="aside"><b>La Mayordoma</b>, suavemente: «Sé menos cruel.» <b>El Escéptico</b>: «Me contrataron exactamente para esta dosis. Ni un gramo más, ni uno menos.»</p>
+
+  <div class="turn v-esc">
+    <p class="who">El Escéptico</p>
+    <p>Cierro con la regla que te propongo tatuarte en el monitor: <strong>por cada cosa nueva que aprendas, una cosa vieja debe tocar a una persona real</strong>. Aprendiste evals → un PR real pasa por tu eval. Aprendiste recuperación → un estudio real incorpora preguntas. Sin esa regla, este consejo entero es entretenimiento de lujo.</p>
+  </div>
+
+  <div class="practica" style="--accent:var(--esc)">
+    <h3>Práctica de esta semana</h3>
+    <ol>
+      <li>Haz una lista de tus marcos y proyectos abiertos. Marca con honestidad: <em>vivo</em>, <em>dormido</em>, <em>muerto</em>. Entierra los muertos con gratitud.</li>
+      <li>Graba tres minutos en inglés explicando algo que amas. No lo edites. Escúchalo una vez. Repite el viernes.</li>
+      <li>Publica algo incompleto esta semana — una página al 80%, un PR imperfecto — y sobrevive a la experiencia.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="sentido" style="--accent:var(--may)">
+  <p class="kicker">Cinco · La Mayordoma</p>
+  <h2>La última palabra: discernimiento</h2>
+
+  <div class="turn v-may">
+    <p class="who">La Mayordoma del Sentido</p>
+    <p>Me guardaron para el final, como siempre, porque mi pregunta incomoda después del entusiasmo: <em>¿para qué?</em> El Ingeniero te dio arquitectura, la Inversionista te dio alcance, el Epistemólogo te dio método, el Escéptico te dio el espejo. Yo te doy la brújula: lo que te falta aprender, por encima de todo, es <strong>discernimiento de mayordomo</strong> — el arte de decidir qué merece tu atención finita, que es el único recurso que de verdad administras.</p>
+    <p>Tú mismo escribiste que la red es la iglesia y que el Espíritu es la fuente de poder de los nodos. Entonces aplica tu propia teología: un nodo que solo recibe y nunca transmite se congestiona; un nodo que transmite sin recibir se agota. Te propongo aprender una disciplina antigua con nombre moderno: el <strong>sábado de los insumos</strong>. Un día a la semana sin consumir nada nuevo — ni artículos, ni protocolos, ni tutoriales — dedicado solo a digerir, escribir y conversar lo ya recibido. Verás que no es una restricción: es la condición para que todo lo demás de esta mesa fructifique.</p>
+    <p>Y una palabra sobre la unión de tus dos mundos, porque algunos los tratan como rivales: tu código y tu fe no compiten por ti; se interpretan mutuamente. El que aprendió Git profundo entiende mejor la reconciliación de historias divergentes. El que estudia a Marcos entiende mejor por qué un sistema necesita un centro que no sea él mismo. Sigue construyendo en esa frontera: es tu voz, y casi nadie más la tiene.</p>
+  </div>
+
+  <p class="aside"><b>El Escéptico</b>, en voz baja: «...está bien, eso último no lo puedo refutar.»</p>
+
+  <div class="practica" style="--accent:var(--may)">
+    <h3>Práctica de esta semana</h3>
+    <ol>
+      <li>Elige tu día de sábado de insumos. Defiéndelo en el calendario como defiendes un despliegue a producción.</li>
+      <li>Escribe en una tarjeta tu criterio de admisión: <em>«Aprendo X solo si sirve a Y persona o proyecto en los próximos 90 días.»</em></li>
+      <li>Termina la semana con una página en blanco y una pregunta: ¿qué recibí este mes que aún no he entregado a nadie?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="plan" style="--accent:var(--ing)">
+  <p class="kicker">Seis · Síntesis</p>
+  <h2>El plan de 90 días (PDCA, por supuesto)</h2>
+
+  <div class="turn v-mod">
+    <p class="who">Moderador</p>
+    <p>Cinco recomendaciones sobre la mesa: arquitectura de agentes con evals, el oficio de la distribución, ciencia del aprendizaje aplicada a tus páginas, producción bajo presión — en inglés y en público —, y el discernimiento que ordena todo lo anterior. Como este consejo conoce al convocante, la síntesis llega en su dialecto natal: un ciclo de planificar, hacer, verificar y ajustar.</p>
+  </div>
+
+  <div class="plan">
+    <div class="fase">
+      <span class="dias">Días 1–30 · Plan + Do</span>
+      <h3>Sembrar</h3>
+      <ul>
+        <li>SKILL.md de revisión de PRs en uso diario</li>
+        <li>Lista de correo abierta; primer envío hecho</li>
+        <li>Un estudio convertido a formato activo (predicción + recuperación)</li>
+        <li>Sábado de insumos instaurado</li>
+      </ul>
+    </div>
+    <div class="fase">
+      <span class="dias">Días 31–60 · Do + Check</span>
+      <h3>Medir</h3>
+      <ul>
+        <li>Eval de 10 PRs: línea base y una iteración</li>
+        <li>Segundo y tercer envío; primeras respuestas reales</li>
+        <li>Tres grabaciones en inglés de tres minutos</li>
+        <li>Funeral honesto de los proyectos muertos</li>
+      </ul>
+    </div>
+    <div class="fase">
+      <span class="dias">Días 61–90 · Act</span>
+      <h3>Ajustar</h3>
+      <ul>
+        <li>Servidor MCP mínimo para Go Epic funcionando</li>
+        <li>Decidir con datos: ¿qué pieza de la sala de lectura crece?</li>
+        <li>Una conversación en inglés sostenida con un desconocido</li>
+        <li>Revisión del trimestre... convocando otra vez a este consejo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="turn v-esc">
+    <p class="who">El Escéptico <span class="tag">— recogiendo su abrigo</span></p>
+    <p>Última observación meta, porque alguien tiene que hacerla: esta página que estás leyendo es, otra vez, una página hermosa sobre aprender. La ironía es deliciosa. Que sea la última que contemplas antes de <em>hacer</em>.</p>
+  </div>
+
+  <div class="turn v-may">
+    <p class="who">La Mayordoma <span class="tag">— apagando la luz</span></p>
+    <p>Y que la hagas con alegría, Gianni. El que te dio cinco talentos no espera un museo de talentos: espera el mercado, el riesgo, el regreso con las manos llenas. Se levanta la sesión.</p>
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  <p class="fin">Coffee with Claude · Sesión del Consejo · Junio 2026</p>
+  <p>Cinco voces, un convocante, noventa días por delante.</p>
+</footer>
+
+<script>
+(function(){
+  // Hamburger
+  var btn=document.getElementById('menuBtn');
+  var rail=document.getElementById('railNav');
+  btn.addEventListener('click',function(){
+    var open=rail.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+    btn.textContent=open?'Cerrar ✕':'Índice ☰';
+  });
+  rail.addEventListener('click',function(e){
+    if(e.target.tagName==='A'&&window.innerWidth<=900){
+      rail.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+      btn.textContent='Índice ☰';
+    }
+  });
+
+  // Scroll-spy
+  var links=Array.prototype.slice.call(rail.querySelectorAll('a'));
+  var map={};
+  links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        links.forEach(function(a){a.classList.remove('active');});
+        var link=map[entry.target.id];
+        if(link)link.classList.add('active');
+      }
+    });
+  },{rootMargin:'-35% 0px -55% 0px',threshold:0});
+  document.querySelectorAll('main section').forEach(function(s){observer.observe(s);});
+})();
+</script>
+</body>
+</html>
