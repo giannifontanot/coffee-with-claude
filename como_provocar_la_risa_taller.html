@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo provocar la risa — El taller del super panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f7f1e3;
+    --parchment-deep: #efe6d2;
+    --ink: #2b2118;
+    --ink-soft: #5a4a3a;
+    --terracotta: #b85c38;
+    --amber: #c9962e;
+    --olive: #6b7a3f;
+    --slate-blue: #4a6274;
+    --plum: #7a4a63;
+    --teal: #3d7068;
+    --brick: #a04545;
+    --rule: #d8cbb0;
+    --card: #fdfaf2;
+    --maxw: 720px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Spectral', Georgia, serif;
+    font-size: 1.075rem;
+    line-height: 1.75;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout { display: flex; min-height: 100vh; }
+  nav.rail {
+    position: sticky; top: 0; align-self: flex-start;
+    width: 250px; min-width: 250px; height: 100vh;
+    padding: 3rem 1.5rem 2rem 2rem;
+    border-right: 1px solid var(--rule);
+    overflow-y: auto;
+  }
+  nav.rail .rail-title {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.25rem;
+  }
+  nav.rail .rail-sub {
+    font-size: 0.78rem; color: var(--ink-soft); font-style: italic; margin-bottom: 1.5rem;
+  }
+  nav.rail ol { list-style: none; }
+  nav.rail li { margin-bottom: 0.15rem; }
+  nav.rail a {
+    display: block; padding: 0.35rem 0.6rem; font-size: 0.85rem;
+    color: var(--ink-soft); text-decoration: none;
+    border-left: 2px solid transparent; border-radius: 0 4px 4px 0;
+    transition: all 0.2s ease;
+  }
+  nav.rail a:hover { color: var(--terracotta); background: var(--parchment-deep); }
+  nav.rail a.active {
+    color: var(--terracotta); border-left-color: var(--terracotta);
+    background: var(--parchment-deep); font-weight: 500;
+  }
+  main { flex: 1; padding: 0 2rem; }
+  .content { max-width: var(--maxw); margin: 0 auto; padding-bottom: 6rem; }
+
+  /* ---------- Hamburger ---------- */
+  .hamburger {
+    display: none; position: fixed; top: 1rem; right: 1rem; z-index: 60;
+    background: var(--card); border: 1px solid var(--rule);
+    border-radius: 8px; padding: 0.55rem 0.7rem; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.12);
+  }
+  .hamburger span {
+    display: block; width: 20px; height: 2px; background: var(--ink);
+    margin: 4px 0; transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  /* ---------- Hero ---------- */
+  header.hero { padding: 5rem 0 3rem; }
+  .hero .eyebrow {
+    font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 800;
+    font-size: clamp(2.4rem, 6vw, 3.9rem); line-height: 1.07;
+    letter-spacing: -0.015em; margin-bottom: 1.4rem;
+  }
+  .hero h1 .ja { font-style: italic; font-weight: 300; color: var(--terracotta); }
+  .hero .lede {
+    font-size: 1.2rem; font-weight: 300; color: var(--ink-soft);
+    max-width: 58ch; font-style: italic;
+  }
+  .hero .panel-roster { margin-top: 2.2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    font-size: 0.78rem; padding: 0.25rem 0.75rem; border-radius: 999px;
+    border: 1px solid currentColor; background: var(--card); white-space: nowrap;
+  }
+  .c-artesano { color: var(--slate-blue); }
+  .c-observacional { color: var(--teal); }
+  .c-provocador { color: var(--brick); }
+  .c-psicoanalista { color: var(--plum); }
+  .c-piagetiana { color: var(--olive); }
+  .c-pastor { color: var(--amber); }
+  .c-esceptico { color: var(--terracotta); }
+
+  /* ---------- Sections ---------- */
+  section { padding-top: 3.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.6rem, 3.4vw, 2.05rem); line-height: 1.2; margin-bottom: 0.4rem;
+  }
+  section .sec-sub { font-style: italic; color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 1.6rem; }
+  section p { margin-bottom: 1.15rem; }
+  .divider {
+    text-align: center; margin: 3.5rem 0 0;
+    font-family: 'Fraunces', serif; font-style: italic;
+    color: var(--rule); font-size: 1rem; letter-spacing: 0.5em; user-select: none;
+  }
+
+  /* ---------- Dialogue ---------- */
+  .dialogue { margin: 1.6rem 0; }
+  .turn {
+    background: var(--card); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 1.1rem 1.3rem; margin-bottom: 0.9rem;
+    box-shadow: 0 1px 3px rgba(43,33,24,0.05);
+  }
+  .turn .who {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.86rem;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .turn .who::before {
+    content: ""; width: 9px; height: 9px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  .turn p { margin-bottom: 0.7rem; font-size: 1.02rem; }
+  .turn p:last-child { margin-bottom: 0; }
+  .turn.t-artesano .who { color: var(--slate-blue); }
+  .turn.t-observacional .who { color: var(--teal); }
+  .turn.t-provocador .who { color: var(--brick); }
+  .turn.t-psicoanalista .who { color: var(--plum); }
+  .turn.t-piagetiana .who { color: var(--olive); }
+  .turn.t-pastor .who { color: var(--amber); }
+  .turn.t-esceptico .who { color: var(--terracotta); }
+  .turn.t-moderador { background: transparent; border: none; box-shadow: none; padding: 0.4rem 1.3rem; }
+  .turn.t-moderador .who { color: var(--ink-soft); }
+  .turn.t-moderador p { font-style: italic; color: var(--ink-soft); }
+
+  /* ---------- Examples & technique boxes ---------- */
+  .ejemplo {
+    background: var(--parchment-deep); border-left: 3px solid var(--teal);
+    border-radius: 0 10px 10px 0; padding: 1rem 1.3rem; margin: 1.4rem 0;
+  }
+  .ejemplo .ej-label {
+    font-family: 'Fraunces', serif; font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal);
+    margin-bottom: 0.4rem;
+  }
+  .ejemplo p { font-size: 1rem; margin-bottom: 0.5rem; }
+  .ejemplo p:last-child { margin-bottom: 0; }
+  .ejemplo .nota { font-size: 0.86rem; font-style: italic; color: var(--ink-soft); }
+
+  .keybox {
+    background: var(--parchment-deep); border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 1.6rem 0; border: 1px solid var(--rule);
+  }
+  .keybox h3 {
+    font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700;
+    margin-bottom: 0.6rem; color: var(--terracotta);
+  }
+  .keybox ol { padding-left: 1.3rem; }
+  .keybox ol li { margin-bottom: 0.55rem; font-size: 0.98rem; }
+  .keybox ul { list-style: none; }
+  .keybox ul li { padding-left: 1.3rem; position: relative; margin-bottom: 0.55rem; font-size: 0.98rem; }
+  .keybox ul li::before { content: "✳"; position: absolute; left: 0; color: var(--amber); font-size: 0.8rem; top: 0.25rem; }
+
+  blockquote {
+    border-left: 3px solid var(--amber);
+    padding: 0.4rem 0 0.4rem 1.3rem; margin: 1.6rem 0;
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 1.12rem; color: var(--ink-soft);
+  }
+  blockquote .cite-line { display: block; font-family: 'Spectral', serif; font-style: normal; font-size: 0.82rem; margin-top: 0.5rem; }
+
+  /* ---------- Synthesis table ---------- */
+  table { width: 100%; border-collapse: collapse; margin: 1.6rem 0; font-size: 0.93rem; }
+  th, td { text-align: left; padding: 0.65rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th {
+    font-family: 'Fraunces', serif; font-size: 0.8rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  td .maestro { font-weight: 600; font-family: 'Fraunces', serif; }
+
+  /* ---------- Sources ---------- */
+  .sources { font-size: 0.92rem; }
+  .sources ul { list-style: none; }
+  .sources li { margin-bottom: 0.6rem; padding-left: 1.2rem; position: relative; }
+  .sources li::before { content: "↗"; position: absolute; left: 0; color: var(--terracotta); font-size: 0.85rem; }
+  a { color: var(--terracotta); text-decoration: none; border-bottom: 1px dotted var(--terracotta); transition: border-color 0.2s; }
+  a:hover { border-bottom-style: solid; }
+  .src-inline { font-size: 0.84rem; color: var(--ink-soft); margin-top: -0.4rem; margin-bottom: 1.4rem; }
+
+  footer {
+    border-top: 1px solid var(--rule); margin-top: 4rem; padding-top: 1.6rem;
+    font-size: 0.85rem; color: var(--ink-soft); font-style: italic;
+  }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    nav.rail {
+      position: fixed; top: 0; right: 0; height: 100vh; width: 280px;
+      background: var(--card); z-index: 50;
+      transform: translateX(100%); transition: transform 0.28s ease;
+      border-left: 1px solid var(--rule); border-right: none;
+      box-shadow: -8px 0 24px rgba(43,33,24,0.12); padding-top: 4.5rem;
+    }
+    nav.rail.open { transform: translateX(0); }
+    .hamburger { display: block; }
+    main { padding: 0 1.3rem; }
+    header.hero { padding-top: 4rem; }
+    table { font-size: 0.84rem; }
+    th, td { padding: 0.5rem 0.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger" aria-label="Abrir menú de navegación" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="layout">
+
+<nav class="rail" id="rail" aria-label="Índice del taller">
+  <div class="rail-title">Cómo provocar la risa</div>
+  <div class="rail-sub">El taller del super panel</div>
+  <ol>
+    <li><a href="#obertura">Obertura: manos a la obra</a></li>
+    <li><a href="#anatomia">El Artesano: anatomía del chiste</a></li>
+    <li><a href="#observacional">El Observacional (esc. Seinfeld)</a></li>
+    <li><a href="#provocador">El Provocador (esc. Gervais)</a></li>
+    <li><a href="#freud">El Psicoanalista: el contrabando</a></li>
+    <li><a href="#piaget">La Piagetiana: reír por edades</a></li>
+    <li><a href="#pastor">El Pastor: humor que edifica</a></li>
+    <li><a href="#esceptico">El Escéptico: cómo matar un chiste</a></li>
+    <li><a href="#taller">Taller: 7 ejercicios</a></li>
+    <li><a href="#sintesis">Tabla del maestro</a></li>
+    <li><a href="#fuentes">Fuentes</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="content">
+
+<header class="hero">
+  <div class="eyebrow">Cuaderno de estudio · Café con Claude · Segunda sesión</div>
+  <h1>Cómo provocar la risa<br><span class="ja">— el taller —</span></h1>
+  <p class="lede">En la primera sesión entendimos <em>por qué</em> reímos. Hoy el panel se arremanga: técnicas, ejemplos e instrucciones. Se suman dos practicantes: el Observacional, formado en la escuela de Jerry Seinfeld, y el Provocador, discípulo del método de Ricky Gervais. Los teóricos —freudianos, piagetianos, pastores y escépticos— ya conocen el camino al café.</p>
+  <div class="panel-roster">
+    <span class="chip c-artesano">El Artesano</span>
+    <span class="chip c-observacional">El Observacional</span>
+    <span class="chip c-provocador">El Provocador</span>
+    <span class="chip c-psicoanalista">El Psicoanalista</span>
+    <span class="chip c-piagetiana">La Piagetiana</span>
+    <span class="chip c-pastor">El Pastor</span>
+    <span class="chip c-esceptico">El Escéptico Honesto</span>
+  </div>
+</header>
+
+<!-- ============ 1. OBERTURA ============ -->
+<section id="obertura">
+  <h2>Obertura: del porqué al cómo</h2>
+  <p class="sec-sub">Donde el moderador cambia el pizarrón por el banco de trabajo</p>
+
+  <p>La sesión pasada terminamos con una confesión colectiva: no entendemos del todo la risa. Hoy hacemos lo que hacen los buenos artesanos con los misterios: trabajarlos. Porque hay una buena noticia escondida en toda la teoría — si la risa estalla en la <em>incongruencia</em>, se descarga como <em>alivio</em>, corrige la <em>rigidez</em> y pega al <em>grupo</em>, entonces cada teoría es también una receta. Cada porqué esconde un cómo.</p>
+
+  <div class="dialogue">
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Regla de la casa para hoy: nada de definiciones sin ejemplo, y nada de ejemplo sin instrucción. Teoría, ejemplo, ejercicio. ¿De acuerdo?</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>De acuerdo, con una cláusula: me reservo el derecho de explicar por qué la mitad de los chistes de este panel van a morir en el intento. Es mi ministerio.</p>
+    </div>
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Concedido. Artesano: la mesa es suya. Enséñenos el esqueleto.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 2. ANATOMÍA ============ -->
+<section id="anatomia">
+  <h2>El Artesano: anatomía del chiste</h2>
+  <p class="sec-sub">Setup, remate, misdirección y la regla de tres — las cuatro herramientas que están en toda caja</p>
+
+  <div class="dialogue">
+    <div class="turn t-artesano">
+      <div class="who">El Artesano</div>
+      <p>Todo chiste, de cualquier escuela, tiene dos piezas. El <strong>setup</strong> (la preparación): construye una expectativa, tensa el arco. El <strong>remate</strong> (punchline): traiciona esa expectativa de golpe, y debe ser breve, porque la sorpresa no sobrevive a la palabrería. La risa vive exactamente en el hueco entre lo que esperabas y lo que llegó. Eso es la incongruencia de Kant convertida en oficio.</p>
+      <p>De ahí salen las herramientas básicas. Primera: la <strong>misdirección</strong> — llevar a la audiencia confiada por un camino y girar en la última palabra. Segunda: la <strong>regla de tres</strong> — dos elementos establecen un patrón, el tercero lo rompe. Tres es el número mínimo para crear un patrón y el máximo antes de que el patrón aburra: por eso funciona. Tercera: la <strong>exageración</strong> — tomar una verdad y estirarla hasta lo absurdo sin que se rompa el hilo con la realidad. Cuarta: la <strong>economía</strong> — el remate va al final de la frase, y cada sílaba de más le roba pólvora.</p>
+    </div>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · Regla de tres</div>
+    <p>«Mis pasatiempos son leer, orar… y corregir agresivamente la teología de desconocidos en internet.»</p>
+    <p class="nota">Dos elementos piadosos establecen el patrón; el tercero lo traiciona — pero lo traiciona con una verdad reconocible, que es lo que lo salva.</p>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · Misdirección</div>
+    <p>«Mi abuela siempre decía: no te cases por dinero… divórciate por dinero.» <em>(estructura clásica popularizada por la comediante Wendy Liebman)</em></p>
+    <p class="nota">El oído ya estaba completando «cásate por amor». El remate roba la palabra que la audiencia tenía en la boca — esa es la misdirección perfecta.</p>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · Exageración</div>
+    <p>«Mi puntuación de conductor en la app es tan baja que los choferes cancelan el viaje… y luego me reportan como persona desaparecida.»</p>
+    <p class="nota">Verdad reconocible (las puntuaciones bajas) estirada un paso más allá de lo posible — pero solo un paso.</p>
+  </div>
+
+  <div class="keybox">
+    <h3>Instrucciones del Artesano</h3>
+    <ol>
+      <li><strong>Escribe el setup más corto posible.</strong> Si una palabra no construye la expectativa, sobra.</li>
+      <li><strong>Pon la palabra graciosa al final.</strong> El remate es la última cosa que oyen; nada después.</li>
+      <li><strong>Para cada setup, escribe cinco remates.</strong> Los profesionales escriben varios y eligen; el primero casi nunca es el mejor.</li>
+      <li><strong>En la regla de tres, vigila al tercero.</strong> Debe romper el patrón pero seguir conectado a él: sorprendente, no arbitrario. Si la audiencia lo puede adivinar, el chiste murió antes de nacer.</li>
+      <li><strong>Lee en voz alta y mide el ritmo.</strong> La comedia es música: corto, corto, largo. La pausa antes del remate es parte del chiste.</li>
+    </ol>
+  </div>
+  <p class="src-inline">Sobre setup, remate y regla de tres: <a href="https://buddyonstage.com/blogs/rule-of-3-in-comedy" target="_blank" rel="noopener">Buddy On Stage — Rule of 3</a>, <a href="http://kenlevine.blogspot.com/2017/07/the-comedy-rule-of-3s.html" target="_blank" rel="noopener">Ken Levine — The Comedy Rule of 3's</a>, <a href="https://comedywriter.info/how-to-master-setup-punchline-and-timing/" target="_blank" rel="noopener">Comedy Writer — Setup, Punchline, Timing</a>; sobre la misdirección: <a href="https://cleancomedians.com/how-to-write-stand-up-comedy/" target="_blank" rel="noopener">Clean Comedians — How to Write Stand-Up</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 3. OBSERVACIONAL ============ -->
+<section id="observacional">
+  <h2>El Observacional: la escuela Seinfeld</h2>
+  <p class="sec-sub">Lo cotidiano bajo la lupa — y la disciplina brutal detrás de lo que parece sin esfuerzo</p>
+
+  <div class="dialogue">
+    <div class="turn t-observacional">
+      <div class="who">El Observacional</div>
+      <p>Mi maestro es Jerry Seinfeld, considerado por muchos el mayor comediante observacional de la historia, y su secreto decepciona a todo el que busca atajos: no es talento, es <em>método</em>. La materia prima de su comedia son las pequeñas absurdidades de la vida diaria que todos vemos y nadie cuestiona — el supermercado, los cereales, los pésames. El público no ríe porque le cuentes algo nuevo; ríe porque le nombras algo que siempre supo y nunca había dicho. La risa observacional es un «¡sí, exacto!» colectivo.</p>
+      <p>Y luego está la disciplina, que es donde la leyenda se vuelve instructiva. Se sabe que Seinfeld llegó a trabajar un solo chiste durante <strong>dos años</strong> antes de estrenarlo. Que edita a nivel microscópico: recorta letras de las palabras y cuenta sílabas hasta que la transición suena exacta. Que aparece sin anunciar en clubes pequeños para probar material nuevo ante público real, ajustando cada chiste según la respuesta. La comedia que parece improvisada es la más escrita de todas.</p>
+    </div>
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Dos años un chiste. Gianni, esto es tu metodología de iteración rápida… en cámara lenta y con público.</p>
+    </div>
+    <div class="turn t-observacional">
+      <div class="who">El Observacional</div>
+      <p>Es exactamente un ciclo PDCA: escribe (plan), pruébalo en el club (do), escucha dónde ríen y dónde no (check), recorta sílabas y reordena (act). Repite hasta que el chiste quede afilado. El escenario es el feedback loop más honesto del mundo: la risa no se puede fingir en grupo.</p>
+    </div>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · Observación cotidiana (ejercicio de escuela)</div>
+    <p>«El audio de WhatsApp de siete minutos es la única carta que te obligan a leer con los ojos del que la escribió. No puedes saltarte párrafos. No puedes leer el final. Solo puedes envejecer.»</p>
+    <p class="nota">Fórmula: cosa diminuta que todos padecen + tratarla con la gravedad de un tratado filosófico. La desproporción entre el tema y el tono es el chiste.</p>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · La pregunta-lupa</div>
+    <p>«¿Alguien ha visto el "self-checkout"? El supermercado descubrió cómo cobrarte por trabajar de cajero. Y encima la máquina te regaña: "artículo inesperado en la zona de empaque". Señora máquina, el artículo inesperado es que yo trabaje aquí gratis.»</p>
+    <p class="nota">Empieza con la pregunta clásica del observacional («¿qué pasa con…?», «¿alguien ha notado…?») que invita al público a mirar contigo.</p>
+  </div>
+
+  <div class="keybox">
+    <h3>Instrucciones del Observacional</h3>
+    <ol>
+      <li><strong>Lleva un cuaderno de absurdos.</strong> Anota cada día tres cosas pequeñas que te irritaron, sorprendieron o desconcertaron. Lo banal es tu mina de oro.</li>
+      <li><strong>Cuestiona lo que nadie cuestiona.</strong> Toma un objeto cotidiano y pregúntale «¿y tú por qué eres así?»: el cargador, la fila, el pésame, el buffet.</li>
+      <li><strong>Sé hiper-específico.</strong> «La comida» no da risa; «el pan del avión» sí. La risa vive en el detalle, porque el detalle prueba que de verdad miraste.</li>
+      <li><strong>Trata lo diminuto como enorme.</strong> Dale a la tapa del tupper la seriedad de una crisis geopolítica. La desproporción es el motor.</li>
+      <li><strong>Prueba, escucha, recorta, repite.</strong> Cuenta tu observación a tres personas distintas. Donde no rían, hay sílabas de más o una expectativa mal tensada. Itera sin piedad.</li>
+    </ol>
+  </div>
+  <p class="src-inline">El proceso de Seinfeld: <a href="https://www.writersdigest.com/write-better-nonfiction/jerry-seinfelds-5-step-comedy-writing-process" target="_blank" rel="noopener">Writer's Digest — Seinfeld's 5-Step Process</a>, <a href="https://nathanbweller.com/writing-tips-from-jerry-seinfeld/" target="_blank" rel="noopener">6 Writing Tips from Jerry Seinfeld</a>, <a href="https://prowritingaid.com/art/614/7-Things-We-Can-Learn-From-Jerry-Seinfeld-About-Writing-.aspx" target="_blank" rel="noopener">ProWritingAid — Lecciones de Seinfeld</a>; sobre la comedia observacional: <a href="https://wfumediaphiles.wordpress.com/2019/07/27/seinfeld-the-masters-of-observational-comedy/" target="_blank" rel="noopener">Seinfeld: King of Observational Comedy</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 4. PROVOCADOR ============ -->
+<section id="provocador">
+  <h2>El Provocador: la escuela Gervais y la violación benigna</h2>
+  <p class="sec-sub">Reír al borde del precipicio — y la ciencia de no caerse</p>
+
+  <div class="dialogue">
+    <div class="turn t-provocador">
+      <div class="who">El Provocador</div>
+      <p>Mi escuela es la de Ricky Gervais: humor seco, oscuro, sin pedir permiso. Pero ojo, porque la caricatura del provocador se equivoca en lo esencial. Los principios de Gervais incluyen dos que sorprenden: <em>nunca estar por encima de la audiencia</em> —no puede reír con gente que no le agrada— y observar obsesivamente la realidad: pasó siete años en una oficina mirando a sus compañeros antes de escribir <em>The Office</em>. El provocador serio no dispara al azar; estudia el tabú antes de tocarlo, y su blanco preferido es la <em>idea</em>, la pomposidad, el sistema — no la persona vulnerable.</p>
+      <p>Y aquí la teoría me da el manual. La <strong>teoría de la violación benigna</strong> de McGraw y Warren dice que algo es gracioso cuando, y solo cuando, se cumplen tres condiciones a la vez: (1) hay una violación —algo está mal, amenaza o transgrede una norma—, (2) la situación es a la vez benigna —inofensiva, segura—, y (3) ambas percepciones ocurren simultáneamente. Las cosquillas son el ejemplo perfecto: un ataque físico… inofensivo. Si quitas el ataque, no hay risa. Si el ataque se vuelve real, tampoco. La comedia provocadora es ingeniería de ese equilibrio.</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Y nótese la elegancia: la teoría también explica el fracaso. El chiste oscuro que «llega demasiado pronto» falla porque la violación todavía no es benigna — la herida está abierta. Y el chiste demasiado seguro falla porque no viola nada. La investigación incluso sugiere que hay un punto dulce de transgresión: ni tan cerca que duela, ni tan lejos que no importe.</p>
+    </div>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · Violación hecha benigna por el blanco</div>
+    <p>«Nuestra iglesia tiene un don espiritual no listado en 1 Corintios: el de alargar los anuncios hasta que el sermón pida perdón por existir.»</p>
+    <p class="nota">Hay violación (burlarse de lo sagrado-institucional) pero es benigna: el blanco es un hábito compartido, dicho desde dentro y con cariño. Nadie sangra; todos se reconocen.</p>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · El mismo chiste, malogrado</div>
+    <p>«El hermano Pérez ora tan largo porque le encanta oírse a sí mismo.»</p>
+    <p class="nota">Misma zona temática, pero la violación dejó de ser benigna: ahora hay nombre, hay víctima, hay herida. Esto ya no es comedia; es un dardo con sonrisa. El Provocador profesional conoce la diferencia mejor que nadie.</p>
+  </div>
+
+  <div class="keybox">
+    <h3>Instrucciones del Provocador</h3>
+    <ol>
+      <li><strong>Identifica la norma antes de violarla.</strong> El humor de borde exige saber exactamente dónde está el borde. El que no conoce el tabú no lo transgrede: lo pisotea.</li>
+      <li><strong>Hazla benigna por una de tres vías:</strong> distancia (tiempo o lejanía del dolor), absurdo (exagerar hasta que sea obviamente irreal) o pertenencia (reírte de un grupo del que formas parte).</li>
+      <li><strong>Apunta hacia arriba o hacia adentro.</strong> Al poder, a las ideas, a ti mismo. El humor que golpea hacia abajo consigue silencios, no risas — y los merece.</li>
+      <li><strong>Nunca te creas superior a tu audiencia.</strong> El público huele el desprecio antes que el chiste. Ríes <em>con</em>, no <em>de</em>.</li>
+      <li><strong>Calcula el «demasiado pronto».</strong> Si la herida está fresca para tu audiencia concreta, guarda el chiste. No es censura; es puntería.</li>
+    </ol>
+  </div>
+  <p class="src-inline">Principios de Gervais: <a href="https://castingfrontier.com/blog/ricky-gervais-on-the-principles-of-comedy/" target="_blank" rel="noopener">Casting Frontier — Gervais on Comedy</a>; la teoría de la violación benigna: <a href="https://humorresearchlab.com/benign-violation-theory/" target="_blank" rel="noopener">Humor Research Lab — Benign Violation Theory</a>, <a href="https://leeds-faculty.colorado.edu/mcgrawp/benign_violation_theory.html" target="_blank" rel="noopener">McGraw &amp; Warren (Universidad de Colorado)</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 5. FREUD ============ -->
+<section id="freud">
+  <h2>El Psicoanalista: el arte del contrabando</h2>
+  <p class="sec-sub">Freud aplicado — cómo decir lo indecible y cobrar en carcajadas</p>
+
+  <div class="dialogue">
+    <div class="turn t-psicoanalista">
+      <div class="who">El Psicoanalista</div>
+      <p>Si la sesión pasada establecimos que el chiste, según Freud, es un contrabandista que cuela material reprimido por la aduana de la censura interna, entonces la instrucción práctica es obvia: <strong>encuentra qué está reprimiendo tu audiencia y dale una salida segura</strong>. Todo grupo humano —una oficina, una familia, una congregación— tiene cosas que todos piensan y nadie dice. Esa tensión acumulada es pólvora esperando mecha. El comediante que la nombra primero, con el disfraz adecuado, se lleva la explosión entera.</p>
+      <p>El «disfraz» es la técnica: el doble sentido, el eufemismo transparente, ponerlo en boca de un personaje, o el clásico «no digo nada, solo observo…». Freud también subrayaba algo que el Artesano aplaudirá: la condensación. El chiste comprime; cuanto más corto el disfraz, más limpia la descarga. Y mi observación clínica favorita: la risa más fuerte de la sala siempre marca el lugar exacto de la tensión más grande. Escuchen <em>dónde</em> ríe la gente y sabrán qué carga.</p>
+    </div>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · Nombrar la tensión del grupo</div>
+    <p>En la reunión donde todos temen los recortes y nadie lo menciona: «Propongo empezar con buenas noticias: esta reunión, de momento, sigue existiendo.»</p>
+    <p class="nota">El miedo colectivo (¿seguiremos existiendo?) sale disfrazado de broma sobre la reunión. La risa que estalla es proporcional al miedo que descarga — Freud cobrando regalías.</p>
+  </div>
+
+  <div class="keybox">
+    <h3>Instrucciones del Psicoanalista</h3>
+    <ol>
+      <li><strong>Haz el inventario de tensiones del grupo.</strong> ¿Qué teme, desea o calla esta audiencia concreta? Ahí está el combustible.</li>
+      <li><strong>Disfraza, no desnudes.</strong> La verdad dicha directamente incomoda; la verdad con disfraz fino libera. El disfraz es el respeto que le pones a la pólvora.</li>
+      <li><strong>Condensa.</strong> El remate freudiano ideal cabe en una frase: la brevedad del chiste es parte del mecanismo, no un adorno.</li>
+      <li><strong>Usa la risa como diagnóstico.</strong> Donde el grupo ríe más fuerte de lo que el chiste merece, acabas de encontrar su tensión real. Información valiosísima para un pastor, un líder o un maestro.</li>
+    </ol>
+  </div>
+  <p class="src-inline">Freud y la teoría del alivio aplicada al chiste: <a href="https://open.ocolearnok.org/whatsfunny/chapter/introduction-the-three-theories-and-beyond/" target="_blank" rel="noopener">What is Funny? — The Three Theories</a>, <a href="https://iep.utm.edu/humor/" target="_blank" rel="noopener">IEP — Humor</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 6. PIAGET ============ -->
+<section id="piaget">
+  <h2>La Piagetiana: cómo hacer reír según la edad</h2>
+  <p class="sec-sub">El borde justo entre lo dominado y lo sorprendente — calibrado por etapas</p>
+
+  <div class="dialogue">
+    <div class="turn t-piagetiana">
+      <div class="who">La Piagetiana</div>
+      <p>Mi principio es uno y lo demás es calibración: la risa vive en la frontera entre lo que la mente ya domina y lo que todavía la sorprende. Para provocarla hay que conocer el mapa cognitivo de tu audiencia y violar <em>exactamente</em> la expectativa que acaba de consolidar — ni la que aún no tiene, ni la que ya le aburre. Por eso el mismo truco que hace llorar de risa a un bebé deja indiferente a un niño de seis años: no es que el chiste envejezca; es que la frontera se movió.</p>
+    </div>
+  </div>
+
+  <div class="keybox">
+    <h3>El manual por edades</h3>
+    <ul>
+      <li><strong>3–6 meses:</strong> el cuerpo es el chiste. Cosquillas suaves, soplidos en la barriga, sonidos exagerados, el «¡buuu!» amable. La sorpresa física en brazos seguros: violación benigna en estado puro.</li>
+      <li><strong>6–12 meses:</strong> el cucú-tras reina, porque juega con la permanencia del objeto que el bebé está justo construyendo. Variarlo es la clave: aparecer por el otro lado, tardar un segundo más, usar una manta. La variación sobre el patrón conocido es su primera misdirección.</li>
+      <li><strong>1–3 años:</strong> el absurdo físico y la incongruencia visible: el zapato en la cabeza, papá bebiendo del biberón, caminar como pato. El niño ríe porque <em>ya sabe</em> cómo va el mundo, y tú acabas de equivocarte a propósito. Su risa es un examen aprobado.</li>
+      <li><strong>3–6 años:</strong> palabras imposibles, nombres cambiados, la lógica patas arriba («¿y si el perro nos sacara a pasear a nosotros?»). Y el gran salto: el niño empieza a fabricar sus propias bromas — celebra cada intento, aunque sea malísimo, porque está estrenando una mente que modela la tuya.</li>
+      <li><strong>Adultos:</strong> el principio no cambia, solo el contenido. Por eso la jerga del oficio, los chistes internos de la familia o de la iglesia son los que más fuerte explotan: operan sobre los patrones que ese grupo exacto tiene más consolidados. El humor es conocimiento compartido violado con cariño.</li>
+    </ul>
+  </div>
+
+  <div class="ejemplo">
+    <div class="ej-label">Ejemplo · La variación sobre el patrón</div>
+    <p>Tres rondas de cucú-tras normales… y en la cuarta, papá aparece con los lentes de la abuela puestos. La carcajada de la cuarta ronda duplica a las tres anteriores.</p>
+    <p class="nota">Setup-setup-setup-remate: el bebé acaba de recibir su primera regla de tres, y nadie le explicó nada. El Artesano llora de orgullo en la esquina.</p>
+  </div>
+
+  <div class="keybox">
+    <h3>Instrucciones de la Piagetiana (sirven también para enseñar)</h3>
+    <ol>
+      <li><strong>Mapea lo que tu audiencia ya domina.</strong> Sin patrón consolidado no hay nada que violar. El humor presupone conocimiento compartido.</li>
+      <li><strong>Viola la expectativa más reciente.</strong> La sorpresa óptima está un paso más allá de lo aprendido — la misma zona donde ocurre el mejor aprendizaje.</li>
+      <li><strong>Repite con variación.</strong> El patrón conocido + el giro nuevo es la fórmula universal, del cucú-tras al stand-up.</li>
+      <li><strong>Si enseñas, ríe a propósito:</strong> la risa mantiene la atención orientada hacia la incongruencia el tiempo necesario para comprenderla. Un buen chiste didáctico no es un descanso de la clase; es la clase.</li>
+    </ol>
+  </div>
+  <p class="src-inline">Hitos del humor infantil (estimulación física → juegos sociales → incongruencia visual → creación de humor): <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3494749/" target="_blank" rel="noopener">Infant Humor Perception (PMC)</a>; el cucú-tras y la permanencia del objeto: <a href="https://en.wikipedia.org/wiki/Peekaboo" target="_blank" rel="noopener">Peekaboo — Wikipedia</a>; participación del bebé por turnos: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5641350/" target="_blank" rel="noopener">Peekaboo Routines (PMC)</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 7. PASTOR ============ -->
+<section id="pastor">
+  <h2>El Pastor: el humor que edifica</h2>
+  <p class="sec-sub">Provocar risa sin provocar heridas — una ética y una homilética de la carcajada</p>
+
+  <div class="dialogue">
+    <div class="turn t-pastor">
+      <div class="who">El Pastor</div>
+      <p>Me toca el filtro final, y la Escritura lo da en una imagen tremenda: el que engaña a su prójimo y luego dice «era una broma» es «como el que enloquece y arroja llamas, flechas y muerte» (Proverbios 26:18–19). La Biblia conoce el humor que mata. Y conoce el criterio opuesto: que de nuestra boca no salga palabra corrompida, «sino la que sea buena para la necesaria edificación» (Efesios 4:29). Esa es mi vara para todo chiste: ¿esta risa construye o cobra?</p>
+      <p>Con esa vara, mi técnica favorita es la <strong>auto-burla santa</strong> — reírme primero de mí. Hace tres cosas a la vez: desarma al oyente, predica humildad sin mencionarla, y le da permiso al grupo de no tomarse tan en serio. El predicador que se ríe de sus propios tropiezos antes de hablar del pecado ajeno ha entendido la viga y la paja mejor que muchos comentaristas. Y noten que Jesús mismo usaba la herramienta del Artesano: la exageración incongruente. Un camello por el ojo de una aguja. Una viga en el ojo. Colar el mosquito y tragarse el camello. Imágenes cómicas deliberadas — caricaturas verbales que la audiencia galilea tenía que recibir con sonrisa — al servicio de una verdad que dolía.</p>
+      <p>Mi instrucción para el que enseña o predica: usa la risa como Jesús usó la sal — poca, estratégica, y nunca como plato principal. El chiste en el sermón no es decoración: baja las defensas exactamente antes del versículo que las necesita bajas. Freud lo llamaría descarga; yo lo llamo arar la tierra antes de la semilla.</p>
+    </div>
+    <div class="turn t-provocador">
+      <div class="who">El Provocador</div>
+      <p>Reconozco que «¿esta risa construye o cobra?» es la versión pastoral exacta de mi violación benigna. Distintos talleres, misma física.</p>
+    </div>
+  </div>
+
+  <div class="keybox">
+    <h3>Instrucciones del Pastor</h3>
+    <ol>
+      <li><strong>Ríete primero de ti.</strong> La auto-burla compra el derecho de hablar de los demás — y a veces lo vuelve innecesario.</li>
+      <li><strong>Aplica el filtro de Efesios 4:29:</strong> si el chiste no edifica a alguien presente, guárdalo. La gracia incluye saber qué gracia callar.</li>
+      <li><strong>Imita la caricatura verbal de Jesús:</strong> exagera la imagen, no a la persona. Camellos y vigas, no nombres y apellidos.</li>
+      <li><strong>Coloca la risa antes de la verdad difícil.</strong> El público que acaba de reír contigo está más dispuesto a llorar contigo — y a cambiar contigo.</li>
+    </ol>
+  </div>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 8. ESCÉPTICO ============ -->
+<section id="esceptico">
+  <h2>El Escéptico Honesto: manual para matar un chiste</h2>
+  <p class="sec-sub">Los errores clásicos — porque saber cómo muere la risa también enseña cómo vive</p>
+
+  <div class="dialogue">
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Mi turno, y vengo en modo forense. Si quieren garantizar el silencio sepulcral, sigan estas instrucciones al pie de la letra:</p>
+    </div>
+  </div>
+
+  <div class="keybox">
+    <h3>Siete maneras infalibles de matar un chiste</h3>
+    <ol>
+      <li><strong>Explícalo.</strong> Remata y luego añade «¿entienden? porque…». La autopsia en vivo. Si hay que explicarlo, no era; y si era, ya no es.</li>
+      <li><strong>Anúncialo.</strong> «Les voy a contar algo buenísimo» es ponerle al remate una expectativa que ningún remate sobrevive.</li>
+      <li><strong>Telegrafía el tercero.</strong> En la regla de tres, si el público adivina el giro, no hay giro. El tercero predecible es el error de principiante número uno.</li>
+      <li><strong>Alarga el remate.</strong> Cada palabra después de la palabra graciosa es tierra sobre el ataúd.</li>
+      <li><strong>Golpea hacia abajo.</strong> El chiste contra el débil no falla por inmoral solamente; falla por mecánica: la audiencia se tensa, y la tensión sin seguridad no descarga en risa.</li>
+      <li><strong>Ríete tú primero y más fuerte.</strong> Le robas al público el trabajo que le tocaba a él.</li>
+      <li><strong>Repite el éxito sin variación.</strong> El chiste que funcionó, contado igual a la misma gente, ya no viola ninguna expectativa: ahora ES la expectativa.</li>
+    </ol>
+  </div>
+
+  <div class="dialogue">
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>Y mi advertencia estructural de siempre: ninguna fórmula de esta página garantiza nada. La regla de tres está tan gastada que el público la ve venir desde el primer elemento; los propios manuales advierten que su familiaridad pone presión extra en el remate. El humor es la única ingeniería donde la pieza deja de funcionar cuando la audiencia reconoce el plano. Por eso los grandes no coleccionan fórmulas: coleccionan <em>horas de escenario</em>. La fórmula te dice dónde buscar; la risa del público te dice si encontraste.</p>
+    </div>
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Un escéptico que termina mandándonos a practicar. Sospecho que es un maestro disfrazado.</p>
+    </div>
+  </div>
+  <p class="src-inline">Sobre el desgaste de la regla de tres y la presión sobre el remate: <a href="http://kenlevine.blogspot.com/2017/07/the-comedy-rule-of-3s.html" target="_blank" rel="noopener">Ken Levine — Rule of 3's</a>; errores comunes (predecibilidad, sobre-explicación): <a href="https://buddyonstage.com/blogs/rule-of-3-in-comedy" target="_blank" rel="noopener">Buddy On Stage</a>, <a href="https://comedywriter.info/how-to-master-setup-punchline-and-timing/" target="_blank" rel="noopener">Comedy Writer</a></p>
+</section>
+
+<div class="divider">ja · ja · ja</div>
+
+<!-- ============ 9. TALLER ============ -->
+<section id="taller">
+  <h2>Taller: siete ejercicios para esta semana</h2>
+  <p class="sec-sub">Uno por panelista — tu plan de entrenamiento iterativo</p>
+
+  <div class="keybox">
+    <h3>Plan de entrenamiento</h3>
+    <ol>
+      <li><strong>Lunes (Artesano):</strong> toma un chiste que te guste y disécalo: ¿dónde está el setup, dónde el remate, qué expectativa traiciona? Luego reescríbele tres remates alternativos.</li>
+      <li><strong>Martes (Observacional):</strong> anota tres absurdos diminutos de tu día. Elige uno y escríbelo con la fórmula «¿alguien ha notado que…?» + tratamiento desproporcionadamente serio. Recorta hasta que no sobre una sílaba.</li>
+      <li><strong>Miércoles (Provocador):</strong> identifica una norma de tu propio grupo (familia, equipo, iglesia) y escribe una broma desde dentro que la toque con cariño. Test: ¿se reiría el más sensible del grupo? Si dudas, suaviza el blanco, no el ingenio.</li>
+      <li><strong>Jueves (Psicoanalista):</strong> en tu próxima reunión, detecta la tensión que nadie nombra. Escríbele un disfraz de una sola frase. No hace falta decirla: el ejercicio es verla.</li>
+      <li><strong>Viernes (Piagetiana):</strong> haz reír a alguien de otra generación — un niño con variación de patrón, un adulto mayor con un recuerdo compartido violado con cariño. Nota cómo cambia la frontera.</li>
+      <li><strong>Sábado (Pastor):</strong> escribe una auto-burla honesta sobre tu defecto más conocido. Mide la diferencia entre reírte de ti con humildad y hacerlo con autodesprecio: la primera libera, la segunda incomoda.</li>
+      <li><strong>Domingo (Escéptico):</strong> repasa la semana: ¿cuál chiste murió y por cuál de las siete causas? Anótalo. El comediante, como el discípulo, crece por ciclos de retroalimentación honesta.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 10. SÍNTESIS ============ -->
+<section id="sintesis">
+  <h2>La tabla del maestro</h2>
+  <p class="sec-sub">Cada escuela en una línea — para la pared del taller</p>
+
+  <table>
+    <thead>
+      <tr><th>Maestro</th><th>Su técnica</th><th>Su instrucción en una frase</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="maestro">El Artesano</span></td><td>Setup + remate, misdirección, regla de tres</td><td>Tensa una expectativa y traiciónala en la última palabra.</td></tr>
+      <tr><td><span class="maestro">El Observacional</span><br><small>(esc. Seinfeld)</small></td><td>Lo cotidiano bajo la lupa + edición obsesiva</td><td>Nombra lo que todos ven y nadie dice — y luego recorta sílabas durante dos años.</td></tr>
+      <tr><td><span class="maestro">El Provocador</span><br><small>(esc. Gervais)</small></td><td>Violación benigna del tabú</td><td>Toca la norma que duele, pero hazlo inofensivo: distancia, absurdo o pertenencia.</td></tr>
+      <tr><td><span class="maestro">El Psicoanalista</span><br><small>(esc. Freud)</small></td><td>Descarga de la tensión reprimida</td><td>Encuentra lo que el grupo calla y dale un disfraz elegante por donde escapar.</td></tr>
+      <tr><td><span class="maestro">La Piagetiana</span><br><small>(esc. Piaget)</small></td><td>Incongruencia calibrada al desarrollo</td><td>Viola exactamente la expectativa que tu audiencia acaba de consolidar.</td></tr>
+      <tr><td><span class="maestro">El Pastor</span></td><td>Auto-burla santa + caricatura verbal</td><td>Ríete primero de ti, exagera imágenes y no personas, y siembra después de la risa.</td></tr>
+      <tr><td><span class="maestro">El Escéptico</span></td><td>Control de calidad</td><td>No expliques, no anuncies, no alargues — y cambia la fórmula por horas de práctica.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="dialogue">
+    <div class="turn t-moderador">
+      <div class="who">Moderador</div>
+      <p>Cierre en una frase, panel. Y que sea graciosa, que para eso fue el taller.</p>
+    </div>
+    <div class="turn t-observacional">
+      <div class="who">El Observacional</div>
+      <p>¿Alguien ha notado que un panel sobre cómo provocar risa lleva tres horas sin provocar ninguna? Eso, damas y caballeros, es material.</p>
+    </div>
+    <div class="turn t-esceptico">
+      <div class="who">El Escéptico Honesto</div>
+      <p>…y acaba de ganarse el taller entero con la regla número uno: el mejor blanco siempre estaba en esta sala.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. FUENTES ============ -->
+<section id="fuentes" class="sources">
+  <h2>Fuentes</h2>
+  <p class="sec-sub">Para seguir afilando</p>
+  <ul>
+    <li><a href="https://www.writersdigest.com/write-better-nonfiction/jerry-seinfelds-5-step-comedy-writing-process" target="_blank" rel="noopener">«Jerry Seinfeld's 5-Step Comedy Writing Process» — Writer's Digest</a></li>
+    <li><a href="https://nathanbweller.com/writing-tips-from-jerry-seinfeld/" target="_blank" rel="noopener">«6 Writing Tips from Jerry Seinfeld» — Nathan B. Weller</a></li>
+    <li><a href="https://prowritingaid.com/art/614/7-Things-We-Can-Learn-From-Jerry-Seinfeld-About-Writing-.aspx" target="_blank" rel="noopener">«7 Things We Can Learn From Jerry Seinfeld About Writing» — ProWritingAid</a></li>
+    <li><a href="https://wfumediaphiles.wordpress.com/2019/07/27/seinfeld-the-masters-of-observational-comedy/" target="_blank" rel="noopener">«Seinfeld: The King of Observational Comedy» — WFU Mediaphiles</a></li>
+    <li><a href="https://castingfrontier.com/blog/ricky-gervais-on-the-principles-of-comedy/" target="_blank" rel="noopener">«Ricky Gervais on the Principles of Comedy» — Casting Frontier</a></li>
+    <li><a href="https://humorresearchlab.com/benign-violation-theory/" target="_blank" rel="noopener">«Benign Violation Theory» — Humor Research Lab (HuRL)</a></li>
+    <li><a href="https://leeds-faculty.colorado.edu/mcgrawp/benign_violation_theory.html" target="_blank" rel="noopener">McGraw &amp; Warren, «Benign Violations» — Universidad de Colorado</a></li>
+    <li><a href="https://buddyonstage.com/blogs/rule-of-3-in-comedy" target="_blank" rel="noopener">«Rule of 3 in Comedy: Why It Works» — Buddy On Stage</a></li>
+    <li><a href="http://kenlevine.blogspot.com/2017/07/the-comedy-rule-of-3s.html" target="_blank" rel="noopener">Ken Levine, «The Comedy Rule of 3's»</a></li>
+    <li><a href="https://comedywriter.info/how-to-master-setup-punchline-and-timing/" target="_blank" rel="noopener">«How to Master Setup, Punchline, and Timing» — Comedy Writer</a></li>
+    <li><a href="https://cleancomedians.com/how-to-write-stand-up-comedy/" target="_blank" rel="noopener">«How To Write Stand-Up Comedy» — Clean Comedians</a></li>
+    <li><a href="https://open.ocolearnok.org/whatsfunny/chapter/introduction-the-three-theories-and-beyond/" target="_blank" rel="noopener">«The Three Major Theories of Humor» — What is Funny? (OER)</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3494749/" target="_blank" rel="noopener">Mireault et al., «Infant Humor Perception» — PMC</a></li>
+  </ul>
+  <p style="margin-top:1.4rem; font-size:0.88rem; font-style:italic; color:var(--ink-soft);">Citas bíblicas: Proverbios 26:18–19; Efesios 4:29; Mateo 7:3–5; 19:24; 23:24 (RVR1960). Página hermana: <em>La risa — Un panel de expertos</em> (primera sesión).</p>
+</section>
+
+<footer>
+  Café con Claude · Cuaderno de estudio · Segunda sesión del panel de la risa
+</footer>
+
+</div>
+</main>
+</div>
+
+<script>
+  // ---------- Hamburger ----------
+  const hamburger = document.getElementById('hamburger');
+  const rail = document.getElementById('rail');
+  hamburger.addEventListener('click', () => {
+    const open = rail.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  rail.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    rail.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ---------- Scroll-spy ----------
+  const links = Array.from(rail.querySelectorAll('a'));
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const link = map.get(entry.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+  document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

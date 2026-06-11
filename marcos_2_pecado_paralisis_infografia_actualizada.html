@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marcos 2: Perdón, pecado y parálisis</title>
+  <style>
+    :root {
+      --bg: #f7f5ef;
+      --card: #ffffff;
+      --ink: #1f2933;
+      --muted: #5d6975;
+      --line: #d9d4c7;
+      --accent: #8b5e34;
+      --accent-2: #365f8c;
+      --soft: #f1e7d8;
+      --soft-blue: #e8f0f8;
+      --success: #2f6f4e;
+      --warning: #9a5b13;
+      --danger: #8a2f2f;
+      --purple: #6b4e8f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(139, 94, 52, 0.12), transparent 34rem),
+        radial-gradient(circle at bottom right, rgba(54, 95, 140, 0.13), transparent 32rem),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 42px 0 64px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #fbf6ee 58%, #eef5fb 100%);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(31, 41, 51, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 999px;
+      right: -80px;
+      top: -80px;
+      background: rgba(139, 94, 52, 0.1);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(2.05rem, 5vw, 4.25rem);
+      line-height: 1.02;
+      margin: 0 0 18px;
+      max-width: 900px;
+    }
+
+    .subtitle {
+      font-size: clamp(1.08rem, 2vw, 1.35rem);
+      color: var(--muted);
+      max-width: 880px;
+      margin: 0;
+    }
+
+    .verse-card {
+      margin-top: 28px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 8px solid var(--accent-2);
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 940px;
+    }
+
+    .verse-card p {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .section-title {
+      margin: 42px 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.7rem;
+      line-height: 1.2;
+      font-weight: 850;
+    }
+
+    .section-title span {
+      font-size: 1.9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      grid-column: span 6;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 14px 35px rgba(31, 41, 51, 0.055);
+    }
+
+    .panel.full {
+      grid-column: 1 / -1;
+    }
+
+    .panel.third {
+      grid-column: span 4;
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .big-answer {
+      font-size: clamp(1.35rem, 2.6vw, 2.1rem);
+      line-height: 1.22;
+      color: var(--accent-2);
+      font-weight: 850;
+      margin: 0;
+    }
+
+    .verdict {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .verdict-card {
+      border-radius: 22px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .verdict-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+
+    .verdict-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .yes {
+      border-left: 8px solid var(--success);
+      background: #f3fbf6;
+    }
+
+    .no {
+      border-left: 8px solid var(--danger);
+      background: #fff5f5;
+    }
+
+    .maybe {
+      border-left: 8px solid var(--warning);
+      background: #fff8eb;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 152px;
+      position: relative;
+    }
+
+    .step .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--soft-blue);
+      color: var(--accent-2);
+      font-weight: 850;
+      margin-bottom: 12px;
+    }
+
+    .step h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    details {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(31, 41, 51, 0.045);
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 20px 22px;
+      font-weight: 850;
+      font-size: 1.08rem;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    details[open] summary::after {
+      content: "–";
+      background: var(--accent);
+      color: white;
+    }
+
+    .accordion-body {
+      padding: 0 22px 22px;
+      color: var(--muted);
+    }
+
+    .accordion-body p {
+      margin: 0 0 12px;
+    }
+
+    .accordion-body ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .accordion-body li {
+      margin: 8px 0;
+    }
+
+    .highlight {
+      background: var(--soft-blue);
+      border-left: 5px solid var(--accent-2);
+      border-radius: 14px;
+      padding: 16px 18px;
+      color: var(--ink);
+      margin-top: 12px;
+    }
+
+    .warning {
+      background: #fff4e3;
+      border-left: 5px solid var(--warning);
+    }
+
+    .success {
+      background: #eaf6ef;
+      border-left: 5px solid var(--success);
+    }
+
+    .danger {
+      background: #fff0f0;
+      border-left: 5px solid var(--danger);
+    }
+
+    .purple {
+      background: #f3eef9;
+      border-left: 5px solid var(--purple);
+    }
+
+    .pseudo-table {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-weight: 850;
+      color: var(--accent);
+    }
+
+    .footer {
+      margin-top: 44px;
+      background: #1f2933;
+      color: #f7f5ef;
+      border-radius: 24px;
+      padding: 28px;
+    }
+
+    .footer p {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        padding: 28px;
+      }
+
+      .panel, .panel.third {
+        grid-column: 1 / -1;
+      }
+
+      .verdict {
+        grid-template-columns: 1fr;
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .hero, .panel, details, .footer, .verdict-card {
+        box-shadow: none;
+      }
+
+      details {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">Marcos 2:5, 11–12 · Panel de expertos actualizado</div>
+      <h1>¿Estaban conectados el pecado y la parálisis?</h1>
+      <p class="subtitle">
+        La respuesta más cuidadosa es: sí están conectados en la escena teológica de Marcos,
+        pero el texto no afirma que la parálisis fue causada por un pecado personal del hombre.
+      </p>
+
+      <div class="verse-card">
+        <p>
+          “Hijo, tus pecados te son perdonados... A ti te digo: levántate, toma tu camilla y vete a tu casa.”
+          <br />
+          <strong>Marcos 2:5, 11</strong>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><span>⚖️</span>Respuesta balanceada</div>
+
+      <div class="grid">
+        <div class="panel full">
+          <p class="big-answer">
+            Jesús une perdón y sanidad para revelar su autoridad y restaurar a la persona completa.
+            Pero Marcos no dice: “este hombre está paralítico porque pecó”.
+          </p>
+        </div>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-card yes">
+          <h3>✔ Sí hay conexión</h3>
+          <p>
+            Hay conexión porque Jesús trata primero el pecado y luego sana el cuerpo.
+            La escena une restauración espiritual y restauración física.
+          </p>
+        </div>
+
+        <div class="verdict-card no">
+          <h3>⚠ No hay prueba de causa directa</h3>
+          <p>
+            No hay prueba de que su parálisis fuera castigo por un pecado personal.
+            Esa conclusión va más allá de lo que Marcos dice.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><span>🧠</span>Panel de expertos</div>
+
+      <details open>
+        <summary>1️⃣ El biblista: Marcos conecta los temas, no declara una causa médica</summary>
+        <div class="accordion-body">
+          <p>
+            El relato pone juntos el perdón y la sanidad, pero no explica el origen de la parálisis.
+            Marcos no dice: “este hombre pecó y por eso quedó paralítico”.
+          </p>
+          <p>
+            Lo que Marcos sí muestra es que Jesús tiene autoridad sobre dos realidades:
+            el pecado que separa de Dios y la enfermedad que debilita el cuerpo.
+          </p>
+          <div class="highlight">
+            Idea clave: conexión teológica sí; diagnóstico causal no.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>2️⃣ El teólogo: Jesús está sanando la creación rota completa</summary>
+        <div class="accordion-body">
+          <p>
+            En la Biblia, el pecado no solo es una lista de errores individuales.
+            También es una condición que rompió el mundo: relación con Dios, cuerpo, comunidad, tierra y vida humana.
+          </p>
+          <p>
+            En ese sentido amplio, enfermedad, muerte y dolor pertenecen a un mundo herido por el pecado.
+            Pero eso no significa que cada enfermedad sea culpa directa de la persona enferma.
+          </p>
+          <div class="highlight success">
+            Jesús no viene a acusar al enfermo. Viene a restaurar lo que está roto.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>3️⃣ El pastor: Jesús no empieza con culpa, empieza con ternura</summary>
+        <div class="accordion-body">
+          <p>
+            Jesús no le dice: “culpable”. Le dice: “Hijo”.
+          </p>
+          <p>
+            Esa palabra cambia el ambiente. Antes de levantarlo físicamente,
+            Jesús lo coloca en una relación de amor, dignidad y pertenencia.
+          </p>
+          <div class="highlight purple">
+            Si había vergüenza en ese hombre, Jesús no la aumenta. La cubre con gracia.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>4️⃣ El experto en Juan 9: cuidado con culpar al enfermo</summary>
+        <div class="accordion-body">
+          <p>
+            En Juan 9, los discípulos ven a un hombre ciego de nacimiento y preguntan:
+            “¿quién pecó, este o sus padres?”
+          </p>
+          <p>
+            Jesús corrige esa forma de pensar. No acepta la idea automática de que la discapacidad
+            siempre es castigo por pecado personal.
+          </p>
+          <div class="highlight warning">
+            Este principio ayuda a leer Marcos 2 con cuidado: no debemos usar el dolor de alguien
+            para buscar culpables rápidamente.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>5️⃣ El psicólogo: la culpa puede paralizar, aunque no cause toda parálisis</summary>
+        <div class="accordion-body">
+          <p>
+            La culpa y la vergüenza pueden inmovilizar interiormente.
+            Una persona puede estar físicamente enferma y además espiritualmente cargada.
+          </p>
+          <p>
+            Pero sería injusto decir que toda discapacidad física viene de culpa personal.
+            Jesús no humilla al paralítico; lo libera.
+          </p>
+          <div class="highlight">
+            Jesús ve a una persona completa: cuerpo, alma, historia, dolor, fe y necesidad.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>6️⃣ El maestro: el milagro visible confirma el perdón invisible</summary>
+        <div class="accordion-body">
+          <p>
+            Nadie podía ver si los pecados habían sido perdonados.
+            Pero todos podían ver si el paralítico se levantaba.
+          </p>
+          <p>
+            Por eso Jesús sana después: para que todos entiendan que el Hijo del Hombre
+            tiene autoridad en la tierra para perdonar pecados.
+          </p>
+          <div class="highlight success">
+            La camilla cargada por el hombre se vuelve evidencia pública de una autoridad espiritual.
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section>
+      <div class="section-title"><span>🔎</span>Tres niveles de conexión</div>
+
+      <div class="grid">
+        <div class="panel third">
+          <h3>1️⃣ Conexión personal</h3>
+          <p>
+            Puede existir en algunos casos, pero Marcos 2 no lo afirma.
+            No debemos inventar una culpa donde el texto guarda silencio.
+          </p>
+        </div>
+
+        <div class="panel third">
+          <h3>2️⃣ Conexión espiritual</h3>
+          <p>
+            Jesús atiende primero la relación con Dios.
+            El perdón muestra que la restauración empieza en lo más profundo.
+          </p>
+        </div>
+
+        <div class="panel third">
+          <h3>3️⃣ Conexión cósmica</h3>
+          <p>
+            En un mundo caído, pecado, enfermedad y muerte forman parte de una creación rota.
+            Jesús viene a renovar todo.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><span>🪜</span>El movimiento de la historia</div>
+
+      <div class="flow">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Lo traen a Jesús</h3>
+          <p>Sus amigos lo cargan. La fe se vuelve acción visible.</p>
+        </div>
+
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Jesús perdona</h3>
+          <p>Jesús mira más profundo que la camilla: ve el alma y la relación con Dios.</p>
+        </div>
+
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Los escribas cuestionan</h3>
+          <p>Ellos entienden que perdonar pecados es una autoridad que pertenece a Dios.</p>
+        </div>
+
+        <div class="step">
+          <div class="num">4</div>
+          <h3>Jesús sana</h3>
+          <p>La sanidad visible confirma su autoridad invisible para perdonar.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><span>🧩</span>Lo que sí podemos decir y lo que no</div>
+
+      <div class="panel full">
+        <div class="pseudo-table">
+          <div class="row">
+            <div class="label">Sí podemos decir</div>
+            <div>Jesús conectó perdón y sanidad en esta escena para revelar su autoridad y su misión.</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Sí podemos decir</div>
+            <div>El pecado es una realidad más profunda que la enfermedad física, porque separa de Dios.</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Sí podemos decir</div>
+            <div>Jesús restaura a la persona completa: alma, cuerpo, identidad y comunidad.</div>
+          </div>
+
+          <div class="row">
+            <div class="label">No debemos decir</div>
+            <div>“Este hombre estaba paralítico porque cometió un pecado específico.” Marcos no dice eso.</div>
+          </div>
+
+          <div class="row">
+            <div class="label">No debemos decir</div>
+            <div>“Toda enfermedad o discapacidad es castigo por pecado personal.” Jesús corrige esa lógica en Juan 9.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><span>🗣️</span>Frases para enseñar</div>
+
+      <details>
+        <summary>Frase corta para abrir la clase</summary>
+        <div class="accordion-body">
+          <p>
+            “En Marcos 2, Jesús no está diciendo: ‘este hombre está paralítico porque pecó’.
+            Está diciendo algo más grande: ‘Yo tengo autoridad para restaurar lo que nadie más puede restaurar’.”
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Frase central para repetir</summary>
+        <div class="accordion-body">
+          <p>
+            “La enfermedad mostraba una necesidad visible; el perdón reveló una necesidad más profunda.”
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Frase pastoral</summary>
+        <div class="accordion-body">
+          <p>
+            “Jesús no usó la enfermedad del hombre para acusarlo. Usó su autoridad para perdonarlo,
+            levantarlo y devolverlo a casa.”
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Frase de cierre</summary>
+        <div class="accordion-body">
+          <p>
+            “El paralítico entró cargado por otros; salió cargando su camilla.
+            Pero el milagro más grande no fue solo que caminó, sino que fue llamado hijo y perdonado por Cristo.”
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section>
+      <div class="section-title"><span>⚠️</span>Advertencia pastoral</div>
+
+      <div class="grid">
+        <div class="panel">
+          <h3>⚠ Una lectura peligrosa</h3>
+          <p>
+            Decirle a una persona enferma: “esto te pasó por tu pecado” puede añadir culpa donde Jesús quiere traer gracia.
+          </p>
+        </div>
+
+        <div class="panel">
+          <h3>✔ Una lectura más fiel</h3>
+          <p>
+            Jesús revela que el perdón es más profundo que la sanidad física, y que su autoridad restaura a la persona completa.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer">
+      <p>
+        ✅ Resumen final: en Marcos 2, pecado y parálisis están conectados como parte de una restauración completa,
+        pero no como una acusación directa contra el paralítico. Jesús no lo culpa; lo llama hijo, lo perdona y lo levanta.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

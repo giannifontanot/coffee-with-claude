@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Marcos 2 · El perdón, la sanidad y el pecado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3ead8;
+    --bg-2:#eee2cc;
+    --surface:#fdf9f0;
+    --surface-warm:#f8efdd;
+    --ink:#322a1f;
+    --ink-soft:#5d5443;
+    --ink-faint:#857a66;
+    --line:#e2d6bd;
+    --line-soft:#ece1ca;
+    --clay:#b0512f;
+    --clay-deep:#8c3d20;
+    --gold:#a87d33;
+    --shadow:rgba(74,58,33,.10);
+  }
+
+  *{box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background-color:var(--bg);
+    background-image:
+      radial-gradient(120% 90% at 12% -10%, #f8f0df 0%, rgba(248,240,223,0) 55%),
+      radial-gradient(120% 90% at 100% 0%, #efe4cd 0%, rgba(239,228,205,0) 50%);
+    color:var(--ink);
+    font-family:'Spectral', Georgia, serif;
+    font-size:18px;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* faint paper grain */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none; z-index:0;
+    opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap{
+    position:relative; z-index:1;
+    max-width:780px;
+    margin:0 auto;
+    padding:64px 26px 96px;
+  }
+
+  /* ---------- Header ---------- */
+  .kicker{
+    font-family:'Spectral', serif;
+    font-style:italic;
+    letter-spacing:.04em;
+    color:var(--clay);
+    font-size:.96rem;
+    margin:0 0 14px;
+  }
+  .kicker::before{content:"☕ "; font-style:normal;}
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(2.1rem, 6vw, 3.3rem);
+    line-height:1.06;
+    letter-spacing:-.012em;
+    margin:0 0 .35em;
+    color:var(--ink);
+  }
+  h1 em{font-style:italic; color:var(--clay-deep);}
+
+  .ref{
+    font-family:'Fraunces', serif;
+    font-size:1.02rem;
+    color:var(--ink-faint);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    margin:0;
+  }
+
+  .rule{
+    height:1px; border:0;
+    background:linear-gradient(to right, var(--line), rgba(226,214,189,0));
+    margin:34px 0;
+  }
+
+  /* ---------- Scripture banner ---------- */
+  .scripture{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:4px solid var(--clay);
+    border-radius:4px;
+    padding:30px 32px 26px;
+    margin:30px 0 38px;
+    box-shadow:0 14px 34px -22px var(--shadow);
+    position:relative;
+  }
+  .scripture .mark{
+    font-family:'Fraunces', serif;
+    font-size:3.6rem; line-height:0;
+    color:var(--line);
+    position:absolute; top:34px; right:22px;
+    user-select:none;
+  }
+  .scripture p{
+    margin:0 0 .8em;
+    font-size:1.16rem;
+    line-height:1.7;
+  }
+  .scripture p:last-of-type{margin-bottom:0;}
+  .scripture b{font-weight:600; color:var(--clay-deep);}
+  .scripture .v{
+    font-family:'Fraunces', serif;
+    font-size:.72em;
+    color:var(--gold);
+    vertical-align:.35em;
+    margin-right:.25em;
+    font-weight:600;
+  }
+
+  /* ---------- Intro / lead ---------- */
+  .lead{font-size:1.08rem; color:var(--ink-soft); margin:0 0 30px;}
+  .lead b{color:var(--ink); font-weight:600;}
+
+  /* ---------- Key idea callout ---------- */
+  .key{
+    background:var(--surface-warm);
+    border:1px dashed #d9c79f;
+    border-radius:6px;
+    padding:24px 26px;
+    margin:0 0 44px;
+    display:flex; gap:18px; align-items:flex-start;
+  }
+  .key .dot{
+    flex:0 0 auto;
+    width:42px; height:42px; border-radius:50%;
+    background:var(--clay);
+    color:#fdf6e8;
+    display:grid; place-items:center;
+    font-family:'Fraunces',serif; font-size:1.3rem;
+    box-shadow:0 8px 18px -8px rgba(140,61,32,.55);
+  }
+  .key h3{
+    font-family:'Fraunces', serif; font-weight:600;
+    font-size:1.12rem; margin:.1em 0 .35em; color:var(--ink);
+  }
+  .key p{margin:0; font-size:1rem; color:var(--ink-soft);}
+  .key b{color:var(--clay-deep); font-weight:600;}
+
+  /* ---------- Section heading ---------- */
+  .sec-head{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.5rem;
+    margin:0 0 6px;
+    color:var(--ink);
+  }
+  .sec-sub{
+    font-style:italic; color:var(--ink-faint);
+    margin:0 0 24px; font-size:1.02rem;
+  }
+
+  /* ---------- Accordion ---------- */
+  .accordion{display:flex; flex-direction:column; gap:14px;}
+
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 10px 26px -22px var(--shadow);
+    transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  .panel.open{
+    border-color:#d8c49b;
+    box-shadow:0 18px 40px -24px rgba(140,61,32,.4);
+  }
+
+  .panel-head{
+    width:100%;
+    background:none; border:0; cursor:pointer;
+    text-align:left;
+    display:flex; align-items:center; gap:16px;
+    padding:20px 22px;
+    font-family:'Spectral', serif;
+    color:var(--ink);
+    transition:background .25s ease;
+  }
+  .panel-head:hover{background:var(--surface-warm);}
+  .panel-head:focus-visible{outline:2px solid var(--clay); outline-offset:-3px;}
+
+  .emoji{
+    flex:0 0 auto;
+    width:44px; height:44px; border-radius:50%;
+    background:var(--bg-2);
+    display:grid; place-items:center;
+    font-size:1.35rem;
+    border:1px solid var(--line);
+  }
+  .panel.open .emoji{background:#f0e0c1; border-color:#dcc89e;}
+
+  .titles{flex:1 1 auto; min-width:0;}
+  .role{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.16rem;
+    line-height:1.2;
+    color:var(--ink);
+  }
+  .who{
+    display:block;
+    font-size:.9rem; font-style:italic;
+    color:var(--ink-faint);
+    margin-top:2px;
+  }
+
+  .chev{
+    flex:0 0 auto;
+    width:26px; height:26px;
+    color:var(--clay);
+    transition:transform .35s cubic-bezier(.5,.05,.2,1);
+  }
+  .panel.open .chev{transform:rotate(180deg);}
+
+  /* smooth auto-height via grid trick */
+  .panel-body{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .42s cubic-bezier(.45,.05,.2,1);
+  }
+  .panel.open .panel-body{grid-template-rows:1fr;}
+  .panel-body > .inner{overflow:hidden;}
+
+  .body-pad{padding:2px 24px 24px 24px;}
+  .body-pad p{margin:0 0 1em; color:var(--ink-soft);}
+  .body-pad p:last-child{margin-bottom:0;}
+  .body-pad b{color:var(--ink); font-weight:600;}
+  .body-pad .gk{
+    font-style:italic; color:var(--clay-deep);
+    font-family:'Spectral', serif;
+  }
+
+  .tag{
+    display:inline-block;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:5px 14px;
+    font-size:.82rem;
+    font-style:italic;
+    color:var(--ink-faint);
+    margin-top:6px;
+  }
+  .tag::before{content:"🔑 ";}
+
+  /* ---------- Synthesis ---------- */
+  .synthesis{
+    margin-top:46px;
+    background:linear-gradient(165deg, #3a2f22, #2c2317);
+    color:#f1e7d3;
+    border-radius:12px;
+    padding:40px 36px 38px;
+    box-shadow:0 26px 56px -30px rgba(44,35,23,.85);
+    position:relative;
+    overflow:hidden;
+  }
+  .synthesis::after{
+    content:"";
+    position:absolute; right:-40px; bottom:-50px;
+    width:200px; height:200px; border-radius:50%;
+    background:radial-gradient(circle, rgba(176,81,47,.4), rgba(176,81,47,0) 70%);
+  }
+  .synthesis .sk{
+    font-family:'Spectral', serif; font-style:italic;
+    color:#d9a463; letter-spacing:.05em;
+    margin:0 0 10px; font-size:.96rem;
+  }
+  .synthesis h3{
+    font-family:'Fraunces', serif; font-weight:500;
+    font-size:1.6rem; margin:0 0 .55em; color:#fbf3e2;
+    position:relative; z-index:1;
+  }
+  .synthesis p{margin:0 0 1em; color:#e7dcc8; position:relative; z-index:1;}
+  .synthesis p:last-child{margin-bottom:0;}
+  .synthesis b{color:#f3c98a; font-weight:600;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    margin-top:50px; text-align:center;
+    color:var(--ink-faint); font-size:.9rem; font-style:italic;
+  }
+  footer .star{color:var(--clay); font-style:normal;}
+
+  @media (max-width:520px){
+    .wrap{padding:48px 18px 80px;}
+    .scripture{padding:24px 22px;}
+    .scripture .mark{display:none;}
+    .panel-head{padding:18px 16px; gap:13px;}
+    .emoji{width:40px; height:40px; font-size:1.2rem;}
+    .role{font-size:1.06rem;}
+    .body-pad{padding:2px 18px 22px;}
+    .synthesis{padding:32px 24px;}
+  }
+
+  /* ---------- Poles (segunda parte) ---------- */
+  .poles{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    gap:16px; align-items:center;
+    margin:28px 0 8px;
+  }
+  .pole{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:22px;
+    box-shadow:0 10px 26px -22px var(--shadow);
+  }
+  .pole-mark{
+    display:inline-grid; place-items:center;
+    width:38px; height:38px; border-radius:50%;
+    font-size:1.05rem; margin-bottom:11px;
+  }
+  .pole-no{border-top:3px solid #938974;}
+  .pole-no .pole-mark{background:#e7dfce; color:#6c6353;}
+  .pole-si{border-top:3px solid var(--clay);}
+  .pole-si .pole-mark{background:#f0dcc1; color:var(--clay-deep);}
+  .pole h4{
+    font-family:'Fraunces', serif; font-weight:600;
+    font-size:1.06rem; margin:0 0 .4em; color:var(--ink);
+  }
+  .pole p{margin:0; font-size:.97rem; color:var(--ink-soft);}
+  .pole-vs{
+    font-family:'Spectral', serif; font-style:italic;
+    color:var(--ink-faint); font-size:.92rem;
+    text-align:center; white-space:nowrap;
+  }
+  .verdict{background:linear-gradient(165deg, #3b2c2a, #2a201c);}
+  .verdict::after{background:radial-gradient(circle, rgba(168,125,51,.42), rgba(168,125,51,0) 70%);}
+  .verdict .sk{color:#d6a259;}
+  @media (max-width:560px){
+    .poles{grid-template-columns:1fr;}
+    .pole-vs{padding:2px 0;}
+  }
+
+  /* ---------- Heart block (tercera parte) ---------- */
+  .heart{
+    background:linear-gradient(165deg, #f7e8d6, #f0dabf);
+    border:1px solid #e4cba6;
+    border-left:4px solid var(--clay);
+    border-radius:12px;
+    padding:34px 34px 30px;
+    margin:30px 0 0;
+    box-shadow:0 16px 40px -26px rgba(140,61,32,.45);
+    position:relative; overflow:hidden;
+  }
+  .heart-word{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-style:italic; font-weight:500;
+    font-size:clamp(2.4rem, 8vw, 3.6rem);
+    line-height:1;
+    color:var(--clay-deep);
+    margin:0 0 .35em;
+    letter-spacing:-.01em;
+  }
+  .heart p{margin:0 0 1em; color:#52442f; font-size:1.06rem;}
+  .heart p:last-child{margin-bottom:0;}
+  .heart b{color:var(--clay-deep); font-weight:600;}
+  .heart .gk{font-style:italic; color:var(--clay-deep);}
+  .closing{
+    font-family:'Fraunces', serif;
+    font-size:1.18rem; line-height:1.6;
+    color:var(--ink); font-style:italic;
+    text-align:center;
+    max-width:60ch; margin:36px auto 0;
+  }
+  @media (max-width:520px){
+    .heart{padding:26px 22px;}
+    .closing{font-size:1.06rem;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Mesa de expertos · Estudio bíblico en tres partes</p>
+  <h1>Primero el perdón,<br>luego <em>las piernas</em></h1>
+  <p class="ref">Marcos 2:5, 11–12</p>
+
+  <hr class="rule" />
+
+  <div class="scripture">
+    <span class="mark">&rdquo;</span>
+    <p><span class="v">5</span>Al ver Jesús la fe de ellos, dijo al paralítico: <b>«Hijo, tus pecados te son perdonados.»</b></p>
+    <p><span class="v">11</span>«A ti te digo: <b>levántate</b>, toma tu camilla y vete a tu casa.»</p>
+    <p><span class="v">12</span>Y él se levantó, tomó su camilla y salió delante de todos, de modo que todos se asombraban y glorificaban a Dios, diciendo: «Nunca hemos visto cosa semejante.»</p>
+  </div>
+
+  <p class="lead">Un hombre baja por el techo en una camilla. Lo obvio es que necesita caminar. Pero lo primero que Jesús atiende no es lo que se ve, sino lo que nadie podía ver. <b>¿Por qué ese orden?</b> Cinco voces se sientan a la mesa para responderlo.</p>
+
+  <div class="key">
+    <span class="dot">★</span>
+    <div>
+      <h3>La idea que abre todo el pasaje</h3>
+      <p>Perdonar es <b>fácil de decir</b> (invisible, nadie lo verifica). Sanar es <b>arriesgado de decir</b> (visible, comprobable al instante). Jesús hace lo verificable para probar que tiene autoridad sobre lo invisible: el milagro a la vista es el <b>recibo</b> de la transacción oculta.</p>
+    </div>
+  </div>
+
+  <h2 class="sec-head">La mesa de expertos</h2>
+  <p class="sec-sub">Toca cada panel para escuchar su voz.</p>
+
+  <div class="accordion" id="acc">
+
+    <!-- 1 -->
+    <div class="panel open">
+      <button class="panel-head" aria-expanded="true">
+        <span class="emoji">📜</span>
+        <span class="titles">
+          <span class="role">«Lo más fácil de decir»</span>
+          <span class="who">La exégeta — el texto y el griego</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>La clave está en el verbo <b>decir</b> (v.9). Perdonar es facilísimo de <i>decir</i> porque es invisible: nadie puede comprobarlo en el momento. Mandar a un paralítico a caminar es lo más arriesgado que puedes <i>decir</i>, porque si no se levanta, quedas expuesto como un farsante.</p>
+        <p>Por eso Jesús hace lo <b>verificable</b> —sanar, frente a todos— para demostrar que también tiene autoridad sobre lo <b>invisible</b> —perdonar—. No esquiva la necesidad obvia: ordena las cosas de menor a mayor riesgo público para que no quede duda. Y nota la palabra con que arranca: <span class="gk">téknon</span>, «hijo». Ternura, no diagnóstico.</p>
+        <span class="tag">El milagro visible respalda la palabra invisible</span>
+      </div></div></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">✝️</span>
+        <span class="titles">
+          <span class="role">«La raíz antes que el síntoma»</span>
+          <span class="who">El teólogo — la doctrina</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Que algo sea más fácil de <i>decir</i> no significa que sea más fácil de <b>hacer</b>. Al revés: lo verdaderamente caro del universo no fue reactivar unas piernas —Dios crea cuerpos con una palabra— sino el perdón, que le costaría la cruz. Sanar fue el milagro «barato» de esa tarde; perdonar fue el que lo llevaría al Gólgota.</p>
+        <p>Por eso atiende la <b>raíz</b> y no solo el síntoma: la parálisis se ve, pero el pecado es la inmovilidad más honda, la que ni la camilla ni los amigos podían cargar. Y al perdonar, Jesús no se <i>mete</i> en el papel de Dios… lo <b>ocupa</b>. «El Hijo del Hombre tiene autoridad en la tierra para perdonar» (v.10) es una declaración de identidad disfrazada de misericordia.</p>
+        <span class="tag">El perdón es lo más costoso, no lo más barato</span>
+      </div></div></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">🏛️</span>
+        <span class="titles">
+          <span class="role">«El escándalo en la sala»</span>
+          <span class="who">La historiadora — el Segundo Templo</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Hay que sentarse en el banco de los escribas. En ese mundo, el perdón tenía dirección de tránsito: pasaba por el <b>Templo</b>, el sacerdote, el sacrificio, el Día de la Expiación. Y de pronto un carpintero, en una casa con el techo roto, sin altar ni ritual ni credenciales, reparte lo que solo se entregaba en Jerusalén.</p>
+        <p>No eran malvados; eran teológicamente alfabetizados y vieron clarísimo el reclamo: <b>o este hombre es Dios, o es un blasfemo</b>. No hay opción tibia. Sobre pecado y enfermedad: muchos asumían que la dolencia era castigo (los discípulos preguntan lo mismo en Juan 9:2). Jesús se apoya en esa intuición para abrir la conversación, pero en otros pasajes la desarma. Aquí trata a la persona entera; no valida una superstición.</p>
+        <span class="tag">Solo Dios perdona — y Jesús lo está haciendo</span>
+      </div></div></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">🕊️</span>
+        <span class="titles">
+          <span class="role">«Hijo antes que arreglado»</span>
+          <span class="who">La pastora — el corazón del texto</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Jesús no le dice «paralítico» ni «caso 47». Le dice <b>hijo</b> —lo nombra como hijo <i>antes</i> de arreglarlo: relación antes que reparación—. El hombre vino por unas piernas; Jesús atiende algo que él ni se atrevió a pedir. A veces nuestra parálisis más profunda no es la que se ve.</p>
+        <p>Y fíjate en el verbo del v.11: <span class="gk">egeíre</span>, «levántate», es de la misma familia que «resucitar». Esa sanación es una <b>pequeña resurrección</b>, anticipo de lo que el perdón hace en grande: no solo te repara, te pone de pie.</p>
+        <span class="tag">Te nombra hijo antes de tocarte</span>
+      </div></div></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">🔥</span>
+        <span class="titles">
+          <span class="role">«Una advertencia necesaria»</span>
+          <span class="who">El escéptico honesto — el contrapeso</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Empecé acusando a Jesús de «evasión»: parecía ofrecer perdón cuando lo urgente eran las piernas. Concedo: la acusación se cae cuando entiendo que hace <b>lo difícil de fingir</b> para respaldar <b>lo imposible de ver</b>.</p>
+        <p>Pero dejo una advertencia para quien predique esto: no convirtamos «primero el alma, luego el cuerpo» en excusa para <b>ignorar cuerpos</b>. Jesús sanó los dos. Las dos cosas le importaron. El orden revela prioridad, no desprecio.</p>
+        <span class="tag">El orden no es desprecio por el cuerpo</span>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <div class="synthesis">
+    <p class="sk">El hilo que une las cinco voces</p>
+    <h3>No es evasión: es revelación</h3>
+    <p>El orden de Jesús no esconde la necesidad obvia; <b>descubre quién es Él</b>. Atiende la raíz (el perdón), prueba su autoridad con el fruto visible (la sanación) y deja a una sala entera preguntándose si acaba de ver a Dios remangándose en una casa con el techo abierto.</p>
+    <p>Lo resumió Ireneo en el siglo II: <b>al perdonar los pecados sanó al hombre, y al sanarlo manifestó quién era.</b></p>
+  </div>
+
+  <hr class="rule" style="margin:56px 0 38px;" />
+
+  <p class="kicker" style="margin:0 0 14px;">Segunda parte · La pregunta de fondo</p>
+  <h2 class="sec-head" style="font-size:clamp(1.7rem,5vw,2.3rem); line-height:1.12;">¿Estaban conectados el pecado y la parálisis?</h2>
+  <p class="lead" style="margin-top:14px;">Jesús perdona y sana al mismo hombre. ¿Quiere decir que su pecado le causó la parálisis? La respuesta honesta es <b>sí y no</b> —y el matiz lo es todo—.</p>
+
+  <div class="poles">
+    <div class="pole pole-no">
+      <span class="pole-mark">✕</span>
+      <h4>Lo que el texto NIEGA</h4>
+      <p>Que la parálisis de <i>este</i> hombre fuera el castigo por un pecado puntual. Marcos no lo dice, y Jesús desarma esa idea una y otra vez.</p>
+    </div>
+    <div class="pole-vs">y aun así…</div>
+    <div class="pole pole-si">
+      <span class="pole-mark">≈</span>
+      <h4>Lo que el texto SUPONE</h4>
+      <p>Que toda enfermedad respira el aire de un mundo quebrado por el pecado. No la culpa de uno: la herida de todos.</p>
+    </div>
+  </div>
+
+  <h3 class="sec-head" style="font-size:1.4rem; margin:46px 0 6px;">La mesa vuelve a reunirse</h3>
+  <p class="sec-sub">Esta vez no se ponen de acuerdo tan fácil.</p>
+
+  <div class="accordion" id="acc2">
+
+    <div class="panel open">
+      <button class="panel-head" aria-expanded="true">
+        <span class="emoji">📜</span>
+        <span class="titles">
+          <span class="role">«Lo que el texto no dice»</span>
+          <span class="who">La exégeta — leer con cuidado</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Marcos nunca afirma que el pecado <b>causó</b> la parálisis. Empareja perdón y sanidad, sí — pero emparejar no es causar. El orden («primero el perdón») marca <b>prioridad</b>, la necesidad más honda primero, no un diagnóstico tipo «tu pecado te dejó así».</p>
+        <p>Si Jesús hubiera querido decir eso, lo habría dicho. En cambio lo llama <i>hijo</i>, sin una sola palabra de reproche.</p>
+        <span class="tag">Emparejar no es lo mismo que causar</span>
+      </div></div></div>
+    </div>
+
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">🔥</span>
+        <span class="titles">
+          <span class="role">«No tan rápido»</span>
+          <span class="who">El escéptico honesto — el contrapeso</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Hay lectores serios —de Cornelio à Lapide a comentaristas de hoy— que leen justo lo contrario: que Jesús fue a «la raíz» porque la raíz <i>era</i> el pecado, y que al quitar la causa cayó el efecto.</p>
+        <p>Y no es disparate: en un texto de Qumrán (la Oración de Nabónido) algunos judíos ya unían perdón y sanación. Decir «aquí no hay conexión» afirma más de lo que el texto permite probar. El pasaje es ambiguo a propósito.</p>
+        <span class="tag">Algunos sí leen una conexión directa aquí</span>
+      </div></div></div>
+    </div>
+
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">🏛️</span>
+        <span class="titles">
+          <span class="role">«La ecuación que Jesús rompe»</span>
+          <span class="who">La historiadora — el trasfondo</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>La teología de fondo en esa sala era la de <b>retribución</b>: si sufres, pecaste tú o pecaron tus padres. Por eso, ante el ciego de nacimiento, los discípulos preguntan «¿quién pecó?» (Juan 9:2). La respuesta de Jesús es demoledora: <b>ni este ni sus padres</b> (Juan 9:3).</p>
+        <p>Lo mismo con los galileos masacrados y los muertos por la torre de Siloé: no eran peores pecadores (Lucas 13:1-5). Una y otra vez Jesús desactiva el «dolor = factura de un pecado concreto». Eso obliga a ser muy cautos antes de leer esa ecuación en Marcos 2.</p>
+        <span class="tag">Jesús niega que sufrir signifique merecerlo</span>
+      </div></div></div>
+    </div>
+
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">✝️</span>
+        <span class="titles">
+          <span class="role">«La conexión real, a otra escala»</span>
+          <span class="who">El teólogo — la caída y la creación</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Aquí está el matiz que reconcilia casi todo. Hay una conexión real… pero a otra escala: no la biografía de este hombre, sino la <b>herida de todo el mundo</b>. La enfermedad, el deterioro y la muerte entraron por la caída (Romanos 5:12), y toda la creación «gime» esperando ser liberada (Romanos 8:20-22).</p>
+        <p>La parálisis es una astilla de esa fractura cósmica. Por eso Jesús, que vino a revertir la maldición entera, perdona <b>y</b> sana: no dice «tú causaste esto», está deshaciendo el daño completo del pecado, raíz y rama.</p>
+        <span class="tag">Todo dolor nace de un mundo caído</span>
+      </div></div></div>
+    </div>
+
+    <div class="panel">
+      <button class="panel-head" aria-expanded="false">
+        <span class="emoji">🕊️</span>
+        <span class="titles">
+          <span class="role">«El peligro de jugar a juez»</span>
+          <span class="who">La pastora — el cuidado</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="panel-body"><div class="inner"><div class="body-pad">
+        <p>Decirle a alguien que sufre «esto te pasó por tu pecado» es exactamente lo que hicieron los amigos de Job… y Dios los reprende al final del libro. Hoy hay personas con discapacidad a quienes les han cargado esa culpa toda la vida. Es crueldad disfrazada de teología.</p>
+        <p>Mira lo que hace Jesús: da perdón y sanidad <b>sin un solo sermón de culpa</b>, sin «te lo dije». Lo llama hijo. La conexión teológica más honda jamás debe volverse un martillo sobre quien ya está en el suelo.</p>
+        <span class="tag">Nunca uses la teología contra el que sufre</span>
+      </div></div></div>
+    </div>
+
+  </div>
+
+  <div class="synthesis verdict">
+    <p class="sk">El veredicto de la mesa</p>
+    <h3>Sí y no — y ahí está la sanidad</h3>
+    <p><b>No</b> en el sentido que asustaba a los discípulos: nada en Marcos 2 dice que esta parálisis fuera el recibo de un pecado puntual, y Jesús rechaza esa lógica cada vez que se la ponen enfrente.</p>
+    <p><b>Sí</b> en el sentido más hondo: toda dolencia respira el aire de un mundo quebrado por el pecado —no la culpa de uno, la herida de todos—, y por eso Jesús toca cuerpo y alma a la vez. La parálisis no probaba culpa: era síntoma de un mundo que espera ser sanado entero.</p>
+    <p>La pista final está en el verbo: <b>«levántate» (egeíre) es palabra de resurrección.</b> Lo que Jesús empieza en ese cuerpo, lo terminará en toda la creación.</p>
+  </div>
+
+  <hr class="rule" style="margin:56px 0 38px;" />
+
+  <p class="kicker" style="margin:0 0 14px;">Tercera parte · Lo que casi se nos escapa</p>
+  <h2 class="sec-head" style="font-size:clamp(1.7rem,5vw,2.3rem); line-height:1.12;">La primera palabra fue «Hijo»</h2>
+  <p class="lead" style="margin-top:14px;">Antes de perdonar, antes de sanar, Jesús hace algo aún más hondo: <b>lo recibe como persona</b>. No dice «paralítico». Dice <i>hijo</i>.</p>
+
+  <div class="heart">
+    <span class="heart-word">«Hijo.»</span>
+    <p>En griego, <span class="gk">téknon</span>: «niño», «hijo mío». Una palabra de ternura y de <b>familia</b>, no de diagnóstico. No revela su edad —Lucas aclara que era un hombre adulto—; revela cómo lo mira Jesús. Mientras todos veían «el paralítico», una camilla, un problema a resolver, Jesús ve a alguien a quien llamar suyo.</p>
+    <p>Marcos lo dice más desnudo que nadie: Mateo pone «ánimo, hijo»; Lucas, «hombre»; Marcos, simplemente, <i>«Hijo»</i>. Lo que ese hombre más necesitaba —antes que piernas, incluso antes de saberlo— era dejar de ser tratado como un mueble y ser recibido como persona. Y eso es lo primero que recibe.</p>
+  </div>
+
+  <div class="key" style="margin:30px 0 0;">
+    <span class="dot">✶</span>
+    <div>
+      <h3>El detalle que lo confirma</h3>
+      <p>Mira el orden: Jesús perdona (v.5) y… del cuerpo, nada. Solo cuando los escribas objetan en su corazón (v.6-7), Jesús sana las piernas — y lo dice expresamente <b>como prueba</b>: «para que sepáis que el Hijo del Hombre tiene autoridad» (v.10). La sanación física llega casi como un epílogo, un «ah, y también las piernas». Si nadie hubiera objetado, la escena podía cerrar con un hijo perdonado y amado, todavía sobre su camilla — y eso ya habría sido el milagro.</p>
+    </div>
+  </div>
+
+  <p class="closing">No es que a Cristo se le «olvidaran» las piernas —lo sabía todo—. Es que ya le había dado lo más grande: un nombre, un lugar, un Padre. Lo demás vino por añadidura.</p>
+
+  <footer>
+    <span class="star">☕</span> Café con Claude · Mesa de expertos sobre Marcos 2
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.accordion').forEach(function(acc){
+    acc.querySelectorAll('.panel').forEach(function(panel){
+      var head = panel.querySelector('.panel-head');
+      head.addEventListener('click', function(){
+        var isOpen = panel.classList.contains('open');
+        // cierra los demás de ESTE acordeón (modo "uno a la vez")
+        acc.querySelectorAll('.panel').forEach(function(p){
+          p.classList.remove('open');
+          p.querySelector('.panel-head').setAttribute('aria-expanded','false');
+        });
+        if(!isOpen){
+          panel.classList.add('open');
+          head.setAttribute('aria-expanded','true');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

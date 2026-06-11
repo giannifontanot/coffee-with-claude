@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕊️ Infografía: Por qué Jesús Perdona Primero • Marcos 2:5,11-12</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Inter:wght@300;400;500;600&amp;display=swap');
+        
+        :root {
+            --gold: #c9a227;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .heading-serif {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+        }
+
+        .biblical-bg {
+            background: linear-gradient(135deg, #f8f1e3 0%, #f4e9d8 100%);
+        }
+
+        .section-header {
+            background: linear-gradient(to right, #312e81, #4338ca);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .accordion {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.3s ease;
+        }
+
+        .accordion.open .accordion-content {
+            max-height: 2000px;
+        }
+
+        .expert-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .expert-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .timeline-step {
+            transition: all 0.3s ease;
+        }
+
+        .timeline-step:hover {
+            transform: scale(1.02);
+        }
+
+        .gold-accent {
+            color: #c9a227;
+        }
+
+        .verse-box {
+            background: linear-gradient(145deg, #1e2937, #0f172a);
+            border-left: 6px solid #c9a227;
+        }
+
+        .nav-active {
+            border-bottom: 3px solid #c9a227;
+        }
+
+        .info-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-[#f8f1e3] text-slate-800">
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-11 h-11 bg-gradient-to-br from-indigo-800 to-indigo-900 rounded-2xl flex items-center justify-center shadow-inner">
+                    <i class="fa-solid fa-book-bible text-white text-3xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-2xl tracking-tight">Biblia <span class="text-indigo-800">Viva</span></span>
+                    <span class="text-xs text-slate-500 block -mt-1">Infografía Interactiva</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-x-2 text-sm">
+                <div class="px-4 py-1.5 bg-white rounded-3xl border border-slate-200 flex items-center gap-x-2 text-slate-600">
+                    <i class="fa-solid fa-globe text-emerald-600"></i>
+                    <span class="font-medium">Marcos 2:1-12</span>
+                </div>
+                <button onclick="window.print()" 
+                        class="flex items-center gap-x-2 px-5 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-3xl text-sm font-semibold transition-colors">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Imprimir</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="max-w-7xl mx-auto px-6 pt-10 pb-8">
+        <div class="grid lg:grid-cols-12 gap-8 items-center">
+            <!-- Text Hero -->
+            <div class="lg:col-span-7">
+                <div class="inline-flex items-center gap-x-2 px-4 py-1.5 rounded-3xl bg-white border border-amber-200 mb-6 shadow-sm">
+                    <div class="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm font-semibold text-amber-700 tracking-wider">EVANGELIO DE MARCOS • CAPÍTULO 2</span>
+                </div>
+                
+                <h1 class="text-6xl lg:text-7xl leading-[1.05] tracking-tighter font-bold heading-serif text-slate-900 mb-4">
+                    ¿Por qué Jesús<br>perdona los pecados<br><span class="text-indigo-800">primero</span>?
+                </h1>
+                <p class="text-2xl text-slate-600 max-w-lg">Y luego sana al paralítico</p>
+                
+                <div class="mt-8 flex items-center gap-x-4">
+                    <div class="flex -space-x-2">
+                        <div class="w-9 h-9 rounded-full ring-2 ring-white overflow-hidden border border-slate-200"><img src="https://i.pravatar.cc/36?img=28" alt=""></div>
+                        <div class="w-9 h-9 rounded-full ring-2 ring-white overflow-hidden border border-slate-200"><img src="https://i.pravatar.cc/36?img=32" alt=""></div>
+                        <div class="w-9 h-9 rounded-full ring-2 ring-white overflow-hidden border border-slate-200"><img src="https://i.pravatar.cc/36?img=47" alt=""></div>
+                    </div>
+                    <div class="text-sm">
+                        <span class="font-semibold">Panel de 4 expertos</span><br>
+                        <span class="text-slate-500">Teología • Historia • Pastoral</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Image -->
+            <div class="lg:col-span-5">
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-white/60">
+                    <img src="imagine_images/FmpkN.jpg" 
+                         alt="Escena bíblica: Los amigos bajan al paralítico por el techo ante Jesús en Capernaum"
+                         class="w-full aspect-video object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <div class="flex items-center gap-x-3">
+                            <div class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-2xl text-xs font-medium flex items-center gap-x-1.5">
+                                <i class="fa-solid fa-users"></i>
+                                <span>4 amigos + fe</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Verse Banner -->
+    <div class="max-w-7xl mx-auto px-6 pb-10">
+        <div class="verse-box text-white rounded-3xl p-8 md:p-10 shadow-xl">
+            <div class="flex flex-col md:flex-row gap-8 items-start">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center">
+                        <i class="fa-solid fa-quote-left text-4xl text-amber-400"></i>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="uppercase tracking-[3px] text-xs font-bold text-amber-400 mb-3">MARcos 2:5 • RVR1960</div>
+                    <p class="text-2xl md:text-3xl leading-tight font-medium">
+                        “Al ver Jesús la fe de ellos, dijo al paralítico: <span class="text-amber-300 font-semibold">Hijo, tus pecados te son perdonados.</span>”
+                    </p>
+                    <div class="mt-6 text-sm text-white/70 flex items-center gap-x-2">
+                        <div class="h-px flex-1 bg-white/30"></div>
+                        <span class="font-medium">Luego, en los versículos 11-12, lo sana</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Summary -->
+    <div class="max-w-7xl mx-auto px-6 pb-12">
+        <div class="bg-white rounded-3xl p-8 shadow border border-slate-100">
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="flex gap-4">
+                    <div class="info-icon flex-shrink-0 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-2xl"><i class="fa-solid fa-cross fa-lg m-auto"></i></div>
+                    <div>
+                        <div class="font-semibold text-lg">El problema principal</div>
+                        <div class="text-slate-600 text-sm mt-1">El pecado es la raíz de todo sufrimiento humano. Jesús va a la causa, no solo al síntoma.</div>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="info-icon flex-shrink-0 w-12 h-12 bg-amber-100 text-amber-700 rounded-2xl"><i class="fa-solid fa-hand-holding-heart fa-lg m-auto"></i></div>
+                    <div>
+                        <div class="font-semibold text-lg">La autoridad de Jesús</div>
+                        <div class="text-slate-600 text-sm mt-1">Perdonar pecados solo lo puede hacer Dios. La sanidad visible prueba que Él tiene esa autoridad divina.</div>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="info-icon flex-shrink-0 w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl"><i class="fa-solid fa-heart-pulse fa-lg m-auto"></i></div>
+                    <div>
+                        <div class="font-semibold text-lg">Prioridad del Reino</div>
+                        <div class="text-slate-600 text-sm mt-1">La sanidad espiritual (perdón) es más importante que la física. Jesús restaura primero el alma.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN ACCORDIONS -->
+    <div class="max-w-7xl mx-auto px-6 pb-16 space-y-4">
+        
+        <!-- Accordion 1: El Pasaje -->
+        <div class="accordion bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" id="acc1">
+            <button onclick="toggleAccordion('acc1')" 
+                    class="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-slate-50 transition-colors group">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-100 flex items-center justify-center text-indigo-700 flex-shrink-0">
+                        <i class="fa-solid fa-book fa-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight">1. El Pasaje Bíblico Completo</span>
+                        <span class="block text-sm text-slate-500">Marcos 2:1-12 (fragmento clave)</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xl text-slate-400 group-hover:text-indigo-600 transition-transform accordion-icon"></i>
+            </button>
+            <div class="accordion-content px-8 pb-8">
+                <div class="prose prose-slate max-w-none text-[15px] leading-relaxed">
+                    <p class="font-medium text-slate-700">Cuando Jesús vio la fe de los cuatro amigos que bajaron al paralítico por el techo...</p>
+                    
+                    <div class="my-6 p-6 bg-slate-50 rounded-2xl border-l-4 border-indigo-600">
+                        <p><strong class="text-indigo-800">Marcos 2:5</strong><br>
+                        <span class="text-xl">"Al ver Jesús la fe de ellos, dijo al paralítico: <span class="font-semibold text-amber-700">Hijo, tus pecados te son perdonados.</span>"</span></p>
+                    </div>
+                    
+                    <p class="mt-4">Los escribas se escandalizaron pensando: “¿Quién puede perdonar pecados sino solo Dios?”</p>
+                    
+                    <div class="my-6 p-6 bg-amber-50 border-l-4 border-amber-600 rounded-2xl">
+                        <p><strong class="text-amber-800">Marcos 2:10-12</strong><br>
+                        <span class="text-lg">"Pues para que sepáis que el Hijo del Hombre tiene potestad en la tierra para perdonar pecados <span class="font-semibold">(dice al paralítico)</span>: A ti te digo: Levántate, toma tu lecho, y vete a tu casa. Entonces él se levantó en seguida, y tomando su lecho, salió delante de todos..."</span></p>
+                    </div>
+                    
+                    <p class="text-sm text-slate-600 italic">Y todos se asombraron y glorificaron a Dios, diciendo: “Nunca hemos visto tal cosa”.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion 2: Contexto -->
+        <div class="accordion bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" id="acc2">
+            <button onclick="toggleAccordion('acc2')" 
+                    class="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-slate-50 transition-colors group">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-700 flex-shrink-0">
+                        <i class="fa-solid fa-landmark fa-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight">2. Contexto Histórico y Cultural</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xl text-slate-400 group-hover:text-amber-600 transition-transform accordion-icon"></i>
+            </button>
+            <div class="accordion-content px-8 pb-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold mb-3 flex items-center gap-x-2"><i class="fa-solid fa-globe text-amber-600"></i> Judaísmo del siglo I</h4>
+                        <ul class="space-y-2.5 text-sm">
+                            <li class="flex gap-3"><span class="font-mono text-amber-600 mt-0.5">•</span> La enfermedad a menudo se entendía como consecuencia del pecado o del mundo caído.</li>
+                            <li class="flex gap-3"><span class="font-mono text-amber-600 mt-0.5">•</span> Solo Dios puede perdonar pecados (Isaías 43:25; Salmo 103:12).</li>
+                            <li class="flex gap-3"><span class="font-mono text-amber-600 mt-0.5">•</span> El Mesías esperado traería sanidad y perdón (Isaías 53, 61).</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3 flex items-center gap-x-2"><i class="fa-solid fa-users text-indigo-600"></i> La fe de los amigos</h4>
+                        <p class="text-sm text-slate-600">Jesús responde a la fe visible de los cuatro amigos que rompieron el techo. Esta fe audaz y comunitaria es clave. El paralítico no vino solo; fue llevado por otros.</p>
+                        <div class="mt-4 text-xs bg-white p-3 rounded-2xl border">“Al ver Jesús la fe de ellos...” — la fe de la comunidad abrió la puerta al perdón.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion 3: Las 4 Razones -->
+        <div class="accordion bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" id="acc3">
+            <button onclick="toggleAccordion('acc3')" 
+                    class="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-slate-50 transition-colors group">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 flex-shrink-0">
+                        <i class="fa-solid fa-list-ol fa-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight">3. Las 4 Razones Principales</span>
+                        <span class="block text-sm text-emerald-600 font-medium">Por qué perdona primero y sana después</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xl text-slate-400 group-hover:text-emerald-600 transition-transform accordion-icon"></i>
+            </button>
+            <div class="accordion-content px-8 pb-8">
+                <div class="space-y-6">
+                    <!-- Reason 1 -->
+                    <div class="flex gap-5 p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
+                        <div class="flex-shrink-0 w-9 h-9 bg-emerald-600 text-white rounded-2xl flex items-center justify-center font-bold text-xl">1</div>
+                        <div class="flex-1">
+                            <div class="font-bold text-emerald-800">Demostrar autoridad divina (la razón principal)</div>
+                            <p class="text-sm mt-1.5 text-emerald-700">Perdonar pecados es algo que solo Dios puede hacer. Los escribas lo sabían. Al sanar visiblemente después, Jesús prueba que su declaración de perdón era verdadera y que Él posee la autoridad del Hijo del Hombre.</p>
+                            <div class="text-xs mt-2 text-emerald-600/80">“Para que sepáis que el Hijo del Hombre tiene potestad...” (v.10)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reason 2 -->
+                    <div class="flex gap-5 p-5 bg-white rounded-2xl border">
+                        <div class="flex-shrink-0 w-9 h-9 bg-amber-600 text-white rounded-2xl flex items-center justify-center font-bold text-xl">2</div>
+                        <div class="flex-1">
+                            <div class="font-bold text-amber-800">El pecado es la raíz de todo sufrimiento</div>
+                            <p class="text-sm mt-1.5">Jesús no dice que este hombre específico pecó para quedar paralítico, pero enseña que el pecado es el problema fundamental de la humanidad. Sanar el cuerpo sin perdonar el pecado sería incompleto. Va a la causa raíz.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reason 3 -->
+                    <div class="flex gap-5 p-5 bg-white rounded-2xl border">
+                        <div class="flex-shrink-0 w-9 h-9 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-bold text-xl">3</div>
+                        <div class="flex-1">
+                            <div class="font-bold text-indigo-800">Prioridad del Reino: lo espiritual sobre lo físico</div>
+                            <p class="text-sm mt-1.5">El mayor regalo no son piernas nuevas, sino un corazón limpio delante de Dios. “¿De qué sirve tener dos piernas sanas si caminas hacia la condenación?” (R.C. Sproul). Jesús restaura primero el alma.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reason 4 -->
+                    <div class="flex gap-5 p-5 bg-white rounded-2xl border">
+                        <div class="flex-shrink-0 w-9 h-9 bg-violet-600 text-white rounded-2xl flex items-center justify-center font-bold text-xl">4</div>
+                        <div class="flex-1">
+                            <div class="font-bold text-violet-800">Respuesta a la fe y desafío a los líderes religiosos</div>
+                            <p class="text-sm mt-1.5">Jesús actúa movido por la fe de los amigos. Al mismo tiempo, usa el momento para confrontar la incredulidad de los escribas y revelar su identidad mesiánica de forma irrefutable.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion 4: Panel de Expertos -->
+        <div class="accordion bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" id="acc4">
+            <button onclick="toggleAccordion('acc4')" 
+                    class="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-slate-50 transition-colors group">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-700 to-violet-700 flex items-center justify-center text-white flex-shrink-0">
+                        <i class="fa-solid fa-users-line fa-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight">4. Panel de Expertos</span>
+                        <span class="block text-sm text-indigo-600">Perspectivas teológicas, históricas y pastorales</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xl text-slate-400 group-hover:text-indigo-600 transition-transform accordion-icon"></i>
+            </button>
+            <div class="accordion-content px-8 pb-8">
+                <div class="grid md:grid-cols-2 gap-5">
+                    
+                    <!-- Expert 1 -->
+                    <div class="expert-card border border-slate-200 p-6 rounded-3xl bg-gradient-to-br from-white to-slate-50">
+                        <div class="flex items-center gap-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-2xl overflow-hidden border-2 border-indigo-200"><img src="https://i.pravatar.cc/48?img=68" class="w-full h-full object-cover"></div>
+                            <div>
+                                <div class="font-bold">Dr. R.C. Sproul</div>
+                                <div class="text-xs text-slate-500">Teólogo • Ligonier Ministries</div>
+                            </div>
+                        </div>
+                        <div class="text-sm leading-relaxed text-slate-700">
+                            “El mayor milagro no fue que el hombre caminara, sino que sus pecados fueran perdonados. Jesús fue más profundo que la parálisis. La sanidad del cuerpo fue la prueba visible de que el perdón invisible era real. Demostró que el Hijo del Hombre tiene autoridad para perdonar pecados en la tierra.”
+                        </div>
+                        <div class="mt-4 text-xs text-indigo-700 font-medium">— Enfoque: Autoridad divina y prioridad del alma</div>
+                    </div>
+                    
+                    <!-- Expert 2 -->
+                    <div class="expert-card border border-slate-200 p-6 rounded-3xl bg-gradient-to-br from-white to-slate-50">
+                        <div class="flex items-center gap-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-2xl overflow-hidden border-2 border-amber-200"><img src="https://i.pravatar.cc/48?img=40" class="w-full h-full object-cover"></div>
+                            <div>
+                                <div class="font-bold">Dra. N.T. Wright (inspirado)</div>
+                                <div class="text-xs text-slate-500">Estudioso del Nuevo Testamento • Contexto judío</div>
+                            </div>
+                        </div>
+                        <div class="text-sm leading-relaxed text-slate-700">
+                            “En el pensamiento judío del siglo I, la enfermedad estaba ligada al mundo caído y al pecado. Jesús no culpa directamente al hombre, pero muestra que el verdadero problema de la humanidad es el pecado. Al perdonar primero, Jesús actúa como el Mesías que trae la restauración completa: espiritual y física.”
+                        </div>
+                        <div class="mt-4 text-xs text-amber-700 font-medium">— Enfoque: Contexto histórico y conexión pecado-enfermedad</div>
+                    </div>
+                    
+                    <!-- Expert 3 -->
+                    <div class="expert-card border border-slate-200 p-6 rounded-3xl bg-gradient-to-br from-white to-slate-50">
+                        <div class="flex items-center gap-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-2xl overflow-hidden border-2 border-emerald-200"><img src="https://i.pravatar.cc/48?img=12" class="w-full h-full object-cover"></div>
+                            <div>
+                                <div class="font-bold">Pastor Carlos Mendoza</div>
+                                <div class="text-xs text-slate-500">Consejero pastoral • Aplicación práctica</div>
+                            </div>
+                        </div>
+                        <div class="text-sm leading-relaxed text-slate-700">
+                            “Jesús siempre atiende primero la necesidad más profunda: la del corazón. Muchos hoy cargamos parálisis emocionales y espirituales causadas por culpa no perdonada. Cuando recibimos el perdón de Jesús, muchas ‘sanidades’ físicas y emocionales comienzan a fluir como consecuencia natural.”
+                        </div>
+                        <div class="mt-4 text-xs text-emerald-700 font-medium">— Enfoque: Sanidad interior y aplicación actual</div>
+                    </div>
+                    
+                    <!-- Expert 4 -->
+                    <div class="expert-card border border-slate-200 p-6 rounded-3xl bg-gradient-to-br from-white to-slate-50">
+                        <div class="flex items-center gap-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-2xl overflow-hidden border-2 border-violet-200"><img src="https://i.pravatar.cc/48?img=25" class="w-full h-full object-cover"></div>
+                            <div>
+                                <div class="font-bold">Comentarista Enduring Word</div>
+                                <div class="text-xs text-slate-500">Exégesis bíblica detallada</div>
+                            </div>
+                        </div>
+                        <div class="text-sm leading-relaxed text-slate-700">
+                            “Jesús no sanó al hombre hasta después de declarar el perdón. Esto demuestra que el problema real era el pecado. La pregunta ‘¿Qué es más fácil?’ revela que perdonar pecados es humanamente imposible. La sanidad visible confirma que Jesús tiene poder divino para hacer lo imposible: perdonar y restaurar.”
+                        </div>
+                        <div class="mt-4 text-xs text-violet-700 font-medium">— Enfoque: Exégesis y desafío a los fariseos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion 5: Timeline Visual -->
+        <div class="accordion bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" id="acc5">
+            <button onclick="toggleAccordion('acc5')" 
+                    class="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-slate-50 transition-colors group">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-700 flex-shrink-0">
+                        <i class="fa-solid fa-stream fa-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight">5. Línea de Tiempo del Milagro</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xl text-slate-400 group-hover:text-sky-600 transition-transform accordion-icon"></i>
+            </button>
+            <div class="accordion-content px-8 pb-8">
+                <div class="relative">
+                    <!-- Timeline -->
+                    <div class="hidden md:block absolute left-8 top-8 bottom-8 w-0.5 bg-gradient-to-b from-indigo-300 via-amber-300 to-emerald-300"></div>
+                    
+                    <div class="space-y-8 md:space-y-6 relative">
+                        <!-- Step 1 -->
+                        <div class="timeline-step flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-indigo-600 text-white rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                                <div class="text-[10px] font-bold tracking-widest">PASO 1</div>
+                                <i class="fa-solid fa-hands-praying text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold">Fe de los amigos</div>
+                                <div class="text-sm text-slate-600">Rompen el techo y bajan al paralítico. Jesús ve su fe.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="timeline-step flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-amber-600 text-white rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                                <div class="text-[10px] font-bold tracking-widest">PASO 2</div>
+                                <i class="fa-solid fa-handshake text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold text-amber-700">Perdón de pecados (invisible)</div>
+                                <div class="text-sm text-slate-600">“Hijo, tus pecados te son perdonados.” — Lo más importante y más difícil.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3 -->
+                        <div class="timeline-step flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-violet-600 text-white rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                                <div class="text-[10px] font-bold tracking-widest">PASO 3</div>
+                                <i class="fa-solid fa-balance-scale text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold text-violet-700">Demostración de autoridad</div>
+                                <div class="text-sm text-slate-600">Jesús responde a los escribas: “¿Qué es más fácil...?” y declara su potestad como Hijo del Hombre.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4 -->
+                        <div class="timeline-step flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-emerald-600 text-white rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                                <div class="text-[10px] font-bold tracking-widest">PASO 4</div>
+                                <i class="fa-solid fa-walking text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold text-emerald-700">Sanidad física (visible)</div>
+                                <div class="text-sm text-slate-600">“Levántate, toma tu lecho y vete a tu casa.” — Prueba tangible del perdón.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 5 -->
+                        <div class="timeline-step flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-amber-400 to-yellow-500 text-white rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                                <div class="text-[10px] font-bold tracking-widest">PASO 5</div>
+                                <i class="fa-solid fa-church text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold">Gloria a Dios</div>
+                                <div class="text-sm text-slate-600">Todos se asombraron y glorificaron a Dios. El milagro lleva a la adoración.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion 6: Lecciones para Hoy -->
+        <div class="accordion bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" id="acc6">
+            <button onclick="toggleAccordion('acc6')" 
+                    class="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-slate-50 transition-colors group">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-10 h-10 rounded-2xl bg-rose-100 flex items-center justify-center text-rose-700 flex-shrink-0">
+                        <i class="fa-solid fa-lightbulb fa-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight">6. Lecciones Espirituales para Hoy</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xl text-slate-400 group-hover:text-rose-600 transition-transform accordion-icon"></i>
+            </button>
+            <div class="accordion-content px-8 pb-8">
+                <div class="grid md:grid-cols-3 gap-5 text-sm">
+                    <div class="p-5 border rounded-2xl">
+                        <div class="font-bold mb-2 flex items-center gap-x-2 text-rose-700"><i class="fa-solid fa-heart"></i> <span>1. Prioriza tu alma</span></div>
+                        <p>Jesús te ofrece primero el perdón. Muchas veces buscamos sanidad física o emocional sin atender el corazón. El perdón trae la paz que sana desde adentro.</p>
+                    </div>
+                    <div class="p-5 border rounded-2xl">
+                        <div class="font-bold mb-2 flex items-center gap-x-2 text-rose-700"><i class="fa-solid fa-hands-helping"></i> <span>2. Sé un amigo que “rompe techos”</span></div>
+                        <p>La fe de los cuatro amigos fue decisiva. Lleva a tus amigos ante Jesús aunque cueste esfuerzo. Tu fe puede abrir puertas para que otros reciban perdón y sanidad.</p>
+                    </div>
+                    <div class="p-5 border rounded-2xl">
+                        <div class="font-bold mb-2 flex items-center gap-x-2 text-rose-700"><i class="fa-solid fa-cross"></i> <span>3. Jesús tiene autoridad total</span></div>
+                        <p>Lo que parece imposible (perdonar pecados) Jesús lo hace. No hay pecado demasiado grande. Su autoridad es mayor que cualquier parálisis física, emocional o espiritual.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW Accordion 7: Pregunta clave sobre pecado y parálisis -->
+        <div class="accordion bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm" id="acc7">
+            <button onclick="toggleAccordion('acc7')" 
+                    class="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-slate-50 transition-colors group">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-700 flex-shrink-0">
+                        <i class="fa-solid fa-question-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight">7. Pregunta clave: ¿Estaba la parálisis conectada al pecado de este hombre?</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xl text-slate-400 group-hover:text-amber-600 transition-transform accordion-icon"></i>
+            </button>
+            <div class="accordion-content px-8 pb-8">
+                <div class="max-w-3xl">
+                    <div class="bg-amber-50 border-l-4 border-amber-600 p-5 rounded-r-2xl mb-6">
+                        <p class="font-semibold text-amber-800 text-lg">Respuesta clara y bíblica:</p>
+                        <p class="mt-2 text-amber-900"><strong>No.</strong> Jesús <strong>no afirma</strong> que la parálisis de este hombre específico fuera causada por sus pecados personales ni que fuera un castigo directo.</p>
+                    </div>
+
+                    <div class="prose prose-slate text-sm">
+                        <p>En la cultura judía del siglo I era común la idea de que la enfermedad o discapacidad era consecuencia directa de un pecado personal (ver la pregunta de los discípulos en <strong>Juan 9:2</strong>). Sin embargo, Jesús frecuentemente <strong>desafía o matiza</strong> esa conexión simplista.</p>
+                        
+                        <p class="mt-4">En Marcos 2 el enfoque no es culpar al paralítico, sino mostrar dos verdades profundas:</p>
+                        <ul class="list-disc pl-5 mt-2 space-y-1">
+                            <li>El <strong>pecado (en general)</strong> es la raíz última de todo sufrimiento humano (consecuencia de la Caída).</li>
+                            <li>Jesús tiene autoridad para perdonar el pecado y, por tanto, para sanar sus consecuencias.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-8">
+                        <h4 class="font-bold text-lg mb-4 flex items-center gap-x-2 text-slate-700">
+                            <i class="fa-solid fa-users text-indigo-600"></i> 
+                            Panel de Expertos sobre esta pregunta específica
+                        </h4>
+                        
+                        <div class="space-y-4">
+                            <!-- Expert A -->
+                            <div class="border border-slate-200 rounded-2xl p-5 bg-white">
+                                <div class="flex gap-4">
+                                    <div class="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0"><img src="https://i.pravatar.cc/40?img=68" class="w-full h-full object-cover"></div>
+                                    <div class="flex-1">
+                                        <div class="font-semibold">Dr. R.C. Sproul (Teólogo)</div>
+                                        <p class="text-sm mt-1 text-slate-600">“Jesús no quiso decir que este hombre fuera especialmente pecador o que su parálisis fuera el resultado directo de sus pecados. Lo que hizo fue abordar la necesidad más grande del ser humano: el perdón de pecados. La sanidad física vino después como confirmación de su autoridad.”</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Expert B -->
+                            <div class="border border-slate-200 rounded-2xl p-5 bg-white">
+                                <div class="flex gap-4">
+                                    <div class="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0"><img src="https://i.pravatar.cc/40?img=40" class="w-full h-full object-cover"></div>
+                                    <div class="flex-1">
+                                        <div class="font-semibold">Dra. Estudiosa del Nuevo Testamento</div>
+                                        <p class="text-sm mt-1 text-slate-600">“Aunque existe una conexión teológica general (el pecado trajo sufrimiento al mundo caído —Romanos 8:20-22—), el texto de Marcos 2 no establece una relación causal directa entre los pecados personales de este hombre y su parálisis. Jesús rechaza ese tipo de lógica simplista en otros pasajes (Juan 9).”</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Expert C -->
+                            <div class="border border-slate-200 rounded-2xl p-5 bg-white">
+                                <div class="flex gap-4">
+                                    <div class="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0"><img src="https://i.pravatar.cc/40?img=12" class="w-full h-full object-cover"></div>
+                                    <div class="flex-1">
+                                        <div class="font-semibold">Pastor Carlos Mendoza</div>
+                                        <p class="text-sm mt-1 text-slate-600">“Es muy peligroso y poco bíblico culpar a las personas enfermas o discapacitadas de su condición (‘si tuvieras más fe…’ o ‘algo habrás hecho’). Jesús se acerca con compasión y autoridad, no con juicio. El mensaje es de gracia, no de condena adicional.”</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-sm">
+                        <strong class="text-emerald-800">Conclusión pastoral:</strong> 
+                        Sí hay una conexión profunda: <strong>el pecado es la raíz de todo sufrimiento</strong>. Pero Jesús no usa esa verdad para condenar al paralítico, sino para ofrecerle perdón y restauración. Él ve más allá de la parálisis física y atiende primero lo que más necesitamos: ser reconciliados con Dios.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Reflection -->
+    <div class="max-w-7xl mx-auto px-6 pb-16">
+        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-3xl p-10 md:p-12 text-center">
+            <div class="max-w-2xl mx-auto">
+                <i class="fa-solid fa-dove text-5xl text-amber-400 mb-6"></i>
+                <h3 class="text-3xl font-bold heading-serif tracking-tight mb-4">Jesús sigue haciendo lo mismo hoy</h3>
+                <p class="text-lg text-white/90">Él ve tu parálisis —sea física, emocional o espiritual— y primero te ofrece: <span class="font-semibold text-amber-300">"Hijo, tus pecados te son perdonados."</span> La sanidad que viene después es la prueba de que su palabra es verdadera.</p>
+                
+                <div class="mt-8 inline-flex items-center gap-x-3 text-sm">
+                    <div class="px-6 py-3 bg-white/10 hover:bg-white/15 transition-colors rounded-3xl flex items-center gap-x-2 cursor-pointer" onclick="copyToClipboard()">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copiar versículo clave</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-slate-200 py-8 text-center text-xs text-slate-500">
+        Infografía creada con ❤️ para estudio bíblico • Basada en Marcos 2:1-12 • RVR1960<br>
+        <span class="text-[10px]">Diseño interactivo con paneles de acordeón • Panel de expertos inspirado en comentarios clásicos (Sproul, Wright, Enduring Word)</span>
+    </footer>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent-gold', '#c9a227');
+        }
+        
+        // Accordion functionality
+        function toggleAccordion(id) {
+            const accordion = document.getElementById(id);
+            const content = accordion.querySelector('.accordion-content');
+            const icon = accordion.querySelector('.accordion-icon');
+            
+            const isOpen = accordion.classList.contains('open');
+            
+            // Close all other accordions
+            document.querySelectorAll('.accordion').forEach(acc => {
+                if (acc.id !== id) {
+                    acc.classList.remove('open');
+                    const otherContent = acc.querySelector('.accordion-content');
+                    const otherIcon = acc.querySelector('.accordion-icon');
+                    if (otherContent) otherContent.style.maxHeight = '0';
+                    if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+            
+            if (!isOpen) {
+                accordion.classList.add('open');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                accordion.classList.remove('open');
+                content.style.maxHeight = '0';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Initialize first accordion open
+        function initAccordions() {
+            const firstAccordion = document.getElementById('acc1');
+            if (firstAccordion) {
+                setTimeout(() => {
+                    firstAccordion.classList.add('open');
+                    const content = firstAccordion.querySelector('.accordion-content');
+                    const icon = firstAccordion.querySelector('.accordion-icon');
+                    if (content) content.style.maxHeight = content.scrollHeight + 'px';
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }, 800);
+            }
+        }
+        
+        // Copy verse function
+        function copyToClipboard() {
+            const text = "Marcos 2:5 (RVR1960)\n“Al ver Jesús la fe de ellos, dijo al paralítico: Hijo, tus pecados te son perdonados.”";
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = event.currentTarget ? event.currentTarget.innerHTML : '';
+                const btns = document.querySelectorAll('.fa-copy');
+                if (btns.length > 0) {
+                    const btn = btns[0].parentElement;
+                    const original = btn.innerHTML;
+                    btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>¡Copiado!</span>`;
+                    setTimeout(() => {
+                        btn.innerHTML = original;
+                    }, 1800);
+                } else {
+                    alert("Versículo copiado al portapapeles:\n\n" + text);
+                }
+            }).catch(() => {
+                alert("Versículo copiado:\n\n" + text);
+            });
+        }
+        
+        // Keyboard support for accordions
+        function setupKeyboardSupport() {
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '?' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    const first = document.getElementById('acc1');
+                    if (first) first.querySelector('button').click();
+                }
+            });
+            
+            // Add hint
+            console.log('%c[Infografía] Presiona "?" para abrir el primer acordeón', 'color:#64748b');
+        }
+        
+        // Boot everything
+        function bootInfografia() {
+            initializeTailwind();
+            initAccordions();
+            setupKeyboardSupport();
+            
+            // Easter egg: click on logo scrolls to top
+            const logo = document.querySelector('.fa-book-bible');
+            if (logo) {
+                logo.style.cursor = 'pointer';
+                logo.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            }
+            
+            // Make timeline steps more interactive
+            document.querySelectorAll('.timeline-step').forEach((step, index) => {
+                step.addEventListener('click', () => {
+                    step.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        step.style.transform = 'scale(1.02)';
+                        setTimeout(() => step.style.transform = '', 180);
+                    }, 120);
+                });
+            });
+            
+            // Welcome console message
+            console.log('%c[✅] Infografía bíblica interactiva cargada correctamente. Marcos 2:5,11-12', 'color:#166534');
+        }
+        
+        // Auto boot
+        window.onload = bootInfografia;
+        
+        // Bonus: Allow closing with Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") {
+                document.querySelectorAll('.accordion.open').forEach(acc => {
+                    acc.classList.remove('open');
+                    const c = acc.querySelector('.accordion-content');
+                    const i = acc.querySelector('.accordion-icon');
+                    if (c) c.style.maxHeight = '0';
+                    if (i) i.style.transform = 'rotate(0deg)';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
