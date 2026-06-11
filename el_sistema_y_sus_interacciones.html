@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Todo que las Partes No Explican — Ackoff, Deming y el Pensamiento de Sistemas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f7f2e9;
+    --parchment-deep: #efe6d6;
+    --ink: #2b2419;
+    --ink-soft: #5a4f3e;
+    --accent: #8c4a2f;       /* terracota quemada */
+    --accent-soft: #b3714f;
+    --gold: #a8842c;
+    --sage: #5f6f52;         /* verde salvia: la voz de las interacciones */
+    --line: #d9cdb8;
+    --card: #fdfaf3;
+    --shadow: 0 2px 14px rgba(60, 45, 20, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    font-family: 'Spectral', Georgia, serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 1.05rem;
+  }
+
+  /* ============ LAYOUT ============ */
+  .layout {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  /* ============ SIDE RAIL ============ */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 3rem 1.5rem 2rem 2rem;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+  }
+  .rail-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 1.6rem;
+  }
+  .rail nav { display: flex; flex-direction: column; gap: 0.15rem; }
+  .rail a {
+    display: block;
+    padding: 0.42rem 0.7rem;
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    border-radius: 0 6px 6px 0;
+    transition: all 0.2s ease;
+    line-height: 1.35;
+  }
+  .rail a:hover { color: var(--accent); background: var(--parchment-deep); }
+  .rail a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: var(--parchment-deep);
+    font-weight: 600;
+  }
+  .rail a:focus-visible, .hamburger:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ============ HAMBURGER (mobile) ============ */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 60;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.55rem 0.7rem;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    font-size: 1.1rem;
+    color: var(--accent);
+  }
+
+  /* ============ MAIN ============ */
+  main { padding: 0 3.2rem 5rem; min-width: 0; }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 5.5rem 0 3.5rem;
+    border-bottom: 3px double var(--line);
+    margin-bottom: 3rem;
+  }
+  .eyebrow {
+    font-family: 'Fraunces', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.1rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    line-height: 1.12;
+    color: var(--ink);
+    margin-bottom: 1.4rem;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    max-width: 42rem;
+    font-weight: 300;
+  }
+  .hero-sub strong { font-weight: 600; color: var(--ink); }
+
+  /* ============ SECTIONS ============ */
+  section { padding: 2.6rem 0; scroll-margin-top: 1.5rem; }
+  section + section { border-top: 1px solid var(--line); }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.4vw, 2.05rem);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .kicker {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin: 2rem 0 0.7rem;
+  }
+  p + p { margin-top: 1rem; }
+  section > p, section > h3, .lead { max-width: 46rem; }
+  .lead { font-size: 1.12rem; color: var(--ink-soft); margin-bottom: 1.4rem; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  /* ============ VOICES (panel dialogue) ============ */
+  .voice {
+    margin: 1.6rem 0;
+    padding: 1.3rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    box-shadow: var(--shadow);
+    max-width: 48rem;
+  }
+  .voice.deming   { border-left-color: #5b3a6e; }
+  .voice.ackoff   { border-left-color: var(--accent); }
+  .voice.meadows  { border-left-color: var(--sage); }
+  .voice.senge    { border-left-color: #2f5d73; }
+  .voice.skeptic  { border-left-color: var(--gold); background: #fbf6e8; }
+  .voice-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+  .voice.deming  .voice-name { color: #5b3a6e; }
+  .voice.ackoff  .voice-name { color: var(--accent); }
+  .voice.meadows .voice-name { color: var(--sage); }
+  .voice.senge   .voice-name { color: #2f5d73; }
+  .voice.skeptic .voice-name { color: var(--gold); }
+  .voice-role { font-weight: 400; font-style: italic; color: var(--ink-soft); font-size: 0.84rem; }
+  .voice p { font-size: 1rem; }
+  .stage { font-style: italic; color: var(--ink-soft); font-size: 0.92rem; }
+
+  /* ============ PULL QUOTE ============ */
+  .pull {
+    margin: 2.4rem 0;
+    padding: 1.8rem 2rem;
+    border-top: 3px double var(--accent-soft);
+    border-bottom: 3px double var(--accent-soft);
+    max-width: 44rem;
+  }
+  .pull blockquote {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--accent);
+  }
+  .pull cite {
+    display: block;
+    margin-top: 0.7rem;
+    font-family: 'Spectral', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  /* ============ INTERACTIVE DEMO (signature) ============ */
+  .demo {
+    margin: 2.2rem 0 1rem;
+    padding: 1.8rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    max-width: 48rem;
+  }
+  .demo-controls { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .demo button {
+    font-family: 'Fraunces', serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: var(--parchment);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .demo button:hover { border-color: var(--accent-soft); color: var(--accent); }
+  .demo button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .demo button.on.sage { background: var(--sage); border-color: var(--sage); }
+  .demo svg { width: 100%; height: auto; display: block; }
+  .node circle { fill: var(--parchment-deep); stroke: var(--ink-soft); stroke-width: 1.5; transition: all 0.45s ease; }
+  .node text { font-family: 'Fraunces', serif; font-size: 13px; fill: var(--ink); text-anchor: middle; }
+  .edge { stroke: var(--sage); stroke-width: 2; opacity: 0; transition: opacity 0.6s ease; }
+  .demo.linked .edge { opacity: 0.85; }
+  .demo.linked .node circle { stroke: var(--sage); fill: #eef0e6; }
+  .demo.parts .node circle { stroke: var(--accent); stroke-width: 2.5; fill: #f6e3d8; }
+  .demo-caption { font-size: 0.92rem; color: var(--ink-soft); font-style: italic; margin-top: 0.9rem; min-height: 3.2em; }
+  .demo-score {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 0.4rem;
+  }
+  .demo-score .val-parts { color: var(--accent); }
+  .demo-score .val-sys  { color: var(--sage); }
+
+  /* ============ TABLE ============ */
+  .compare {
+    width: 100%;
+    max-width: 48rem;
+    border-collapse: collapse;
+    margin: 1.6rem 0;
+    font-size: 0.96rem;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .compare th {
+    font-family: 'Fraunces', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 0.85rem 1.1rem;
+    background: var(--parchment-deep);
+    color: var(--accent);
+    border-bottom: 2px solid var(--line);
+  }
+  .compare td {
+    padding: 0.8rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .compare tr:last-child td { border-bottom: none; }
+
+  /* ============ SOURCES ============ */
+  .sources { font-size: 0.92rem; color: var(--ink-soft); max-width: 46rem; }
+  .sources a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); }
+  .sources a:hover { color: var(--accent-soft); }
+  .sources li { margin-bottom: 0.5rem; margin-left: 1.2rem; }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 3px double var(--line);
+    margin-top: 2rem;
+    padding-top: 1.6rem;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .hamburger { display: block; }
+    .rail {
+      position: fixed;
+      top: 0; right: 0;
+      width: min(78vw, 300px);
+      height: 100vh;
+      background: var(--card);
+      border-left: 1px solid var(--line);
+      border-right: none;
+      box-shadow: -8px 0 30px rgba(60,45,20,0.18);
+      transform: translateX(105%);
+      transition: transform 0.3s ease;
+      z-index: 50;
+      padding-top: 4rem;
+    }
+    .rail.open { transform: translateX(0); }
+    main { padding: 0 1.4rem 4rem; }
+    .hero { padding-top: 4.5rem; }
+    .voice, .demo { padding: 1.1rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+
+<div class="layout">
+
+  <aside class="rail" id="rail">
+    <div class="rail-title">En esta clase</div>
+    <nav>
+      <a href="#panel">El panel se reúne</a>
+      <a href="#ackoff">Ackoff: el auto desarmado</a>
+      <a href="#deming">Deming: el 94% es el sistema</a>
+      <a href="#cuentas">El experimento de las cuentas rojas</a>
+      <a href="#meadows">Meadows: dónde apalancar</a>
+      <a href="#senge">Senge: la quinta disciplina</a>
+      <a href="#demo">Laboratorio: partes vs. vínculos</a>
+      <a href="#sintesis">Síntesis del panel</a>
+      <a href="#epilogo">Epílogo: la red que es cuerpo</a>
+      <a href="#fuentes">Fuentes</a>
+    </nav>
+  </aside>
+
+  <main>
+
+    <header class="hero">
+      <div class="eyebrow">Pensamiento de Sistemas · Una clase a varias voces</div>
+      <h1>El todo que las partes <em>no explican</em></h1>
+      <p class="hero-sub">Russell Ackoff lo dijo sin anestesia: <strong>un sistema no es la suma de sus partes, sino el producto de sus interacciones</strong>. Esta noche lo acompañan W.&nbsp;Edwards Deming, Donella Meadows, Peter Senge… y un escéptico que no deja pasar nada.</p>
+    </header>
+
+    <section id="panel">
+      <div class="kicker">Apertura</div>
+      <h2>El panel se reúne</h2>
+      <p class="lead"><span class="stage">Una mesa de madera, café recién servido, una pizarra en blanco. Cinco sillas. El moderador da la bienvenida.</span></p>
+
+      <div class="voice ackoff">
+        <div class="voice-name">Russell Ackoff <span class="voice-role">— arquitecto de sistemas, Wharton (1919–2009)</span></div>
+        <p>Empecemos por desarmar un mito: durante siglos, Occidente creyó que para entender algo había que <em>desarmarlo</em>. Análisis. Reducir el todo a sus piezas. Funciona de maravilla… hasta que el objeto de estudio es un sistema. Entonces falla de manera espectacular.</p>
+      </div>
+
+      <div class="voice deming">
+        <div class="voice-name">W. Edwards Deming <span class="voice-role">— estadístico y padre de la calidad (1900–1993)</span></div>
+        <p>Y yo agrego desde la fábrica lo que Russell dice desde el aula: pasé décadas viendo gerentes culpar a sus trabajadores por defectos que el <em>sistema</em> producía. La inmensa mayoría de los problemas no vienen de la gente: vienen de cómo las partes están conectadas. Cambien el sistema, no busquen culpables.</p>
+      </div>
+
+      <div class="voice meadows">
+        <div class="voice-name">Donella Meadows <span class="voice-role">— científica ambiental, MIT (1941–2001)</span></div>
+        <p>Yo traigo los mapas. Porque un sistema no se ve a simple vista: se ve en sus <em>flujos</em>, sus <em>retroalimentaciones</em>, sus demoras. Y les advierto desde ya: el lugar donde más empujamos casi nunca es el lugar donde el sistema cede.</p>
+      </div>
+
+      <div class="voice senge">
+        <div class="voice-name">Peter Senge <span class="voice-role">— teórico del aprendizaje organizacional, MIT</span></div>
+        <p>Y yo cierro la mesa con la pregunta práctica: ¿cómo logramos que una organización entera <em>aprenda</em> a ver el sistema, y no solo sus fotografías instantáneas? De eso trata la quinta disciplina.</p>
+      </div>
+
+      <div class="voice skeptic">
+        <div class="voice-name">El Escéptico Honesto <span class="voice-role">— sin cátedra, sin piedad</span></div>
+        <p><span class="stage">(revolviendo el café)</span> Cuatro eminencias y una pizarra. Muy bien. Pero yo vengo a hacer la pregunta incómoda: si "todo está conectado con todo", ¿no se vuelve eso una excusa para no arreglar nada en concreto? Demuéstrenme que esto no es poesía gerencial.</p>
+      </div>
+    </section>
+
+    <section id="ackoff">
+      <div class="kicker">Primera voz</div>
+      <h2>Ackoff: el auto desarmado</h2>
+      <p>Ackoff usaba un experimento mental devastador. Imaginen que reunimos los mejores autos del mundo. Tomamos el motor del Rolls-Royce, la transmisión del Mercedes, los frenos del BMW, la suspensión del Lexus. Lo mejor de lo mejor, pieza por pieza. Las juntamos.</p>
+      <p><strong>¿Qué obtenemos?</strong> Ni siquiera un auto. Obtenemos un montón de chatarra carísima, porque las piezas no fueron diseñadas para <em>trabajar juntas</em>. El desempeño de un sistema nunca es la suma del desempeño de sus partes tomadas por separado: es el producto de sus interacciones.</p>
+
+      <div class="pull">
+        <blockquote>«Un sistema no es la suma de sus partes. Es el producto de sus interacciones.»</blockquote>
+        <cite>— Russell L. Ackoff</cite>
+      </div>
+
+      <h3>Análisis vs. síntesis</h3>
+      <p>De aquí se desprende su distinción más fértil. El <strong>análisis</strong> desarma: te dice <em>cómo funciona</em> algo, su estructura interna. La <strong>síntesis</strong> mira hacia afuera: te dice <em>por qué</em> algo es como es, qué papel juega dentro de un todo mayor. Una mano separada del cuerpo puede analizarse hasta el último tendón, pero ya no escribe, no saluda, no consuela. Sus propiedades esenciales eran propiedades <em>del todo</em>.</p>
+
+      <div class="voice skeptic">
+        <div class="voice-name">El Escéptico Honesto</div>
+        <p>Bonito. Pero los médicos analizan órganos por separado y salvan vidas. La ciencia reduccionista nos dio antibióticos y cohetes. ¿No estás exagerando, Russell?</p>
+      </div>
+
+      <div class="voice ackoff">
+        <div class="voice-name">Ackoff</div>
+        <p>No niego el análisis: niego su <em>monopolio</em>. El cardiólogo brillante que ignora que su paciente vive estresado, mal dormido y solo, trata una bomba hidráulica, no a una persona. El análisis te da conocimiento; la síntesis te da <em>comprensión</em>. Necesitas ambos, pero llevamos tres siglos usando solo uno.</p>
+      </div>
+    </section>
+
+    <section id="deming">
+      <div class="kicker">Segunda voz</div>
+      <h2>Deming: el 94% es el sistema</h2>
+      <p>Si Ackoff es el filósofo de los sistemas, Deming es su ingeniero moral. Después de la Segunda Guerra Mundial, Japón lo invitó a enseñar control estadístico de calidad, y lo que sembró allí transformó a un país en ruinas en una potencia industrial. Los japoneses crearon en su honor el Premio Deming, que aún hoy es el galardón de calidad más prestigioso de Japón.</p>
+      <p>Su tesis más célebre es brutal para el ego gerencial: <strong>la inmensa mayoría de los problemas —él estimaba alrededor del 94%— pertenecen al sistema</strong>, es decir, a la responsabilidad de la dirección que lo diseñó, y solo una fracción mínima es atribuible a causas especiales o a los trabajadores individuales. Culpar a la persona por el resultado del sistema es, en sus palabras, confundir las causas comunes con las causas especiales.</p>
+
+      <div class="voice deming">
+        <div class="voice-name">Deming</div>
+        <p>Lo digo de otra forma: <em>un mal sistema derrota a una buena persona, todas las veces</em>. Pueden contratar a los mejores, motivarlos con discursos y bonos, y el sistema seguirá produciendo exactamente lo que está diseñado para producir. Si quieren otro resultado, rediseñen las interacciones.</p>
+      </div>
+
+      <h3>El Sistema de Conocimiento Profundo</h3>
+      <p>Al final de su vida, Deming destiló todo en cuatro lentes inseparables que llamó su <em>Sistema de Conocimiento Profundo</em>:</p>
+      <table class="compare">
+        <tr><th>Lente</th><th>La pregunta que abre</th></tr>
+        <tr><td><strong>Apreciación del sistema</strong></td><td>¿Cómo se conectan las partes y cuál es el propósito del todo?</td></tr>
+        <tr><td><strong>Conocimiento de la variación</strong></td><td>¿Esto es ruido normal del sistema o una causa especial? ¿Estoy reaccionando a un patrón o a un punto?</td></tr>
+        <tr><td><strong>Teoría del conocimiento</strong></td><td>¿Cómo sé lo que creo saber? ¿Qué predicción haría mi teoría, y cómo la pongo a prueba?</td></tr>
+        <tr><td><strong>Psicología</strong></td><td>¿Qué mueve realmente a las personas dentro del sistema: el miedo, el premio, o la dignidad del trabajo bien hecho?</td></tr>
+      </table>
+      <p>Nótese la jugada: los cuatro lentes <em>interactúan entre sí</em>. Deming construyó su propia teoría como un sistema, no como una lista. Coherencia hasta el final.</p>
+    </section>
+
+    <section id="cuentas">
+      <div class="kicker">Interludio práctico</div>
+      <h2>El experimento de las cuentas rojas</h2>
+      <p>Deming lo escenificaba en sus seminarios como un pequeño teatro. Una caja con miles de cuentas: 80% blancas, 20% rojas. Seis "trabajadores voluntarios" deben extraer cuentas con una paleta. Las blancas son producción buena; las rojas, defectos. La regla del juego: <strong>nadie puede elegir</strong>, la paleta saca lo que saca.</p>
+      <p>Entonces el "gerente" (Deming, con sorna magistral) empieza a administrar: felicita al que sacó pocas rojas, amenaza al que sacó muchas, pone carteles motivacionales, ofrece bonos, despide al peor del trimestre. Y los resultados, por supuesto, <strong>no cambian jamás</strong>: la proporción de rojas la fija la caja, no el esfuerzo. El sistema —la mezcla de cuentas— determina el resultado; la gerencia solo administra una lotería mientras cree administrar personas.</p>
+
+      <div class="voice skeptic">
+        <div class="voice-name">El Escéptico Honesto</div>
+        <p><span class="stage">(despacio, dejando la taza)</span> Está bien. Esto me dolió. He visto esa escena con otros nombres: rankings de vendedores, evaluaciones de desempeño, el "empleado del mes"… ¿Me están diciendo que buena parte de eso es premiar y castigar el azar del sistema?</p>
+      </div>
+
+      <div class="voice deming">
+        <div class="voice-name">Deming</div>
+        <p>Exactamente eso le digo. Y le digo más: cada vez que premia el azar, enseña a su gente que el juego es la suerte y la apariencia, no la mejora del sistema. La calificación anual de méritos la llamé una de las enfermedades mortales de la gerencia occidental. No por crueldad: por matemática.</p>
+      </div>
+    </section>
+
+    <section id="meadows">
+      <div class="kicker">Tercera voz</div>
+      <h2>Meadows: dónde apalancar</h2>
+      <p>Donella Meadows, autora principal de <em>Los límites del crecimiento</em> y de <em>Thinking in Systems</em>, aportó el mapa que faltaba: si los sistemas se definen por sus interacciones, entonces no todos los puntos de intervención valen lo mismo. Hay <strong>puntos de apalancamiento</strong>: lugares donde un empujón pequeño produce un cambio grande.</p>
+      <p>Su hallazgo más incómodo: los ajustes que más nos gustan —cambiar números, presupuestos, metas, parámetros— están entre los <em>menos</em> poderosos. Subiendo en la escalera de apalancamiento aparecen los flujos de información, luego las reglas del sistema, después <strong>la meta del sistema</strong>, y en la cima, <strong>el paradigma</strong>: la mentalidad desde la cual el sistema entero fue concebido.</p>
+
+      <div class="voice meadows">
+        <div class="voice-name">Meadows</div>
+        <p>Y una advertencia de campo: la gente suele intuir dónde están los puntos de apalancamiento… y empujarlos <em>en la dirección equivocada</em>. Por eso insisto: antes de intervenir, observa. Aprende el ritmo del sistema, sus demoras, sus bucles. Baila con el sistema antes de pretender dirigirlo.</p>
+      </div>
+
+      <div class="voice ackoff">
+        <div class="voice-name">Ackoff</div>
+        <p><span class="stage">(asintiendo)</span> Lo que Donella llama "cambiar el paradigma" yo lo llamé <em>idealized design</em>: en vez de arreglar el sistema que tienes, diseña desde cero el que deberías tener, y trabaja hacia atrás. La mayoría de los problemas no hay que resolverlos: hay que <em>disolverlos</em> rediseñando el sistema que los produce.</p>
+      </div>
+    </section>
+
+    <section id="senge">
+      <div class="kicker">Cuarta voz</div>
+      <h2>Senge: la quinta disciplina</h2>
+      <p>Peter Senge tomó todo lo anterior y lo llevó a la pregunta organizacional: ¿por qué las empresas, las iglesias, los equipos, no aprenden? En <em>La quinta disciplina</em> propone que el pensamiento sistémico es justamente eso —la quinta disciplina— porque integra a las otras cuatro: dominio personal, modelos mentales, visión compartida y aprendizaje en equipo.</p>
+      <p>Su aporte más citado son las <strong>leyes del pensamiento sistémico</strong>, pequeñas navajas de bolsillo. Tres ejemplos:</p>
+      <p><strong>«Los problemas de hoy vienen de las soluciones de ayer.»</strong> El parche que alivió un síntoma desplazó la carga a otra parte del sistema, donde reaparece con otro nombre. <strong>«Cuanto más fuerte empujas, más fuerte el sistema empuja de vuelta.»</strong> La compensación de los bucles de retroalimentación devora el esfuerzo heroico. <strong>«Causa y efecto no están cercanos en el tiempo ni en el espacio.»</strong> Por eso culpamos a lo que tenemos enfrente, cuando la causa real lleva meses gestándose en otro rincón del sistema.</p>
+
+      <div class="voice senge">
+        <div class="voice-name">Senge</div>
+        <p>Y la síntesis de todas: <em>hoy los problemas estructurales no se resuelven encontrando culpables, sino viendo el sistema que todos sostenemos juntos</em>. Tú y tu "enemigo" suelen ser parte del mismo bucle. Esa es la conversión mental que pido: de ver fotos, a ver películas; de ver eventos, a ver estructuras.</p>
+      </div>
+    </section>
+
+    <section id="demo">
+      <div class="kicker">Laboratorio interactivo</div>
+      <h2>Partes vs. vínculos</h2>
+      <p class="lead">El argumento de toda la clase, en un solo gesto. Cinco componentes excelentes. Pulsa los botones y observa qué cambia el desempeño del conjunto.</p>
+
+      <div class="demo" id="sysdemo">
+        <div class="demo-controls">
+          <button id="btnParts" type="button">Optimizar cada parte</button>
+          <button id="btnLinks" type="button">Optimizar las interacciones</button>
+          <button id="btnReset" type="button">Reiniciar</button>
+        </div>
+        <svg viewBox="0 0 560 300" role="img" aria-label="Diagrama de cinco nodos: motor, frenos, dirección, chasis y transmisión, con vínculos entre ellos">
+          <!-- edges -->
+          <line class="edge" x1="280" y1="60"  x2="120" y2="150"/>
+          <line class="edge" x1="280" y1="60"  x2="440" y2="150"/>
+          <line class="edge" x1="120" y1="150" x2="200" y2="250"/>
+          <line class="edge" x1="440" y1="150" x2="360" y2="250"/>
+          <line class="edge" x1="200" y1="250" x2="360" y2="250"/>
+          <line class="edge" x1="120" y1="150" x2="440" y2="150"/>
+          <line class="edge" x1="280" y1="60"  x2="200" y2="250"/>
+          <line class="edge" x1="280" y1="60"  x2="360" y2="250"/>
+          <!-- nodes -->
+          <g class="node"><circle cx="280" cy="60"  r="40"/><text x="280" y="64">Motor</text></g>
+          <g class="node"><circle cx="120" cy="150" r="40"/><text x="120" y="154">Frenos</text></g>
+          <g class="node"><circle cx="440" cy="150" r="40"/><text x="440" y="154">Dirección</text></g>
+          <g class="node"><circle cx="200" cy="250" r="40"/><text x="200" y="254">Chasis</text></g>
+          <g class="node"><circle cx="360" cy="250" r="40"/><text x="360" y="254">Transmisión</text></g>
+        </svg>
+        <div class="demo-score" id="score">Desempeño del conjunto: —</div>
+        <div class="demo-caption" id="caption">Cinco piezas, cada una la mejor de su clase. Todavía no es un auto: es un inventario.</div>
+      </div>
+
+      <div class="voice skeptic">
+        <div class="voice-name">El Escéptico Honesto</div>
+        <p>Confieso que el botón rojo me describió la vida entera: brillar individualmente y chocar en equipo. De acuerdo, panel: las interacciones no son poesía. Son <em>la</em> variable. Retiro mi objeción inicial… parcialmente. Sigo vigilando.</p>
+      </div>
+    </section>
+
+    <section id="sintesis">
+      <div class="kicker">Cierre del panel</div>
+      <h2>Síntesis: cuatro lentes, una sola lección</h2>
+      <table class="compare">
+        <tr><th>Pensador</th><th>Su forma de decir lo mismo</th></tr>
+        <tr><td><strong>Ackoff</strong></td><td>El sistema es el producto de las interacciones de sus partes; mejora las partes por separado y puedes destruir el todo.</td></tr>
+        <tr><td><strong>Deming</strong></td><td>La gran mayoría de los resultados los produce el sistema, no los individuos; rediseña las conexiones, no castigues a la gente.</td></tr>
+        <tr><td><strong>Meadows</strong></td><td>Interviene en los vínculos correctos: información, reglas, metas, paradigma. Los parámetros sueltos casi no mueven nada.</td></tr>
+        <tr><td><strong>Senge</strong></td><td>Aprende a ver estructuras y bucles, no eventos y culpables; esa visión compartida es lo que hace que una organización aprenda.</td></tr>
+      </table>
+      <p>Cuatro acentos, una gramática común: <strong>la realidad importante no vive en las cajas del diagrama, sino en las flechas</strong>.</p>
+    </section>
+
+    <section id="epilogo">
+      <div class="kicker">Epílogo · sobremesa</div>
+      <h2>La red que es cuerpo</h2>
+      <p><span class="stage">El panel se ha levantado; quedan dos tazas a medio terminar y la pizarra llena de flechas.</span></p>
+      <p>Vale la pena notar que esta idea tiene veinte siglos de ventaja. Cuando Pablo escribe que el cuerpo «no es un solo miembro, sino muchos» y que el ojo no puede decirle a la mano «no te necesito» (1 Corintios 12), está haciendo pensamiento de sistemas antes del nombre: lo esencial del cuerpo no está en la excelencia aislada de cada miembro, sino en que están <em>bien concertados y unidos entre sí por todas las coyunturas</em> (Efesios 4:16). Las coyunturas. Las interacciones. Las flechas del diagrama.</p>
+      <p>Una comunidad con miembros brillantes pero desconectados es el garaje de Ackoff: piezas de Rolls-Royce que no forman un auto. Y un discípulo que falla repetidamente quizá no necesita más reproche individual —Deming levantaría la mano aquí— sino un rediseño del sistema de relaciones que lo sostiene. El crecimiento, dice el mismo texto, viene «según la actividad propia de cada miembro», pero solo cuando el cuerpo está unido: el producto de las interacciones.</p>
+    </section>
+
+    <section id="fuentes">
+      <div class="kicker">Para seguir tirando del hilo</div>
+      <h2>Fuentes</h2>
+      <ul class="sources">
+        <li>Russell L. Ackoff, <em>Re-Creating the Corporation: A Design of Organizations for the 21st Century</em> (Oxford University Press, 1999) — análisis vs. síntesis y el experimento del auto.</li>
+        <li>Russell L. Ackoff, conferencia <em>«Beyond Continual Improvement»</em> (1994) — disponible en video; la exposición más citada de "el sistema como producto de interacciones".</li>
+        <li>W. Edwards Deming, <em>Out of the Crisis</em> (MIT Press, 1986) — los 14 puntos, las enfermedades mortales y la regla del 94%.</li>
+        <li>W. Edwards Deming, <em>The New Economics</em> (MIT Press, 1993) — el Sistema de Conocimiento Profundo y el experimento de las cuentas rojas.</li>
+        <li>Donella Meadows, <em>Thinking in Systems: A Primer</em> (Chelsea Green, 2008) y el ensayo <em>«Leverage Points: Places to Intervene in a System»</em> (1999).</li>
+        <li>Peter Senge, <em>La quinta disciplina</em> (Doubleday, 1990; ed. en español, Granica) — las leyes del pensamiento sistémico y la organización que aprende.</li>
+      </ul>
+    </section>
+
+    <footer>
+      Preparado para la mesa de estudio de Gianni · Pensamiento de sistemas a varias voces · «La realidad vive en las flechas.»
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ---------- Hamburger ----------
+  const burger = document.getElementById('hamburger');
+  const rail = document.getElementById('rail');
+  burger.addEventListener('click', () => {
+    const open = rail.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.textContent = open ? '✕' : '☰';
+  });
+  rail.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    rail.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.textContent = '☰';
+  }));
+
+  // ---------- Scroll-spy ----------
+  const links = Array.from(rail.querySelectorAll('a'));
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const link = map.get(e.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  document.querySelectorAll('main section').forEach(s => spy.observe(s));
+
+  // ---------- Demo ----------
+  const demo = document.getElementById('sysdemo');
+  const btnParts = document.getElementById('btnParts');
+  const btnLinks = document.getElementById('btnLinks');
+  const btnReset = document.getElementById('btnReset');
+  const caption = document.getElementById('caption');
+  const score = document.getElementById('score');
+
+  function setState(state) {
+    demo.classList.remove('parts', 'linked');
+    btnParts.classList.remove('on');
+    btnLinks.classList.remove('on', 'sage');
+
+    if (state === 'parts') {
+      demo.classList.add('parts');
+      btnParts.classList.add('on');
+      score.innerHTML = 'Desempeño del conjunto: <span class="val-parts">23 / 100</span> · piezas: 5 × excelentes';
+      caption.textContent = 'Cada pieza ahora es la mejor del mundo… y el conjunto empeoró: nada encaja con nada. Es el garaje de Ackoff — chatarra de lujo.';
+    } else if (state === 'linked') {
+      demo.classList.add('linked');
+      btnLinks.classList.add('on', 'sage');
+      score.innerHTML = 'Desempeño del conjunto: <span class="val-sys">91 / 100</span> · piezas: 5 × buenas (no perfectas)';
+      caption.textContent = 'Mismas cinco piezas — incluso sin ser las mejores de su clase — pero diseñadas para trabajar juntas. El desempeño emergió de los vínculos, no de las cajas.';
+    } else {
+      score.textContent = 'Desempeño del conjunto: —';
+      caption.textContent = 'Cinco piezas, cada una la mejor de su clase. Todavía no es un auto: es un inventario.';
+    }
+  }
+
+  btnParts.addEventListener('click', () => setState('parts'));
+  btnLinks.addEventListener('click', () => setState('linked'));
+  btnReset.addEventListener('click', () => setState('reset'));
+</script>
+
+</body>
+</html>

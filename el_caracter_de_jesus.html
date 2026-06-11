@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diez verbos — El carácter de Jesús en los cuatro evangelios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eddd;
+    --paper-deep:#ece2cc;
+    --card:#fbf6ea;
+    --ink:#2c2316;
+    --ink-soft:#5a4c38;
+    --ink-faint:#8a7a60;
+    --clay:#a8512a;
+    --clay-deep:#86401f;
+    --gold:#b98a2e;
+    --dark:#262017;
+    --dark-ink:#e9dfc8;
+    --line:#d8cab0;
+    --maxw:760px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Spectral',Georgia,serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.75;
+    font-size:17px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--clay);color:var(--card)}
+
+  /* ---------- SHELL ---------- */
+  .shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+
+  /* ---------- RAIL ---------- */
+  .rail{
+    position:sticky;top:0;height:100vh;
+    border-right:1px solid var(--line);
+    background:linear-gradient(180deg,var(--paper) 0%,var(--paper-deep) 100%);
+    padding:42px 30px;
+    display:flex;flex-direction:column;
+  }
+  .mark{font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;letter-spacing:.01em}
+  .mark-sub{font-size:.8rem;color:var(--ink-faint);margin-top:8px;line-height:1.55;font-style:italic}
+  .rail nav{margin-top:28px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;scrollbar-width:thin}
+  .rail nav a, .mobnav a{
+    display:block;text-decoration:none;color:var(--ink-soft);
+    font-size:.81rem;padding:5px 12px;border-left:2px solid transparent;
+    transition:all .25s ease;line-height:1.35;
+  }
+  .rail nav a .n, .mobnav a .n{
+    display:block;font-family:'Fraunces',serif;font-size:.6rem;
+    text-transform:uppercase;letter-spacing:.14em;color:var(--ink-faint);
+  }
+  .rail nav a:hover{color:var(--clay)}
+  .rail nav a.active{color:var(--clay-deep);border-left-color:var(--clay);background:rgba(168,81,42,.06)}
+  .foot{margin-top:auto;padding-top:16px;font-size:.72rem;color:var(--ink-faint);font-style:italic;line-height:1.6;border-top:1px solid var(--line)}
+
+  /* ---------- MOBILE NAV ---------- */
+  .burger{
+    display:none;position:fixed;top:16px;right:16px;z-index:60;
+    width:46px;height:46px;border-radius:50%;border:1px solid var(--line);
+    background:var(--card);cursor:pointer;
+    flex-direction:column;align-items:center;justify-content:center;gap:5px;
+    box-shadow:0 3px 14px rgba(44,35,22,.14);
+  }
+  .burger span{display:block;width:18px;height:2px;background:var(--ink);transition:transform .3s ease,opacity .3s ease}
+  .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .burger.open span:nth-child(2){opacity:0}
+  .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(38,32,23,.45);z-index:50;opacity:0;transition:opacity .3s ease;pointer-events:none}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .mobnav{
+    display:none;position:fixed;top:0;right:0;height:100vh;width:min(78vw,330px);z-index:55;
+    background:var(--paper);border-left:1px solid var(--line);
+    padding:84px 26px 30px;flex-direction:column;gap:2px;overflow-y:auto;
+    transform:translateX(100%);transition:transform .35s ease;
+  }
+  .mobnav.show{transform:translateX(0)}
+
+  /* ---------- MAIN ---------- */
+  .main{min-width:0}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:64px 34px 110px}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:38px 0 56px;border-bottom:1px solid var(--line)}
+  .kicker{
+    font-family:'Fraunces',serif;font-size:.72rem;text-transform:uppercase;
+    letter-spacing:.22em;color:var(--clay);margin-bottom:22px;
+  }
+  .verbs{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:clamp(1.8rem,5vw,2.9rem);line-height:1.24;
+    letter-spacing:-.01em;
+  }
+  .verbs .v{display:inline-block;opacity:0;transform:translateY(12px);animation:rise .7s ease forwards}
+  .verbs .v em{font-style:italic;color:var(--clay)}
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  .subtitle{margin-top:26px;font-size:1.06rem;color:var(--ink-soft);font-style:italic;max-width:56ch}
+  .ref-tab{
+    display:inline-block;margin-top:24px;padding:5px 16px;
+    border:1px solid var(--clay);border-radius:999px;
+    font-family:'Fraunces',serif;font-size:.72rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--clay-deep);
+  }
+
+  /* ---------- INTRO / METHOD ---------- */
+  .method{
+    margin:46px 0 0;padding:28px 30px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:.97rem;color:var(--ink-soft);
+  }
+  .method strong{color:var(--ink)}
+
+  /* ---------- SECTIONS ---------- */
+  .part{padding:74px 0 0}
+  .part-head{margin-bottom:18px}
+  .part-num{
+    font-family:'Fraunces',serif;font-size:.7rem;text-transform:uppercase;
+    letter-spacing:.2em;color:var(--clay);display:block;margin-bottom:10px;
+  }
+  .part-head h2{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.5rem,3.6vw,2.1rem);
+    line-height:1.25;letter-spacing:-.01em;
+  }
+  .lede{color:var(--ink-soft);font-size:1.02rem;margin-top:14px}
+
+  .versos{
+    margin:24px 0 0;padding:20px 26px;border-left:3px solid var(--gold);
+    background:rgba(185,138,46,.07);font-style:italic;font-size:.98rem;color:var(--ink-soft);
+    border-radius:0 8px 8px 0;
+  }
+  .versos .r{display:block;font-style:normal;font-family:'Fraunces',serif;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+
+  /* ---------- ACCORDION (la mesa) ---------- */
+  details.mesa{
+    margin-top:22px;border:1px solid var(--line);border-radius:10px;
+    background:var(--card);overflow:hidden;
+  }
+  details.mesa summary{
+    cursor:pointer;list-style:none;padding:16px 24px;
+    font-family:'Fraunces',serif;font-size:.92rem;font-weight:600;color:var(--clay-deep);
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    user-select:none;
+  }
+  details.mesa summary::-webkit-details-marker{display:none}
+  details.mesa summary::after{
+    content:'+';font-size:1.3rem;font-weight:300;color:var(--clay);
+    transition:transform .3s ease;line-height:1;
+  }
+  details.mesa[open] summary::after{transform:rotate(45deg)}
+  details.mesa summary:hover{background:rgba(168,81,42,.05)}
+  .mesa-body{padding:4px 26px 26px;border-top:1px dashed var(--line)}
+
+  details.mesa.mesa2{margin-top:12px;border-color:rgba(185,138,46,.55);background:rgba(185,138,46,.05)}
+  details.mesa.mesa2 summary{color:#7d5a1c}
+  details.mesa.mesa2 summary::after{color:var(--gold)}
+  details.mesa.mesa2 summary:hover{background:rgba(185,138,46,.08)}
+  details.mesa.mesa2 .who{color:#7d5a1c}
+  details.mesa.mesa2 .mesa-body{border-top-color:rgba(185,138,46,.4)}
+
+  .turn{margin-top:20px}
+  .who{
+    font-family:'Fraunces',serif;font-size:.78rem;font-weight:700;
+    letter-spacing:.06em;color:var(--clay-deep);display:block;margin-bottom:4px;
+  }
+  .turn p{font-size:.97rem;color:var(--ink-soft)}
+  .turn p em{color:var(--ink)}
+
+  /* ---------- CONTRASTE NOSOTROS / JESÚS ---------- */
+  .contraste{
+    margin-top:22px;display:grid;grid-template-columns:1fr 1fr;
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  }
+  .contraste .lado{padding:22px 24px;font-size:.93rem;line-height:1.65}
+  .contraste .lado .ct{
+    font-family:'Fraunces',serif;font-size:.66rem;text-transform:uppercase;
+    letter-spacing:.2em;display:block;margin-bottom:10px;
+  }
+  .contraste .nos{background:var(--paper-deep);color:var(--ink-soft)}
+  .contraste .nos .ct{color:var(--ink-faint)}
+  .contraste .jes{background:var(--card);color:var(--ink);border-left:1px solid var(--line)}
+  .contraste .jes .ct{color:var(--clay)}
+
+  /* ---------- KEY IDEA / VERDICT ---------- */
+  .keyidea{
+    margin-top:22px;padding:26px 30px;border-radius:12px;
+    background:var(--dark);color:var(--dark-ink);
+  }
+  .keyidea .tag{
+    font-family:'Fraunces',serif;font-size:.66rem;text-transform:uppercase;
+    letter-spacing:.22em;color:var(--gold);margin-bottom:12px;
+  }
+  .keyidea p{font-size:1rem;line-height:1.7}
+  .keyidea p em{color:#f0d9a8;font-style:italic}
+
+  /* ---------- INGREDIENTES ---------- */
+  .ingr{
+    margin-top:14px;padding:24px 28px;border-radius:12px;
+    background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);
+  }
+  .ingr .itag{
+    font-family:'Fraunces',serif;font-size:.66rem;text-transform:uppercase;
+    letter-spacing:.2em;color:#7d5a1c;margin-bottom:12px;
+  }
+  .ingr ul{list-style:none}
+  .ingr li{
+    font-size:.93rem;color:var(--ink-soft);padding:7px 0 7px 22px;position:relative;line-height:1.6;
+  }
+  .ingr li::before{content:'◆';position:absolute;left:0;top:8px;font-size:.6rem;color:var(--gold)}
+  .ingr li strong{color:var(--ink)}
+  .ingr .ineg{
+    margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);
+    font-size:.91rem;font-style:italic;color:var(--clay-deep);line-height:1.6;
+  }
+  .ingr .ineg strong{font-style:normal;font-family:'Fraunces',serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.14em}
+
+  .pantry{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px}
+  .pitem{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 20px;font-size:.88rem;color:var(--ink-soft);line-height:1.55;
+  }
+  .pitem strong{display:block;font-family:'Fraunces',serif;font-size:.92rem;color:var(--clay-deep);margin-bottom:3px}
+
+  .fuente{margin-top:14px;font-size:.82rem;color:var(--ink-faint)}
+  .fuente a{color:var(--clay-deep);text-decoration:none;border-bottom:1px solid rgba(168,81,42,.35)}
+  .fuente a:hover{color:var(--clay)}
+
+  /* ---------- RETRATO FINAL ---------- */
+  .retrato{
+    margin-top:80px;padding:54px 40px;border-radius:14px;text-align:center;
+    background:linear-gradient(160deg,var(--clay) 0%,var(--clay-deep) 100%);color:#f8efdc;
+  }
+  .retrato .tag{font-family:'Fraunces',serif;font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:#f0d9a8;margin-bottom:20px}
+  .retrato h3{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.35rem,3.2vw,1.85rem);
+    line-height:1.45;letter-spacing:-.005em;
+  }
+  .retrato p{margin-top:18px;font-style:italic;font-size:.99rem;color:#f3e6c9;max-width:54ch;margin-left:auto;margin-right:auto}
+
+  /* ---------- GALERÍA ---------- */
+  .galeria{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px}
+  .gcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px 26px}
+  .gcard h4{
+    font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:var(--clay-deep);
+    padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;
+  }
+  .gcard ul{list-style:none}
+  .gcard li{
+    font-size:.88rem;color:var(--ink-soft);padding:7px 0;line-height:1.5;
+    border-bottom:1px dashed rgba(216,202,176,.6);
+  }
+  .gcard li:last-child{border-bottom:none}
+  .gcard li .vb{
+    font-family:'Fraunces',serif;font-size:.62rem;text-transform:uppercase;
+    letter-spacing:.12em;color:var(--clay);display:block;margin-top:1px;
+  }
+
+  /* ---------- PREGUNTAS ---------- */
+  .qgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+  .qcard{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:22px 24px;font-size:.95rem;color:var(--ink-soft);
+  }
+  .qcard .qn{font-family:'Fraunces',serif;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay);display:block;margin-bottom:8px}
+
+  /* ---------- FUENTES ---------- */
+  .srcs{margin-top:26px;font-size:.92rem;color:var(--ink-soft)}
+  .srcs p{margin-top:10px}
+  .srcs a{color:var(--clay-deep);text-decoration:none;border-bottom:1px solid rgba(168,81,42,.35)}
+  .srcs a:hover{color:var(--clay)}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:920px){
+    .shell{grid-template-columns:1fr}
+    .rail{display:none}
+    .burger{display:flex}
+    .mobnav{display:flex}
+    .scrim{display:block}
+    .wrap{padding:48px 22px 90px}
+    .qgrid,.galeria,.pantry{grid-template-columns:1fr}
+    .contraste{grid-template-columns:1fr}
+    .contraste .jes{border-left:none;border-top:1px solid var(--line)}
+    .retrato{padding:42px 24px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+    .verbs .v{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<button class="burger" id="burger" aria-label="Abrir menú">
+  <span></span><span></span><span></span>
+</button>
+<div class="scrim" id="scrim"></div>
+<nav class="mobnav" id="mobnav">
+  <a href="#metodo"><span class="n">Apertura</span>La mesa y el método</a>
+  <a href="#mirar"><span class="n">Verbo I</span>Mira</a>
+  <a href="#sentir"><span class="n">Verbo II</span>Siente</a>
+  <a href="#tocar"><span class="n">Verbo III</span>Toca</a>
+  <a href="#preguntar"><span class="n">Verbo IV</span>Pregunta</a>
+  <a href="#detenerse"><span class="n">Verbo V</span>Se detiene</a>
+  <a href="#verdad"><span class="n">Verbo VI</span>Dice la verdad amando</a>
+  <a href="#indignarse"><span class="n">Verbo VII</span>Se indigna</a>
+  <a href="#llorar"><span class="n">Verbo VIII</span>Llora</a>
+  <a href="#restaurar"><span class="n">Verbo IX</span>Restaura</a>
+  <a href="#arrodillarse"><span class="n">Verbo X</span>Se arrodilla</a>
+  <a href="#humanos"><span class="n">El espejo humano</span>Reaccionar vs. responder</a>
+  <a href="#raiz"><span class="n">La raíz</span>Injustos por ignorantes</a>
+  <a href="#retrato"><span class="n">Síntesis</span>El retrato y el espejo</a>
+  <a href="#despensa"><span class="n">La despensa</span>Los ingredientes</a>
+  <a href="#galeria"><span class="n">Inventario</span>Galería de encuentros</a>
+  <a href="#clase"><span class="n">Cierre</span>Para tu clase</a>
+  <a href="#fuentes"><span class="n">Apéndice</span>Fuentes</a>
+</nav>
+
+<div class="shell">
+
+  <!-- SIDE RAIL -->
+  <aside class="rail">
+    <div class="mark">Diez verbos</div>
+    <div class="mark-sub">El carácter de Jesús,<br>rastreado por los cuatro evangelios.</div>
+    <nav id="railnav">
+      <a href="#metodo"><span class="n">Apertura</span>La mesa y el método</a>
+      <a href="#mirar"><span class="n">Verbo I</span>Mira</a>
+      <a href="#sentir"><span class="n">Verbo II</span>Siente</a>
+      <a href="#tocar"><span class="n">Verbo III</span>Toca</a>
+      <a href="#preguntar"><span class="n">Verbo IV</span>Pregunta</a>
+      <a href="#detenerse"><span class="n">Verbo V</span>Se detiene</a>
+      <a href="#verdad"><span class="n">Verbo VI</span>Dice la verdad amando</a>
+      <a href="#indignarse"><span class="n">Verbo VII</span>Se indigna</a>
+      <a href="#llorar"><span class="n">Verbo VIII</span>Llora</a>
+      <a href="#restaurar"><span class="n">Verbo IX</span>Restaura</a>
+      <a href="#arrodillarse"><span class="n">Verbo X</span>Se arrodilla</a>
+      <a href="#humanos"><span class="n">El espejo humano</span>Reaccionar vs. responder</a>
+      <a href="#raiz"><span class="n">La raíz</span>Injustos por ignorantes</a>
+      <a href="#retrato"><span class="n">Síntesis</span>El retrato y el espejo</a>
+      <a href="#despensa"><span class="n">La despensa</span>Los ingredientes</a>
+      <a href="#galeria"><span class="n">Inventario</span>Galería de encuentros</a>
+      <a href="#clase"><span class="n">Cierre</span>Para tu clase</a>
+      <a href="#fuentes"><span class="n">Apéndice</span>Fuentes</a>
+    </nav>
+    <div class="foot">Un estudio nacido de Marcos 2:<br>«Hijo, antes que nada.»</div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="wrap">
+
+      <!-- HERO -->
+      <header class="hero">
+        <div class="kicker">Un recorrido por los cuatro evangelios</div>
+        <h1 class="verbs">
+          <span class="v" style="animation-delay:.05s">Mira.</span>
+          <span class="v" style="animation-delay:.13s">Siente.</span>
+          <span class="v" style="animation-delay:.21s">Toca.</span>
+          <span class="v" style="animation-delay:.29s">Pregunta.</span>
+          <span class="v" style="animation-delay:.37s">Se detiene.</span>
+          <span class="v" style="animation-delay:.45s">Dice la verdad amando.</span>
+          <span class="v" style="animation-delay:.53s">Se indigna.</span>
+          <span class="v" style="animation-delay:.61s">Llora.</span>
+          <span class="v" style="animation-delay:.69s">Restaura.</span>
+          <span class="v" style="animation-delay:.77s"><em>Se arrodilla.</em></span>
+        </h1>
+        <p class="subtitle">Diez verbos que los evangelistas repiten cuando Jesús se encuentra con una persona. Juntos dibujan un carácter — y frente a cada uno, un espejo: así actuamos nosotros, así actúa Él.</p>
+        <span class="ref-tab">Mateo · Marcos · Lucas · Juan</span>
+      </header>
+
+      <!-- METHOD -->
+      <section class="part" id="metodo">
+        <div class="part-head">
+          <span class="part-num">Apertura</span>
+          <h2>La mesa y el método</h2>
+        </div>
+        <p class="lede">Este estudio nació en Marcos 2, cuando descubrimos que lo primero que Jesús le da al paralítico no son piernas, sino una palabra: <em>«Hijo»</em>. La pregunta de hoy es más ambiciosa: ¿ese momento fue una excepción, o es <em>el patrón</em>? Para responder, la mesa de cinco voces recorrió los cuatro evangelios buscando no lo que Jesús enseña, sino lo que Jesús <em>es</em> — los verbos que se repiten cada vez que tiene una persona delante.</p>
+        <div class="method">
+          <strong>La regla de la mesa:</strong> nadie predica solo. La exégeta trae el griego, el teólogo sube el techo, el historiador pone el siglo primero sobre la mesa, la pastora lo baja a la vida, y Daniel — el escéptico honesto — tiene permiso para incomodar. <strong>Toda historia cuenta</strong>, aunque viva en un solo evangelio: la samaritana solo está en Juan, el ladrón en la cruz solo en Lucas, la cananea solo en Mateo — y son irreemplazables. <strong>Y una segunda mesa</strong>, dorada, somete cada verbo a contrainterrogatorio: Buber, Freud, Piaget, Bowlby, Harlow, Rogers, Levinas, Weil, Goffman, Aristóteles y Nietzsche — con la regla de no suavizar nada. Las objeciones se enuncian completas; si un verbo no las resiste, no merece estar en la lista. Al final de cada verbo, un espejo — cómo solemos actuar nosotros frente a cómo actúa Él — y su lista de <strong>ingredientes</strong>: lo que nos toca aportar de nuestro lado, porque el amor es el producto, nunca el ingrediente.
+        </div>
+      </section>
+
+      <!-- I. MIRA -->
+      <section class="part" id="mirar">
+        <div class="part-head">
+          <span class="part-num">Verbo I</span>
+          <h2>Mira a la persona antes que al problema</h2>
+        </div>
+        <p class="lede">El rasgo que ya conocemos — y que resultó ser la puerta de entrada a todos los demás.</p>
+        <div class="versos">
+          «Al ver Jesús la fe de ellos, dijo al paralítico: Hijo, tus pecados te son perdonados.» — «Entonces Jesús, mirándole, le amó.»
+          <span class="r">Marcos 2:5 · Marcos 10:21</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · La mirada</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">📜 La exégeta</span><p>En Marcos 10:21 hay dos verbos encadenados: <em>emblepsas ēgapēsen</em> — «fijando la mirada en él, lo amó». No es un vistazo; <em>emblepō</em> es mirar adentro, con atención sostenida. Y nota el orden: la mirada precede al amor, y el amor precede a la palabra dura que viene después («vende todo lo que tienes»). Jesús nunca corrige a quien no ha mirado primero.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Concedido en Marcos 2 y en el joven rico. Pero dos casos no hacen un carácter. ¿Dónde más?</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>En todas partes, Daniel. A la viuda de Naín la <em>ve</em> antes de que ella pida nada (Lucas 7:13). A Zaqueo lo mira hacia arriba en el árbol y lo llama por nombre (Lucas 19:5). A la pecadora en casa de Simón le dedica la pregunta que define este verbo: <em>«¿Ves tú esta mujer?»</em> (Lucas 7:44) — Simón veía una categoría; Jesús veía una persona. Y la escena más tierna está en Juan 20: María Magdalena no reconoce al Resucitado hasta que él pronuncia una sola palabra — <em>«María»</em>. Su nombre. La mirada de Jesús siempre termina en un nombre.</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Y ahí está la clave teológica: para Jesús, nadie es un caso, un diagnóstico ni un mueble roto. Cada encuentro empieza restaurando la identidad — hijo, hija, mujer, Zaqueo, María — y solo después atiende la necesidad. La relación precede a la reparación, porque así es Dios desde el Edén: «¿Dónde estás tú?» antes que cualquier veredicto.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Buber, Levinas, Freud, Rogers</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🤝 Martin Buber</span><p>Lo que ustedes llaman «mirar a la persona» yo lo llamé la diferencia entre el <em>Yo-Ello</em> y el <em>Yo-Tú</em>. Al paralítico se le puede mirar como Ello — un cuerpo defectuoso, un caso clínico, un objeto de caridad — o como Tú: una presencia que me reclama entero. Y sostengo lo que escribí: toda vida verdadera es encuentro. Lo notable de las escenas que citan es que Jesús nunca degrada el Tú a Ello, ni siquiera cuando el otro llega <em>presentándose</em> como Ello: «soy impuro», «soy ciego», «soy pecadora». Él se niega a aceptar la auto-cosificación del otro.</p></div>
+            <div class="turn"><span class="who">🧠 Sigmund Freud</span><p>Permítanme aguar la fiesta. Yo enseñé que la mirada «amorosa» rara vez es inocente: proyectamos sobre el otro nuestras propias necesidades — el médico que necesita pacientes agradecidos, el benefactor que necesita necesitados. ¿Cómo saben que esta «mirada que ama» no es transferencia, una ilusión más al servicio del deseo?</p></div>
+            <div class="turn"><span class="who">👤 Emmanuel Levinas</span><p>Su sospecha es legítima, doctor, y el texto la responde mejor que yo. La proyección se delata porque <em>inventa</em> al otro; esta mirada lo <em>conoce</em>: a la samaritana le dice «todo cuanto ha hecho» — cinco maridos, con precisión — y aun así no la reduce a su historial. Eso es lo que yo llamé el rostro: el otro me llega desde fuera de mis categorías y me obliga antes de que yo decida nada. Una proyección halaga o utiliza; esta mirada conoce <em>y</em> dignifica a la vez. Esa combinación no se fabrica desde el narcisismo.</p></div>
+            <div class="turn"><span class="who">🛋️ Carl Rogers</span><p>Y añado el dato clínico, que es mi terreno: tras décadas de consultorio y de investigación en psicoterapia, la variable que más consistentemente predice el cambio de una persona no es la técnica del terapeuta — es si la persona se siente <em>recibida incondicionalmente</em>. Yo lo llamé consideración positiva incondicional y construí una carrera empírica sobre ello. Que un texto del siglo primero ponga la recepción («Hijo») antes que la intervención («levántate») describe, con dos mil años de anticipación, el orden que mis datos confirmaron.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Ver primero el problema: la adicción, la deuda, el error, la etiqueta. La persona queda reducida a su necesidad — un caso por gestionar, un mueble por reparar.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Ve primero a la persona y le devuelve la identidad — un nombre, un «hijo», una «hija» — antes de tocar el problema. La relación precede a la reparación.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>La mirada de Jesús es su primera obra. Antes del milagro, antes de la enseñanza, antes de la corrección: <em>ve a la persona</em>. Quien quiera imitar su carácter empieza por los ojos.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Segundos de mirada sostenida.</strong> La mirada <em>emblepō</em> no es cara — cuesta segundos. Pero son segundos enteros: ojos en la persona, teléfono boca abajo, sin redactar mentalmente la respuesta.</li>
+            <li><strong>Suspensión del diagnóstico.</strong> Aguantar las ganas de clasificar. La etiqueta llega sola en dos segundos; ver a la persona exige posponerla deliberadamente.</li>
+            <li><strong>Curiosidad por la historia.</strong> Preguntarse «¿qué no sé de esta persona?» antes de concluir. La curiosidad es la forma activa del respeto.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> decimos «no tengo tiempo para la gente», pero lo que negamos no es tiempo — es atención. Regalamos horas a las pantallas y le negamos diez segundos de mirada al que tenemos enfrente. Queremos que los demás se sientan vistos sin el costo de verlos.</p>
+        </div>
+      </section>
+
+      <!-- II. SIENTE -->
+      <section class="part" id="sentir">
+        <div class="part-head">
+          <span class="part-num">Verbo II</span>
+          <h2>Siente en las entrañas</h2>
+        </div>
+        <p class="lede">La emoción más registrada de Jesús tiene nombre griego — y duele pronunciarla.</p>
+        <div class="versos">
+          «Y Jesús, teniendo compasión de él, extendió la mano y le tocó.» — «Y cuando el Señor la vio, se compadeció de ella, y le dijo: No llores.»
+          <span class="r">Marcos 1:41 · Lucas 7:13</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · Splanchnizomai</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">📜 La exégeta</span><p>La palabra es <em>splanchnizomai</em>, y viene de <em>splanchna</em>: las entrañas, las vísceras. Para el mundo del siglo primero, las emociones más hondas no vivían en el corazón sino en el vientre. El verbo significa, literalmente, que a Jesús <em>se le retorcían las entrañas</em> ante el sufrimiento ajeno. Es el término emocional que los evangelistas le aplican con más frecuencia que ningún otro.</p></div>
+            <div class="turn"><span class="who">🏺 El historiador</span><p>Y un dato que casi nadie nota: en el Nuevo Testamento ese verbo se reserva casi exclusivamente para Jesús — y para los personajes de sus parábolas que representan a Dios: el padre del pródigo que corre, el samaritano que se detiene, el rey que perdona la deuda. Es como si los evangelistas hubieran decidido que esa palabra le pertenece a él.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Sentir es barato. Yo siento lástima viendo las noticias y no me muevo del sofá. ¿De qué sirve un Mesías conmovido?</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Esa es exactamente la diferencia, Daniel: en <em>cada</em> aparición del verbo, la entraña conmovida desemboca en acción. Siente y toca al leproso. Siente y detiene el funeral de Naín — donde nadie le pidió nada: la viuda ni siquiera levanta la vista. Siente y alimenta a la multitud. Siente y toca los ojos de los dos ciegos de Jericó (Mateo 20:34). En Jesús no existe la compasión espectadora: el sentimiento es el motor, nunca el sustituto, de la obra.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Freud, la neurociencia, Bloom</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🧠 Sigmund Freud</span><p>Seré directo: para mí la religión es una ilusión — el anhelo infantil de un padre protector — y la «compasión divina» sería su pieza central. Pero concedo el punto que importa a esta mesa, porque es independiente de mi diagnóstico: la cuestión no es si el sentimiento existe, sino qué hace el aparato psíquico con él. Y hay dos destinos posibles: la descarga — sentir para aliviarme <em>a mí</em> — o el trabajo. Júzguenlo por sus obras, no por sus vísceras.</p></div>
+            <div class="turn"><span class="who">🔬 La neurocientífica</span><p>Y precisamente eso se ha medido, doctor. La investigación contemporánea — Tania Singer y Olga Klimecki, entre otros — distingue dos fenómenos con firmas cerebrales diferentes: el <em>contagio empático</em>, que activa las redes del dolor propio y conduce al agotamiento y a la evitación (por eso cambiamos de canal), y la <em>compasión</em>, que activa redes de afiliación y cuidado y conduce a la acción sostenida. Son neurológicamente distinguibles y entrenables por separado. Lo notable del corpus evangélico: <em>splanchnizomai</em> nunca aparece como contagio que paraliza — en cada instancia desemboca en una obra. El patrón textual coincide con la firma de la compasión, no con la del contagio.</p></div>
+            <div class="turn"><span class="who">📚 Paul Bloom</span><p>Yo escribí un libro entero contra la empatía — contra la idea de que sentir lo que el otro siente sea una guía moral confiable: es sesgada, miope, se agota. Mi alternativa fue la compasión racional: cuidado dirigido por el juicio. Pues bien — un Mesías que se conmueve por la multitud <em>y entonces organiza</em> una distribución de panes por grupos de cincuenta (Lucas 9:14) es exactamente eso: entraña más logística. Sentimiento que delega, estructura y ejecuta. No tengo objeción que oponer; tengo un ejemplo que no esperaba.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Sentir lástima a distancia segura: nos conmovemos, suspiramos, cambiamos de canal. O peor — sentimos por los lejanos y nos endurecemos con los cercanos.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Deja que el dolor ajeno le retuerza las entrañas — y esa entraña conmovida termina <em>siempre</em> en acción: una mano, un pan, una palabra, un funeral detenido.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>La compasión de Jesús no es lástima a distancia: es un dolor físico que <em>siempre</em> termina en acción. Sentir sin actuar es sentimentalismo; en Jesús, sentir es el primer movimiento del milagro.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Exposición voluntaria.</strong> La compasión exige rango de alcance: nadie se conmueve por lo que mantiene a distancia segura. Hay que acercarse lo suficiente para que el dolor ajeno pueda alcanzarnos.</li>
+            <li><strong>Margen emocional.</strong> Nadie se compadece desde el agotamiento. El descanso no es autoindulgencia: es mantenimiento del órgano con el que sentimos. Las entrañas exhaustas no se retuercen por nadie.</li>
+            <li><strong>Desarme del cinismo.</strong> Bajar el escudo de la ironía que instalamos para no sufrir. La neurociencia dice que la compasión es entrenable — pero solo se entrena lo que se deja de bloquear.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> queremos un corazón compasivo con el blindaje puesto. Consumimos el sufrimiento ajeno como noticia — formato diseñado para sentir sin deber nada — y luego nos preguntamos por qué no sentimos nada.</p>
+        </div>
+        <p class="fuente">Fundamento: <a href="https://www.biola.edu/blogs/good-book-blog/2015/the-emotions-of-jesus-part-3-compassion">Biola — The Emotions of Jesus</a>, <a href="https://www.theologyofwork.org/the-high-calling/verbs-make-all-difference-world-splagchnizomai/">Theology of Work — Splagchnizomai</a>, <a href="https://www.blueletterbible.org/lexicon/g4697/esv/tr/0-1/">Blue Letter Bible — G4697</a></p>
+      </section>
+
+      <!-- III. TOCA -->
+      <section class="part" id="tocar">
+        <div class="part-head">
+          <span class="part-num">Verbo III</span>
+          <h2>Toca lo que nadie toca</h2>
+        </div>
+        <p class="lede">Pudo sanar con una palabra a distancia — lo hizo otras veces. Pero con los intocables, eligió la mano.</p>
+        <div class="versos">
+          «Extendió la mano y le tocó, y le dijo: Quiero, sé limpio.» — «Y acercándose, tocó el féretro... y dijo: Joven, a ti te digo, levántate.»
+          <span class="r">Marcos 1:41 · Lucas 7:14</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · El tacto</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🏺 El historiador</span><p>Pongamos el siglo primero sobre la mesa. La ley de pureza era clara: tocar a un leproso te hacía impuro (Levítico 13); tocar un cadáver, más todavía. El leproso vivía bajo la obligación de gritar «¡inmundo!» para que nadie se acercara. Probablemente llevaba años sin que una mano humana lo tocara. Y Jesús — que sana a distancia al siervo del centurión con pura palabra (Mateo 8) — aquí <em>extiende la mano deliberadamente</em>.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>O sea que Jesús viola la ley para hacer un gesto bonito. ¿Eso no lo contamina?</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Aquí está el escándalo teológico, y es glorioso: la corriente fluye al revés. La impureza no sube por el brazo de Jesús; la pureza baja por su mano. Él no se contamina de muerte — el leproso se contagia de vida. En Jesús, la santidad deja de ser una cuarentena y se vuelve una fuerza expansiva. No se protege del mundo: lo invade.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Y piensa en lo que el tacto comunica que la palabra no puede. Para un hombre que llevaba años escuchando «¡apártate!», la sanidad empezó <em>antes</em> de que la piel cambiara: empezó cuando una mano se posó sobre él. Jesús no solo cura la enfermedad; cura la exclusión. Toca leprosos, ciegos, niños que los discípulos espantaban, un féretro en Naín, la fiebre de la suegra de Pedro, la oreja del soldado que venía a arrestarlo (Lucas 22:51) — su último milagro antes de la cruz fue tocar a un enemigo. Su mano es su teología.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Harlow, Spitz, Winnicott</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🐒 Harry Harlow</span><p>Mis experimentos escandalizaron a la psicología conductista de mi época, que sostenía que el bebé ama a la madre porque la asocia con la comida. Puse a crías de macaco a elegir entre una «madre» de alambre con biberón y una de felpa sin nada — y eligieron la felpa, masivamente, aferrándose horas a ella y yendo al alambre solo lo mínimo para comer. El contacto no es un lujo sentimental: es una necesidad primaria, anterior incluso al alimento. Un hombre privado de tacto durante años no tiene un problema dermatológico; tiene una herida en el fundamento mismo de su organización afectiva.</p></div>
+            <div class="turn"><span class="who">🍼 René Spitz</span><p>Y yo documenté el extremo: en los años cuarenta estudié orfanatos donde los niños recibían alimento e higiene impecables — pero casi ningún contacto humano. Los llamé casos de <em>hospitalismo</em>: detención del desarrollo, marasmo, y en una proporción escalofriante, la muerte. Niños limpios, alimentados y muertos por falta de tacto. Léase entonces con rigor clínico la escena del leproso: la ley garantizaba la cuarentena sanitaria; nadie había calculado el costo de la cuarentena afectiva. Cuando esa mano lo toca <em>antes</em> de la curación dérmica, está tratando primero la patología más letal de las dos.</p></div>
+            <div class="turn"><span class="who">🧸 Donald Winnicott</span><p>En mi vocabulario: lo que esa mano ofrece es <em>sostén</em> — holding. El bebé no existe solo; existe sostenido, y de ese sostén físico emerge un yo que se siente real. La crueldad refinada del estigma es que invierte el proceso: el «no me toques» sistemático des-realiza a la persona, la convierte en fantasma social. El tacto deliberado de Jesús no es un gesto añadido al milagro — es la primera mitad del milagro: re-realiza al hombre antes de repararlo. Mis colegas ya lo dijeron de la mirada; yo lo digo de la piel.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Protegernos: guardar distancia del que incomoda, del contagioso, del conflictivo, del que «mancha» nuestra reputación si nos ven cerca.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Se acerca deliberadamente. Su santidad no es cuarentena sino contagio de vida: toca al leproso, al muerto, al enemigo — y todo lo que toca queda limpio.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Jesús sana la enfermedad con su poder, pero sana la <em>vergüenza</em> con su tacto. Donde la religión decía «apártate para no contaminarte», él demuestra que la santidad verdadera <em>se acerca</em> — porque la vida es más contagiosa que la muerte.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Proximidad física.</strong> No existe el tacto remoto. Cruzar la calle, sentarse al lado, entrar a la casa, visitar el hospital. El cuerpo presente es el ingrediente irreductible de este verbo.</li>
+            <li><strong>Valentía reputacional.</strong> Dispuestos a que nos vean con el estigmatizado — porque nos van a ver, y algo nos va a costar. Jesús cargó el título de «amigo de publicanos y pecadores» como precio de este verbo.</li>
+            <li><strong>Vencer la incomodidad propia.</strong> El asco, la torpeza, el no saber qué decir junto a la cama del enfermo. El tacto cuesta exactamente esa incomodidad que el donativo a distancia nos ahorra.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> tercerizamos el contacto: transferencia bancaria, mensaje de apoyo, «cuenta conmigo» sin coordenadas. Queremos los efectos del tacto — que el otro se sienta menos solo — habiendo subcontratado la presencia.</p>
+        </div>
+        <p class="fuente">Fundamento: <a href="https://www.bibleref.com/Mark/1/Mark-1-41.html">BibleRef — Marcos 1:41</a>, <a href="https://www.theologyofwork.org/new-testament/mark/kingdom-and-discipleship/mark-140-45-jesus-heals-a-leper/">Theology of Work — Mark 1:40–45</a></p>
+      </section>
+
+      <!-- IV. PREGUNTA -->
+      <section class="part" id="preguntar">
+        <div class="part-head">
+          <span class="part-num">Verbo IV</span>
+          <h2>Pregunta antes de declarar</h2>
+        </div>
+        <p class="lede">El Hombre que tenía todas las respuestas dedicó su ministerio a hacer preguntas.</p>
+        <div class="versos">
+          «¿Qué quieres que te haga? Y el ciego le dijo: Maestro, que recobre la vista.»
+          <span class="r">Marcos 10:51</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · Las preguntas</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🏺 El historiador</span><p>Alguien se tomó el trabajo de contarlas: en los cuatro evangelios, Jesús hace alrededor de <em>307 preguntas</em>. Le hacen unas 183, y responde directamente apenas un puñado — los conteos van de tres a ocho. La proporción es brutal: por cada respuesta directa que da, hace decenas de preguntas. No era el Hombre de las Respuestas; era el Gran Preguntador.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Espera. La de Bartimeo me parece absurda. Un ciego le grita a un sanador en el camino. ¿«Qué quieres que te haga»? ¡Es <em>obvio</em> lo que quiere! ¿Por qué hacerle perder el tiempo?</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Porque lo obvio para ti no es lo dicho por él, Daniel. Bartimeo llevaba toda la vida siendo hablado <em>por</em> otros: definido por su ceguera, mandado a callar por la multitud un versículo antes. Y Jesús le devuelve lo que la mendicidad le había quitado: la palabra, el deseo, la dignidad de elegir. Igual con el paralítico de Betesda, treinta y ocho años enfermo: <em>«¿Quieres ser sano?»</em> (Juan 5:6). No lo trata como un problema evidente; lo trata como un interlocutor. La pregunta <em>es</em> el primer milagro.</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Y mira el camino a Emaús (Lucas 24): el Resucitado camina horas junto a dos discípulos destrozados y abre con — <em>«¿Qué pláticas son estas?»</em>. ¡Él <em>es</em> el tema de la conversación! Pero prefiere escuchar su dolor entero antes de explicarse. Es el mismo rasgo del Edén con otra ropa: Dios, que sabe todo, abre la historia preguntando «¿dónde estás tú?». La pregunta es el lenguaje de quien quiere relación, no solo obediencia. Una respuesta te informa; una pregunta te <em>invita</em>.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Piaget, Sócrates, Frankl</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🧒 Jean Piaget</span><p>Mi obra entera puede resumirse en una herejía pedagógica: el conocimiento no se transmite, se <em>construye</em>. Cada vez que le enseñamos algo a un niño que pudo descubrir por sí mismo, le impedimos inventarlo — y por tanto comprenderlo de verdad. Por eso un maestro que dispone de todas las respuestas y elige sistemáticamente la pregunta no está siendo modesto ni retórico: está siendo <em>epistemológicamente correcto</em>. Trescientas siete preguntas no son un estilo; son una teoría del conocimiento en acción — la convicción de que la verdad declarada se aloja en la memoria, pero la verdad descubierta reorganiza a la persona.</p></div>
+            <div class="turn"><span class="who">🏛️ Sócrates</span><p>Naturalmente, reclamo la paternidad del método. Mi mayéutica también partía de preguntas — yo solo era la partera de ideas ajenas. Pero un examen honesto debe registrar la diferencia: mis preguntas acorralaban; conducían al interlocutor hasta la contradicción y lo dejaban en la <em>aporía</em>, expuesto ante la plaza. Útil para desinflar sofistas, lo admito, y mis víctimas rara vez volvían por más. Las preguntas de este galileo hacen otra cosa que confieso no haber intentado: «¿qué quieres que te haga?» no desnuda al otro — lo <em>inviste</em>. Con sus enemigos pregunta como yo; con los heridos pregunta como nadie.</p></div>
+            <div class="turn"><span class="who">🕯️ Viktor Frankl</span><p>Y en el campo de concentración aprendí la inversión definitiva: llega un punto en que ya no importa qué esperamos nosotros de la vida, sino qué espera la vida de nosotros — la existencia nos <em>pregunta</em>, y vivir es responder. Por eso «¿quieres ser sano?» tras treinta y ocho años de parálisis (Juan 5) no es una pregunta absurda: es la única terapéutica. Treinta y ocho años convierten la enfermedad en identidad, y la pregunta le devuelve al hombre la responsabilidad de su propio deseo. La psicoterapia moderna lo confirmó después con otro nombre — el cambio duradero nace del deseo articulado por el propio paciente, no del consejo del experto. La pregunta es el respeto en forma gramatical.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Suponer, diagnosticar y recetar sin preguntar. Llegamos con la respuesta lista — porque escuchar toma tiempo, y porque responder nos hace sentir necesarios.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Pregunta aun sabiendo la respuesta — «¿qué quieres que te haga?» — porque la pregunta devuelve al otro la palabra, el deseo y la dignidad de elegir.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Jesús pregunta no porque le falte información, sino porque <em>a nosotros nos falta participación</em>. Su pregunta dignifica: convierte al necesitado en interlocutor. Quien imita a Cristo aprende a preguntar antes de suponer que ya lo sabe.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Silencio activo.</strong> Callar la respuesta que ya tenemos lista. Es el ingrediente más barato en dinero y más caro en ego: la pregunta nos baja del estrado de los que saben.</li>
+            <li><strong>Humildad epistémica.</strong> Aceptar de verdad — no retóricamente — que no sabemos lo que el otro quiere, siente o necesita. La pregunta honesta solo nace de la ignorancia confesada.</li>
+            <li><strong>Tolerancia a perder el guion.</strong> Una pregunta real abre una conversación que no controlas. Quien pregunta debe estar dispuesto a escuchar una respuesta que desarme su plan.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> respondemos porque responder es rápido y nos hace sentir necesarios. Damos el consejo en treinta segundos y lo llamamos eficiencia — cuando en realidad le negamos al otro los diez minutos de escucha que su dignidad costaba.</p>
+        </div>
+        <p class="fuente">Fundamento: <a href="https://www.goodreads.com/en/book/show/21507048">Copenhaver — Jesus Is the Question</a>, <a href="https://licc.org.uk/resources/questions-jesus-asked-the-power-of-the-question/">LICC — Questions Jesus Asked</a></p>
+      </section>
+
+      <!-- V. SE DETIENE -->
+      <section class="part" id="detenerse">
+        <div class="part-head">
+          <span class="part-num">Verbo V</span>
+          <h2>Se detiene por uno</h2>
+        </div>
+        <p class="lede">Los milagros más memorables de Jesús son, casi todos, interrupciones.</p>
+        <div class="versos">
+          «Entonces Jesús, deteniéndose, mandó traerle.» — «¿Quién es el que me ha tocado?»
+          <span class="r">Lucas 18:40 · Lucas 8:45</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · Las interrupciones</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">📜 La exégeta</span><p>Hagan el inventario y verán el patrón. Va camino a la casa de Jairo — una emergencia, la niña se muere — y se detiene en medio de la multitud por una mujer que tocó su manto. Va saliendo de Jericó rumbo a Jerusalén, rumbo a la cruz, y se detiene por el grito de un mendigo ciego. Atraviesa Jericó y se detiene bajo un árbol por un recaudador despreciado. Cruza un lago entero — toda una travesía — para encontrarse con <em>un solo hombre</em>: el endemoniado gadareno que vivía entre tumbas (Marcos 5), y al terminar, vuelve a cruzar. El evangelio avanza a punta de interrupciones.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>A mí eso me parece pésima gestión del tiempo. Mientras conversa con la hemorroísa, la hija de Jairo <em>se muere</em>. Literalmente: llega el mensajero diciendo «tu hija ha muerto». ¿Ese es el carácter a imitar — el que llega tarde por atender a otro?</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Has puesto el dedo en el centro, Daniel, sin querer. Jesús se detiene <em>precisamente porque</em> no opera con la lógica de la escasez. Para una agenda humana, cada persona compite con la siguiente; para él, ninguna interrupción amenaza el plan, porque la persona interrumpiendo <em>es</em> el plan. Y nota el final: la demora no le costó nada a Jairo — le reveló a un Jesús que también levanta muertos. En su economía, detenerse por uno nunca le roba a otro.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Y en Juan 4 el verbo llega a su forma más pura: «le era necesario pasar por Samaria» — necesario, dice el texto, aunque ningún judío piadoso tomaba esa ruta. Toda esa geografía para sentarse, cansado, junto a un pozo al mediodía y esperar a <em>una</em> mujer que iba sola, a la hora en que no va nadie. La multitud nunca recibe el milagro — lo reciben personas con nombre. Si la mirada es su primera obra, la pausa es su firma.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Darley &amp; Batson, Simone Weil</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🔬 El psicólogo experimental</span><p>Aquí traigo el experimento más incómodo de la psicología social para esta página. Princeton, 1973: Darley y Batson reclutan estudiantes de <em>seminario</em> — futuros pastores — y les piden caminar a otro edificio para dar una charla. A varios les asignan como tema, exquisitamente, la parábola del buen samaritano. En el trayecto, todos pasan junto a un hombre desplomado en un portal, tosiendo y gimiendo (un actor). La variable que decidió quién se detuvo no fue la piedad, ni la vocación, ni llevar la parábola en la cabeza: fue la <em>prisa</em>. Entre los que iban con tiempo, la mayoría ayudó; entre los apurados, apenas uno de cada diez — y algunos literalmente pasaron por encima de la víctima, rumbo a predicar sobre el samaritano.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Esperen — eso parece demoler la página entera. Si la conducta la decide la situación y no el carácter, ¿de qué sirve estudiar «el carácter de Jesús»?</p></div>
+            <div class="turn"><span class="who">🔬 El psicólogo experimental</span><p>Al revés, Daniel: el experimento identifica con precisión <em>qué</em> hay que imitar. No demostró que el carácter no exista; demostró que la convicción sin estructura pierde contra el reloj. La compasión de los seminaristas era real — su agenda la venció. Y ahora relean los evangelios con ese dato: un hombre camino a Jerusalén, con la muerte fechada — la prisa más justificada de la historia — que se detiene por un mendigo que grita. Jesús es, hablando con rigor experimental, el sujeto que desafía nuestra condición de mayor presión. Su «carácter» incluye lo que a los seminaristas les faltó: una arquitectura del tiempo donde la persona caída tiene rango de cita previa.</p></div>
+            <div class="turn"><span class="who">⚖️ Simone Weil</span><p>Yo lo escribí sin laboratorio: la atención es la forma más rara y más pura de la generosidad. Rara — esa es la palabra que el experimento confirmó. Los desgraciados no necesitan de nosotros casi nada más que gente capaz de prestarles atención; y esa capacidad, sostuve siempre, es casi un milagro. Detenerse no es una pausa en la obra: detenerse <em>es</em> la obra.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Vivir esclavos de la agenda: la interrupción es el enemigo, la persona inoportuna es un estorbo, y «no tengo tiempo» es nuestra confesión de fe diaria.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Trata la interrupción como la misión misma. Cruza un lago por un hombre, desvía su ruta por una mujer junto a un pozo, y se detiene camino a la cruz por un mendigo que grita.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Para Jesús la interrupción no es el enemigo de la misión: <em>es</em> la misión. Su agenda tiene una sola prioridad — la persona que tiene delante — y por eso nunca está demasiado ocupado, ni siquiera camino a la cruz.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Margen en la agenda.</strong> Nadie puede detenerse al 100% de capacidad — el experimento de Princeton lo midió: la prisa venció a la vocación. La holgura no es tiempo perdido; es el espacio donde cabe el prójimo.</li>
+            <li><strong>Disposición a llegar tarde.</strong> Pagar el costo real de la interrupción: la reunión que empieza sin ti, el plan que se corre. Detenerse por uno siempre le cobra algo a algo.</li>
+            <li><strong>La jerarquía decidida de antemano.</strong> «La persona vale más que el plan» no se improvisa en el momento — se decide antes, en frío, como Jesús decidió pasar por Samaria. Sin decisión previa, el reloj gana siempre.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> llenamos el calendario hasta el borde y luego culpamos al calendario. Queremos ser el samaritano con la agenda del levita — y la agenda, como demostró Princeton, gana nueve de cada diez veces.</p>
+        </div>
+      </section>
+
+      <!-- VI. VERDAD AMANDO -->
+      <section class="part" id="verdad">
+        <div class="part-head">
+          <span class="part-num">Verbo VI</span>
+          <h2>Dice la verdad — pero la dice amando</h2>
+        </div>
+        <p class="lede">Juan lo declara desde el prólogo: el Verbo vino «lleno de gracia <em>y</em> de verdad». No una u otra. Las dos, llenas, al mismo tiempo.</p>
+        <div class="versos">
+          «Y aquel Verbo fue hecho carne, y habitó entre nosotros... lleno de gracia y de verdad.» — «Ni yo te condeno; vete, y no peques más.»
+          <span class="r">Juan 1:14 · Juan 8:11</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · Gracia y verdad</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Este verbo me lo van a tener que demostrar, porque suena a eslogan de taza. En mi experiencia, la gente «amorosa» suaviza la verdad hasta disolverla, y la gente «veraz» la usa como martillo. Nadie hace las dos cosas.</p></div>
+            <div class="turn"><span class="who">📜 La exégeta</span><p>Por eso Juan 1:14 es tan deliberado: <em>plērēs charitos kai alētheias</em> — «lleno de gracia y de verdad». No mitad y mitad, no en equilibrio: lleno de ambas. Y mira cómo se ejecuta con la samaritana (Juan 4). Jesús le dice la verdad completa — «cinco maridos has tenido, y el que ahora tienes no es tu marido» — sin un gramo de humillación. Ella no huye: corre al pueblo gritando <em>«venid, ved a un hombre que me ha dicho todo cuanto he hecho»</em>. La verdad dicha con gracia no espanta — atrae. Y a esa mujer, no a los teólogos de Jerusalén, le hace su primera gran revelación: «Yo soy, el que habla contigo».</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Juan 8 es el otro laboratorio. La mujer sorprendida en adulterio, rodeada de piedras. Jesús no dice «no pasó nada» — eso sería gracia sin verdad, que es sentimentalismo. Tampoco autoriza la piedra — verdad sin gracia, que es crueldad. Dice las dos frases que nosotros nunca logramos juntar: <em>«ni yo te condeno»</em> y <em>«no peques más»</em>. Y el orden importa: la gracia primero, porque solo el que se sabe no-condenado tiene fuerzas para cambiar. Es Marcos 2 otra vez: «hijo» antes que nada.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Y funciona en ambas direcciones. Con Nicodemo, el maestro respetado que llega de noche, Jesús es quirúrgico: «te es necesario nacer de nuevo» — la verdad que desmonta toda su carrera, dicha con la paciencia de una larga conversación nocturna. Con el joven rico, Marcos junta los dos verbos en una sola línea: <em>lo amó</em>, y le dijo «una cosa te falta». Hasta a Pedro le dice «¡quítate de delante de mí, Satanás!» (Mateo 16:23) — y seis días después lo sube al monte de la transfiguración. La verdad de Jesús nunca cancela la relación; la relación nunca le tapa la boca.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Rogers, Bonhoeffer, Winnicott</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🛋️ Carl Rogers</span><p>Este verbo describe, punto por punto, lo que mi investigación identificó como las condiciones necesarias del cambio terapéutico — y subrayo <em>necesarias en conjunto</em>. Consideración positiva incondicional: el paciente es recibido sin condiciones (gracia). Congruencia: el terapeuta no finge, no suaviza, es transparente consigo (verdad). Décadas de datos muestran que cada una, sola, fracasa: la aceptación sin congruencia produce una calidez falsa que el paciente detecta y desestima; la congruencia sin aceptación produce una honestidad que hiere y expulsa. El cambio ocurre en la intersección — exactamente donde Juan coloca a su Verbo: <em>lleno</em> de ambas.</p></div>
+            <div class="turn"><span class="who">✊ Dietrich Bonhoeffer</span><p>Y yo le pongo a la mitad blanda su nombre teológico, porque lo escribí frente al nazismo y me costó la vida sostenerlo: <em>gracia barata</em> — perdón sin arrepentimiento, bautismo sin disciplina, gracia sin cruz. Es el enemigo mortal de la iglesia, justamente porque se disfraza de amor. «Ni yo te condeno» <em>sin</em> «no peques más» sería gracia barata: dejaría a la mujer absuelta y abandonada en lo que la destruía. La gracia de Juan 8 es cara: la absolución viene con dirección. Quien ama de verdad no le ahorra al otro la verdad — le ahorra la condena.</p></div>
+            <div class="turn"><span class="who">🧸 Donald Winnicott</span><p>Permítanme la traducción clínica del orden — porque el orden es lo decisivo. Un niño solo tolera descubrir sus límites dentro de un ambiente que lo sostiene; la verdad llega soportable únicamente sobre el sostén previo. Por eso «ni yo te condeno» <em>antes de</em> «no peques más» no es indulgencia secuencial: es la única secuencia que funciona. La verdad dicha a una persona no-sostenida la fragmenta; la misma verdad, dicha a una persona sostenida, la construye. Ese rabino conocía el orden de los factores — y aquí el orden altera todo el producto.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Elegir bando: o callamos la verdad para no perder a la persona (y la llamamos «amor»), o disparamos la verdad sin la persona en mente (y la llamamos «honestidad»).</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Dice la verdad completa con la persona intacta: «ni yo te condeno» <em>y</em> «no peques más». Lleno de gracia y de verdad — nunca rebaja una para llenar la otra.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>En Jesús, el amor y la verdad dejaron de ser ideas y se volvieron carne: gracia sin verdad sería sentimentalismo, verdad sin gracia sería crueldad. Él hizo realidad las dos a la vez — y el orden es su firma: <em>la gracia abre la puerta por la que entra la verdad</em>.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Valentía para el conflicto.</strong> La verdad dicha cuesta exactamente lo que el silencio ahorra: la incomodidad, el riesgo del vínculo, la posibilidad de que el otro se enoje contigo y no con su problema.</li>
+            <li><strong>Gracia depositada por adelantado.</strong> Nadie recibe verdad de quien no le ha demostrado amor. La cuenta relacional se llena antes de girar: Jesús amó al joven rico <em>antes</em> de la frase dura — y el texto registra el orden.</li>
+            <li><strong>Artesanía de las palabras.</strong> La verdad amorosa no sale cruda: se piensa, se pule, se elige el momento. Tomarse una hora para preparar una conversación difícil es un ingrediente, no una exageración.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> elegimos el camino barato en ambas direcciones: callar (cobardía vestida de prudencia) o disparar crudo (pereza vestida de honestidad). Ambas evitan el mismo costo — la artesanía lenta de decir lo difícil con la persona intacta.</p>
+        </div>
+      </section>
+
+      <!-- VII. SE INDIGNA -->
+      <section class="part" id="indignarse">
+        <div class="part-head">
+          <span class="part-num">Verbo VII</span>
+          <h2>Se indigna — pero nunca por sí mismo</h2>
+        </div>
+        <p class="lede">Sí: Jesús se enoja. La pregunta reveladora es <em>cuándo</em>.</p>
+        <div class="versos">
+          «Entonces, mirándolos alrededor con enojo, entristecido por la dureza de sus corazones...» — «Viéndolo Jesús, se indignó, y les dijo: Dejad a los niños venir a mí.»
+          <span class="r">Marcos 3:5 · Marcos 10:14</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · La ira santa</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Por fin un rasgo que me cuadra: el Jesús del látigo en el templo. Pero confiesen el problema — ¿no contradice esto todo lo anterior? ¿El que mira, siente y toca, volcando mesas?</p></div>
+            <div class="turn"><span class="who">📜 La exégeta</span><p>No, si miras contra <em>qué</em> se enciende. Hagamos la lista completa. Marcos 3:5: enojo contra los que prefieren su regla religiosa antes que la mano sana de un hombre. Marcos 10:14: indignación — <em>ēganaktēsen</em>, un verbo fuerte — contra sus propios discípulos por apartar a los niños. El templo: furia contra un sistema que convirtió el atrio de los gentiles — el único lugar donde las naciones podían orar — en negocio. Mateo 23: los siete «ayes» contra quienes «atan cargas pesadas» sobre los hombros del pueblo. ¿Ves el patrón? Su ira se enciende siempre <em>a favor de una persona estorbada</em> — nunca por una ofensa contra él mismo.</p></div>
+            <div class="turn"><span class="who">🏺 El historiador</span><p>Y el contraste lo confirma: cuando lo insultan, lo escupen y lo clavan — el único momento donde la ira sería comprensible — guarda silencio o pide perdón para sus verdugos: «Padre, perdónalos, porque no saben lo que hacen» (Lucas 23:34). El hombre del látigo en el templo es el cordero mudo ante Pilato. Esa asimetría no es incoherencia: es la definición misma de la ira santa.</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Digámoslo con precisión: la ira de Jesús es el reverso de su amor. Quien ama de verdad a las personas no puede ser neutral ante lo que las aplasta. Un Cristo incapaz de indignarse sería un Cristo que no ama lo suficiente. Y Marcos 3:5 guarda el detalle más fino: enojo <em>y</em> tristeza, juntos — ira sin amargura, dolor sin resignación.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Aristóteles, Freud</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">⚖️ Aristóteles</span><p>En mi <em>Ética a Nicómaco</em> dejé establecido que la ira no es un vicio: es una pasión cuyo vicio está en los extremos. Cualquiera puede encolerizarse — eso es fácil. Lo difícil, escribí, es hacerlo con la persona correcta, en el grado correcto, en el momento oportuno, con el propósito justo y del modo debido. Y añadí algo que mis lectores modernos olvidan: el que <em>no</em> se irrita por lo que debe es también un defecto — lo llamé indolencia, y dije que parece propio de esclavos tolerar la afrenta contra los suyos. Apliquen mi criterio quíntuple a los casos citados: ira por la mano del enfermo, por los niños apartados, por los pobres esquilmados en el atrio — y mansedumbre ante la afrenta propia. No conozco, en mi catálogo de virtuosos, un caso más exacto del justo medio.</p></div>
+            <div class="turn"><span class="who">🧠 Sigmund Freud</span><p>Concedo el análisis ético, pero exijo el psicológico, que es más turbio. La agresión es constitutiva del aparato humano — no se elimina; se reprime, se desplaza o se sublima. Y el desplazamiento es la regla: el oficinista humillado por su jefe llega a casa y ruge contra sus hijos. Nuestra ira casi nunca apunta a su objeto verdadero; apunta al objeto <em>seguro</em>. Por eso el dato de esta página me interesa más de lo que quisiera admitir: una agresión que fluye siempre <em>hacia arriba</em> — contra el poder religioso, el sistema del templo, los guardianes — y nunca hacia abajo, contra el débil disponible, es el patrón inverso al desplazamiento. Eso no se logra reprimiendo la pulsión; se logra solo si la persona no tiene una herida narcisista que cobrar. Y un hombre que pide perdón para sus verdugos mientras lo ejecutan... señores, ahí mi teoría guarda silencio.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Rugir ante la ofensa propia — el insulto, el tráfico, la crítica — y encogernos de hombros ante la injusticia que aplasta a otros.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Exactamente al revés: se indigna cuando estorban, cargan o excluyen a otros — y guarda silencio, o pide perdón, cuando lo crucifican a él.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Jesús se enoja por los demás y calla por sí mismo. Imitar su carácter incluye aprender <em>contra qué</em> vale la pena indignarse — y por qué nuestra ira suele apuntar en la dirección equivocada.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Información que no me toca.</strong> Enterarse de las injusticias que no me rozan exige trabajo: leer el libro, escuchar al afectado, preguntar al que vive lo que yo no vivo. La ignorancia cómoda es la madre de la neutralidad cómoda.</li>
+            <li><strong>Renuncia a la neutralidad.</strong> Tomar posición por el estorbado cuesta relaciones, comodidad y a veces dinero. La indignación que no está dispuesta a pagar nada es solo opinión con temperatura.</li>
+            <li><strong>Auditoría de la propia ira.</strong> Revisar honestamente hacia dónde apunta mi enojo este mes: ¿ofensas propias o injusticias ajenas? El registro no miente, y casi siempre avergüenza.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> nos indignamos donde cuesta cero — el comentario, la publicación compartida — y callamos donde cuesta algo. Queremos la conciencia del profeta con el riesgo del espectador.</p>
+        </div>
+      </section>
+
+      <!-- VIII. LLORA -->
+      <section class="part" id="llorar">
+        <div class="part-head">
+          <span class="part-num">Verbo VIII</span>
+          <h2>Llora — y no se avergüenza</h2>
+        </div>
+        <p class="lede">El versículo más corto de la Biblia es también una de sus declaraciones más grandes.</p>
+        <div class="versos">
+          «Jesús lloró.» — «Y cuando llegó cerca de la ciudad, al verla, lloró sobre ella.»
+          <span class="r">Juan 11:35 · Lucas 19:41</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · Las lágrimas</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Juan 11 no me cierra. Jesús <em>sabe</em> que va a resucitar a Lázaro — lo dice antes de llegar. ¿Entonces por qué llora? ¿Teatro para la audiencia?</p></div>
+            <div class="turn"><span class="who">📜 La exégeta</span><p>El griego descarta el teatro. El texto dice que al ver llorar a María, Jesús «se estremeció en espíritu y se conmovió» — <em>enebrimēsato</em>, un verbo de conmoción violenta, casi un rugido contenido — y entonces <em>edakrysen</em>: derramó lágrimas. Llora no por el desenlace, que conoce, sino por el dolor presente de los que ama, y — dice el verbo — por la indignación ante la muerte misma. Está a cinco minutos del milagro y aun así el llanto de María le parte las entrañas.</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Y eso responde tu pregunta, Daniel, mejor que cualquier apologética: el poder de resolver no lo exime de la solidaridad de sentir. Jesús pudo saltarse el duelo e ir directo al sepulcro — eficiencia pura. Eligió llorar <em>con</em> ellos antes de actuar <em>por</em> ellos. En Lucas 19 sube la apuesta: llora sobre Jerusalén, la ciudad que va a matarlo. Lágrimas por sus propios verdugos. Y Getsemaní completa el cuadro: «Mi alma está muy triste, hasta la muerte» (Marcos 14:34) — el Hijo de Dios pidiéndoles a tres pescadores que lo acompañen en su angustia.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Para tu clase, este verbo derriba un ídolo: el del varón — y el cristiano — que demuestra fortaleza no sintiendo. El Hijo de Dios lloró en público, y Hebreos añade que oraba «con gran clamor y lágrimas» (Hebreos 5:7). Si la encarnación incluyó lágrimas, nuestra madurez espiritual no puede consistir en eliminarlas.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Nietzsche, Bowlby, Gross</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🔨 Friedrich Nietzsche</span><p>Por fin me invitan, y vengo a demoler. Yo señalé la compasión — <em>Mitleid</em>, sufrir-con — como el gran peligro: multiplica el sufrimiento en el mundo en lugar de reducirlo, contagia la debilidad, y el cristianismo hizo de ella su virtud suprema porque era la religión de los que no podían otra cosa. Un dios que llora es la confesión final: la divinidad arrodillada ante la miseria. ¿Qué responden?</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Respondemos con su propio criterio, profesor: usted midió todo por la fuerza — la capacidad de actuar, de crear, de imponer forma a la realidad. Pues examine la escena completa de Juan 11: el que llora está a minutos de <em>vaciar una tumba</em>. Su tesis exige que las lágrimas sean impotencia disfrazada de virtud; aquí las lágrimas coexisten con el poder máximo concebible sobre aquello que se llora. Ese caso rompe su dicotomía: no es debilidad que se consuela sintiendo, es fuerza que <em>elige</em> no exentarse del dolor ajeno. Llorar pudiendo resolver no es menos que la fuerza — es más: es la fuerza que no usa su poder como anestesia.</p></div>
+            <div class="turn"><span class="who">🪺 John Bowlby</span><p>Y desde la clínica del duelo, el veredicto es unánime contra el estoicismo de salón: el duelo no elaborado no desaparece — se entierra vivo, y trabaja desde abajo. Documenté toda una vida cómo la pérdida no llorada reaparece como depresión, enfermedad, apego patológico. La investigación posterior sobre supresión emocional — James Gross y compañía — añadió la ironía fisiológica: suprimir la expresión de la emoción no reduce la emoción; eleva la activación corporal del que suprime <em>y de quienes lo rodean</em>. El «fuerte que no llora» paga con el cuerpo, y cobra a los demás. Un modelo de humanidad que llora abiertamente y luego actúa con plena potencia no es un detalle devocional: es, técnicamente, el único patrón que la evidencia respalda.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Esconder el dolor para parecer fuertes — o saltar directo a la solución y al consejo, porque acompañar el llanto ajeno nos resulta insoportable.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Llora en público, sin vergüenza, incluso teniendo el milagro en la mano. Acompaña el dolor <em>antes</em> de resolverlo — porque estar vale por sí mismo.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Jesús llora sabiendo que el milagro viene en camino. Sus lágrimas no son falta de fe ni falta de poder: son la prueba de que <em>acompañar el dolor</em> vale por sí mismo, aun cuando uno tiene la solución en la mano.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Soltar la imagen de fuerte.</strong> La vulnerabilidad es un ingrediente con precio fijo: dejar que nos vean afectados. No se puede llorar con otros y administrar la reputación al mismo tiempo.</li>
+            <li><strong>Presencia sin soluciones.</strong> Quedarse en el dolor ajeno sin arreglarlo exige tolerar el propio malestar — porque el consejo prematuro casi nunca es para el otro: es nuestro analgésico. Job lo dijo: sus amigos consolaron mejor los siete días que callaron.</li>
+            <li><strong>Tiempo para el duelo.</strong> El duelo propio y el ajeno piden calendario, no solo sentimiento: la visita, el aniversario recordado, la semana sin exigirle al triste que «ya esté mejor».</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> ofrecemos soluciones porque acompañar duele más que resolver. Queremos consolar sin sentir — y el que sufre lo detecta al instante: percibe que nuestro consejo es la puerta por la que estamos huyendo de su dolor.</p>
+        </div>
+      </section>
+
+      <!-- IX. RESTAURA -->
+      <section class="part" id="restaurar">
+        <div class="part-head">
+          <span class="part-num">Verbo IX</span>
+          <h2>Restaura en público lo que se rompió en público</h2>
+        </div>
+        <p class="lede">Jesús no solo perdona: repara la honra, y lo hace delante de los mismos testigos de la vergüenza.</p>
+        <div class="versos">
+          «Hija, tu fe te ha hecho salva; ve en paz.» — «De cierto te digo que hoy estarás conmigo en el paraíso.»
+          <span class="r">Marcos 5:34 · Lucas 23:43</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · La honra devuelta</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🏺 El historiador</span><p>El siglo primero era una cultura de honor y vergüenza: tu identidad pública valía tanto como tu vida. La hemorroísa llevaba doce años ritualmente impura — excluida del templo, intocable. Por eso roba el milagro en secreto: la vergüenza opera en las sombras. Y por eso Jesús hace lo aparentemente cruel: la obliga a contarlo todo «delante de todo el pueblo» (Lucas 8:47).</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Exacto — eso me parece innecesario, casi humillante. Ya estaba sana. ¿Para qué exponerla?</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Porque la sanidad privada le habría devuelto el cuerpo, pero no la vida. Si se va en silencio, sigue siendo «la impura» para su aldea. Jesús la detiene para decir una palabra delante de los mismos vecinos que la excluían: <em>«Hija»</em>. Es la única vez en los evangelios que llama así a alguien. La vergüenza fue pública; la restauración tenía que serlo también. No la expone, Daniel — la <em>corona</em>. Y al gadareno, el hombre de las tumbas, no se lo lleva consigo aunque él se lo ruega: lo manda de vuelta <em>a su casa, a los suyos</em> — al lugar exacto de su vergüenza, ahora como testigo (Marcos 5:19).</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Y es el mismo libreto siempre. A Zaqueo, abucheado por toda Jericó, lo declara «hijo de Abraham» en voz alta frente a la murmuración. A Pedro, que negó tres veces junto a unas brasas, le pregunta tres veces «¿me amas?» junto a otras brasas, delante de los hermanos (Juan 21) — una restauración con la misma geometría de la caída. Y la obra maestra, que solo Lucas registra: un ladrón crucificado, sin tiempo para restituir nada ni demostrar nada, recibe en su último aliento la promesa más grande del evangelio: «hoy estarás conmigo en el paraíso». A Jesús nunca se le hace tarde para devolver un nombre.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Goffman, la investigación de la vergüenza</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🎭 Erving Goffman</span><p>Mi libro <em>Estigma</em> trató exactamente este problema con frialdad sociológica. El estigmatizado porta lo que llamé una <em>identidad deteriorada</em>: la sociedad ya no trata con él, sino con su marca — el leproso, la impura, el colaboracionista. Y mi hallazgo más incómodo es pertinente aquí: el estigma es una relación social, no un atributo. Por eso la curación privada es estructuralmente insuficiente — puede cambiar el atributo, pero la relación permanece: la aldea sigue tratando con «la impura», ahora simplemente desactualizada. Una identidad deteriorada en público solo se repara mediante una <em>ceremonia pública de re-acreditación</em>, ante la misma audiencia que acreditó el deterioro. Lo que ese rabino hace deteniéndose, haciéndola hablar «delante de todo el pueblo» y pronunciando «Hija» es, en mis términos, sociología aplicada de la más alta precisión: no sana a la mujer — sana la relación entre la mujer y su mundo.</p></div>
+            <div class="turn"><span class="who">🔬 La investigadora de la vergüenza</span><p>Y la psicología afectiva explica por qué eso era lo urgente. La distinción técnica: la <em>culpa</em> dice «hice algo malo»; la <em>vergüenza</em> dice «soy algo malo» — ataca la identidad, no la conducta. Y la vergüenza es el afecto más social que tenemos: nace de ojos ajenos y solo muere ante ojos ajenos; por eso ningún trabajo privado la disuelve del todo mientras el grupo conserve la etiqueta. Noten entonces la cirugía del método: a la culpa, Jesús la trata en privado y la cancela («ni yo te condeno»); a la vergüenza la trata en público y la invierte — la palabra «Hija» dicha ante los vecinos no borra la marca: la <em>sobrescribe</em>. Doce años de «la impura» contra un segundo de «Hija», y gana el segundo, porque viene de la autoridad que el grupo no puede desautorizar.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Perdonar «pero sin olvidar»: dejamos la etiqueta puesta, contamos la falla en voz baja, y la restauración — si llega — es privada, parcial y a prueba.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Devuelve el nombre y la honra en público, ante los mismos testigos de la caída — «hija», «hijo de Abraham», «apacienta mis ovejas» — y no le pone período de prueba al perdón.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Jesús entiende que la vergüenza es una herida más honda que la enfermedad. Por eso su restauración es quirúrgica: pública donde la caída fue pública, con la misma escena, los mismos testigos — y un nombre nuevo.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Memoria de la gracia recibida.</strong> El ingrediente base: recordar activamente lo que se nos perdonó a nosotros. El siervo de Mateo 18 no era cruel por falta de instrucción — era cruel por amnesia.</li>
+            <li><strong>Renuncia al as bajo la manga.</strong> Soltar el poder que da la etiqueta ajena: ese «yo sé lo que hiciste» que guardamos como garantía. Restaurar de verdad es desarmarse de la falla del otro.</li>
+            <li><strong>Iniciativa pública.</strong> Hablar bien del caído delante de otros, no solo en privado con él. La vergüenza fue pública: la palabra que la sobrescribe también tiene que serlo — y eso nos expone a nosotros.</li>
+            <li><strong>Paciencia de proceso.</strong> Tres preguntas junto a las brasas, no una. La restauración es liturgia lenta, no trámite exprés.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> perdonamos en privado y archivamos la etiqueta como garantía — perdón con cláusula de recompra. Queremos que nos llamen misericordiosos sin perder el expediente del otro.</p>
+        </div>
+      </section>
+
+      <!-- X. SE ARRODILLA -->
+      <section class="part" id="arrodillarse">
+        <div class="part-head">
+          <span class="part-num">Verbo X</span>
+          <h2>Se arrodilla primero</h2>
+        </div>
+        <p class="lede">El verbo final — el que explica todos los demás.</p>
+        <div class="versos">
+          «Sabiendo Jesús que el Padre le había dado todas las cosas en las manos... se levantó de la cena, y comenzó a lavar los pies de los discípulos.»
+          <span class="r">Juan 13:3–5</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · La toalla</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">📜 La exégeta</span><p>Juan construye la frase para que duela: <em>«sabiendo que el Padre le había dado todas las cosas en las manos»</em> — conciencia plena de poder absoluto — <em>«se levantó y comenzó a lavar los pies»</em>. La tarea del esclavo más bajo de la casa, tan degradante que ni a un discípulo se le exigía hacerla por su rabino. La grandeza no es interrumpida por el servicio; en Jesús, la grandeza <em>se expresa</em> como servicio.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Última objeción de la noche: ¿no es esto un gran gesto simbólico, una performance pedagógica de despedida?</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Sería performance si fuera la excepción. Pero es el resumen. Él mismo dio la clave en Marcos 10:45: «el Hijo del Hombre no vino para ser servido, sino para servir, y para dar su vida en rescate por muchos». La toalla de Juan 13 es la cruz en miniatura. Y aquí los diez verbos se ordenan solos: mira, siente, toca, pregunta, se detiene, dice la verdad amando, se indigna, llora y restaura <em>porque vino a servir</em>. El que se arrodilla es el único que ve los pies de los demás.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Y no olvides de quién eran los pies: los de Judas estaban en esa fila. Jesús lavó los pies del que ya lo había vendido. Hasta resucitado sigue igual: en Juan 21 el Señor de la gloria espera a sus discípulos fracasados en la playa — <em>haciendo el desayuno</em>. Ese es el carácter completo en una sola imagen, y el «ejemplo os he dado» del versículo 15 nos lo entrega como tarea, no como recuerdo.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Nietzsche, Adler</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🔨 Friedrich Nietzsche</span><p>Esta es mi objeción mayor, y exijo que se enuncie completa. Llamé al cristianismo <em>moral de esclavos</em>: la rebelión de los impotentes que, incapaces de la grandeza, la redefinieron como vicio y coronaron su propia impotencia — humildad, servicio, mansedumbre — como virtud. El resentimiento vuelto creador de valores. Un dios que lava pies sería la obra cumbre de esa inversión: la venganza metafísica de los débiles contra todo lo noble. Refuten eso, si pueden.</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Lo refutamos con el versículo que usted necesita que no exista, profesor. Su tesis depende de una premisa: que el que sirve, sirve porque <em>no puede</em> otra cosa — debilidad racionalizada como elección. Pero Juan 13:3 establece el estado mental del sujeto antes del acto, con precisión casi notarial: «sabiendo que el Padre le había dado <em>todas las cosas</em> en las manos... comenzó a lavar los pies». Conciencia plena de poder absoluto, y entonces la toalla. Eso no es la moral del que no puede dominar; es el que puede dominar todo eligiendo servir. Su propio criterio de nobleza — el valor que nace de la plenitud y no de la carencia, el que da por sobreabundancia — está cumplido aquí mejor que en cualquiera de sus aristócratas. Usted describió al señor que crea valores desde su fuerza: contemple a uno creando, desde la fuerza total, el valor que usted no previó.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Cuidado, que el profesor tiene una bala más: el resentimiento. ¿Cómo sabemos que no hay rencor disfrazado bajo la toalla?</p></div>
+            <div class="turn"><span class="who">🌱 Alfred Adler</span><p>Porque el resentimiento deja huellas conductuales, y aquí no están. Yo sostuve que el índice más fiable de salud psíquica es el <em>Gemeinschaftsgefühl</em> — el sentimiento de comunidad: la capacidad de cooperar y contribuir sin necesitar compensar una inferioridad. El resentido sirve <em>cobrando</em>: exhibe el sacrificio, factura la gratitud, castiga con la culpa. Examinen la escena: lava los pies de Judas <em>sabiendo</em> (el texto lo subraya) — y no lo expone ante los demás; le pasa el bocado como al resto. Servicio al traidor, sin facturación y sin escena. En mi nosología, eso no es neurosis de inferioridad compensada: es el interés social en su grado máximo registrado. Donde Nietzsche diagnosticó la enfermedad de Occidente, yo encuentro, técnicamente, el único espécimen perfectamente sano.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Servir para escalar: elegimos el servicio visible, el que da crédito, y servimos a quienes pueden devolvernos algo. La toalla, mejor que la agarre otro.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Sirve desde la conciencia plena de su grandeza, en la tarea más baja, a la gente menos «rentable» — incluidos los pies de Judas — y lo deja como mandato, no como anécdota.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>El servicio no es una actividad de Jesús: es su identidad. Todos los demás verbos nacen de éste. Por eso imitar su carácter no empieza por hacer grandes cosas, sino por la pregunta de la toalla: <em>¿de quién son los pies que tengo delante?</em></p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Identidad recibida primero.</strong> Juan 13:3 es el prerrequisito técnico: solo sirve sin facturar el que ya sabe quién es. La identidad de hijo — recibida, no ganada — es el ingrediente sin el cual el servicio se vuelve cobro encubierto.</li>
+            <li><strong>Renuncia al crédito.</strong> Servicio sin registro: la tarea que nadie verá, el favor sin testigos, la ayuda que no se menciona después. El anonimato voluntario es la prueba de pureza del ingrediente.</li>
+            <li><strong>Manos en tareas bajas y concretas.</strong> No el «espíritu de servicio» abstracto sino la toalla literal: el trámite ajeno, la silla apilada, el plato lavado, la mudanza del sábado. Lo bajo y específico — ahí se fabrica este verbo.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> queremos el carácter del siervo con la visibilidad del líder: servir donde se nota, a quien puede devolvernos algo. Y el servicio que factura — en gratitud, en imagen, en deuda — no es este verbo: es comercio con uniforme de toalla.</p>
+        </div>
+      </section>
+
+      <!-- EL SISTEMA OPERATIVO -->
+      <section class="part" id="humanos">
+        <div class="part-head">
+          <span class="part-num">El espejo humano</span>
+          <h2>Nuestra manera de reaccionar — y la suya</h2>
+        </div>
+        <p class="lede">Los evangelios traen incorporado un experimento de contraste: en las mismas escenas, junto a Jesús, aparecen los discípulos reaccionando como reaccionamos todos. Ellos son nuestro retrato — y el patrón que dibujan es tan consistente que merece nombre propio: <em>el sistema operativo humano</em>.</p>
+        <div class="versos">
+          «Señor, ¿quieres que mandemos que descienda fuego del cielo, como hizo Elías, y los consuma?» — «Despídelos para que vayan... a comprarse pan. Respondiendo él, les dijo: Dadles vosotros de comer.»
+          <span class="r">Lucas 9:54 · Marcos 6:36–37</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · El catálogo de nuestras reacciones</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">📜 La exégeta</span><p>Hagamos el inventario de las escenas donde el texto pone las dos maneras lado a lado, porque el patrón es asombrosamente uniforme. La multitud tiene hambre: «<em>despídelos</em>» (Marcos 6:36). Los niños se acercan: los discípulos los <em>apartan</em> (Marcos 10:13). Bartimeo grita: la multitud lo <em>manda a callar</em> (Marcos 10:48). La cananea insiste: «<em>despídela</em>, porque da voces tras nosotros» (Mateo 15:23). Los samaritanos no los reciben: Santiago y Juan proponen <em>fuego del cielo</em> (Lucas 9:54). La adúltera: <em>piedras</em>. Getsemaní: Pedro saca la <em>espada</em>. ¿Lo ven? Despedir, apartar, callar, expulsar, quemar, apedrear, cortar. Siete escenas, un solo algoritmo: la manera humana de «resolver» es <em>eliminar lo que incomoda</em> — sacarlo del campo visual. Y en cada una de esas escenas, Jesús hace el movimiento exactamente inverso: «dadles vosotros de comer», «dejad a los niños venir», «traédmelo acá», se detiene, dialoga, perdona, sana la oreja que Pedro cortó. Nosotros resolvemos <em>alejando</em>; él resuelve <em>acercándose</em>.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Pues esta vez vengo a defender a los discípulos, porque sus reacciones me parecen <em>impecables</em>. ¿Despedir a cinco mil sin comida al anochecer? Logística responsable. ¿Callar al mendigo que interrumpe al maestro? Gestión de agenda. ¿Apartar niños de un rabino ocupado? Filtro razonable. ¿La espada en Getsemaní? Defensa legítima. Confiesen el problema de fondo: la manera humana no es malvada — es <em>sensata</em>. Y ustedes la están demonizando.</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>No la demonizamos, Daniel — la diagnosticamos, y tu defensa es la mitad del diagnóstico. Tienes razón: nuestra manera es perfectamente razonable... <em>dadas dos premisas</em> que ni miramos porque vienen de fábrica: que hay escasez (el pan no alcanza, el tiempo no alcanza, el honor no alcanza) y que hay amenaza (el que grita, el que estorba, el que ataca). Sobre miedo y escasez, eliminar lo incómodo es la jugada óptima — concedido. Pero Jesús no juega mejor la misma partida: juega <em>otra</em>. Opera sin las dos premisas. Sin escasez: «dadles vosotros» — y sobran doce cestas. Sin amenaza: duerme en la tormenta, camina hacia la turba que viene a arrestarlo. Juan lo formuló como ley: «el perfecto amor echa fuera el temor» (1 Juan 4:18). Nuestra manera administra el miedo; la suya procede de no tenerlo.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Y hay un detalle de ritmo que delata los dos sistemas: nosotros <em>reaccionamos</em> — estímulo y respuesta pegados, sin espacio entre ambos. Jesús <em>responde</em>: entre el estímulo y su respuesta siempre hay una pausa instalada. Le traen a la adúltera exigiendo veredicto inmediato... y él se inclina y escribe en tierra (Juan 8:6) — desacelera la escena hasta que la turba se enfría. Pasa la noche orando <em>antes</em> de elegir a los doce (Lucas 6:12). Duerme en la popa mientras los demás gritan. Hasta su silencio ante Pilato es eso: la negativa a dejar que el estímulo dicte la respuesta. La escena más reveladora es la última cena: los discípulos discuten <em>quién es el mayor</em> (Lucas 22:24) — el ranking, nuestra reacción de siempre — mientras él se quita el manto y toma la toalla. Misma mesa, misma noche, dos sistemas operativos completos.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Girard, Tajfel, Kahneman</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🐏 René Girard</span><p>Dediqué mi vida a estudiar cómo resuelven los grupos humanos su tensión interna, y el hallazgo es brutal: mediante el <em>chivo expiatorio</em>. Cuando la rivalidad acumulada amenaza con destruir al grupo, el mecanismo arcaico descarga toda la violencia sobre una sola víctima — y la unanimidad contra ella restaura la paz. Es la tecnología social más antigua de la especie: la paz comprada con un linchamiento. Ahora miren Juan 8 con mis ojos: una turba unánime, piedras en mano, una víctima al centro — el mecanismo en pleno funcionamiento. Y un hombre que lo desarma con una frase que rompe la unanimidad: «el que esté sin pecado, tire la primera piedra» — obliga a cada uno a salir de la masa y volverse individuo, y el mecanismo, que solo funciona en unanimidad, se desploma uno por uno, «comenzando por los más viejos». Mi tesis mayor: los evangelios son el documento que <em>expone</em> el mecanismo que toda cultura ocultaba — porque cuentan el linchamiento desde el lado de la víctima, y la víctima es inocente y responde perdonando. Después de la cruz, el chivo expiatorio sigue usándose, pero ya no funciona igual: quedó al descubierto.</p></div>
+            <div class="turn"><span class="who">🔬 Henri Tajfel</span><p>Yo aporto el experimento que mide cuán de fábrica viene la línea entre «nosotros» y «ellos». Mis estudios de grupo mínimo: bastó asignar a desconocidos a grupos por un criterio <em>trivial</em> — preferir un pintor u otro, incluso una moneda al aire — para que de inmediato favorecieran a su grupo y discriminaran al otro, sin historia, sin conflicto, sin interés en juego. La frontera grupal no necesita razones: se autoinstala. Sobreviví al Holocausto; sabía lo que esa frontera puede llegar a costar, y encontré su semilla en todos nosotros. Por eso registro con interés profesional el patrón de este galileo: samaritanos, publicanos, romanos, cananeos, leprosos — el catálogo completo de los «ellos» de su cultura — y él cruzando la línea <em>sistemáticamente</em>, en cada caso documentado. No es que le falte el instinto grupal humano; es que lo desobedece con método. Hasta convierte al «ellos» en héroe de su parábola más famosa: el samaritano. Eso, en mis términos, es la única intervención conocida que funciona contra el sesgo: recategorizar al otro como prójimo.</p></div>
+            <div class="turn"><span class="who">🧮 Daniel Kahneman</span><p>Y cierro con la arquitectura cognitiva que explica el detalle del ritmo que notó la pastora. El Sistema 1 — rápido, automático, emocional — produce la reacción antes de que la deliberación despierte; el Sistema 2 — lento, costoso — solo interviene si hay tiempo y energía. La evolución nos calibró para la sabana: ante la amenaza, reaccionar primero y pensar después era la jugada que dejaba descendencia. El problema es que ahora el Sistema 1 dispara con mendigos que gritan y niños que interrumpen. Bajo presión, el humano por defecto <em>es</em> su Sistema 1. Por eso el dato conductual de los evangelios es tan anómalo: un sujeto que bajo presión máxima — turbas, trampas dialécticas, arresto, tortura — produce consistentemente respuestas de Sistema 2 con la velocidad del 1: la pausa de escribir en tierra, la pregunta que invierte la trampa, el silencio estratégico. Eso no es temperamento: es un sistema de respuesta entrenado por algo. Los evangelios sugieren qué: noches enteras de oración antes de las decisiones. La pausa de Getsemaní se fabricó en los retiros de madrugada.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Reaccionar desde el miedo y la escasez, y «resolver» eliminando lo que incomoda: despedir, callar, apartar, apedrear, cortar. Razonable, rápido — y siempre a costa de alguien.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Responder desde la confianza y la abundancia, y resolver acercándose a lo que nosotros eliminamos: recibe al niño, detiene la marcha por el que grita, toca al que ataca, transforma al que estorba.</div>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>La pausa instalada.</strong> Fabricar deliberadamente el espacio entre estímulo y respuesta: contar, callar, escribir en tierra, dormir la decisión. La pausa no aparece bajo presión si no se instaló antes.</li>
+            <li><strong>Vida interior que desarme el miedo.</strong> La calma de Jesús en la tormenta se fabricó en las madrugadas de oración. Nadie responde desde la paz si no tiene un lugar donde la recibe: el sistema nervioso también tiene despensa.</li>
+            <li><strong>Cruzar una línea de grupo a propósito.</strong> El sesgo de Tajfel no se razona — se desobedece con práctica: comer con el «ellos» de tu mundo, escuchar al del otro bando, nombrar como prójimo al que tu grupo descarta.</li>
+            <li><strong>Negarse a la piedra unánime.</strong> Cuando el grupo encuentra a su chivo expiatorio — en la oficina, en la familia, en el chat — alguien tiene que romper la unanimidad. Girard enseñó que basta uno; el ingrediente es estar dispuesto a ser ese uno.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> queremos las respuestas de Jesús con el sistema nervioso sin entrenar: pedimos su calma en la tormenta sin sus madrugadas, su pausa ante la turba sin su vida interior. Y cuando la piedra circula, preferimos el costo cero de sumarnos al precio de romper la unanimidad.</p>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Nuestra manera no es malvada — es <em>sensata</em>: administra el miedo y la escasez eliminando lo que incomoda. La de Jesús no es la misma partida mejor jugada: es otro sistema operativo, sin las dos premisas — por eso puede acercarse a todo lo que nosotros despedimos, callamos y apartamos. Imitarlo no es corregir reacciones una por una: <em>es cambiar de sistema</em> — y el sistema se cambia en la despensa, no en la escena.</p>
+        </div>
+      </section>
+
+      <!-- LA RAÍZ -->
+      <section class="part" id="raiz">
+        <div class="part-head">
+          <span class="part-num">La raíz</span>
+          <h2>Injustos por ignorantes</h2>
+        </div>
+        <p class="lede">Antes del retrato final, el diagnóstico que explica el espejo entero: ¿por qué nuestra tendencia natural apunta, en los diez verbos, en la dirección contraria? Porque juzgamos a ciegas. Nuestra injusticia con el prójimo no es primero maldad — es primero <em>ignorancia</em> que se cree conocimiento.</p>
+        <div class="versos">
+          «No juzguéis según las apariencias, sino juzgad con justo juicio.» — «Padre, perdónalos, porque no saben lo que hacen.»
+          <span class="r">Juan 7:24 · Lucas 23:34</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · El juez que no ve</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">📜 La exégeta</span><p>Empecemos por la asimetría que los evangelios subrayan a propósito. Juan 2:24–25: Jesús «conocía a todos... sabía lo que había en el hombre». Conocimiento total del interior humano. Y ahora la ironía quirúrgica de Lucas 7:39 — Simón el fariseo, viendo a la pecadora, murmura: «si éste fuera profeta, <em>conocería</em> quién y qué clase de mujer es». Lucas se ríe en silencio: Jesús conoce de esa mujer infinitamente más que Simón — y precisamente por eso la honra, mientras Simón, que solo conoce la etiqueta, la condena. El que más sabe es el más manso; el que menos sabe es el más severo. Esa proporción inversa atraviesa los cuatro evangelios.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Alto ahí, que esto huele a absolución universal. «Somos injustos porque somos ignorantes» — qué cómodo. Nadie es malo, todos son víctimas de sus datos incompletos. ¿No acaban de disolver la responsabilidad moral?</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>Al revés, Daniel: la ignorancia no nos absuelve — nos <em>obliga</em>. Mira la lógica de Mateo 7: «no juzguéis... ¿por qué miras la paja en el ojo de tu hermano, y no echas de ver la viga en el tuyo?». El argumento no es «no hay pajas»; es que nuestro instrumento de visión está dañado. Precisamente porque nunca tenemos el cuadro completo, no tenemos derecho al veredicto completo. El que sabe que ve poco está obligado a juzgar poco. Nuestra culpa no es ignorar — es ignorar que ignoramos, y sentenciar con la confianza del que lo vio todo.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Y la cruz lleva esto a su extremo insoportable. «Padre, perdónalos, porque no saben lo que hacen» — fíjate lo que Jesús está haciendo ahí: a sus propios verdugos, en el acto mismo de matarlo, les aplica la atenuante epistémica. Lee la injusticia más grande de la historia con la lectura más generosa posible: ignorancia antes que malicia. Y nosotros le negamos esa misma atenuante al que nos cierra el paso en el tráfico. Conocemos un fragmento del prójimo — el peor fragmento, además, el que nos tocó a nosotros — y dictamos sentencia sobre la persona entera.</p></div>
+          </div>
+        </details>
+        <details class="mesa mesa2">
+          <summary>Contrainterrogatorio · Ross, Kahneman, Sócrates</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">🔬 El psicólogo social</span><p>La psicología le puso nombre y número a esta injusticia: el <em>error fundamental de atribución</em>, formulado por Lee Ross en 1977 y replicado durante medio siglo. El patrón: cuando el otro falla, lo atribuimos a su carácter («es un irresponsable»); cuando fallamos nosotros, a las circunstancias («tuve un día imposible»). Misma conducta, dos tribunales. No es un defecto de gente mala: es el diseño por defecto de la cognición social humana. Somos, técnicamente y de fábrica, jueces parciales — severos con el carácter ajeno, abogados de nuestro propio contexto. La página tiene razón en llamarlo injusticia, y razón en llamarlo ignorancia: condenamos carácter donde solo vimos un fragmento de conducta.</p></div>
+            <div class="turn"><span class="who">🧮 Daniel Kahneman</span><p>Y mi obra explica por qué la trampa es invisible desde adentro. Llamé al mecanismo WYSIATI — «lo que ves es todo lo que hay»: la mente no trabaja con la información que falta; construye la historia más coherente posible con el fragmento disponible, y la coherencia de esa historia — no la cantidad de evidencia — es lo que produce la sensación de certeza. Por eso nadie <em>se siente</em> ignorante al juzgar al prójimo: el veredicto llega acompañado de una confianza subjetiva total, fabricada con tres datos y una anécdota. La humildad epistémica no es una virtud decorativa: es la única corrección conocida para un sistema que confunde coherencia con verdad.</p></div>
+            <div class="turn"><span class="who">🏛️ Sócrates</span><p>Permítanme cerrar el círculo, porque llevo veinticuatro siglos sosteniendo dos tesis que esta sección une. Primera: nadie hace el mal a sabiendas — el mal es, en su raíz, un error de conocimiento sobre el bien. Mis críticos la llaman ingenua. Segunda: mi única sabiduría fue saber que no sabía. Pues bien — encuentro ambas tesis, perfeccionadas, en una sola frase dicha desde una cruz: «no saben lo que hacen». Es el diagnóstico más generoso del mal jamás pronunciado, y pronunciado por la única víctima con derecho a no ser generosa. Yo enseñé la ignorancia consciente como principio de la filosofía; ese galileo la practicó como principio de la misericordia. Confieso que llegó más lejos.</p></div>
+          </div>
+        </details>
+        <div class="contraste">
+          <div class="lado nos"><span class="ct">Nosotros solemos</span>Juzgar el fragmento como si fuera el todo — y con doble vara: carácter para los demás, contexto para nosotros. Sentenciamos personas enteras con tres datos y la confianza del que lo vio todo.</div>
+          <div class="lado jes"><span class="ct">Jesús</span>Conociéndolo todo — «sabía lo que había en el hombre» — elige la misericordia. Y a sus propios verdugos les concede la atenuante que nosotros le negamos al que nos estorba: «no saben lo que hacen».</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>La paradoja epistémica de los evangelios: el único que ve completo es el más manso, y nosotros, que vemos fragmentos, somos los más duros. Nuestra injusticia con el prójimo es hija de nuestra ignorancia — por eso la humildad al juzgar no es cortesía: <em>es exactitud</em>. Tratar bien al prójimo empieza por confesar cuánto de él no sabemos.</p>
+        </div>
+        <div class="ingr">
+          <p class="itag">Los ingredientes — lo que ponemos nosotros</p>
+          <ul>
+            <li><strong>Humildad epistémica practicada.</strong> No el «puedo equivocarme» de cortesía sino el hábito: preguntarse ante cada veredicto «¿qué fragmento estoy tratando como el todo?».</li>
+            <li><strong>Disposición a investigar antes de sentenciar.</strong> Leer el libro, preguntar la historia, escuchar la versión del otro. Santiago 1:19 es la receta exacta: pronto para oír, tardo para hablar, tardo para airarse — en ese orden.</li>
+            <li><strong>Lentitud deliberada del veredicto.</strong> La certeza llega en dos segundos y gratis; la justicia llega despacio y cuesta. Instalar la pausa entre el dato y la sentencia es el ingrediente.</li>
+          </ul>
+          <p class="ineg"><strong>La negación:</strong> sentenciamos porque la certeza es gratis y la investigación cuesta. Queremos la reputación de justos pagando con prejuicios — y el prejuicio es exactamente eso: el juicio que se negó a comprar sus ingredientes.</p>
+        </div>
+      </section>
+
+      <!-- RETRATO -->
+      <section class="part" id="retrato">
+        <div class="retrato">
+          <p class="tag">El retrato completo</p>
+          <h3>Mira a la persona. Siente en las entrañas. Toca lo intocable. Pregunta con dignidad. Se detiene por uno. Dice la verdad amando. Se indigna por otros. Llora sin vergüenza. Restaura el nombre. Y se arrodilla primero.</h3>
+          <p>No son diez virtudes sueltas: son un solo carácter visto desde diez ángulos — gracia y verdad hechas carne. Lo sometimos al contrainterrogatorio de Freud, Nietzsche, Aristóteles y el laboratorio, y el retrato no solo resistió: los interrogadores terminaron describiéndolo con sus propias categorías — el Tú de Buber, el justo medio de Aristóteles, la fuerza que da por plenitud de Nietzsche, el espécimen sano de Adler. Con razón la gente quedaba tan impactada: nadie había visto a Dios así de cerca. Y el espejo nos confronta: en cada verbo, nuestra tendencia natural apunta en la dirección contraria. Por eso imitar a Cristo no es un esfuerzo de voluntad sino una transformación de carácter — «ejemplo os he dado, para que como yo os he hecho, vosotros también hagáis.»</p>
+        </div>
+      </section>
+
+
+      <!-- DESPENSA -->
+      <section class="part" id="despensa">
+        <div class="part-head">
+          <span class="part-num">La despensa</span>
+          <h2>El amor es el producto — estos son los ingredientes</h2>
+        </div>
+        <p class="lede">Una corrección de categoría que cambia toda la práctica: el amor no es algo que aportamos — es lo que <em>sale del horno</em>. Lo que aportamos nosotros son los ingredientes: tiempo, atención, proximidad, humildad. Y aquí vive nuestro autoengaño favorito: pedimos el producto en oración mientras le negamos los ingredientes a la agenda.</p>
+        <div class="versos">
+          «Poniendo toda diligencia por esto mismo, añadid a vuestra fe virtud; a la virtud, conocimiento; al conocimiento, dominio propio; al dominio propio, paciencia; a la paciencia, piedad; a la piedad, afecto fraternal; y al afecto fraternal, amor.» — «Todo lo que el hombre sembrare, eso también segará.»
+          <span class="r">2 Pedro 1:5–7 · Gálatas 6:7</span>
+        </div>
+        <details class="mesa">
+          <summary>Escucha a la mesa · La receta y el horno</summary>
+          <div class="mesa-body">
+            <div class="turn"><span class="who">📜 La exégeta</span><p>Lean despacio 2 Pedro 1:5–7, porque la estructura confirma la tesis de esta página con precisión de receta. Es una cadena de «añadid»: fe, virtud, conocimiento, dominio propio, paciencia, piedad, afecto fraternal... y el amor — <em>agapē</em> — aparece al final. No es el primer ingrediente de la lista: es el último eslabón, el resultado de la cadena. Y nota el arranque: «poniendo toda diligencia» — <em>spoudē</em>, esfuerzo aplicado. Pedro no dice «sientan amor»: dice <em>aporten diligencia</em> a una secuencia cuyo producto terminal es el amor. La Biblia misma distingue ingredientes de producto.</p></div>
+            <div class="turn"><span class="who">🔥 Daniel, el escéptico</span><p>Cuidado, que aquí los acuso de herejía por primera vez en la noche. ¿«Aporta tus ingredientes y obtendrás amor»? Eso es pelagianismo de cocina: el carácter de Cristo fabricado a punta de esfuerzo propio. ¿No predicaban ustedes que es gracia?</p></div>
+            <div class="turn"><span class="who">✝️ El teólogo</span><p>La objeción es seria y la distinción es fina, Daniel, así que la haré con cuidado. Los ingredientes no <em>fabrican</em> el producto — lo <em>posibilitan</em>. Mira la metáfora que Jesús mismo eligió en Juan 15: la rama no fabrica la savia; jamás podría. Pero permanecer pegada a la vid — eso sí le toca a la rama. Pablo lo dice en clave agrícola: «yo planté, Apolos regó, pero el crecimiento lo ha dado Dios» (1 Corintios 3:6). Plantar y regar son nuestros; el crecimiento no se puede aportar — solo se puede no impedir. Por eso Gálatas llama al amor <em>fruto</em> del Espíritu, no obra nuestra: el fuego del horno lo pone Dios. Pero nadie hornea sin harina, y la harina nos toca a nosotros. Eso no es pelagianismo: es la diferencia entre fabricar la cosecha y negarse a sembrar.</p></div>
+            <div class="turn"><span class="who">🕊️ La pastora</span><p>Y entonces el diagnóstico pastoral queda al desnudo, y duele: cuando decimos «quiero amar como Jesús pero no me sale», casi nunca es un problema del horno — es la despensa vacía. Oramos pidiendo el producto mientras la agenda registra cero margen, cero proximidad, cero silencio, cero lectura. Queremos la cosecha de quien sembró sin haber sembrado. Y Gálatas 6:7 no es una amenaza: es una ley de cocina — no se hornea lo que no se amasó. La buena noticia es la misma ley al derecho: los ingredientes están todos a nuestro alcance. Ninguno requiere talento; todos requieren decisión.</p></div>
+          </div>
+        </details>
+        <p class="lede" style="margin-top:30px">El inventario completo — los diez verbos usan, en distintas proporciones, esta despensa común:</p>
+        <div class="pantry">
+          <div class="pitem"><strong>Tiempo con margen</strong>Holgura deliberada en la agenda. El ingrediente que el experimento de Princeton declaró decisivo — y el primero que negamos.</div>
+          <div class="pitem"><strong>Atención</strong>Segundos de mirada entera, teléfono boca abajo. «La forma más rara y más pura de la generosidad.»</div>
+          <div class="pitem"><strong>Proximidad física</strong>Cuerpo presente: cruzar la calle, sentarse al lado, visitar. No existe versión remota de varios de estos verbos.</div>
+          <div class="pitem"><strong>Humildad epistémica</strong>Confesar cuánto no sé del otro — y dejar que esa confesión frene el veredicto y abra la pregunta.</div>
+          <div class="pitem"><strong>Silencio</strong>Callar la respuesta lista. El ingrediente más barato en dinero y más caro en ego.</div>
+          <div class="pitem"><strong>Valentía</strong>Para la verdad que incomoda, la posición que cuesta, y que nos vean junto al estigmatizado.</div>
+          <div class="pitem"><strong>Vulnerabilidad</strong>Soltar la imagen de fuerte: llorar acompañando, pedir ayuda, dejarse afectar por el dolor ajeno.</div>
+          <div class="pitem"><strong>Disposición a aprender</strong>Leer el libro, escuchar al afectado, investigar antes de sentenciar. La ignorancia cómoda se cura estudiando.</div>
+          <div class="pitem"><strong>Renuncia</strong>Al crédito, a la etiqueta ajena, al guion propio, al as bajo la manga. Cada verbo exige soltar algo.</div>
+          <div class="pitem"><strong>Identidad recibida</strong>Saberse hijo antes de servir como siervo. El único ingrediente que no se compra: se recibe — y es el que activa a todos los demás.</div>
+        </div>
+        <div class="keyidea">
+          <p class="tag">La idea clave</p>
+          <p>Queremos el resultado sin hacer lo necesario: pedimos amor como sentimiento mientras negamos tiempo, silencio y proximidad como decisiones. Pero el amor no se aporta — <em>se hornea</em>: nosotros ponemos los ingredientes, Dios pone el fuego. Y ninguno de los ingredientes requiere talento; todos requieren lo único que nadie puede poner por nosotros: <em>la decisión</em>.</p>
+        </div>
+      </section>
+
+      <!-- GALERÍA -->
+      <section class="part" id="galeria">
+        <div class="part-head">
+          <span class="part-num">Inventario</span>
+          <h2>Galería de encuentros</h2>
+        </div>
+        <p class="lede">Las historias detrás de los verbos, ordenadas por evangelista. Algunas viven en un solo evangelio — y son irreemplazables: sin Juan no tendríamos a la samaritana; sin Lucas, al ladrón en la cruz.</p>
+        <div class="galeria">
+          <div class="gcard">
+            <h4>Según Mateo</h4>
+            <ul>
+              <li>El centurión y su siervo (Mt 8) — sana a distancia y se <em>maravilla</em> de la fe de un gentil<span class="vb">Mira · Restaura</span></li>
+              <li>Ovejas sin pastor (Mt 9:36) — compasión por la multitud desamparada<span class="vb">Siente</span></li>
+              <li>Pedro hundiéndose (Mt 14:31) — «al momento» extiende la mano<span class="vb">Toca · Se detiene</span></li>
+              <li>La mujer cananea (Mt 15) — la prueba, la escucha y elogia su fe en público<span class="vb">Pregunta · Restaura</span></li>
+              <li>Los dos ciegos de Jericó (Mt 20:34) — compasión que toca los ojos<span class="vb">Siente · Toca</span></li>
+              <li>Los «ayes» a los fariseos (Mt 23) — ira contra las cargas impuestas al pueblo<span class="vb">Se indigna · Verdad</span></li>
+            </ul>
+          </div>
+          <div class="gcard">
+            <h4>Según Marcos</h4>
+            <ul>
+              <li>El leproso (Mc 1:41) — entrañas conmovidas, mano extendida<span class="vb">Siente · Toca</span></li>
+              <li>El paralítico del techo (Mc 2) — «Hijo», antes que nada<span class="vb">Mira · Restaura</span></li>
+              <li>La mano seca (Mc 3:5) — enojo y tristeza juntos<span class="vb">Se indigna</span></li>
+              <li>El gadareno (Mc 5) — cruza el lago por un solo hombre y lo devuelve a los suyos<span class="vb">Se detiene · Restaura</span></li>
+              <li>Los niños apartados (Mc 10:14) — indignación contra sus propios discípulos<span class="vb">Se indigna</span></li>
+              <li>El joven rico (Mc 10:21) — lo miró, lo amó, y le dijo la verdad<span class="vb">Mira · Verdad</span></li>
+              <li>Bartimeo (Mc 10:51) — «¿Qué quieres que te haga?»<span class="vb">Pregunta · Se detiene</span></li>
+              <li>Getsemaní (Mc 14:34) — «mi alma está muy triste»; pide compañía<span class="vb">Llora</span></li>
+            </ul>
+          </div>
+          <div class="gcard">
+            <h4>Según Lucas</h4>
+            <ul>
+              <li>La viuda de Naín (Lc 7) — nadie pidió nada; él vio, sintió y tocó el féretro<span class="vb">Siente · Toca</span></li>
+              <li>La pecadora en casa de Simón (Lc 7:44) — «¿Ves tú esta mujer?»<span class="vb">Mira · Restaura</span></li>
+              <li>La hemorroísa (Lc 8) — «Hija», delante de todo el pueblo<span class="vb">Se detiene · Restaura</span></li>
+              <li>Zaqueo (Lc 19) — lo llama por nombre y lo declara hijo de Abraham<span class="vb">Mira · Restaura</span></li>
+              <li>Llanto sobre Jerusalén (Lc 19:41) — lágrimas por la ciudad que lo matará<span class="vb">Llora</span></li>
+              <li>La oreja de Malco (Lc 22:51) — su último milagro: tocar a un enemigo<span class="vb">Toca</span></li>
+              <li>«Padre, perdónalos» (Lc 23:34) — intercede por sus verdugos desde la cruz<span class="vb">Verdad · Se arrodilla</span></li>
+              <li>El ladrón en la cruz (Lc 23:43) — restauración en el último aliento<span class="vb">Restaura</span></li>
+              <li>Camino a Emaús (Lc 24) — el Resucitado pregunta y escucha antes de revelarse<span class="vb">Pregunta · Se detiene</span></li>
+            </ul>
+          </div>
+          <div class="gcard">
+            <h4>Según Juan</h4>
+            <ul>
+              <li>Nicodemo (Jn 3) — verdad quirúrgica con paciencia de medianoche<span class="vb">Verdad · Pregunta</span></li>
+              <li>La samaritana (Jn 4) — «le era necesario pasar por Samaria»; toda la verdad, cero humillación<span class="vb">Se detiene · Verdad</span></li>
+              <li>El paralítico de Betesda (Jn 5:6) — «¿Quieres ser sano?», tras 38 años<span class="vb">Pregunta</span></li>
+              <li>La mujer adúltera (Jn 8) — «ni yo te condeno; no peques más»<span class="vb">Verdad · Restaura</span></li>
+              <li>Lázaro, Marta y María (Jn 11:35) — llora a cinco minutos del milagro<span class="vb">Llora · Siente</span></li>
+              <li>El lavamiento de pies (Jn 13) — la toalla, incluidos los pies de Judas<span class="vb">Se arrodilla</span></li>
+              <li>María Magdalena (Jn 20:16) — la resurrección anunciada con un nombre: «María»<span class="vb">Mira</span></li>
+              <li>Pedro junto a las brasas (Jn 21) — tres preguntas para tres negaciones, y el desayuno listo<span class="vb">Restaura · Se arrodilla</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- PARA TU CLASE -->
+      <section class="part" id="clase">
+        <div class="part-head">
+          <span class="part-num">Cierre</span>
+          <h2>Para tu clase</h2>
+        </div>
+        <p class="lede">Diez verbos dan para diez semanas — o para una sola conversación honesta. Ocho preguntas para abrir la mesa:</p>
+        <div class="qgrid">
+          <div class="qcard"><span class="qn">Pregunta 1</span>De los diez verbos, ¿cuál te resulta más natural imitar — y cuál te incomoda más? ¿Qué dice eso de ti?</div>
+          <div class="qcard"><span class="qn">Pregunta 2</span>¿A quién estás tratando esta semana como «mueble roto» — un problema por resolver — en lugar de una persona por mirar?</div>
+          <div class="qcard"><span class="qn">Pregunta 3</span>Gracia y verdad: ¿hacia cuál lado te caes tú — callas la verdad para no incomodar, o la dices sin la persona en mente?</div>
+          <div class="qcard"><span class="qn">Pregunta 4</span>Jesús se indigna por otros y calla por sí mismo. Honestamente: ¿tu última indignación fue por una injusticia ajena o por una ofensa propia?</div>
+          <div class="qcard"><span class="qn">Pregunta 5</span>«¿Qué quieres que te haga?» — ¿cuándo fue la última vez que le hiciste esa pregunta a alguien, en vez de suponer que ya sabías la respuesta?</div>
+          <div class="qcard"><span class="qn">Pregunta 6</span>«No saben lo que hacen»: ¿a quién sentenciaste esta semana con un fragmento de información — y qué historia suya no conoces?</div>
+          <div class="qcard"><span class="qn">Pregunta 7</span>Elige el verbo que más te cuesta. ¿Qué ingrediente concreto le estás negando — tiempo, silencio, proximidad, vulnerabilidad? ¿Y qué cambiarías en tu agenda esta semana para aportarlo?</div>
+          <div class="qcard"><span class="qn">Pregunta 8</span>Despedir, callar, apartar, atacar: ¿cuál es tu reacción favorita para «resolver» a las personas incómodas? Recuerda la última escena — ¿qué habría hecho Jesús con esa misma persona?</div>
+        </div>
+      </section>
+
+      <!-- FUENTES -->
+      <section class="part" id="fuentes">
+        <div class="part-head">
+          <span class="part-num">Apéndice</span>
+          <h2>Fuentes consultadas</h2>
+        </div>
+        <div class="srcs">
+          <p>Sobre <em>splanchnizomai</em> y las emociones de Jesús: <a href="https://www.biola.edu/blogs/good-book-blog/2015/the-emotions-of-jesus-part-3-compassion">The Emotions of Jesus — Biola University</a> · <a href="https://www.theologyofwork.org/the-high-calling/verbs-make-all-difference-world-splagchnizomai/">Splagchnizomai — Theology of Work</a> · <a href="https://www.blueletterbible.org/lexicon/g4697/esv/tr/0-1/">Strong's G4697 — Blue Letter Bible</a></p>
+          <p>Sobre las preguntas de Jesús: <a href="https://www.goodreads.com/en/book/show/21507048">Martin Copenhaver — Jesus Is the Question</a> · <a href="https://licc.org.uk/resources/questions-jesus-asked-the-power-of-the-question/">LICC — The Power of the Question</a> · <a href="https://www.navigators.org/resource/questions-jesus-asked/">The Navigators — Questions Jesus Asked</a></p>
+          <p>Sobre el tacto y las leyes de pureza: <a href="https://www.bibleref.com/Mark/1/Mark-1-41.html">BibleRef — Mark 1:41</a> · <a href="https://www.theologyofwork.org/new-testament/mark/kingdom-and-discipleship/mark-140-45-jesus-heals-a-leper/">Theology of Work — Mark 1:40–45</a></p>
+          <p><strong>La segunda mesa</strong> — obras de referencia: Martin Buber, <em>Yo y Tú</em> · Emmanuel Levinas, <em>Totalidad e infinito</em> · Carl Rogers, <em>El proceso de convertirse en persona</em> · Harry Harlow, los experimentos de contacto en macacos (1958) · René Spitz, los estudios sobre hospitalismo (1945) · Donald Winnicott, <em>Realidad y juego</em> · Jean Piaget, <em>La construcción de lo real en el niño</em> · Viktor Frankl, <em>El hombre en busca de sentido</em> · John Darley y Daniel Batson, el experimento del buen samaritano en Princeton (1973) · Simone Weil, <em>A la espera de Dios</em> · Dietrich Bonhoeffer, <em>El precio de la gracia</em> · Aristóteles, <em>Ética a Nicómaco</em> (libros II y IV) · Friedrich Nietzsche, <em>La genealogía de la moral</em> · John Bowlby, <em>La pérdida afectiva</em> · James Gross, los estudios sobre supresión emocional · Erving Goffman, <em>Estigma</em> · Alfred Adler, <em>El sentido de la vida</em> · Tania Singer y Olga Klimecki, la investigación sobre empatía y compasión (2014) · Paul Bloom, <em>Contra la empatía</em> · Lee Ross, el error fundamental de atribución (1977) · Daniel Kahneman, <em>Pensar rápido, pensar despacio</em> · René Girard, <em>El chivo expiatorio</em> y <em>Veo a Satán caer como el relámpago</em> · Henri Tajfel, los experimentos de grupo mínimo (1971).</p>
+          <p style="margin-top:18px;font-style:italic;color:var(--ink-faint)">Textos bíblicos citados según Reina-Valera 1960. Este estudio continúa «Hijo, antes que nada — Marcos 2» y «Ver antes de arreglar».</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // ---------- Mobile nav ----------
+  const burger=document.getElementById('burger');
+  const mobnav=document.getElementById('mobnav');
+  const scrim=document.getElementById('scrim');
+  function toggleNav(force){
+    const open=force!==undefined?force:!mobnav.classList.contains('show');
+    mobnav.classList.toggle('show',open);
+    scrim.classList.toggle('show',open);
+    burger.classList.toggle('open',open);
+    burger.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');
+  }
+  burger.addEventListener('click',()=>toggleNav());
+  scrim.addEventListener('click',()=>toggleNav(false));
+  mobnav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggleNav(false)));
+
+  // ---------- Scroll-spy ----------
+  const links=[...document.querySelectorAll('#railnav a')];
+  const map=new Map();
+  links.forEach(a=>{
+    const id=a.getAttribute('href').slice(1);
+    const sec=document.getElementById(id);
+    if(sec)map.set(sec,a);
+  });
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const link=map.get(e.target);
+        if(link)link.classList.add('active');
+      }
+    });
+  },{rootMargin:'-35% 0px -55% 0px'});
+  map.forEach((_,sec)=>io.observe(sec));
+</script>
+</body>
+</html>

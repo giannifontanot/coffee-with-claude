@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Mesa de los Métodos — PDCA, Ackoff y el arte de mejorar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#f7f1e3;
+    --parchment-deep:#efe5cf;
+    --ink:#2b2118;
+    --ink-soft:#5a4a3a;
+    --rule:#d8c9a8;
+    --accent:#9a4a1f;          /* moderador / acentos */
+    --deming:#1f4e79;          /* azul profundo */
+    --ackoff:#7a1f3d;          /* borgoña */
+    --ingeniero:#3a4a52;       /* acero */
+    --tiburon:#0e6b5e;         /* verde mar */
+    --esceptico:#6b6b52;       /* gris oliva */
+    --card:#fdfaf2;
+    --shadow:0 2px 12px rgba(43,33,24,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation:none!important;transition:none!important;}
+  }
+  body{
+    font-family:'Spectral',Georgia,serif;
+    background:var(--parchment);
+    color:var(--ink);
+    line-height:1.75;
+    font-size:1.05rem;
+  }
+  /* ---------- layout ---------- */
+  .layout{display:grid;grid-template-columns:240px 1fr;max-width:1180px;margin:0 auto;}
+  main{padding:0 2.4rem 6rem;min-width:0;}
+  /* ---------- side rail ---------- */
+  .rail{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    padding:2.2rem 1.2rem 2rem 1.6rem;
+    border-right:1px solid var(--rule);
+  }
+  .rail .brand{
+    font-family:'Fraunces',serif;font-weight:900;font-size:1.05rem;
+    letter-spacing:.02em;margin-bottom:.4rem;color:var(--accent);
+  }
+  .rail .brand-sub{font-size:.78rem;color:var(--ink-soft);font-style:italic;margin-bottom:1.6rem;}
+  .rail nav a{
+    display:block;text-decoration:none;color:var(--ink-soft);
+    font-size:.86rem;padding:.34rem .6rem;border-left:2px solid transparent;
+    transition:color .2s,border-color .2s,background .2s;border-radius:0 6px 6px 0;
+  }
+  .rail nav a:hover{color:var(--ink);background:var(--parchment-deep);}
+  .rail nav a.active{color:var(--accent);border-left-color:var(--accent);font-weight:600;background:var(--parchment-deep);}
+  .rail nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  /* ---------- hamburger ---------- */
+  .menu-btn{
+    display:none;position:fixed;top:.9rem;right:.9rem;z-index:60;
+    background:var(--card);border:1px solid var(--rule);border-radius:10px;
+    padding:.55rem .7rem;font-size:1.1rem;cursor:pointer;box-shadow:var(--shadow);
+    color:var(--ink);
+  }
+  .menu-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  /* ---------- hero ---------- */
+  header.hero{padding:4.5rem 0 3rem;border-bottom:1px solid var(--rule);}
+  .hero .eyebrow{
+    font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:1rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',serif;font-weight:900;
+    font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.08;margin-bottom:1.2rem;
+  }
+  .hero h1 em{font-style:italic;color:var(--accent);}
+  .hero .lede{font-size:1.18rem;color:var(--ink-soft);max-width:46ch;font-weight:300;}
+  .panelists{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.8rem;}
+  .chip{
+    font-size:.78rem;padding:.3rem .8rem;border-radius:999px;
+    border:1.5px solid;background:var(--card);font-weight:500;
+  }
+  .chip.deming{color:var(--deming);border-color:var(--deming);}
+  .chip.ackoff{color:var(--ackoff);border-color:var(--ackoff);}
+  .chip.ingeniero{color:var(--ingeniero);border-color:var(--ingeniero);}
+  .chip.tiburon{color:var(--tiburon);border-color:var(--tiburon);}
+  .chip.esceptico{color:var(--esceptico);border-color:var(--esceptico);}
+  .chip.mod{color:var(--accent);border-color:var(--accent);}
+  .disclaimer{
+    margin-top:1.6rem;font-size:.82rem;color:var(--ink-soft);font-style:italic;
+    border-left:3px solid var(--rule);padding-left:.9rem;max-width:60ch;
+  }
+  /* ---------- sections ---------- */
+  section{padding:3.2rem 0 1rem;border-bottom:1px solid var(--rule);}
+  section:last-of-type{border-bottom:none;}
+  .kicker{
+    font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:.5rem;
+  }
+  h2{
+    font-family:'Fraunces',serif;font-weight:700;
+    font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.15;margin-bottom:1.4rem;
+  }
+  h3{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.18rem;
+    margin:2rem 0 .8rem;color:var(--ink);
+  }
+  p{margin-bottom:1.05rem;max-width:68ch;}
+  strong{font-weight:600;}
+  /* ---------- dialogue ---------- */
+  .turno{
+    background:var(--card);border-radius:14px;box-shadow:var(--shadow);
+    padding:1.2rem 1.4rem;margin:1.1rem 0;border-left:4px solid var(--rule);
+    max-width:70ch;
+  }
+  .turno .voz{
+    font-family:'Fraunces',serif;font-weight:700;font-size:.92rem;
+    letter-spacing:.04em;display:block;margin-bottom:.4rem;
+  }
+  .turno p{margin-bottom:.7rem;}
+  .turno p:last-child{margin-bottom:0;}
+  .turno.deming{border-left-color:var(--deming);}   .turno.deming .voz{color:var(--deming);}
+  .turno.ackoff{border-left-color:var(--ackoff);}   .turno.ackoff .voz{color:var(--ackoff);}
+  .turno.ingeniero{border-left-color:var(--ingeniero);} .turno.ingeniero .voz{color:var(--ingeniero);}
+  .turno.tiburon{border-left-color:var(--tiburon);} .turno.tiburon .voz{color:var(--tiburon);}
+  .turno.esceptico{border-left-color:var(--esceptico);} .turno.esceptico .voz{color:var(--esceptico);}
+  .turno.mod{border-left-color:var(--accent);}      .turno.mod .voz{color:var(--accent);}
+  .aparte{
+    font-size:.88rem;font-style:italic;color:var(--ink-soft);
+    margin:.4rem 0 1.2rem .6rem;max-width:62ch;
+  }
+  /* ---------- PDCA wheel (signature) ---------- */
+  .wheel-wrap{display:grid;grid-template-columns:240px 1fr;gap:1.8rem;align-items:start;margin:1.6rem 0 1rem;}
+  .wheel{width:240px;height:240px;}
+  .wheel .quad{cursor:pointer;transition:opacity .2s, transform .2s;transform-origin:120px 120px;}
+  .wheel .quad:hover{opacity:.85;}
+  .wheel .quad.sel{transform:scale(1.04);}
+  .wheel text{font-family:'Fraunces',serif;font-weight:700;fill:#fdfaf2;font-size:15px;pointer-events:none;}
+  .wheel-info{
+    background:var(--card);border-radius:14px;box-shadow:var(--shadow);
+    padding:1.2rem 1.4rem;min-height:160px;
+  }
+  .wheel-info h4{font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:.5rem;color:var(--deming);}
+  .wheel-info p{font-size:.95rem;margin-bottom:.6rem;}
+  .wheel-hint{font-size:.78rem;color:var(--ink-soft);font-style:italic;margin-top:.6rem;}
+  /* ---------- lists & tables ---------- */
+  ul.clean, ol.clean{margin:0 0 1.2rem 1.3rem;max-width:66ch;}
+  ul.clean li, ol.clean li{margin-bottom:.55rem;}
+  .matriz{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:.92rem;background:var(--card);box-shadow:var(--shadow);border-radius:12px;overflow:hidden;}
+  .matriz th{
+    font-family:'Fraunces',serif;text-align:left;padding:.7rem .9rem;
+    background:var(--parchment-deep);border-bottom:2px solid var(--rule);font-size:.86rem;
+  }
+  .matriz td{padding:.65rem .9rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  .matriz tr:last-child td{border-bottom:none;}
+  /* ---------- fuentes ---------- */
+  .fuentes{font-size:.84rem;color:var(--ink-soft);margin:.4rem 0 1.4rem;}
+  .fuentes a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);}
+  .fuentes a:hover{border-bottom-style:solid;}
+  footer{padding:2.5rem 0 1rem;font-size:.85rem;color:var(--ink-soft);font-style:italic;}
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    .menu-btn{display:block;}
+    .rail{
+      position:fixed;inset:0 30% 0 0;min-width:260px;z-index:50;background:var(--parchment);
+      transform:translateX(-105%);transition:transform .28s ease;border-right:1px solid var(--rule);
+      box-shadow:8px 0 30px rgba(43,33,24,.15);
+    }
+    .rail.open{transform:translateX(0);}
+    main{padding:0 1.2rem 4rem;}
+    .wheel-wrap{grid-template-columns:1fr;}
+    .wheel{margin:0 auto;}
+  }
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDE RAIL ===== -->
+  <aside class="rail" id="rail">
+    <div class="brand">La Mesa de los Métodos</div>
+    <div class="brand-sub">Café con Claude · cuaderno de mejora</div>
+    <nav id="railNav" aria-label="Secciones">
+      <a href="#apertura">Apertura</a>
+      <a href="#pdca">El ciclo PDCA / PDSA</a>
+      <a href="#profundo">Conocimiento Profundo</a>
+      <a href="#ackoff">Ackoff y los sistemas</a>
+      <a href="#algoritmo">El Algoritmo de Musk</a>
+      <a href="#tiburon">La mente del tiburón</a>
+      <a href="#radar">Lo que te falta en el radar</a>
+      <a href="#sintesis">Síntesis: ¿cuál uso?</a>
+      <a href="#fuentes">Fuentes</a>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main>
+
+    <header class="hero" id="top">
+      <div class="eyebrow">Mesa redonda imaginaria · Edición de una noche</div>
+      <h1>Cinco mentes, una pregunta:<br><em>¿cómo se mejora algo de verdad?</em></h1>
+      <p class="lede">PDCA, pensamiento de sistemas, el algoritmo de las cinco etapas y el olfato del inversionista — sentados a la misma mesa, con café, para discutir qué es lo esencial.</p>
+      <div class="panelists">
+        <span class="chip mod">La Moderadora</span>
+        <span class="chip deming">El Estadístico · voz de W. E. Deming</span>
+        <span class="chip ackoff">El Filósofo de Sistemas · voz de R. Ackoff</span>
+        <span class="chip ingeniero">El Ingeniero Iterador · método de E. Musk</span>
+        <span class="chip tiburon">La Tiburona · mentalidad Shark Tank</span>
+        <span class="chip esceptico">El Escéptico Honesto</span>
+      </div>
+      <p class="disclaimer">Esto es una dramatización pedagógica: las voces representan las <strong>ideas documentadas</strong> de cada escuela, no citas literales de personas reales. Cuando algo es cita real, va señalado en las fuentes al pie de cada sección.</p>
+    </header>
+
+    <!-- ========== APERTURA ========== -->
+    <section id="apertura">
+      <div class="kicker">Acto I</div>
+      <h2>Apertura: el mapa antes del territorio</h2>
+
+      <div class="turno mod">
+        <span class="voz">LA MODERADORA</span>
+        <p>Bienvenidos. La regla de la casa es simple: nada de jerga sin traducción, y cada quien tiene derecho a interrumpir al otro una vez por sección. Empecemos por lo grande: ¿qué tienen en común todos sus métodos?</p>
+      </div>
+
+      <div class="turno deming">
+        <span class="voz">EL ESTADÍSTICO</span>
+        <p>Que ninguno confía en la opinión. Todos, a su manera, son formas disciplinadas de <strong>aprender de la realidad</strong>: formular una teoría, probarla en pequeño, estudiar lo que pasó, y ajustar. Es el método científico vestido de ropa de trabajo.</p>
+      </div>
+
+      <div class="turno ackoff">
+        <span class="voz">EL FILÓSOFO DE SISTEMAS</span>
+        <p>Y que ninguno funciona si lo aplicas a la pregunta equivocada. Antes de mejorar <em>cómo</em> haces algo, hay que verificar <em>si deberías estar haciéndolo</em>. Esa será mi cantaleta de toda la noche, aviso desde ya.</p>
+      </div>
+
+      <div class="turno esceptico">
+        <span class="voz">EL ESCÉPTICO</span>
+        <p>Mi cantaleta será la opuesta: los marcos mentales son adictivos. Coleccionarlos se siente productivo y no produce nada. Esta noche solo me interesan dos preguntas por cada método: ¿qué error específico me evita? y ¿cómo sé que lo estoy usando mal?</p>
+      </div>
+
+      <p class="aparte">— La Moderadora anota en su pizarra: «Aprender de la realidad. Pregunta correcta primero. Marcos que evitan errores específicos.» Tres hilos para toda la velada.</p>
+    </section>
+
+    <!-- ========== PDCA ========== -->
+    <section id="pdca">
+      <div class="kicker">Acto II · Deming &amp; Shewhart</div>
+      <h2>El ciclo PDCA / PDSA: la rueda que nunca para</h2>
+
+      <div class="turno deming">
+        <span class="voz">EL ESTADÍSTICO</span>
+        <p>La rueda nació con Walter Shewhart en los laboratorios Bell y Deming la convirtió en el corazón de la mejora continua: <strong>Planificar, Hacer, Estudiar, Actuar</strong>. Es un ciclo de aprendizaje, no una lista de tareas. Toca cada cuadrante de la rueda y te cuento.</p>
+      </div>
+
+      <div class="wheel-wrap">
+        <svg class="wheel" viewBox="0 0 240 240" role="img" aria-label="Rueda PDCA interactiva con cuatro cuadrantes">
+          <g class="quad sel" data-q="0" tabindex="0" role="button" aria-label="Planificar">
+            <path d="M120,120 L120,12 A108,108 0 0,1 228,120 Z" fill="#1f4e79"/>
+            <text x="158" y="78" text-anchor="middle">Plan</text>
+          </g>
+          <g class="quad" data-q="1" tabindex="0" role="button" aria-label="Hacer">
+            <path d="M120,120 L228,120 A108,108 0 0,1 120,228 Z" fill="#9a4a1f"/>
+            <text x="160" y="170" text-anchor="middle">Do</text>
+          </g>
+          <g class="quad" data-q="2" tabindex="0" role="button" aria-label="Estudiar">
+            <path d="M120,120 L120,228 A108,108 0 0,1 12,120 Z" fill="#7a1f3d"/>
+            <text x="78" y="170" text-anchor="middle">Study</text>
+          </g>
+          <g class="quad" data-q="3" tabindex="0" role="button" aria-label="Actuar">
+            <path d="M120,120 L12,120 A108,108 0 0,1 120,12 Z" fill="#0e6b5e"/>
+            <text x="80" y="78" text-anchor="middle">Act</text>
+          </g>
+          <circle cx="120" cy="120" r="34" fill="#f7f1e3"/>
+          <text x="120" y="126" text-anchor="middle" style="fill:#2b2118;font-size:13px;">↻</text>
+        </svg>
+        <div class="wheel-info">
+          <h4 id="wTitle">Plan — Planificar</h4>
+          <p id="wBody">Define el objetivo, formula una <strong>teoría</strong> («si cambio X, espero Y»), decide cómo medirás el éxito y diseña un experimento pequeño. Sin predicción explícita no hay aprendizaje posible después.</p>
+          <p class="wheel-hint">Toca cada cuadrante de la rueda →</p>
+        </div>
+      </div>
+
+      <h3>Los tres errores clásicos</h3>
+      <div class="turno deming">
+        <span class="voz">EL ESTADÍSTICO</span>
+        <p><strong>1. Confundir «Do» con «implementar la mejora».</strong> «Do» significa <em>hacer el experimento</em>, en pequeño. Si no hay experimento, no hay ciclo: hay una ocurrencia ejecutada con entusiasmo.</p>
+        <p><strong>2. Confundir «Check» con «Study».</strong> Deming insistía en PDSA, no PDCA: «Check» tienta a solo verificar éxito/fracaso del plan; «Study» exige comparar el resultado contra tu predicción y <em>revisar la teoría</em>. La diferencia parece semántica y es teológica: una busca aprobación, la otra busca comprensión.</p>
+        <p><strong>3. Olvidar que «Act» tiene tres salidas:</strong> <em>ajustar</em> el experimento y girar de nuevo, <em>adoptar</em> el cambio, o <em>abandonar</em> la línea entera. Abandonar también es un resultado exitoso del ciclo.</p>
+      </div>
+
+      <div class="turno esceptico">
+        <span class="voz">EL ESCÉPTICO</span>
+        <p>Pasa mi prueba: el error que evita es <em>implementar sin aprender</em>. Y sabes que lo usas mal cuando tus ciclos duran trimestres. La rueda está diseñada para girar rápido — experimento chico, lección rápida, otro giro.</p>
+      </div>
+
+      <p class="fuentes">Fuentes: <a href="https://deming.org/explore/pdsa/">Deming Institute — PDSA</a>, <a href="https://deming.org/quick-tips-for-using-the-pdsa-improvement-cycle/">Quick Tips PDSA</a>, <a href="https://asq.org/quality-resources/pdca-cycle">ASQ — PDCA</a></p>
+    </section>
+
+    <!-- ========== CONOCIMIENTO PROFUNDO ========== -->
+    <section id="profundo">
+      <div class="kicker">Acto III · Deming</div>
+      <h2>El Sistema de Conocimiento Profundo: los cuatro lentes</h2>
+
+      <div class="turno mod">
+        <span class="voz">LA MODERADORA</span>
+        <p>Estadístico, mucha gente conoce su rueda pero no la filosofía detrás. ¿Cuál es?</p>
+      </div>
+
+      <div class="turno deming">
+        <span class="voz">EL ESTADÍSTICO</span>
+        <p>Deming enseñaba que para dirigir cualquier organización necesitas mirar por cuatro lentes a la vez:</p>
+        <p><strong>1. Apreciación del sistema.</strong> Tu organización es una red de procesos interdependientes con un propósito. Optimizar una pieza aislada suele dañar el todo.</p>
+        <p><strong>2. Conocimiento de la variación.</strong> Todo proceso varía. Hay <em>causas comunes</em> (el ruido normal del sistema) y <em>causas especiales</em> (algo excepcional ocurrió). Tratar ruido común como si fuera una crisis especial — regañar al equipo por un mes malo dentro del rango normal — empeora el sistema. Deming sostenía que la inmensa mayoría de los problemas proviene del sistema, no de las personas.</p>
+        <p><strong>3. Teoría del conocimiento.</strong> No hay aprendizaje sin predicción. La experiencia sola no enseña nada; la experiencia comparada contra una teoría sí.</p>
+        <p><strong>4. Psicología.</strong> Las personas tienen motivación intrínseca. Los incentivos torpes, los rankings y el miedo la destruyen.</p>
+      </div>
+
+      <div class="turno tiburon">
+        <span class="voz">LA TIBURONA</span>
+        <p>El lente dos me ha salvado dinero real: aprender a no reaccionar a cada variación de ventas como si fuera tendencia. La mitad de las «crisis» mensuales de una empresa pequeña son ruido estadístico.</p>
+      </div>
+
+      <p class="fuentes">Fuentes: <a href="https://deming.org/explore/sopk/">Deming Institute — System of Profound Knowledge</a>, <a href="https://deming.org/deming-101-theory-of-knowledge-and-the-pdsa-improvement-and-learning-cycle/">Deming 101 — Teoría del conocimiento</a></p>
+    </section>
+
+    <!-- ========== ACKOFF ========== -->
+    <section id="ackoff">
+      <div class="kicker">Acto IV · Russell Ackoff</div>
+      <h2>Ackoff: análisis, síntesis y el arte de no resolver el problema equivocado</h2>
+
+      <div class="turno ackoff">
+        <span class="voz">EL FILÓSOFO DE SISTEMAS</span>
+        <p>Mi turno. Tres ideas, y prometo que la tercera les va a incomodar.</p>
+        <p><strong>Primera: análisis vs. síntesis.</strong> El análisis desarma la cosa para entender sus partes; produce <em>conocimiento</em> — te dice <em>cómo</em> funciona. La síntesis hace lo contrario: pregunta «¿de qué todo mayor es parte esto?» y produce <em>comprensión</em> — te dice <em>por qué</em> existe y por qué se comporta así. ¿Por qué el motor de un auto va adelante? Ningún análisis del auto te lo dirá; tienes que mirar afuera: el motor reemplazó al caballo, y el caballo iba adelante de la carreta.</p>
+        <p><strong>Segunda: un sistema no es la suma de sus partes, sino el producto de sus interacciones.</strong> Si juntas el mejor motor, la mejor transmisión y los mejores frenos de marcas distintas, no obtienes el mejor auto: obtienes chatarra que no encaja. El desempeño del sistema depende de cómo las partes <em>encajan</em>, no de cuán buenas son por separado. Por eso mejorar cada departamento por separado puede empeorar la empresa entera.</p>
+        <p><strong>Tercera, la incómoda: es mejor hacer lo correcto mal que hacer lo incorrecto bien.</strong> Si haces lo incorrecto y lo corriges, lo haces <em>más</em> incorrecto, con más eficiencia. Si haces lo correcto mal y lo corriges, mejoras. La eficiencia es hacer bien las cosas; la <em>eficacia</em> es hacer las cosas correctas. Casi todos nuestros problemas graves vienen de hacer cada vez mejor lo que nunca debimos hacer.</p>
+      </div>
+
+      <div class="turno ingeniero">
+        <span class="voz">EL INGENIERO ITERADOR</span>
+        <p>Esa tercera idea es literalmente el paso tres de mi algoritmo: «el error más común es optimizar algo que no debería existir». Llegamos a la misma puerta por pasillos distintos.</p>
+      </div>
+
+      <h3>Los problemas no vienen solos: vienen en «messes»</h3>
+      <div class="turno ackoff">
+        <span class="voz">EL FILÓSOFO DE SISTEMAS</span>
+        <p>Los gerentes no enfrentan problemas independientes sino <em>marañas</em>: sistemas dinámicos de problemas que interactúan. Ante una maraña tienes cuatro respuestas posibles: <strong>absolverla</strong> (ignorarla y esperar), <strong>resolverla</strong> (un parche suficientemente bueno), <strong>solucionarla</strong> (la mejor respuesta posible al problema tal como está planteado), o <strong>disolverla</strong> — rediseñar el sistema para que el problema ya no pueda existir. Disolver es la jugada maestra y casi nadie la intenta.</p>
+        <p>Para disolver inventé el <strong>diseño idealizado</strong>: en lugar de mejorar lo que hay, pregúntate «si esto se destruyera anoche y pudiéramos crearlo de cero hoy, ¿cómo sería?» — y luego trabaja hacia atrás desde ese ideal hasta el presente. Planificar desde el futuro, no hacia el futuro.</p>
+      </div>
+
+      <div class="turno esceptico">
+        <span class="voz">EL ESCÉPTICO</span>
+        <p>Error que evita: <em>resolver brillantemente el problema equivocado</em>. Señal de mal uso: cuando «pensar en sistemas» se vuelve excusa para no decidir nada porque «todo está conectado». Ackoff diseñaba y actuaba; sus discípulos a veces solo dibujan diagramas.</p>
+      </div>
+
+      <p class="fuentes">Fuentes: <a href="https://deming.org/ackoff-on-systems-thinking-and-management/">Deming Institute — Ackoff sobre sistemas</a>, <a href="http://environment-ecology.com/general-systems-theory/380-systems-thinking-with-dr-russell-ackoff.html">Systems Thinking con Ackoff</a>, <a href="https://en.wikipedia.org/wiki/F-Law">f-Laws (Wikipedia)</a></p>
+    </section>
+
+    <!-- ========== ALGORITMO MUSK ========== -->
+    <section id="algoritmo">
+      <div class="kicker">Acto V · Iteración radical</div>
+      <h2>El Algoritmo: cinco pasos en orden estricto</h2>
+
+      <div class="turno ingeniero">
+        <span class="voz">EL INGENIERO ITERADOR</span>
+        <p>El método que Isaacson documentó en su biografía de Musk es un martillo de cinco golpes, y <strong>el orden no es negociable</strong>:</p>
+      </div>
+
+      <ol class="clean">
+        <li><strong>Cuestiona cada requisito.</strong> Todo requisito debe llevar el nombre de una <em>persona</em>, nunca de un departamento («lo pide legal» no vale). Y los requisitos de la gente brillante son los más peligrosos, porque nadie se atreve a cuestionarlos.</li>
+        <li><strong>Elimina partes y procesos.</strong> Regla de calibración: si no terminas reinstalando al menos un 10% de lo que borraste, no borraste suficiente.</li>
+        <li><strong>Simplifica y optimiza</strong> — solo lo que sobrevivió. El error clásico es optimizar algo que no debería existir.</li>
+        <li><strong>Acelera el ciclo.</strong> Todo proceso puede ir más rápido — pero solo después de los tres pasos anteriores, o estarás acelerando basura.</li>
+        <li><strong>Automatiza, al final.</strong> Automatizar primero fue uno de los errores más caros de las fábricas de Tesla: cementa la complejidad en lugar de eliminarla.</li>
+      </ol>
+
+      <div class="turno deming">
+        <span class="voz">EL ESTADÍSTICO</span>
+        <p>Permíteme la interrupción que me corresponde: tu algoritmo es un ciclo PDSA con el volumen al máximo. «Cuestiona el requisito» es estudiar la teoría; «elimina y mide qué hay que devolver» es un experimento con criterio de éxito explícito. Me agrada. Lo que me inquieta es la psicología: un sistema basado en presión extrema quema a las personas, y las personas son parte del sistema.</p>
+      </div>
+
+      <div class="turno ingeniero">
+        <span class="voz">EL INGENIERO ITERADOR</span>
+        <p>Crítica justa y documentada. Tómese el algoritmo, no necesariamente la cultura que lo rodea. El principio rescatable es: <strong>borrar antes que optimizar, optimizar antes que acelerar, acelerar antes que automatizar.</strong></p>
+      </div>
+
+      <p class="fuentes">Fuentes: <a href="https://www.startuparchive.org/p/elon-musk-explains-his-5-step-algorithm-for-running-companies">El algoritmo citado de la biografía de Isaacson</a>, <a href="https://modelthinkers.com/mental-model/musks-5-step-design-process">ModelThinkers — 5 Step Design Process</a></p>
+    </section>
+
+    <!-- ========== SHARK TANK ========== -->
+    <section id="tiburon">
+      <div class="kicker">Acto VI · El olfato del capital</div>
+      <h2>La mente del tiburón: la realidad tiene precio</h2>
+
+      <div class="turno tiburon">
+        <span class="voz">LA TIBURONA</span>
+        <p>Ustedes hablan de teorías y sistemas; yo hablo de la prueba más barata y brutal que existe: <strong>¿alguien paga por esto?</strong> Mi marco cabe en cuatro preguntas:</p>
+        <p><strong>1. Conoce tus números.</strong> Costo de adquirir un cliente, margen por unidad, cuánto cuesta producir, cuánto queda. Quien no sabe sus números de memoria no conoce su propio negocio — y en el estudio de Shark Tank, ahí muere el trato.</p>
+        <p><strong>2. Validación con dinero real.</strong> Cien personas que dicen «me encanta» valen menos que diez que pagaron. La opinión es gratis; la billetera es un instrumento de medición.</p>
+        <p><strong>3. Economía unitaria antes que escala.</strong> Si pierdes dinero en cada venta, vender más solo acelera la quiebra. Primero que una unidad sea rentable; luego, multiplica.</p>
+        <p><strong>4. Costo de oportunidad.</strong> Cada sí es mil noes. La pregunta no es «¿esto es bueno?» sino «¿esto es lo <em>mejor</em> que puedo hacer con este tiempo y este dinero?»</p>
+      </div>
+
+      <div class="turno ackoff">
+        <span class="voz">EL FILÓSOFO DE SISTEMAS</span>
+        <p>Uso mi interrupción: tu prueba de la billetera es síntesis pura, aunque no lo sepas. No analizas el producto por dentro; observas su función en el sistema mayor — el mercado. Bienvenida al club, Tiburona.</p>
+      </div>
+
+      <div class="turno tiburon">
+        <span class="voz">LA TIBURONA</span>
+        <p>Cobraré regalías por la membresía.</p>
+      </div>
+    </section>
+
+    <!-- ========== RADAR ========== -->
+    <section id="radar">
+      <div class="kicker">Acto VII · Lo que pediste sin saberlo</div>
+      <h2>Cinco marcos que probablemente te faltan en el radar</h2>
+
+      <div class="turno mod">
+        <span class="voz">LA MODERADORA</span>
+        <p>El anfitrión de esta página pidió «lo súper importante que se me pueda estar escapando». Panel: una idea cada uno, máximo dos párrafos, sin pelearse.</p>
+      </div>
+
+      <div class="turno ingeniero">
+        <span class="voz">EL INGENIERO ITERADOR</span>
+        <p><strong>El bucle OODA (John Boyd):</strong> Observar, Orientar, Decidir, Actuar. Nació en el combate aéreo: no gana el piloto más fuerte sino el que completa el ciclo de decisión <em>más rápido</em>, obligando al rival a reaccionar a un panorama ya viejo. La etapa clave es «Orientar» — actualizar tus modelos mentales antes de decidir. Es el primo veloz y adversarial del PDCA: PDCA mejora procesos; OODA gana entornos cambiantes.</p>
+      </div>
+
+      <div class="turno tiburon">
+        <span class="voz">LA TIBURONA</span>
+        <p><strong>La Teoría de Restricciones (Eliyahu Goldratt, «La Meta»):</strong> todo sistema tiene <em>un</em> cuello de botella que limita su rendimiento total. Mejorar cualquier otra parte es una ilusión de progreso — la cadena es tan fuerte como su eslabón más débil. El método: identifica la restricción, exprímela, subordina todo lo demás a ella, elévala, y vuelve a empezar porque la restricción se habrá movido. Es Ackoff con instinto asesino: te dice exactamente <em>dónde</em> intervenir el sistema.</p>
+      </div>
+
+      <div class="turno deming">
+        <span class="voz">EL ESTADÍSTICO</span>
+        <p><strong>El sistema Toyota / Lean (Taiichi Ohno):</strong> mis ideas hechas cultura nacional. Dos joyas: <em>genchi genbutsu</em> — «ve y mira por ti mismo» donde ocurre el trabajo, no gobiernes desde reportes — y los <em>cinco porqués</em>: ante un problema, pregunta «¿por qué?» cinco veces seguidas hasta llegar a la causa raíz en el proceso, no en la persona. Más el principio de eliminar <em>muda</em>: todo lo que no agrega valor para quien recibe.</p>
+      </div>
+
+      <div class="turno ackoff">
+        <span class="voz">EL FILÓSOFO DE SISTEMAS</span>
+        <p><strong>El marco Cynefin (Dave Snowden):</strong> un mapa para saber qué clase de problema tienes antes de elegir herramienta. <em>Claro</em>: aplica la mejor práctica. <em>Complicado</em>: analiza, llama expertos. <em>Complejo</em>: nadie puede predecir — sondea con experimentos seguros-para-fallar y responde a lo que emerge. <em>Caótico</em>: actúa primero, estabiliza, pregunta después. El pecado capital de nuestra época es tratar lo complejo como si fuera complicado: pedir el plan perfecto donde solo el experimento puede enseñar.</p>
+      </div>
+
+      <div class="turno esceptico">
+        <span class="voz">EL ESCÉPTICO</span>
+        <p><strong>El aprendizaje de doble bucle (Chris Argyris):</strong> el bucle simple corrige el error dentro de las reglas actuales («falló el plan, ajusto el plan»). El doble bucle cuestiona las reglas mismas («¿por qué creía que ese plan tenía sentido? ¿qué supuesto mío produjo este error?»). Las organizaciones — y las personas — más competentes son a menudo las peores en esto, porque rara vez fallan y nunca aprendieron a examinarse. Es el «Study» de Deming apuntado hacia adentro.</p>
+      </div>
+
+      <p class="fuentes">Fuentes: <a href="https://en.wikipedia.org/wiki/OODA_loop">OODA loop</a>, <a href="https://en.wikipedia.org/wiki/Theory_of_constraints">Teoría de Restricciones</a>, <a href="https://en.wikipedia.org/wiki/Toyota_Production_System">Sistema Toyota</a>, <a href="https://en.wikipedia.org/wiki/Cynefin_framework">Cynefin</a>, <a href="https://en.wikipedia.org/wiki/Double-loop_learning">Doble bucle</a></p>
+    </section>
+
+    <!-- ========== SÍNTESIS ========== -->
+    <section id="sintesis">
+      <div class="kicker">Acto final</div>
+      <h2>Síntesis: ¿cuál uso y cuándo?</h2>
+
+      <table class="matriz">
+        <thead>
+          <tr><th>Situación</th><th>Herramienta</th><th>Pregunta clave</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>¿Estoy resolviendo el problema correcto?</td><td><strong>Ackoff</strong> (síntesis, diseño idealizado)</td><td>«¿De qué todo es parte esto? ¿Y si lo rediseñara de cero?»</td></tr>
+          <tr><td>El problema es correcto; quiero mejorar el proceso</td><td><strong>PDSA</strong> (Deming)</td><td>«¿Cuál es mi predicción, y qué dice el resultado de mi teoría?»</td></tr>
+          <tr><td>El proceso está hinchado de pasos y requisitos</td><td><strong>El Algoritmo</strong> (Musk)</td><td>«¿Quién pidió esto, y qué pasa si lo borro?»</td></tr>
+          <tr><td>Recursos limitados, hay que elegir dónde golpear</td><td><strong>Restricciones</strong> (Goldratt) + <strong>Tiburona</strong></td><td>«¿Cuál es el cuello de botella, y los números dan?»</td></tr>
+          <tr><td>Entorno cambiante, competencia, incertidumbre</td><td><strong>OODA</strong> + <strong>Cynefin</strong></td><td>«¿Qué tipo de terreno piso, y qué tan rápido giro mi ciclo?»</td></tr>
+          <tr><td>Vuelvo a tropezar con la misma piedra</td><td><strong>Doble bucle</strong> (Argyris)</td><td>«¿Qué supuesto mío fabrica este error una y otra vez?»</td></tr>
+        </tbody>
+      </table>
+
+      <div class="turno mod">
+        <span class="voz">LA MODERADORA</span>
+        <p>Última ronda. Una frase cada uno: ¿qué se lleva el lector a casa?</p>
+      </div>
+
+      <div class="turno ackoff">
+        <span class="voz">EL FILÓSOFO DE SISTEMAS</span>
+        <p>Primero la dirección, luego la velocidad: hacer cada vez mejor lo incorrecto solo te aleja más rápido.</p>
+      </div>
+
+      <div class="turno deming">
+        <span class="voz">EL ESTADÍSTICO</span>
+        <p>Sin predicción no hay aprendizaje; sin sistema no hay mejora que dure.</p>
+      </div>
+
+      <div class="turno ingeniero">
+        <span class="voz">EL INGENIERO ITERADOR</span>
+        <p>Borra antes de optimizar; itera más rápido de lo que te resulta cómodo.</p>
+      </div>
+
+      <div class="turno tiburon">
+        <span class="voz">LA TIBURONA</span>
+        <p>La realidad cobra en efectivo: valida con billeteras, no con aplausos.</p>
+      </div>
+
+      <div class="turno esceptico">
+        <span class="voz">EL ESCÉPTICO</span>
+        <p>Un marco aplicado esta semana vale más que cinco coleccionados. Elige uno de esta mesa y úsalo antes del domingo.</p>
+      </div>
+
+      <div class="turno mod">
+        <span class="voz">LA MODERADORA</span>
+        <p>Y noten la ironía final, cortesía de la casa: esta mesa misma fue la demostración. Ninguna de estas cinco voces, por separado, les habría dado la noche completa. El valor estuvo en las interrupciones — en cómo encajaron. Un panel, como un sistema, no es la suma de sus expertos…</p>
+      </div>
+
+      <div class="turno ackoff">
+        <span class="voz">EL FILÓSOFO DE SISTEMAS</span>
+        <p>…es el producto de sus interacciones. Iba a decirlo yo, pero admito que disolvió usted mi problema. Buenas noches.</p>
+      </div>
+    </section>
+
+    <!-- ========== FUENTES ========== -->
+    <section id="fuentes">
+      <div class="kicker">Bibliografía de la mesa</div>
+      <h2>Fuentes y lecturas siguientes</h2>
+      <ul class="clean">
+        <li><a href="https://deming.org/explore/pdsa/" style="color:var(--accent)">Deming Institute — el ciclo PDSA</a> y <a href="https://deming.org/explore/sopk/" style="color:var(--accent)">el Sistema de Conocimiento Profundo</a></li>
+        <li>W. Edwards Deming, <em>Out of the Crisis</em> y <em>The New Economics</em></li>
+        <li>Russell Ackoff, <em>Idealized Design</em>, <em>Re-Creating the Corporation</em> y sus conferencias sobre <a href="https://deming.org/ackoff-on-systems-thinking-and-management/" style="color:var(--accent)">pensamiento de sistemas</a></li>
+        <li>Walter Isaacson, <em>Elon Musk</em> — donde el <a href="https://www.startuparchive.org/p/elon-musk-explains-his-5-step-algorithm-for-running-companies" style="color:var(--accent)">algoritmo de cinco pasos</a> está citado completo</li>
+        <li>Eliyahu Goldratt, <em>La Meta</em> · Taiichi Ohno, <em>Toyota Production System</em> · Chris Argyris, <em>Teaching Smart People How to Learn</em> · Dave Snowden, <a href="https://en.wikipedia.org/wiki/Cynefin_framework" style="color:var(--accent)">marco Cynefin</a></li>
+      </ul>
+      <footer>La Mesa de los Métodos · una velada del cuaderno «Café con Claude» · junio 2026</footer>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ---------- hamburger ----------
+  const btn = document.getElementById('menuBtn');
+  const rail = document.getElementById('rail');
+  btn.addEventListener('click', () => {
+    const open = rail.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    btn.textContent = open ? '✕' : '☰';
+  });
+  document.querySelectorAll('#railNav a').forEach(a => {
+    a.addEventListener('click', () => {
+      rail.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+      btn.textContent = '☰';
+    });
+  });
+
+  // ---------- scroll-spy ----------
+  const links = [...document.querySelectorAll('#railNav a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = map.get(e.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section, header.hero').forEach(s => { if (s.id) spy.observe(s); });
+
+  // ---------- PDCA wheel ----------
+  const quads = [...document.querySelectorAll('.wheel .quad')];
+  const wTitle = document.getElementById('wTitle');
+  const wBody  = document.getElementById('wBody');
+  const data = [
+    {t:'Plan — Planificar', b:'Define el objetivo, formula una <strong>teoría</strong> («si cambio X, espero Y»), decide cómo medirás el éxito y diseña un experimento pequeño. Sin predicción explícita no hay aprendizaje posible después.'},
+    {t:'Do — Hacer (¡el experimento!)', b:'Ejecuta el plan <strong>en pequeño</strong>. «Do» no significa implementar la mejora a lo grande: significa <em>hacer el experimento</em>. Si no hay experimento controlado, no estás en el ciclo — estás improvisando con uniforme de científico.'},
+    {t:'Study — Estudiar (no solo «Check»)', b:'Compara lo que ocurrió contra lo que <strong>predijiste</strong>. Deming prefería «Study» sobre «Check»: no se trata de aprobar o reprobar el plan, sino de revisar tu teoría. La sorpresa — positiva o negativa — es donde vive el aprendizaje.'},
+    {t:'Act — Actuar: ajustar, adoptar o abandonar', b:'Tres salidas dignas: <strong>ajusta</strong> el experimento y gira de nuevo, <strong>adopta</strong> el cambio e intégralo al estándar, o <strong>abandona</strong> esa línea por completo. Luego la rueda vuelve a empezar — la mejora continua no tiene línea de meta.'}
+  ];
+  function select(i){
+    quads.forEach(q => q.classList.remove('sel'));
+    quads[i].classList.add('sel');
+    wTitle.textContent = data[i].t;
+    wBody.innerHTML = data[i].b;
+  }
+  quads.forEach((q,i) => {
+    q.addEventListener('click', () => select(i));
+    q.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i);} });
+  });
+</script>
+</body>
+</html>
