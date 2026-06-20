@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Decápolis y Dallas — Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#f5eee0;
+    --parchment-deep:#efe5d2;
+    --card:#fbf6ea;
+    --card-2:#f7f0e1;
+    --ink:#33302a;
+    --ink-soft:#5f574a;
+    --ink-faint:#8a7f6d;
+    --rule:rgba(51,48,42,.13);
+    --rule-soft:rgba(51,48,42,.07);
+
+    --terracotta:#bd5a3c;
+    --amber:#cf932f;
+    --ochre:#a9762a;
+    --olive:#6f7a48;
+    --olive-deep:#525c34;
+    --plum:#7d4e6b;
+    --wine:#8a3f4f;
+
+    --rail:250px;
+    --measure:39rem;
+    --shadow:0 1px 2px rgba(51,48,42,.05), 0 18px 44px -26px rgba(51,48,42,.40);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation:none!important;transition:none!important;}
+  }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 700px at 80% -8%, rgba(207,147,47,.11), transparent 60%),
+      radial-gradient(900px 640px at -6% 102%, rgba(111,122,72,.10), transparent 58%),
+      var(--parchment);
+    color:var(--ink);
+    font-family:"Spectral", Georgia, serif;
+    font-size:1.08rem;
+    line-height:1.78;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* ---------- reading progress ---------- */
+  .progress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:linear-gradient(90deg, var(--olive), var(--amber), var(--terracotta));
+    z-index:60; transition:width .12s ease-out;
+  }
+
+  /* ---------- layout ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns:var(--rail) 1fr;
+    max-width:1180px;
+    margin:0 auto;
+  }
+
+  /* ---------- side rail ---------- */
+  .rail{
+    position:sticky; top:0; align-self:start;
+    height:100vh; padding:2.4rem 1.5rem 2rem;
+    border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; gap:1.1rem;
+    background:linear-gradient(180deg, rgba(251,246,234,.6), rgba(247,240,225,.25));
+    overflow-y:auto;
+  }
+  .kicker{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-faint); font-weight:600;
+  }
+  .rail h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1.34rem; line-height:1.18; margin:.1rem 0 .2rem;
+    font-weight:600; letter-spacing:.005em;
+  }
+  .rail .sub{
+    font-size:.92rem; color:var(--ink-soft); font-style:italic;
+    border-bottom:1px solid var(--rule); padding-bottom:1.1rem; margin-bottom:.2rem;
+  }
+  nav.toc{display:flex; flex-direction:column; gap:.1rem;}
+  nav.toc a{
+    display:flex; align-items:baseline; gap:.6rem;
+    text-decoration:none; color:var(--ink-soft);
+    padding:.42rem .55rem; border-radius:7px;
+    font-size:.95rem; line-height:1.3;
+    transition:background .18s ease, color .18s ease;
+  }
+  nav.toc a .num{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:.74rem; color:var(--ink-faint); font-weight:600;
+    min-width:1.3em; font-variant-numeric:tabular-nums;
+  }
+  nav.toc a:hover{background:var(--card-2); color:var(--ink);}
+  nav.toc a.active{
+    background:linear-gradient(90deg, rgba(189,90,60,.13), rgba(189,90,60,.03));
+    color:var(--terracotta); font-weight:500;
+  }
+  nav.toc a.active .num{color:var(--terracotta);}
+
+  .rail .foot{
+    margin-top:auto; padding-top:1.2rem;
+    border-top:1px solid var(--rule);
+    font-size:.82rem; color:var(--ink-faint);
+  }
+  .rail .foot a{color:var(--ochre); text-decoration:none;}
+  .rail .foot a:hover{text-decoration:underline;}
+
+  /* font-size control */
+  .fsctrl{
+    display:flex; align-items:center; gap:.4rem;
+    margin-top:1rem; padding:.5rem .6rem;
+    background:var(--card); border:1px solid var(--rule);
+    border-radius:8px; font-size:.78rem; color:var(--ink-soft);
+  }
+  .fsctrl span{font-family:"Fraunces",Georgia,serif; letter-spacing:.04em;}
+  .fsctrl button{
+    border:1px solid var(--rule); background:var(--card-2);
+    color:var(--ink); width:26px; height:26px; border-radius:6px;
+    cursor:pointer; font-family:"Fraunces",serif; font-size:.9rem;
+    display:inline-flex; align-items:center; justify-content:center;
+    transition:background .15s ease;
+  }
+  .fsctrl button:hover{background:var(--terracotta); color:#fff; border-color:var(--terracotta);}
+
+  /* ---------- main ---------- */
+  main{
+    padding:3.2rem clamp(1.4rem,5vw,4rem) 5rem;
+    min-width:0;
+  }
+  .wrap{max-width:var(--measure); margin:0 auto;}
+
+  .hero{margin-bottom:2.6rem;}
+  .eyebrow{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:.76rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--terracotta); font-weight:600; margin-bottom:.7rem;
+  }
+  .hero h2{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:clamp(2rem,5vw,2.9rem); line-height:1.08;
+    font-weight:600; margin:0 0 .8rem; letter-spacing:-.01em;
+  }
+  .hero .lede{
+    font-size:1.18rem; color:var(--ink-soft); line-height:1.7;
+  }
+
+  section{margin:3rem 0; scroll-margin-top:1.5rem;}
+  h3{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1.55rem; line-height:1.2; font-weight:600;
+    margin:0 0 1rem; letter-spacing:.005em;
+    display:flex; align-items:baseline; gap:.7rem;
+  }
+  h3 .mark{
+    font-size:1.4rem; line-height:1; flex:none;
+  }
+  h4{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1.12rem; font-weight:600; margin:1.8rem 0 .5rem;
+    color:var(--ink);
+  }
+  p{margin:0 0 1.1rem;}
+  strong{font-weight:600; color:var(--ink);}
+  em{color:var(--ink-soft);}
+
+  ul{margin:0 0 1.2rem; padding-left:0; list-style:none;}
+  ul li{
+    position:relative; padding-left:1.4rem; margin-bottom:.5rem;
+  }
+  ul li::before{
+    content:"•"; position:absolute; left:.2rem; top:-.05rem;
+    color:var(--terracotta); font-size:1.1rem;
+  }
+  ol{margin:0 0 1.2rem; padding-left:1.4rem;}
+  ol li{margin-bottom:.5rem;}
+
+  /* callout card */
+  .card{
+    background:var(--card); border:1px solid var(--rule);
+    border-radius:14px; padding:1.5rem 1.7rem; margin:1.8rem 0;
+    box-shadow:var(--shadow);
+  }
+  .card.terr{border-left:4px solid var(--terracotta);}
+  .card.olive{border-left:4px solid var(--olive);}
+  .card.amber{border-left:4px solid var(--amber);}
+  .card .lbl{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
+    font-weight:600; margin-bottom:.5rem;
+  }
+  .card.terr .lbl{color:var(--terracotta);}
+  .card.olive .lbl{color:var(--olive-deep);}
+  .card.amber .lbl{color:var(--ochre);}
+  .card p:last-child{margin-bottom:0;}
+
+  /* compare grid */
+  .compare{
+    display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin:1.8rem 0;
+  }
+  .compare .col{
+    background:var(--card); border:1px solid var(--rule);
+    border-radius:14px; padding:1.4rem 1.5rem; box-shadow:var(--shadow);
+  }
+  .compare .col h4{margin-top:0;}
+
+  /* city list */
+  .cities{display:flex; flex-direction:column; gap:1rem; margin:1.6rem 0;}
+  .city{
+    background:var(--card); border:1px solid var(--rule);
+    border-radius:12px; padding:1.1rem 1.3rem 1.1rem 1.5rem;
+    box-shadow:var(--shadow); position:relative;
+    border-left:4px solid var(--ochre);
+  }
+  .city h4{
+    margin:0 0 .35rem; display:flex; align-items:baseline; gap:.6rem;
+    font-size:1.1rem;
+  }
+  .city h4 .n{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1.15rem; font-weight:600; color:var(--terracotta);
+    flex:none; min-width:1.4em; font-variant-numeric:tabular-nums;
+  }
+  .city ul{margin:0;}
+  .city ul li{margin-bottom:.25rem; font-size:.97rem; color:var(--ink-soft);}
+
+  blockquote{
+    margin:1.6rem 0; padding:.4rem 0 .4rem 1.4rem;
+    border-left:3px solid var(--amber);
+    font-style:italic; color:var(--ink-soft); font-size:1.1rem;
+  }
+
+  .divider{
+    text-align:center; color:var(--ink-faint);
+    margin:2.6rem 0; font-size:1.1rem; letter-spacing:.4em;
+  }
+
+  /* ---------- mobile ---------- */
+  .menu-btn, .scrim{display:none;}
+  @media (max-width:880px){
+    .shell{grid-template-columns:1fr;}
+    .rail{
+      position:fixed; top:0; left:0; z-index:50;
+      width:min(82vw,320px); transform:translateX(-100%);
+      transition:transform .28s ease; border-right:1px solid var(--rule);
+      box-shadow:0 0 60px -12px rgba(51,48,42,.4);
+    }
+    .rail.open{transform:translateX(0);}
+    .menu-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      position:fixed; top:1rem; left:1rem; z-index:55;
+      width:46px; height:46px; border-radius:11px;
+      background:var(--card); border:1px solid var(--rule);
+      box-shadow:var(--shadow); cursor:pointer;
+    }
+    .menu-btn span{
+      width:20px; height:2px; background:var(--ink); position:relative;
+    }
+    .menu-btn span::before,.menu-btn span::after{
+      content:""; position:absolute; left:0; width:20px; height:2px; background:var(--ink);
+    }
+    .menu-btn span::before{top:-6px;} .menu-btn span::after{top:6px;}
+    .scrim{
+      display:block; position:fixed; inset:0; z-index:45;
+      background:rgba(51,48,42,.4); opacity:0; pointer-events:none;
+      transition:opacity .28s ease;
+    }
+    .scrim.show{opacity:1; pointer-events:auto;}
+    main{padding-top:4.6rem;}
+    .compare{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<button class="menu-btn" id="menuToggle" aria-label="Abrir menú"><span></span></button>
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+  <nav class="rail" id="rail">
+    <div class="kicker">Café con Claude</div>
+    <h1>La Decápolis y Dallas</h1>
+    <div class="sub">Una comparación para imaginar la escala de las diez ciudades</div>
+
+    <nav class="toc" id="toc">
+      <a href="#region"><span class="num">I</span><span>¿Qué era la Decápolis?</span></a>
+      <a href="#tamano"><span class="num">II</span><span>¿Qué tan grande era?</span></a>
+      <a href="#dallas"><span class="num">III</span><span>¿Y Dallas?</span></a>
+      <a href="#visual"><span class="num">IV</span><span>Una comparación visual</span></a>
+      <a href="#tiempo"><span class="num">V</span><span>¿Cuánto tardaba recorrerla?</span></a>
+      <a href="#marcos"><span class="num">VI</span><span>Un detalle para Marcos 5</span></a>
+      <a href="#ciudades"><span class="num">VII</span><span>Las diez ciudades</span></a>
+      <a href="#cercanas"><span class="num">VIII</span><span>¿Cuáles cerca de Jesús?</span></a>
+      <a href="#resumen"><span class="num">IX</span><span>En resumen</span></a>
+    </nav>
+
+    <div class="fsctrl">
+      <span>Texto</span>
+      <button id="fsDown" aria-label="Reducir texto">A−</button>
+      <button id="fsReset" aria-label="Restablecer texto">A</button>
+      <button id="fsUp" aria-label="Aumentar texto">A+</button>
+    </div>
+
+    <div class="foot">
+      <a href="https://giannifontanot.github.io/coffee-with-claude/">← Sala de lectura</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="wrap">
+      <header class="hero">
+
+        <div class="eyebrow">🗺️ Geografía bíblica · Escala</div>
+        <h2>La Decápolis vs. Dallas</h2>
+        <p class="lede">Una comparación muy útil, porque muchas veces imaginamos la Decápolis como una sola ciudad enorme, cuando en realidad era una región formada por diez ciudades.</p>
+      </header>
+
+      <section id="region">
+        <h3>¿Qué era la Decápolis?</h3>
+        <p>La Decápolis era una alianza de ciudades grecorromanas ubicadas principalmente al este del Mar de Galilea y del Río Jordán.</p>
+        <ul>
+          <li>No era un país ni una ciudad continua.</li>
+          <li>Era más parecida a una red de ciudades separadas por campos, montañas y caminos.</li>
+        </ul>
+      </section>
+
+      <section id="tamano">
+        <h3>¿Qué tan grande era?</h3>
+        <p>La región donde estaban distribuidas las ciudades medía aproximadamente:</p>
+        <ul>
+          <li><strong>Norte a sur:</strong> 180–220 km (110–135 millas)</li>
+          <li><strong>Este a oeste:</strong> 80–120 km (50–75 millas)</li>
+        </ul>
+        <p>Eso equivale a unos <strong>15,000–20,000 km²</strong>.</p>
+      </section>
+
+      <section id="dallas">
+        <h3>¿Y Dallas?</h3>
+        <p>Si hablamos de la Dallas y su área metropolitana (Dallas–Fort Worth):</p>
+        <ul>
+          <li><strong>Norte a sur:</strong> ~110 km (70 millas)</li>
+          <li><strong>Este a oeste:</strong> ~130 km (80 millas)</li>
+          <li><strong>Área metropolitana:</strong> alrededor de 24,000 km².</li>
+        </ul>
+        <div class="card terr">
+          <div class="lbl">El punto clave</div>
+          <p>La región de la Decápolis era aproximadamente del tamaño del área metropolitana de Dallas–Fort Worth. No era mucho más grande.</p>
+        </div>
+      </section>
+
+      <section id="visual">
+        <h3>Una comparación más visual</h3>
+        <p>Imagina que:</p>
+        <ul>
+          <li>Una ciudad estuviera en Dallas.</li>
+          <li>Otra en Fort Worth.</li>
+          <li>Otra en Plano.</li>
+          <li>Otra en Denton.</li>
+          <li>Otra en McKinney.</li>
+          <li>Otra en Arlington.</li>
+          <li>Y las demás repartidas por toda el área metropolitana.</li>
+        </ul>
+        <p>Con carreteras (en aquel tiempo, caminos romanos) conectándolas. Eso se parece bastante a cómo funcionaba la Decápolis.</p>
+      </section>
+
+      <section id="tiempo">
+        <h3>¿Cuánto tardaba alguien en recorrerla?</h3>
+        <div class="compare">
+          <div class="col">
+            <h4>A pie</h4>
+            <ul>
+              <li>Entre ciudades cercanas: 1 día.</li>
+              <li>Entre las más lejanas: 4–6 días.</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>A caballo</h4>
+            <ul>
+              <li>La mayor parte de la región podía cruzarse en 2–3 días.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="marcos">
+        <h3>Un detalle interesante para tus clases bíblicas</h3>
+        <p>Cuando Jesús de Nazaret sanó al endemoniado y le dijo que anunciara lo que Dios había hecho por él (Evangelio según Marcos 5:20), el texto dice que el hombre comenzó a proclamarlo <em>«en toda la Decápolis»</em>.</p>
+        <p>Eso no significa que recorriera un continente.</p>
+        <div class="card olive">
+          <div class="lbl">La imagen verdadera</div>
+          <p>Significa que llevó el mensaje por una región del tamaño aproximado del área metropolitana de Dallas–Fort Worth, visitando varias ciudades importantes de influencia griega y romana. Para un hombre transformado, era una misión enorme, pero completamente alcanzable en meses o algunos años.</p>
+        </div>
+      </section>
+
+      <div class="divider">· · ·</div>
+
+      <section id="ciudades">
+        <h3>Las ciudades de la Decápolis</h3>
+        <p>La palabra <strong>«Decápolis»</strong> viene del griego:</p>
+        <ul>
+          <li><strong>deka</strong> = diez</li>
+          <li><strong>polis</strong> = ciudades</li>
+        </ul>
+        <p>Aunque con el tiempo la lista cambió ligeramente, la lista clásica mencionada por escritores antiguos como Plinio el Viejo incluye estas diez ciudades:</p>
+
+        <div class="cities">
+          <div class="city">
+            <h4><span class="n">1</span>Escitópolis</h4>
+            <ul>
+              <li>Hoy: Beit She'an, Israel.</li>
+              <li>Era la única ciudad de la Decápolis ubicada al oeste del Río Jordán.</li>
+              <li>Muy importante por su agricultura y comercio.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">2</span>Hipos</h4>
+            <ul>
+              <li>También llamada Hippos o Sussita.</li>
+              <li>Estaba sobre una montaña con vista al Mar de Galilea.</li>
+              <li>Era una ciudad fortificada.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">3</span>Gadara</h4>
+            <ul>
+              <li>Hoy cerca de Umm Qais, Jordania.</li>
+              <li>Famosa por sus filósofos, teatros y aguas termales.</li>
+              <li>Muchos estudiosos creen que esta es la región relacionada con el endemoniado de Marcos 5.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">4</span>Pella</h4>
+            <ul>
+              <li>En el valle del Jordán.</li>
+              <li>Más tarde fue un refugio importante para cristianos del siglo I.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">5</span>Gerasa</h4>
+            <ul>
+              <li>Hoy Jerash.</li>
+              <li>Es una de las ciudades romanas mejor conservadas del mundo.</li>
+              <li>Conserva calles, templos, teatros y columnas impresionantes.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">6</span>Filadelfia</h4>
+            <ul>
+              <li>La actual Ammán.</li>
+              <li>Hoy es la capital de Jordania.</li>
+              <li>En tiempos de Jesús era una ciudad importante de cultura griega.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">7</span>Canata</h4>
+            <ul>
+              <li>Hoy Qanawat, Siria.</li>
+              <li>Situada en una región montañosa.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">8</span>Ráfana</h4>
+            <ul>
+              <li>Su ubicación exacta sigue siendo debatida.</li>
+              <li>Probablemente estaba en el sur de Siria.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">9</span>Damasco</h4>
+            <ul>
+              <li>Una de las ciudades habitadas continuamente más antiguas del mundo.</li>
+              <li>Mucho después sería el lugar donde Saulo de Tarso tuvo su encuentro con Cristo.</li>
+            </ul>
+          </div>
+          <div class="city">
+            <h4><span class="n">10</span>Dion</h4>
+            <ul>
+              <li>Se cree que estaba en el norte de Jordania.</li>
+              <li>Su localización exacta aún es motivo de estudio.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="cercanas">
+        <h3>¿Cuáles estaban cerca de Jesús?</h3>
+        <p>Las más cercanas al Mar de Galilea eran:</p>
+        <ul>
+          <li>Hipos</li>
+          <li>Gadara</li>
+          <li>Escitópolis</li>
+          <li>Pella</li>
+        </ul>
+        <p>Estas eran las ciudades con las que probablemente tenían más contacto los habitantes de Capernaúm y otras poblaciones de Galilea.</p>
+
+        <div class="card amber">
+          <div class="lbl">🌍 Lo interesante</div>
+          <p>La mayoría de estas ciudades eran profundamente grecorromanas. Hablaban principalmente griego, tenían teatros, contaban con templos paganos, acuñaban sus propias monedas y celebraban juegos y festivales al estilo romano. Para muchos judíos eran consideradas ciudades «gentiles», aunque había intercambio comercial frecuente.</p>
+        </div>
+
+        <h4>✨ Un detalle que hace aún más impresionante Marcos 5</h4>
+        <p>Cuando Jesús envió al hombre que había sido liberado de los demonios, no le dijo que fuera solo a su aldea.</p>
+        <blockquote>El texto dice que fue «por toda la Decápolis», es decir, a un conjunto de importantes ciudades grecorromanas.</blockquote>
+        <p>Su testimonio pudo haber llegado a miles de personas de una cultura muy distinta a la judía, preparando el terreno para que más adelante el mensaje del evangelio encontrara una recepción más amplia en esa región.</p>
+      </section>
+
+      <section id="resumen">
+        <h3>En resumen</h3>
+        <p>Las diez ciudades clásicas fueron:</p>
+        <ul>
+          <li>Escitópolis</li>
+          <li>Hipos</li>
+          <li>Gadara</li>
+          <li>Pella</li>
+          <li>Gerasa</li>
+          <li>Filadelfia (actual Ammán)</li>
+          <li>Canata</li>
+          <li>Ráfana</li>
+          <li>Damasco</li>
+          <li>Dion</li>
+        </ul>
+        <div class="card terr">
+          <div class="lbl">La imagen para recordar</div>
+          <p>De ellas, las que tuvieron una relación más directa con el ministerio de Jesús fueron especialmente <strong>Hipos, Gadara, Pella y Escitópolis</strong>, por su cercanía al Mar de Galilea y al valle del Jordán. Cuando lees que alguien predicó «en toda la Decápolis», imagina recorrer todas las ciudades principales del metroplex de Dallas–Fort Worth, no todo el estado de Texas.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  // reading progress
+  var prog=document.getElementById('progress');
+  function onScroll(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(h.scrollTop/max*100):0)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  // scroll-spy
+  var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+  var map={};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)]=a; });
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){l.classList.remove('active');});
+        var a=map[e.target.id]; if(a) a.classList.add('active');
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){obs.observe(s);});
+
+  // mobile menu
+  var rail=document.getElementById('rail');
+  var btn=document.getElementById('menuToggle');
+  var scrim=document.getElementById('scrim');
+  function toggle(open){
+    rail.classList.toggle('open',open);
+    scrim.classList.toggle('show',open);
+  }
+  btn.addEventListener('click',function(){toggle(!rail.classList.contains('open'));});
+  scrim.addEventListener('click',function(){toggle(false);});
+  document.querySelectorAll('nav.toc a').forEach(function(a){
+    a.addEventListener('click',function(){ if(window.innerWidth<=880) toggle(false); });
+  });
+
+  // font-size control
+  var KEY='cafeConClaude:fontScaleStep';
+  var steps=[0.92,1,1.08,1.18,1.3], idx=1;
+  try{ var s=localStorage.getItem(KEY); if(s!==null){ idx=Math.max(0,Math.min(steps.length-1,parseInt(s,10))); } }catch(e){}
+  function apply(){ document.documentElement.style.zoom=steps[idx]; try{localStorage.setItem(KEY,idx);}catch(e){} }
+  document.getElementById('fsDown').addEventListener('click',function(){ if(idx>0){idx--;apply();} });
+  document.getElementById('fsUp').addEventListener('click',function(){ if(idx<steps.length-1){idx++;apply();} });
+  document.getElementById('fsReset').addEventListener('click',function(){ idx=1;apply(); });
+  apply();
+})();
+</script>
+</body>
+</html>
