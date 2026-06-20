@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dos llamados, dos respuestas — Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#f5eee0;
+    --parchment-deep:#efe5d2;
+    --card:#fbf6ea;
+    --card-2:#f7f0e1;
+    --ink:#33302a;
+    --ink-soft:#5f574a;
+    --ink-faint:#8a7f6d;
+    --rule:rgba(51,48,42,.13);
+    --rule-soft:rgba(51,48,42,.07);
+
+    --terracotta:#bd5a3c;
+    --amber:#cf932f;
+    --ochre:#a9762a;
+    --olive:#6f7a48;
+    --olive-deep:#525c34;
+    --plum:#7d4e6b;
+    --wine:#8a3f4f;
+
+    --rail:250px;
+    --measure:39rem;
+    --shadow:0 1px 2px rgba(51,48,42,.05), 0 18px 44px -26px rgba(51,48,42,.40);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation:none!important;transition:none!important;}
+  }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 700px at 80% -8%, rgba(207,147,47,.11), transparent 60%),
+      radial-gradient(900px 640px at -6% 102%, rgba(111,122,72,.10), transparent 58%),
+      var(--parchment);
+    color:var(--ink);
+    font-family:"Spectral", Georgia, serif;
+    font-size:1.08rem;
+    line-height:1.78;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* ---------- reading progress ---------- */
+  .progress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:linear-gradient(90deg, var(--olive), var(--amber), var(--terracotta));
+    z-index:120; transition:width .08s linear;
+  }
+
+  /* ---------- layout ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns:var(--rail) minmax(0,1fr);
+    align-items:start;
+    max-width:1160px;
+    margin:0 auto;
+  }
+
+  /* ---------- side rail ---------- */
+  .sidebar{
+    position:sticky; top:0;
+    height:100vh;
+    padding:2.5rem 1.4rem 2rem 2.1rem;
+    display:flex; flex-direction:column;
+    border-right:1px solid var(--rule-soft);
+    overflow-y:auto;
+  }
+  .brand{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size:1.06rem;
+    letter-spacing:.01em;
+    color:var(--ink);
+    display:flex; align-items:center; gap:.55rem;
+    margin-bottom:.2rem;
+  }
+  .brand .dot{
+    width:9px; height:9px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--amber), var(--terracotta));
+    box-shadow:0 0 0 4px rgba(189,90,60,.12);
+    flex:none;
+  }
+  .brand-sub{
+    font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ink-faint); margin:.15rem 0 1.9rem .05rem; font-family:"Spectral",serif;
+  }
+
+  .nav{display:flex; flex-direction:column; gap:.1rem;}
+  .nav a{
+    display:flex; align-items:baseline; gap:.6rem;
+    text-decoration:none;
+    color:var(--ink-faint);
+    font-size:.92rem;
+    line-height:1.3;
+    padding:.42rem .5rem .42rem .55rem;
+    border-radius:7px;
+    border-left:2px solid transparent;
+    transition:color .2s, background .2s, border-color .2s;
+  }
+  .nav a .num{
+    font-family:"Fraunces", serif;
+    font-size:.72rem;
+    color:var(--ink-faint);
+    opacity:.7;
+    font-variant-numeric:tabular-nums;
+    flex:none;
+    transition:color .2s, opacity .2s;
+  }
+  .nav a:hover{ color:var(--ink-soft); background:rgba(51,48,42,.035); }
+  .nav a.active{
+    color:var(--terracotta);
+    border-left-color:var(--terracotta);
+    background:linear-gradient(90deg, rgba(189,90,60,.09), transparent);
+  }
+  .nav a.active .num{ color:var(--terracotta); opacity:1; }
+
+  .rail-foot{
+    margin-top:auto; padding-top:1.6rem;
+    font-size:.74rem; line-height:1.55; color:var(--ink-faint);
+    border-top:1px solid var(--rule-soft);
+  }
+  .rail-foot em{ font-style:italic; color:var(--ink-soft); }
+
+  /* ---------- main ---------- */
+  main{ padding:0 clamp(1.4rem, 5vw, 4.2rem) 7rem; min-width:0; }
+  .wrap{ max-width:var(--measure); margin:0 auto; }
+
+  /* ---------- hero ---------- */
+  header.hero{
+    max-width:var(--measure);
+    margin:0 auto;
+    padding:4.5rem 0 2.4rem;
+  }
+  .kicker{
+    font-size:.74rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--terracotta); font-weight:500; margin-bottom:1.1rem;
+  }
+  h1{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size:clamp(2.1rem, 5.4vw, 3.15rem);
+    line-height:1.07;
+    letter-spacing:-.012em;
+    margin:0 0 1.1rem;
+    color:var(--ink);
+  }
+  h1 em{ font-style:italic; color:var(--terracotta); font-weight:500; }
+  .dek{
+    font-size:1.2rem;
+    line-height:1.62;
+    color:var(--ink-soft);
+    font-weight:300;
+    max-width:34rem;
+  }
+  .dek strong{ font-weight:500; color:var(--ink); font-style:italic; font-family:"Fraunces",serif; }
+
+  .hero-art{
+    margin:2.6rem 0 .4rem;
+    border-radius:14px;
+    overflow:hidden;
+    background:linear-gradient(170deg, #f9f2e3, #f0e6d1);
+    border:1px solid var(--rule);
+    box-shadow:var(--shadow);
+  }
+  .hero-art svg{ display:block; width:100%; height:auto; }
+
+  /* ---------- sections ---------- */
+  section{ max-width:var(--measure); margin:0 auto; padding:3.1rem 0 .4rem; }
+  .eyebrow{
+    display:flex; align-items:center; gap:.7rem;
+    font-size:.73rem; letter-spacing:.17em; text-transform:uppercase;
+    color:var(--ink-faint); margin-bottom:.85rem; font-weight:500;
+  }
+  .eyebrow .ref{
+    color:#fff; background:var(--accent, var(--ochre));
+    padding:.12rem .5rem; border-radius:20px; letter-spacing:.06em;
+    font-size:.66rem;
+  }
+  .eyebrow .line{ flex:1; height:1px; background:var(--rule); }
+
+  h2{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size:clamp(1.55rem, 3.4vw, 2.05rem);
+    line-height:1.16;
+    letter-spacing:-.01em;
+    margin:0 0 1rem;
+    color:var(--ink);
+  }
+  h2 em{ font-style:italic; color:var(--accent, var(--terracotta)); font-weight:500; }
+
+  p{ margin:0 0 1.15rem; }
+  p .soft{ color:var(--ink-soft); }
+  strong{ font-weight:600; color:var(--ink); }
+  .lead{ font-size:1.16rem; color:var(--ink-soft); }
+
+  .small-caps{
+    font-variant:small-caps; letter-spacing:.04em; font-weight:500;
+    color:var(--ink-soft);
+  }
+
+  /* drop-cap on first body para of a section */
+  .dropcap::first-letter{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    float:left;
+    font-size:3.4rem;
+    line-height:.82;
+    padding:.18rem .55rem 0 0;
+    color:var(--accent, var(--terracotta));
+  }
+
+  /* ---------- pull quote ---------- */
+  .pq{
+    margin:1.9rem 0;
+    padding:1.3rem 0 1.3rem 1.5rem;
+    border-left:3px solid var(--accent, var(--amber));
+    font-family:"Fraunces", serif;
+    font-size:1.42rem;
+    line-height:1.34;
+    font-weight:500;
+    font-style:italic;
+    color:var(--ink);
+  }
+  .pq .src{
+    display:block; margin-top:.7rem;
+    font-family:"Spectral", serif; font-style:normal; font-weight:500;
+    font-size:.78rem; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+
+  /* ---------- diptych ---------- */
+  .diptych{
+    display:grid; grid-template-columns:1fr 1fr; gap:1rem;
+    margin:2rem 0 1.4rem;
+  }
+  .man{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:12px;
+    padding:1.5rem 1.4rem 1.55rem;
+    box-shadow:var(--shadow);
+    position:relative; overflow:hidden;
+  }
+  .man::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:4px;
+    background:var(--mc, var(--ochre));
+  }
+  .man h3{
+    font-family:"Fraunces", serif; font-weight:600;
+    font-size:1.18rem; margin:.2rem 0 .15rem; color:var(--ink);
+  }
+  .man .ref{
+    font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--mc, var(--ochre)); font-weight:500; margin-bottom:1rem;
+  }
+  .row{
+    display:flex; gap:.7rem; padding:.55rem 0;
+    border-top:1px solid var(--rule-soft); font-size:.96rem;
+  }
+  .row:first-of-type{ border-top:none; }
+  .row .lab{
+    flex:none; width:5.4rem;
+    font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ink-faint); padding-top:.18rem; font-weight:500;
+  }
+  .row .val{ color:var(--ink-soft); }
+  .row .val strong{ color:var(--ink); }
+  .man.joy .val .out{ color:var(--olive-deep); font-weight:600; }
+  .man.grief .val .out{ color:var(--wine); font-weight:600; }
+
+  .paradox{
+    background:linear-gradient(165deg, #2f2a23, #3a332a);
+    color:#f3ead8;
+    border-radius:12px;
+    padding:1.5rem 1.6rem;
+    margin:1.3rem 0 .5rem;
+    font-family:"Fraunces", serif;
+    font-size:1.12rem;
+    line-height:1.45;
+    box-shadow:var(--shadow);
+  }
+  .paradox b{ color:var(--amber); font-weight:600; }
+  .paradox .em{ color:#fff; font-style:italic; }
+
+  /* ---------- whisper / counterfactual list ---------- */
+  .maybe{
+    margin:1.6rem 0; padding:1.4rem 1.5rem;
+    background:var(--card-2); border:1px dashed var(--rule);
+    border-radius:12px;
+  }
+  .maybe ul{ list-style:none; margin:0; padding:0; }
+  .maybe li{
+    padding:.32rem 0 .32rem 1.4rem; position:relative;
+    color:var(--ink-soft); font-style:italic;
+  }
+  .maybe li::before{
+    content:"·"; position:absolute; left:.35rem; top:-.05rem;
+    color:var(--plum); font-size:1.4rem; font-style:normal;
+  }
+  .maybe .cap{
+    font-style:normal; color:var(--ink-faint);
+    font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
+    margin-bottom:.7rem; font-weight:500;
+  }
+
+  /* ---------- remembered names ---------- */
+  .names{
+    display:flex; flex-wrap:wrap; gap:.5rem; margin:1.3rem 0 .4rem;
+  }
+  .names .chip{
+    font-family:"Fraunces", serif; font-weight:500;
+    background:var(--card); border:1px solid var(--rule);
+    color:var(--ink); padding:.35rem .85rem; border-radius:20px;
+    font-size:.92rem; box-shadow:0 1px 0 rgba(51,48,42,.04);
+  }
+  .names .chip.nameless{
+    background:transparent; border-style:dashed; color:var(--ink-faint);
+    font-style:italic;
+  }
+
+  /* ---------- closing ---------- */
+  .closing{
+    text-align:center; max-width:34rem; margin:3.4rem auto 0;
+    padding-top:2.6rem; border-top:1px solid var(--rule);
+  }
+  .closing .q{
+    font-family:"Fraunces", serif; font-style:italic; font-weight:500;
+    font-size:1.5rem; line-height:1.4; color:var(--ink); margin-bottom:1.4rem;
+  }
+  .seal{
+    display:inline-block; font-family:"Fraunces", serif; font-weight:600;
+    font-size:1.05rem; letter-spacing:.02em; color:var(--terracotta);
+    padding:.7rem 0 0;
+  }
+  .seal::before, .seal::after{ content:"·"; color:var(--ink-faint); margin:0 .6rem; }
+
+  /* ---------- mobile chrome ---------- */
+  .topbar{ display:none; }
+  .scrim{
+    position:fixed; inset:0; background:rgba(34,30,24,.42);
+    opacity:0; pointer-events:none; transition:opacity .25s; z-index:90;
+    -webkit-backdrop-filter:blur(1.5px); backdrop-filter:blur(1.5px);
+  }
+  .scrim.show{ opacity:1; pointer-events:auto; }
+
+  @media (max-width:880px){
+    .layout{ grid-template-columns:1fr; }
+    .topbar{
+      display:flex; align-items:center; gap:.7rem;
+      position:sticky; top:0; z-index:100;
+      padding:.85rem 1.1rem;
+      background:rgba(245,238,224,.92);
+      -webkit-backdrop-filter:saturate(1.4) blur(8px); backdrop-filter:saturate(1.4) blur(8px);
+      border-bottom:1px solid var(--rule-soft);
+    }
+    .topbar .brand{ margin:0; font-size:1rem; }
+    .burger{
+      margin-left:auto; width:42px; height:38px; border-radius:9px;
+      border:1px solid var(--rule); background:var(--card);
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      gap:4px; cursor:pointer;
+    }
+    .burger span{ width:18px; height:2px; background:var(--ink-soft); border-radius:2px;
+      transition:transform .25s, opacity .25s; }
+    .burger.open span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+    .burger.open span:nth-child(2){ opacity:0; }
+    .burger.open span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+
+    .sidebar{
+      position:fixed; top:0; left:0; bottom:0; width:268px; height:100%;
+      background:var(--parchment-deep);
+      border-right:1px solid var(--rule);
+      transform:translateX(-104%); transition:transform .28s ease;
+      z-index:95; box-shadow:14px 0 44px -24px rgba(51,48,42,.5);
+    }
+    .sidebar.open{ transform:translateX(0); }
+    main{ padding:0 1.3rem 5rem; }
+    header.hero{ padding-top:2.6rem; }
+    .diptych{ grid-template-columns:1fr; }
+  }
+
+  @media (max-width:420px){
+    body{ font-size:1.04rem; }
+    .row .lab{ width:4.6rem; }
+  }
+
+  :focus-visible{ outline:2px solid var(--terracotta); outline-offset:3px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- mobile top bar -->
+<div class="topbar">
+  <div class="brand"><span class="dot"></span>Café con Claude</div>
+  <button class="burger" id="burger" aria-label="Abrir índice" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<div class="layout">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="dot"></span>Café con Claude</div>
+    <div class="brand-sub">Sala de lectura</div>
+    <nav class="nav" id="nav">
+      <a href="#intro"><span class="num">I</span><span>El mismo llamado</span></a>
+      <a href="#gadareno"><span class="num">II</span><span>El gadareno</span></a>
+      <a href="#rico"><span class="num">III</span><span>El joven rico</span></a>
+      <a href="#ropa"><span class="num">IV</span><span>Las ropas brillantes</span></a>
+      <a href="#caminos"><span class="num">V</span><span>Dos caminos</span></a>
+      <a href="#gozo"><span class="num">VI</span><span>Contento · triste</span></a>
+      <a href="#silencio"><span class="num">VII</span><span>La historia muda</span></a>
+      <a href="#tesoro"><span class="num">VIII</span><span>¿Dónde el tesoro?</span></a>
+      <a href="#conclusion"><span class="num">IX</span><span>Una decisión</span></a>
+    </nav>
+    <div class="rail-foot">
+      Una meditación sobre <em>Marcos 5</em> y <em>Marcos 10</em>.<br>
+      La diferencia no estuvo en la invitación, sino en la respuesta.
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+    <header class="hero">
+      <div class="kicker">Dos personas · Dos llamados</div>
+      <h1>Dos llamados,<br>dos <em>respuestas</em></h1>
+      <p class="dek">A ambas les habló de la misma manera: <strong>«Sígueme».</strong> Las dos vivieron un encuentro extraordinario. Pero sus historias terminaron muy distintas — no porque Cristo amara más a una que a la otra, sino por lo que cada corazón fue capaz de soltar… o no.</p>
+
+      <div class="hero-art">
+        <!-- hand-drawn forking path: one figure walks toward the light, one into shadow -->
+        <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Un camino que se bifurca: una figura se aleja hacia la sombra, otra avanza hacia la luz.">
+          <defs>
+            <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e9b34e"/>
+              <stop offset="60%" stop-color="#cf932f"/>
+              <stop offset="100%" stop-color="#cf932f" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="shade" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7d4e6b" stop-opacity=".0"/>
+              <stop offset="100%" stop-color="#502635" stop-opacity=".22"/>
+            </linearGradient>
+          </defs>
+
+          <!-- shadow wash on the left -->
+          <path d="M0 360 L0 150 Q150 175 230 360 Z" fill="url(#shade)"/>
+
+          <!-- ground line -->
+          <path d="M0 318 H760" stroke="#cdbf9f" stroke-width="1.4" stroke-dasharray="2 9" fill="none"/>
+
+          <!-- sun, upper right -->
+          <circle cx="612" cy="92" r="70" fill="url(#sun)"/>
+          <circle cx="612" cy="92" r="26" fill="none" stroke="#bd5a3c" stroke-width="2.2"/>
+          <g stroke="#bd5a3c" stroke-width="2" stroke-linecap="round" opacity=".85">
+            <path d="M612 44 V26"/><path d="M612 158 V140"/>
+            <path d="M564 92 H546"/><path d="M678 92 H660"/>
+            <path d="M578 58 L566 46"/><path d="M646 126 L658 138"/>
+            <path d="M646 58 L658 46"/><path d="M578 126 L566 138"/>
+          </g>
+
+          <!-- single trunk rising, then forking -->
+          <path d="M378 330
+                   C 372 286 366 250 360 224"
+                fill="none" stroke="#a9762a" stroke-width="3.4" stroke-linecap="round"/>
+          <!-- left branch, curving down into shadow -->
+          <path d="M360 224 C 340 244 250 270 150 300 C 110 312 70 318 36 320"
+                fill="none" stroke="#8a3f4f" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 0" opacity=".9"/>
+          <!-- right branch, rising toward the light -->
+          <path d="M360 224 C 392 204 470 188 548 172 C 600 161 654 156 712 154"
+                fill="none" stroke="#6f7a48" stroke-width="3.2" stroke-linecap="round"/>
+
+          <!-- fork marker -->
+          <circle cx="360" cy="224" r="5.5" fill="#bd5a3c"/>
+
+          <!-- figure walking LEFT into shadow (the rich man) -->
+          <g transform="translate(150 286)" stroke="#6f3a51" stroke-width="3" stroke-linecap="round" fill="none" opacity=".92">
+            <circle cx="0" cy="-30" r="7.5" fill="#6f3a51" stroke="none"/>
+            <path d="M0 -22 V2"/>
+            <path d="M0 -14 L-11 -4 M0 -14 L9 -7"/>
+            <path d="M0 2 L-9 20 M0 2 L7 20"/>
+          </g>
+
+          <!-- figure walking RIGHT toward light (the gadarene), arms a touch open -->
+          <g transform="translate(556 150)" stroke="#525c34" stroke-width="3" stroke-linecap="round" fill="none">
+            <circle cx="0" cy="-32" r="7.5" fill="#525c34" stroke="none"/>
+            <path d="M0 -24 V0"/>
+            <path d="M0 -16 L-10 -22 M0 -16 L12 -23"/>
+            <path d="M0 0 L-8 18 M0 0 L9 18"/>
+          </g>
+
+          <!-- two little birds over the light side -->
+          <g stroke="#5f574a" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".7">
+            <path d="M470 96 q7 -8 14 0 q7 -8 14 0"/>
+            <path d="M512 74 q5 -6 10 0 q5 -6 10 0"/>
+          </g>
+
+          <!-- whispered labels -->
+          <text x="92" y="344" font-family="Fraunces, serif" font-style="italic" font-size="15" fill="#8a3f4f">se fue triste</text>
+          <text x="600" y="206" font-family="Fraunces, serif" font-style="italic" font-size="15" fill="#525c34">se fue contento</text>
+        </svg>
+      </div>
+    </header>
+
+    <!-- ===== I ===== -->
+    <section id="intro" style="--accent:var(--terracotta)">
+      <div class="eyebrow"><span>Introducción</span><span class="line"></span></div>
+      <h2>El mismo llamado, dos <em>finales</em></h2>
+      <p class="dropcap lead">Hay una idea que suele pasar desapercibida cuando leemos los evangelios. Dos personas recibieron una invitación personal de Jesús, y a ambas —de una forma u otra— les dijo: <strong>«Sígueme».</strong></p>
+      <p>Las dos vivieron un encuentro extraordinario. Las dos escucharon la voz del Maestro. Y sin embargo, sus historias terminaron siendo completamente diferentes. <span class="soft">¿Por qué?</span></p>
+      <p>No porque Cristo quisiera más a una que a la otra. La diferencia fue más honda: a una le fue posible soltar lo conocido y confiar; a la otra le costó muchísimo soltarse de la seguridad de siempre.</p>
+    </section>
+
+    <!-- ===== II ===== -->
+    <section id="gadareno" style="--accent:var(--olive-deep)">
+      <div class="eyebrow"><span class="ref" style="--accent:var(--olive-deep)">Marcos 5 · 1–20</span><span>Primer hombre</span><span class="line"></span></div>
+      <h2>El endemoniado <em>gadareno</em></h2>
+      <p class="dropcap">Este hombre lo había perdido todo: su familia, su dignidad, su libertad, su futuro. Jesús lo libera por completo. Y entonces él quiere, naturalmente, lo que cualquiera de nosotros habría querido — <strong>«Déjame ir contigo».</strong></p>
+      <p>Pero ocurre algo inesperado. Jesús le responde: <strong>«No».</strong> Y le entrega otra misión:</p>
+
+      <div class="pq" style="--accent:var(--olive)">«Vete a tu casa, con tus parientes, y cuéntales todo lo que el Señor te ha hecho, y cómo ha tenido compasión de ti.»<span class="src">Marcos 5:19 · DHH</span></div>
+
+      <p>Qué difícil debió ser. Después de conocer personalmente a Jesús, seguramente quería permanecer a su lado. Y sin embargo… soltó su propio deseo y fue. Marcos dice que comenzó a contar por toda Decápolis lo que Jesús había hecho por él, y la gente se maravillaba.</p>
+      <p>Se fue <span class="small-caps">contento</span>. Porque el gozo no nace de aferrarse, sino de soltar y confiar.</p>
+    </section>
+
+    <!-- ===== III ===== -->
+    <section id="rico" style="--accent:var(--wine)">
+      <div class="eyebrow"><span class="ref" style="--accent:var(--wine)">Marcos 10 · 17–23</span><span>Segundo hombre</span><span class="line"></span></div>
+      <h2>El joven <em>rico</em></h2>
+      <p class="dropcap">Este hombre también busca a Jesús — y mira <em>cómo</em> llega: corriendo, de rodillas, «Maestro bueno», y enseguida su currículum, «todo esto lo he cumplido desde joven». Es la postura de alguien que necesita ser visto, validado, querido. Religioso, intachable, de buen testimonio. Y antes de que pidiera nada, antes de que él respondiera nada, el texto regala uno de sus versículos más tiernos — porque es la única persona en todo el Evangelio de Marcos de quien se dice, con todas sus letras, que Jesús la miró con cariño:</p>
+
+      <div class="pq" style="--accent:var(--wine)">«Jesús lo miró con cariño.»<span class="src">Marcos 10:21 · DHH</span></div>
+
+      <p>Entonces viene la invitación: <strong>«Una cosa te falta… vende todo lo que tienes y dáselo a los pobres… Luego ven y sígueme».</strong> ¡Qué privilegio! Y sin embargo, ocurre una de las frases más tristes de toda la Biblia:</p>
+
+      <div class="pq" style="--accent:var(--plum)">«El hombre se afligió al oír esto, y se fue triste, porque era muy rico.»<span class="src">Marcos 10:22 · DHH</span></div>
+
+      <p>Es fácil leerlo deprisa y dictar sentencia: avaro, materialista, un necio que prefirió el dinero a Dios. Pero quizá no fue codicia lo que lo detuvo. <strong>Quizá fue miedo.</strong></p>
+    </section>
+
+    <!-- ===== IV · Las ropas brillantes ===== -->
+    <section id="ropa" style="--accent:var(--plum)">
+      <div class="eyebrow"><span>El corazón del relato</span><span class="line"></span></div>
+      <h2>Las ropas <em>brillantes</em></h2>
+      <p class="dropcap">En algún momento de la niñez, casi todos sacamos una conclusión silenciosa: que tal como somos —con nuestros miedos, nuestras torpezas, nuestras cicatrices— quizá no alcanzamos para que alguien nos quiera y se quede. Así que, por las dudas, nos pusimos un disfraz.</p>
+      <p>Y aquí está lo conmovedor: <strong>el disfraz nace de la necesidad de sentirse amado.</strong> Nos cubrimos justamente porque queremos ser elegidos. La ropa cara casi nunca es pura soberbia; muchas veces es una súplica bien planchada: <em>«así, tal vez, sea más fácil amarme».</em></p>
+      <p>La riqueza de este joven hacía exactamente eso. Lo volvía más fácil de querer, y a la vez cubría las cicatrices que la vida le había dado — las dudas, la sospecha de no ser suficiente. Capas y capas puestas para hacer más fácil que lo amaran. <strong>Sus ropas brillantes le daban seguridad delante de los demás.</strong></p>
+      <p>Por eso, cuando Jesús le dijo «vende todo lo que tienes», él no escuchó una lección de finanzas. Escuchó: <strong>«quítate la máscara que cubre quien eres».</strong> Y tembló — no por miedo a quedarse sin dinero, sino por miedo a quedar a la vista sin aquello que, por fuera, lo hacía sentir digno de cariño.</p>
+
+      <div class="pq" style="--accent:var(--plum)">La máscara que nos ponemos para ser amados es, muchas veces, justo lo que impide el amor.<span class="src">la trampa del disfraz</span></div>
+
+      <p>Porque el disfraz esconde una trampa callada: si alguien me quiere mientras llevo la máscara puesta, una parte de mí siempre lo sabrá — <em>no me aman a mí, aman al personaje</em>. Y eso deja más solo, no menos.</p>
+      <p>Y aquí el pasaje se vuelve casi insoportable de tierno. Antes de pedirle nada, Marcos dice que Jesús lo miró con cariño. Lo miró <em>a través</em> de la ropa fina, del currículum, de todas las capas — y lo quiso. No después de vender nada. No a condición de nada. Lo quiso <strong>tal como llegó, con todas sus capas todavía puestas.</strong></p>
+      <p>Así que «vende todo» nunca fue un castigo. Era la invitación más amable que existe: <em>ya eres amado; ya no necesitas la máscara.</em> Jesús no le estaba quitando su seguridad; le ofrecía la única que las ropas brillantes jamás pudieron darle — ser conocido del todo y, aun así, no ser rechazado.</p>
+      <p>Y esa es la tragedia honda y tierna del relato: <strong>al joven le costó muchísimo ver que las cosas de afuera no eran lo que de verdad lo sostenía.</strong> Le costó soltarse de una seguridad que le era familiar, conocida, suya desde siempre. No se alejó porque fuera malo, ni porque amara el dinero más que a Dios. Se alejó porque soltar lo conocido daba demasiado miedo — y todavía no había alcanzado a creer que, sin nada de eso, ya bastaba.</p>
+      <p style="color:var(--ink-soft)">Piénsalo junto a la otra orilla: al gadareno, la gracia lo encontró sin nada y lo dejó entero — «sentado, vestido y en su cabal juicio». Pudo recibir. El joven rico llegó con las manos llenas, y esas mismas manos llenas no supieron abrirse. A uno le bastó dejarse encontrar; al otro le pesó demasiado lo que ya tenía.</p>
+    </section>
+
+    <!-- ===== V ===== -->
+    <section id="caminos" style="--accent:var(--ochre)">
+      <div class="eyebrow"><span>El contraste</span><span class="line"></span></div>
+      <h2>Dos personas, dos <em>caminos</em></h2>
+      <p>Pon las dos historias una junto a la otra y aparece la simetría que lo dice todo.</p>
+
+      <div class="diptych">
+        <div class="man joy" style="--mc:var(--olive)">
+          <h3>El gadareno</h3>
+          <div class="ref">Liberado · enviado</div>
+          <div class="row"><span class="lab">Pidió</span><span class="val">«Déjame <strong>ir contigo</strong>».</span></div>
+          <div class="row"><span class="lab">Jesús</span><span class="val">«No. <strong>Vete a tu casa</strong>».</span></div>
+          <div class="row"><span class="lab">Pudo</span><span class="val"><strong>soltar su plan</strong> y confiar.</span></div>
+          <div class="row"><span class="lab">Salió</span><span class="val"><span class="out">contento</span>, a contar lo vivido.</span></div>
+        </div>
+        <div class="man grief" style="--mc:var(--wine)">
+          <h3>El joven rico</h3>
+          <div class="ref">Amado · llamado</div>
+          <div class="row"><span class="lab">Recibió</span><span class="val">«<strong>Ven</strong>, sígueme».</span></div>
+          <div class="row"><span class="lab">Su máscara</span><span class="val">las ropas que cubrían sus <strong>cicatrices</strong>.</span></div>
+          <div class="row"><span class="lab">Le costó</span><span class="val"><strong>soltar lo conocido</strong>.</span></div>
+          <div class="row"><span class="lab">Salió</span><span class="val"><span class="out">triste</span> — a un paso del gozo.</span></div>
+        </div>
+      </div>
+
+      <div class="paradox">A una se le dijo <b>«quédate»</b> — y, por confiar, <span class="em">se fue</span>.<br>A la otra se le dijo <b>«ven»</b> — y, por miedo a soltar lo suyo, <span class="em">se quedó</span>.</div>
+
+      <p>Una recibió un «quédate»; la otra, un «ven». Pero lo importante nunca fue el destino — sino si el corazón podía soltar lo conocido y confiar.</p>
+    </section>
+
+    <!-- ===== VI ===== -->
+    <section id="gozo" style="--accent:var(--amber)">
+      <div class="eyebrow"><span>El gozo</span><span class="line"></span></div>
+      <h2>Uno se fue contento… <em>el otro, triste</em></h2>
+      <p class="dropcap">El hombre liberado salió anunciando a Cristo. El joven rico salió entristecido. Y aquí está la lección: el gozo no dependió de cumplir deseos personales — dependió de poder confiar y soltar aquello que daba seguridad.</p>
+      <p>El gadareno quería quedarse, y se le pidió partir. El joven rico podía partir con Jesús, y no se atrevió a soltar lo suyo. En ambos casos, <strong>el gozo siguió a la confianza, no al deseo.</strong></p>
+      <p class="lead">Hay una alegría que solo conoce quien se atreve a abrir las manos.</p>
+    </section>
+
+    <!-- ===== VII ===== -->
+    <section id="silencio" style="--accent:var(--plum)">
+      <div class="eyebrow"><span>Lo que pudo ser</span><span class="line"></span></div>
+      <h2>Una historia que <em>nunca ocurrió</em></h2>
+      <p>¿Qué habría pasado si el joven rico hubiera podido confiar?</p>
+
+      <div class="maybe">
+        <div class="cap">Tal vez…</div>
+        <ul>
+          <li>habría caminado junto a Pedro;</li>
+          <li>habría visto la resurrección de Lázaro;</li>
+          <li>habría estado en la última cena;</li>
+          <li>habría visto la cruz;</li>
+          <li>habría visto al Cristo resucitado;</li>
+          <li>habría recibido el Espíritu Santo en Pentecostés.</li>
+        </ul>
+      </div>
+
+      <p>Tal vez hoy conoceríamos su nombre. Pero la Biblia nunca vuelve a mencionarlo. Su historia quedó en silencio — <strong>no porque Jesús no lo llamara, sino porque no logró soltar lo que lo retenía.</strong></p>
+    </section>
+
+    <!-- ===== VIII ===== -->
+    <section id="tesoro" style="--accent:var(--terracotta)">
+      <div class="eyebrow"><span class="ref" style="--accent:var(--terracotta)">Mateo 6:21 · 13:44</span><span>El corazón</span><span class="line"></span></div>
+      <h2>¿Dónde estaba su <em>tesoro</em>?</h2>
+
+      <div class="pq" style="--accent:var(--ochre)">«Pues donde esté la riqueza de ustedes, allí estará también su corazón.»<span class="src">Mateo 6:21 · DHH</span></div>
+
+      <p>El problema nunca fue el dinero. El problema fue dónde había aprendido a sentirse seguro. Su tesoro estaba en la tierra — y por eso le costó tanto soltarse.</p>
+
+      <p>Contrasta con quien, en la parábola, encuentra un tesoro escondido y, <strong>lleno de alegría</strong>, lo vende todo:</p>
+
+      <div class="pq" style="--accent:var(--amber)">«Lleno de alegría, va y vende todo lo que tiene, y compra ese terreno.»<span class="src">Mateo 13:44 · DHH</span></div>
+
+      <p>No con tristeza. No obligado. <strong>Con alegría</strong> — porque entendió que lo que recibía era infinitamente mayor que lo que dejaba. Eso fue, precisamente, lo que al joven rico le costó tanto ver.</p>
+    </section>
+
+    <!-- ===== IX ===== -->
+    <section id="conclusion" style="--accent:var(--terracotta)">
+      <div class="eyebrow"><span>Conclusión</span><span class="line"></span></div>
+      <h2>Una decisión, un <em>destino</em></h2>
+      <p class="dropcap">Cristo no llama a todos de la misma manera. A unos les dice «Ve»; a otros, «Ven». A unos los envía lejos; a otros los acerca. Pero el llamado específico no es lo más importante: <strong>lo importante es poder confiar lo suficiente para soltar y responder.</strong></p>
+      <p>No todos tenemos la misma misión. Pero todos enfrentamos la misma decisión: <em>¿haré lo que Cristo me pide, aunque no sea lo que esperaba?</em></p>
+
+      <p>Y hay algo más. El mundo recuerda a quienes se atrevieron a seguir a Cristo — no necesariamente a quienes tenían más riqueza, prestigio o posición:</p>
+
+      <div class="names">
+        <span class="chip">Zaqueo</span>
+        <span class="chip">Mateo</span>
+        <span class="chip">María Magdalena</span>
+        <span class="chip">Pedro</span>
+        <span class="chip">Andrés</span>
+        <span class="chip">Jacobo</span>
+        <span class="chip">Juan</span>
+        <span class="chip nameless">el joven rico — sin nombre</span>
+      </div>
+
+      <p>Y su silencio no es una condena: es una pérdida que no tenía por qué ocurrir. No se alejó por avaricia ni por necedad, sino porque soltar lo conocido le dio demasiado miedo — y todavía no había podido creer que ya era amado, así, sin nada que lo respaldara delante de los demás. Y la invitación que él recibió es la misma que nos llega a nosotros; no dice «esfuérzate más», dice algo mucho más liberador: <strong>«ya eres amado; ya puedes quitarte la máscara».</strong> La verdadera tragedia no es que Jesús no nos llame, sino oír su voz escondidos tras lo que creemos que nos hace dignos de cariño… cuando podríamos caminar con Él, ligeros y llenos de gozo.</p>
+
+      <div class="closing">
+        <div class="q">Cuando Cristo nos dice «ve»… ¿iremos?<br>Cuando nos dice «ven»… ¿dejaremos todo?</div>
+        <span class="seal">Una decisión · Un destino</span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // reading progress
+  const progress = document.getElementById('progress');
+  const onScroll = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // scroll-spy
+  const links = Array.from(document.querySelectorAll('#nav a'));
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        const a = map.get(e.target.id);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  document.querySelectorAll('main section').forEach(s => spy.observe(s));
+
+  // mobile menu
+  const burger = document.getElementById('burger');
+  const sidebar = document.getElementById('sidebar');
+  const scrim = document.getElementById('scrim');
+  const setMenu = (open) => {
+    sidebar.classList.toggle('open', open);
+    burger.classList.toggle('open', open);
+    scrim.classList.toggle('show', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  burger.addEventListener('click', () => setMenu(!sidebar.classList.contains('open')));
+  scrim.addEventListener('click', () => setMenu(false));
+  document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+</script>
+</body>
+</html>
