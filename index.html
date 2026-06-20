@@ -1,106 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee with Claude</title>
-    <style>
-        body {
-            font-family: Georgia, serif;
-            max-width: 600px;
-            margin: 60px auto;
-            padding: 0 24px;
-            color: #2C2C2A;
-            background: #FAFAF7;
-        }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        p.sub {
-            color: #888;
-            margin-bottom: 40px;
-            font-size: 0.95rem;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            margin-bottom: 12px;
-        }
-
-        a {
-            color: #BA7517;
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        small {
-            color: #aaa;
-            margin-left: 8px;
-            font-family: sans-serif;
-            font-size: 0.8rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee with Claude</title>
+<style>
+  :root {
+    --ink: #2C2C2A;
+    --paper: #FAFAF7;
+    --accent: #BA7517;
+    --muted: #9A9A93;
+    --rule: #E7E4DC;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  header {
+    background: #1A1A18;
+    color: #FAFAF7;
+    padding: 32px 24px;
+    margin-bottom: 48px;
+  }
+  .header-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+  h1 {
+    font-size: 2.1rem;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+    color: #FAFAF7;
+  }
+  .sub {
+    color: #C9A36B;
+    margin: 0;
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+  section { margin-bottom: 40px; }
+  .label {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { margin-bottom: 11px; }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.08rem;
+  }
+  a:hover { text-decoration: underline; }
+  .tag {
+    color: var(--muted);
+    margin-left: 10px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.02em;
+  }
+  footer {
+    margin-top: 56px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+</style>
 </head>
 <body>
 
-<h1>Coffee with Claude</h1>
-<p class="sub">Reflections on interesting topics, one coffee at a time.</p>
+<header>
+  <div class="header-inner">
+    <h1>Coffee with Claude</h1>
+    <p class="sub">Reflections on interesting topics, one coffee at a time.</p>
+  </div>
+</header>
 
-<ol>
-    <li><a href="https://github.com/giannifontanot/coffee-with-claude/blob/main/index.html">Upload...</a><small></small>
-    </li>
-    <li><a href="el-mono-y-el-ave-v3.html">El mono que se viste, el ave que se muestra</a><small>Essay · Theology &
-        Philosophy</small></li>
-    <li><a href="vestirse-para-ser-amado.html">Marcos 2: vestirse-para-ser-amado</a><small></small></li>
-    <li><a href="ver-antes-de-arreglar.html">Marcos 2: ver-antes-de-arreglar</a><small></small></li>
-    <li><a href="primero-invisible-despues-imparable.html">primero-invisible-despues-imparable</a><small></small></li>
-    <li><a href="dos-llamados-dos-respuestas.html">dos-llamados-dos-respuestas</a><small></small></li>
-</ol>
-<HR>
-<ol>
-    <li><a href="el_caracter_de_jesus.html">el_caracter_de_jesus</a><small></small></li>
-    <li><a href="el-camino-del-discipulo.html">el-camino-del-discipulo</a><small></small></li>
-    <li><a href="una_pregunta_a_Dios.html">una_pregunta_a_Dios</a></li>
-</ol>
-<HR>
-<ol>
-    <li><a href="grok-musk-speed.html">Grok's Musk Speed</a><small></small></li>
-    <li><a href="part2_feedback_elixir.html">Feedback is the elixir</a><small></small></li>
-    <li><a href="part1_speed_iteration_discipleship.html">Speed is the secret sauce</a><small></small></li>
-    <li><a href="el_sistema_y_sus_interacciones.html">el_sistema_y_sus_interacciones</a><small></small></li>
-</ol>
-<HR>
+<main>
 
-<ol>
-    <li><a href="american-history-infographic.html">american-history-infographic</a><small></small></li>
-    <li><a href="rocket_engine_comparison.html">rocket_engine_comparison</a></li>
-</ol>
-<HR>
+<section>
+  <p class="label">Theology &amp; Philosophy</p>
+  <ul>
+    <li><a href="el-mono-y-el-ave-v3.html">El mono que se viste, el ave que se muestra</a><span class="tag">Essay</span></li>
+    <li><a href="vestirse-para-ser-amado.html">Marcos 2 · Vestirse para ser amado</a></li>
+    <li><a href="ver-antes-de-arreglar.html">Marcos 2 · Ver antes de arreglar</a></li>
+    <li><a href="primero-invisible-despues-imparable.html">Primero invisible, después imparable</a></li>
+    <li><a href="dos-llamados-dos-respuestas.html">Dos llamados, dos respuestas</a></li>
+  </ul>
+</section>
 
-<ol>
-    <li><a href="la_mesa_de_los_metodos.html">la_mesa_de_los_metodos</a><small></small></li>
-    <li><a href="el_consejo_que_te_falta_aprender.html">el_consejo_que_te_falta_aprender</a><small></small></li>
-</ol>
-<HR>
+<section>
+  <p class="label">Discipleship &amp; Character</p>
+  <ul>
+    <li><a href="el_caracter_de_jesus.html">El carácter de Jesús</a></li>
+    <li><a href="el-camino-del-discipulo.html">El camino del discípulo</a></li>
+    <li><a href="una_pregunta_a_Dios.html">Una pregunta a Dios</a></li>
+  </ul>
+</section>
 
-<ol>
-    <li><a href="la_risa_panel_de_expertos.html">la_risa_panel_de_expertos</a><small></small></li>
-    <li><a href="como_provocar_la_risa_taller.html">como_provocar_la_risa_taller</a></li>
-    <li><a href="anatomia_de_la_risa.html">anatomia_de_la_risa</a></li>
-    <li><a href="la_arquitectura_de_la_risa.html">la_arquitectura_de_la_risa</a></li>
-</ol>
-<HR>
+<section>
+  <p class="label">Method &amp; Iteration</p>
+  <ul>
+    <li><a href="grok-musk-speed.html">Grok's Musk Speed</a></li>
+    <li><a href="part2_feedback_elixir.html">Feedback is the elixir</a></li>
+    <li><a href="part1_speed_iteration_discipleship.html">Speed is the secret sauce</a></li>
+    <li><a href="el_sistema_y_sus_interacciones.html">El sistema y sus interacciones</a></li>
+    <li><a href="la_mesa_de_los_metodos.html">La mesa de los métodos</a></li>
+    <li><a href="el_consejo_que_te_falta_aprender.html">El consejo que te falta aprender</a></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">On Laughter</p>
+  <ul>
+    <li><a href="la_risa_panel_de_expertos.html">La risa · panel de expertos</a></li>
+    <li><a href="como_provocar_la_risa_taller.html">Cómo provocar la risa · taller</a></li>
+    <li><a href="anatomia_de_la_risa.html">Anatomía de la risa</a></li>
+    <li><a href="la_arquitectura_de_la_risa.html">La arquitectura de la risa</a></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Infographics</p>
+  <ul>
+    <li><a href="american-history-infographic.html">American History</a></li>
+    <li><a href="rocket_engine_comparison.html">Rocket Engine Comparison</a></li>
+  </ul>
+</section>
+
+<footer>Café con Claude · hand-edited index</footer>
+
+</main>
 
 </body>
 </html>
