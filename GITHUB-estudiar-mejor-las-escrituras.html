@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📚 Estudiar Mejor las Escrituras — Un mapa para no perderse entre Biblia, historia y pensamiento cristiano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3ecdd;
+      --bg-tint: #ebe1ca;
+      --panel: #fbf6ea;
+      --panel-2: #fffaf0;
+      --text: #2a2520;
+      --muted: #756c5f;
+      --line: #e0d2b6;
+      --line-soft: #ece2cc;
+      --accent: #7a4f2a;
+      --accent-deep: #5a3a1f;
+      --accent-2: #ecd7af;
+      --accent-soft: #f6e8c8;
+      --gold: #b88845;
+      --ok: #6c8a55;
+      --warn: #b57a42;
+      --shadow: 0 18px 45px rgba(52, 38, 21, .10);
+      --shadow-soft: 0 6px 18px rgba(52, 38, 21, .06);
+      --radius: 22px;
+    }
+
+    body.night {
+      --bg: #1a1612;
+      --bg-tint: #221d17;
+      --panel: #221d17;
+      --panel-2: #2a241d;
+      --text: #ece2cd;
+      --muted: #9b8f7c;
+      --line: #3a3127;
+      --line-soft: #2e2820;
+      --accent: #d9a766;
+      --accent-deep: #f0c285;
+      --accent-2: #3d3225;
+      --accent-soft: #2e261b;
+      --gold: #e9c07a;
+      --ok: #9bb87c;
+      --warn: #d99c63;
+      --shadow: 0 18px 45px rgba(0, 0, 0, .35);
+      --shadow-soft: 0 6px 18px rgba(0, 0, 0, .25);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Lora", Georgia, "Times New Roman", serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(133,100,63,.13), transparent 34rem),
+        radial-gradient(circle at bottom right, rgba(184, 136, 69, .08), transparent 30rem),
+        var(--bg);
+      line-height: 1.7;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* Paper texture overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .35;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.30 0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      z-index: 0;
+    }
+    body.night::before { mix-blend-mode: screen; opacity: .25; }
+
+    /* Reading progress */
+    .progress-track {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      z-index: 50;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      transition: width .12s linear;
+    }
+
+    .wrap {
+      position: relative;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 70px;
+      z-index: 1;
+    }
+
+    /* HERO */
+    header {
+      background: linear-gradient(135deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: clamp(28px, 5vw, 60px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-2), transparent 70%);
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    header::before {
+      content: "✦";
+      position: absolute;
+      top: 28px;
+      right: 36px;
+      font-family: "EB Garamond", serif;
+      font-size: 2rem;
+      color: var(--gold);
+      opacity: .35;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-family: "DM Sans", system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: .76rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .eyebrow::before, .eyebrow::after {
+      content: "";
+      display: inline-block;
+      width: 22px;
+      height: 1px;
+      background: var(--accent);
+      opacity: .5;
+    }
+    .eyebrow::after { flex: 1; max-width: 80px; }
+
+    h1 {
+      margin: 0 0 18px;
+      font-family: "EB Garamond", serif;
+      font-weight: 500;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      line-height: 1.06;
+      letter-spacing: -.015em;
+      max-width: 920px;
+    }
+
+    h1 .book {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 0;
+      font-family: "Lora", Georgia, serif;
+      font-size: clamp(1.02rem, 1.6vw, 1.18rem);
+      max-width: 760px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    button.utility {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font: 700 .85rem "DM Sans", system-ui, sans-serif;
+      letter-spacing: .02em;
+      box-shadow: var(--shadow-soft);
+      transition: all .18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button.utility:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    button.utility:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 28px;
+      margin-top: 28px;
+      align-items: start;
+    }
+
+    /* TOC */
+    nav.toc {
+      position: sticky;
+      top: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+    }
+
+    .toc-title {
+      font: 800 .72rem "DM Sans", system-ui, sans-serif;
+      color: var(--accent);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    nav.toc a {
+      position: relative;
+      display: block;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 9px 12px 9px 14px;
+      border-radius: 12px;
+      font: 600 .87rem "DM Sans", system-ui, sans-serif;
+      line-height: 1.4;
+      transition: all .15s ease;
+      border-left: 2px solid transparent;
+    }
+
+    nav.toc a:hover {
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    nav.toc a.active {
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      border-left-color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* MAIN COLUMN */
+    main {
+      display: grid;
+      gap: 16px;
+    }
+
+    .intro-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(22px, 4vw, 32px);
+      position: relative;
+    }
+
+    .intro-card::before {
+      content: "";
+      position: absolute;
+      top: 22px;
+      left: 0;
+      width: 3px;
+      height: calc(100% - 44px);
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      border-radius: 2px;
+    }
+
+    .intro-card .lead {
+      font-family: "EB Garamond", serif;
+      font-size: 1.18rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .intro-card .lead p {
+      margin: 0 0 12px;
+    }
+    .intro-card .lead p:last-child { margin-bottom: 0; }
+
+    /* DETAILS / SUMMARY */
+    details.section-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      scroll-margin-top: 20px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    details.section-card:hover { border-color: var(--accent-2); }
+    details.section-card[open] {
+      border-color: var(--accent-2);
+      box-shadow: var(--shadow);
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 20px 22px;
+      font-family: "EB Garamond", serif;
+      font-weight: 600;
+      transition: background .15s ease;
+    }
+
+    details summary::-webkit-details-marker,
+    details summary::marker { display: none; content: none; }
+
+    details summary:hover { background: var(--accent-soft); }
+    details summary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+
+    /* Medallion (roman numeral) */
+    .medallion {
+      flex: 0 0 auto;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      font-family: "EB Garamond", serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1rem;
+      border: 1px solid var(--accent-2);
+      transition: all .2s ease;
+    }
+
+    details[open] .medallion {
+      background: var(--accent);
+      color: var(--panel-2);
+      border-color: var(--accent);
+    }
+
+    .medallion.ornament {
+      font-style: normal;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-head .emoji {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .section-head .section-title {
+      flex: 1;
+      font-size: clamp(1.08rem, 1.8vw, 1.28rem);
+      letter-spacing: -.005em;
+    }
+
+    .chevron {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      transition: transform .25s ease, color .15s ease;
+      font-size: 1rem;
+    }
+
+    details[open] .chevron {
+      transform: rotate(180deg);
+      color: var(--accent);
+    }
+
+    /* SECTION BODY */
+    .section-body {
+      padding: 0 clamp(22px, 4vw, 30px) 28px;
+      color: var(--text);
+    }
+
+    .section-body p {
+      margin: 0 0 14px;
+      font-size: 1.04rem;
+      font-family: "Lora", Georgia, serif;
+    }
+
+    /* Lead-line / blockquote */
+    .section-body blockquote {
+      margin: 16px 0 20px;
+      padding: 16px 20px 16px 24px;
+      background: linear-gradient(to right, var(--accent-soft), transparent 80%);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 14px 14px 0;
+      font-family: "EB Garamond", serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      line-height: 1.45;
+      color: var(--accent-deep);
+      position: relative;
+    }
+
+    .section-body blockquote::before {
+      content: "“";
+      position: absolute;
+      top: -8px;
+      left: 12px;
+      font-family: "EB Garamond", serif;
+      font-size: 2.8rem;
+      color: var(--accent);
+      opacity: .22;
+      line-height: 1;
+    }
+
+    /* Clean list = chip grid */
+    .clean-list {
+      margin: 6px 0 18px;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+      list-style: none;
+    }
+
+    .clean-list li {
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-2);
+      border-radius: 12px;
+      padding: 9px 12px;
+      color: var(--accent-deep);
+      font: 600 .9rem "DM Sans", system-ui, sans-serif;
+      transition: all .15s ease;
+    }
+
+    .clean-list li:hover {
+      background: var(--accent-2);
+      transform: translateY(-1px);
+    }
+
+    /* Step blocks */
+    .step {
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      border: 1px solid var(--line-soft);
+      font-family: "EB Garamond", serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--accent-deep);
+      position: relative;
+    }
+
+    /* OK / WARN */
+    .ok, .warn {
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      border: 1px solid var(--line-soft);
+      font-family: "Lora", Georgia, serif;
+    }
+    .ok { border-left: 4px solid var(--ok); }
+    .warn { border-left: 4px solid var(--warn); }
+
+    /* Area chips (for section 9) */
+    .area-chip {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 14px;
+      align-items: center;
+      background: var(--panel-2);
+      border: 1px solid var(--line-soft);
+      border-left: 3px solid var(--accent);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin: 14px 0 6px;
+    }
+
+    .area-chip span {
+      color: var(--accent);
+      font: 800 .72rem "DM Sans", system-ui, sans-serif;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .area-chip strong {
+      font-family: "EB Garamond", serif;
+      font-weight: 600;
+      font-size: 1.12rem;
+      color: var(--text);
+    }
+
+    /* Final synthesis card */
+    .final-card {
+      background: linear-gradient(135deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--accent-2);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 36px);
+      margin-top: 8px;
+      text-align: center;
+      position: relative;
+    }
+
+    .final-card::before {
+      content: "✦";
+      display: block;
+      color: var(--gold);
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+      opacity: .7;
+    }
+
+    .final-card p {
+      margin: 0;
+      font-family: "EB Garamond", serif;
+      font-style: italic;
+      font-size: 1.25rem;
+      line-height: 1.45;
+      color: var(--accent-deep);
+    }
+
+    .print-note {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: .92rem;
+      font-family: "DM Sans", system-ui, sans-serif;
+      text-align: center;
+      padding: 16px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+      nav.toc { position: relative; top: auto; max-height: none; }
+      details summary { padding: 18px 18px; gap: 12px; }
+      .section-body { padding: 0 20px 24px; }
+      .medallion { width: 38px; height: 38px; font-size: .9rem; }
+      .area-chip { grid-template-columns: 1fr; gap: 4px; }
+    }
+
+    /* PRINT */
+    @media print {
+      body { background: white; }
+      body::before, .progress-track, .toolbar, nav.toc, .chevron { display: none; }
+      .layout { display: block; }
+      details, details[open] { open: true; }
+      details .section-body { display: block !important; }
+      .section-body { padding-bottom: 24px !important; }
+      details.section-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border-color: #ccc;
+        margin-bottom: 12px;
+      }
+      .medallion {
+        background: transparent !important;
+        color: #000 !important;
+        border-color: #888 !important;
+      }
+      header::before, header::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-track" aria-hidden="true">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Biblioteca de estudio bíblico</div>
+      <h1><span class="book">📚</span> Estudiar Mejor las Escrituras — Un mapa para no perderse entre Biblia, historia y pensamiento cristiano</h1>
+      <p class="subtitle">Una página organizada para estudiar la Biblia con contexto, historia, teología, Cristo al centro y herramientas de apoyo.</p>
+
+      <div class="toolbar">
+        <button class="utility" id="toggleAll">Abrir todo</button>
+        <button class="utility" id="themeToggle">🌙 Modo noche</button>
+        <button class="utility" onclick="window.print()">🖨 Imprimir / PDF</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="toc" aria-label="Tabla de contenido">
+        <div class="toc-title">Mapa del estudio</div>
+        <a href="#s1">🕊️ 1. El centro: el texto bíblico</a>
+        <a href="#s2">🏛️ 2. La historia bíblica: cómo ocurrieron las cosas</a>
+        <a href="#s3">🌍 3. La historia del mundo alrededor de la Biblia</a>
+        <a href="#s4">🧠 4. Teología bíblica: los grandes temas</a>
+        <a href="#s5">✝️ 5. Cristo como centro de interpretación</a>
+        <a href="#s6">📖 6. Literatura bíblica: leer cada género</a>
+        <a href="#s7">🧓 7. Los grandes pensadores cristianos</a>
+        <a href="#s8">🛠️ 8. Herramientas de estudio</a>
+        <a href="#s9">🧭 9. Una forma simple de organizarlo todo</a>
+        <a href="#s10">🔥 10. El orden ideal para estudiar</a>
+        <a href="#s11">🧩 11. Ejemplo práctico con Marcos</a>
+        <a href="#s12">✅ Resumen final — La estructura madre</a>
+      </nav>
+
+      <main>
+        <section class="intro-card">
+          <div class="lead">
+            <p>La mejor forma de organizarlo es pensar en capas.</p>
+            <p>No estudiar «cosas sueltas», sino construir un mapa donde cada tema tenga su lugar.</p>
+            <p>La Biblia es el centro.</p>
+            <p>Todo lo demás sirve como contexto, lámpara, comparación o herramienta.</p>
+          </div>
+        </section>
+
+        <details id="s1" class="section-card" open>
+          <summary>
+            <span class="medallion">I</span>
+            <span class="section-head"><span class="emoji">🕊️</span><span class="section-title">El centro: el texto bíblico</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Esta es la base principal.</p>
+            <p>Aquí estudiamos directamente los libros de la Biblia:</p>
+            <ul class="clean-list"><li>Génesis</li><li>Éxodo</li><li>Samuel</li><li>Salmos</li><li>Isaías</li><li>Marcos</li><li>Juan</li><li>Romanos</li><li>Hebreos</li><li>Apocalipsis</li></ul>
+            <p>etc.</p>
+            <p>Pero no solo leerlos.</p>
+            <p>Hay que estudiarlos con preguntas como:</p>
+            <blockquote>¿Quién escribió este libro?</blockquote>
+            <blockquote>¿A quién fue dirigido?</blockquote>
+            <blockquote>¿Qué problema estaba enfrentando el pueblo?</blockquote>
+            <blockquote>¿Qué revela este libro acerca de Dios?</blockquote>
+            <blockquote>¿Qué revela acerca del ser humano?</blockquote>
+            <blockquote>¿Qué apunta hacia Cristo?</blockquote>
+            <blockquote>¿Qué me llama a obedecer?</blockquote>
+            <p>Aquí la Biblia no es «un libro más».</p>
+            <p>Es la columna vertebral.</p>
+          </div>
+        </details>
+
+        <details id="s2" class="section-card">
+          <summary>
+            <span class="medallion">II</span>
+            <span class="section-head"><span class="emoji">🏛️</span><span class="section-title">La historia bíblica: cómo ocurrieron las cosas</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Esta capa organiza los eventos en orden.</p>
+            <p>Porque a veces leemos la Biblia como piezas separadas, pero en realidad es una gran historia.</p>
+            <p>Podríamos dividirla así:</p>
+            <p class="step">1️⃣ Creación y caída</p>
+            <p>Adán, Eva, pecado, separación de Dios.</p>
+            <p class="step">2️⃣ Patriarcas</p>
+            <p>Abraham, Isaac, Jacob, José.</p>
+            <p class="step">3️⃣ Éxodo y desierto</p>
+            <p>Moisés, liberación, pacto, tabernáculo.</p>
+            <p class="step">4️⃣ Conquista y jueces</p>
+            <p>Josué, la tierra prometida, ciclos de rebelión.</p>
+            <p class="step">5️⃣ Reino unido</p>
+            <p>Saúl, David, Salomón.</p>
+            <p class="step">6️⃣ Reino dividido</p>
+            <p>Israel al norte, Judá al sur.</p>
+            <p class="step">7️⃣ Exilio</p>
+            <p>Asiria, Babilonia, destrucción, disciplina.</p>
+            <p class="step">8️⃣ Retorno</p>
+            <p>Esdras, Nehemías, reconstrucción.</p>
+            <p class="step">9️⃣ Tiempo entre Testamentos</p>
+            <p>Imperios, cambios culturales, espera del Mesías.</p>
+            <p class="step">🔟 Vida de Cristo</p>
+            <p>Evangelios: Jesús como Rey, Siervo, Hijo de Dios, Salvador.</p>
+            <p class="step">1️⃣1️⃣ Iglesia primitiva</p>
+            <p>Hechos, misión, persecución, expansión.</p>
+            <p class="step">1️⃣2️⃣ Cartas apostólicas</p>
+            <p>Doctrina, corrección, vida cristiana.</p>
+            <p class="step">1️⃣3️⃣ Esperanza final</p>
+            <p>Apocalipsis, juicio, nueva creación.</p>
+            <p>Esta capa responde:</p>
+            <blockquote>¿Dónde estamos en la historia?</blockquote>
+          </div>
+        </details>
+
+        <details id="s3" class="section-card">
+          <summary>
+            <span class="medallion">III</span>
+            <span class="section-head"><span class="emoji">🌍</span><span class="section-title">La historia del mundo alrededor de la Biblia</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Esta parte es clave, porque la Biblia ocurrió dentro del mundo real.</p>
+            <p>No cayó del cielo como un documento aislado.</p>
+            <p>Hay que estudiar:</p>
+            <ul class="clean-list"><li>Egipto</li><li>Asiria</li><li>Babilonia</li><li>Persia</li><li>Grecia</li><li>Roma</li></ul>
+            <p>Y también:</p>
+            <ul class="clean-list"><li>costumbres antiguas</li><li>leyes del mundo antiguo</li><li>comercio</li><li>guerras</li><li>esclavitud</li><li>templos paganos</li><li>estructura familiar</li><li>honor y vergüenza</li><li>ocupación romana</li><li>impuestos</li><li>sinagogas</li><li>fariseos, saduceos, escribas y zelotes</li></ul>
+            <p>Por ejemplo:</p>
+            <p>Para entender mejor a Jesús, ayuda saber:</p>
+            <ul class="clean-list"><li>Israel estaba bajo Roma</li><li>muchos esperaban un Mesías político</li><li>los líderes religiosos tenían poder social</li><li>el templo era el centro espiritual y económico</li><li>Samaria tenía una historia de conflicto con los judíos</li><li>Galilea no era vista igual que Jerusalén</li></ul>
+            <p>Eso le da carne y hueso al texto.</p>
+            <p>La Escritura se vuelve más visible.</p>
+          </div>
+        </details>
+
+        <details id="s4" class="section-card">
+          <summary>
+            <span class="medallion">IV</span>
+            <span class="section-head"><span class="emoji">🧠</span><span class="section-title">Teología bíblica: los grandes temas que atraviesan toda la Biblia</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Aquí no estudiamos solo «versículos».</p>
+            <p>Estudiamos temas que aparecen desde Génesis hasta Apocalipsis.</p>
+            <p>Por ejemplo:</p>
+            <ul class="clean-list"><li>Reino de Dios</li><li>pacto</li><li>sacrificio</li><li>templo</li><li>sacerdocio</li><li>pecado</li><li>justicia</li><li>gracia</li><li>fe</li><li>obediencia</li><li>sabiduría</li><li>Espíritu Santo</li><li>exilio y retorno</li><li>nueva creación</li><li>Cristo como cumplimiento</li></ul>
+            <p>Ejemplo poderoso:</p>
+            <p>El tema del agua.</p>
+            <ul class="clean-list"><li>aguas de la creación</li><li>diluvio</li><li>Mar Rojo</li><li>agua de la roca</li><li>lavamientos rituales</li><li>bautismo</li><li>Jesús como agua viva</li><li>río de vida en Apocalipsis</li></ul>
+            <p>Eso no es casualidad.</p>
+            <p>Es una línea teológica.</p>
+          </div>
+        </details>
+
+        <details id="s5" class="section-card">
+          <summary>
+            <span class="medallion">V</span>
+            <span class="section-head"><span class="emoji">✝️</span><span class="section-title">Cristo como centro de interpretación</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Esta capa pregunta:</p>
+            <blockquote>¿Cómo apunta esto hacia Cristo?</blockquote>
+            <p>No de manera forzada.</p>
+            <p>Sino viendo cómo Cristo cumple la historia.</p>
+            <p>Por ejemplo:</p>
+            <p>Adán falló; Cristo es el nuevo Adán.</p>
+            <p>Israel fue llamado hijo de Dios; Cristo es el Hijo fiel.</p>
+            <p>Moisés liberó de Egipto; Cristo libera del pecado.</p>
+            <p>El cordero pascual protegió de la muerte; Cristo es el Cordero de Dios.</p>
+            <p>El templo era el lugar de la presencia de Dios; Cristo es Dios con nosotros.</p>
+            <p>El sacerdote mediaba; Cristo es nuestro gran Sumo Sacerdote.</p>
+            <p>David fue rey; Cristo es el Rey eterno.</p>
+            <p>Aquí la pregunta no es solo:</p>
+            <blockquote>¿Qué significa este texto?</blockquote>
+            <p>Sino también:</p>
+            <blockquote>¿Dónde está esto dentro del plan de redención?</blockquote>
+          </div>
+        </details>
+
+        <details id="s6" class="section-card">
+          <summary>
+            <span class="medallion">VI</span>
+            <span class="section-head"><span class="emoji">📖</span><span class="section-title">Literatura bíblica: aprender a leer cada género</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>No se lee igual un salmo que una carta de Pablo.</p>
+            <p>Hay géneros distintos:</p>
+            <ul class="clean-list"><li>narrativa histórica</li><li>ley</li><li>poesía</li><li>sabiduría</li><li>profecía</li><li>evangelios</li><li>parábolas</li><li>cartas</li><li>apocalíptica</li></ul>
+            <p>Cada género tiene reglas de lectura.</p>
+            <p>Por ejemplo:</p>
+            <p class="ok">✔ Proverbios da sabiduría general.</p>
+            <p class="warn">⚠ No siempre son promesas automáticas.</p>
+            <p class="ok">✔ Apocalipsis usa símbolos poderosos.</p>
+            <p class="warn">⚠ No debe leerse como si fuera una noticia moderna escrita en código secreto.</p>
+            <p class="ok">✔ Las parábolas enseñan con imágenes.</p>
+            <p class="warn">⚠ No cada detalle de una parábola tiene que tener significado oculto.</p>
+            <p>Esta capa evita muchos errores.</p>
+          </div>
+        </details>
+
+        <details id="s7" class="section-card">
+          <summary>
+            <span class="medallion">VII</span>
+            <span class="section-head"><span class="emoji">🧓</span><span class="section-title">Los grandes pensadores cristianos</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Aquí entran personas como:</p>
+            <ul class="clean-list"><li>C. S. Lewis</li><li>Agustín</li><li>Atanasio</li><li>Martín Lutero</li><li>Juan Calvino</li><li>John Wesley</li><li>Dietrich Bonhoeffer</li><li>Dallas Willard</li><li>N. T. Wright</li><li>Tim Keller</li><li>Eugene Peterson</li></ul>
+            <p>Pero con una regla importante:</p>
+            <blockquote>La Biblia gobierna. Los autores ayudan. No reemplazan.</blockquote>
+            <p>C. S. Lewis, por ejemplo, puede ayudar mucho en:</p>
+            <ul class="clean-list"><li>imaginación cristiana</li><li>apologética</li><li>dolor</li><li>orgullo</li><li>tentación</li><li>moralidad</li><li>deseo</li><li>eternidad</li></ul>
+            <p>Pero Lewis no es Escritura.</p>
+            <p>Es un buen compañero de camino.</p>
+            <p>No el camino.</p>
+          </div>
+        </details>
+
+        <details id="s8" class="section-card">
+          <summary>
+            <span class="medallion">VIII</span>
+            <span class="section-head"><span class="emoji">🛠️</span><span class="section-title">Herramientas de estudio</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Aquí pondríamos recursos prácticos:</p>
+            <ul class="clean-list"><li>diccionarios bíblicos</li><li>atlas bíblicos</li><li>comentarios bíblicos</li><li>concordancias</li><li>líneas del tiempo</li><li>mapas</li><li>Biblias de estudio</li><li>interlineales</li><li>léxicos hebreo/griego</li><li>enciclopedias bíblicas</li><li>estudios arqueológicos</li></ul>
+            <p>Pero hay que usarlos con orden.</p>
+            <p>Primero:</p>
+            <p class="step">1️⃣ Leo el texto bíblico.</p>
+            <p class="step">2️⃣ Observo lo que dice.</p>
+            <p class="step">3️⃣ Hago preguntas.</p>
+            <p class="step">4️⃣ Reviso contexto.</p>
+            <p class="step">5️⃣ Comparo con otros pasajes.</p>
+            <p class="step">6️⃣ Consulto herramientas.</p>
+            <p class="step">7️⃣ Medito aplicación.</p>
+            <p>No empezar con el comentario.</p>
+            <p>Primero escuchar la Escritura.</p>
+            <p>Después consultar a los maestros.</p>
+          </div>
+        </details>
+
+        <details id="s9" class="section-card">
+          <summary>
+            <span class="medallion">IX</span>
+            <span class="section-head"><span class="emoji">🧭</span><span class="section-title">Una forma simple de organizarlo todo</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Yo lo organizaría como una «Biblioteca de Estudio Bíblico» con estas áreas:</p>
+            <div class="area-chip"><span>Área 1</span><strong>Texto Bíblico</strong></div>
+            <ul class="clean-list"><li>libros de la Biblia</li><li>capítulos</li><li>pasajes clave</li><li>estructura de cada libro</li></ul>
+            <div class="area-chip"><span>Área 2</span><strong>Historia Bíblica</strong></div>
+            <ul class="clean-list"><li>línea del tiempo</li><li>personajes</li><li>eventos</li><li>pactos</li><li>etapas de redención</li></ul>
+            <div class="area-chip"><span>Área 3</span><strong>Mundo Bíblico</strong></div>
+            <ul class="clean-list"><li>Egipto</li><li>Asiria</li><li>Babilonia</li><li>Persia</li><li>Grecia</li><li>Roma</li><li>cultura judía</li><li>geografía</li></ul>
+            <div class="area-chip"><span>Área 4</span><strong>Temas Teológicos</strong></div>
+            <ul class="clean-list"><li>pacto</li><li>reino</li><li>sacrificio</li><li>templo</li><li>pecado</li><li>gracia</li><li>Espíritu Santo</li><li>nueva creación</li></ul>
+            <div class="area-chip"><span>Área 5</span><strong>Cristo en las Escrituras</strong></div>
+            <ul class="clean-list"><li>profecías</li><li>tipos y sombras</li><li>cumplimiento</li><li>enseñanzas de Jesús</li><li>obra de Cristo</li></ul>
+            <div class="area-chip"><span>Área 6</span><strong>Vida Cristiana</strong></div>
+            <ul class="clean-list"><li>obediencia</li><li>oración</li><li>humildad</li><li>servicio</li><li>santidad</li><li>amor al prójimo</li><li>misión</li></ul>
+            <div class="area-chip"><span>Área 7</span><strong>Pensadores Cristianos</strong></div>
+            <ul class="clean-list"><li>C. S. Lewis</li><li>Agustín</li><li>Bonhoeffer</li><li>otros autores</li><li>apologética</li><li>espiritualidad</li><li>ética cristiana</li></ul>
+            <div class="area-chip"><span>Área 8</span><strong>Herramientas</strong></div>
+            <ul class="clean-list"><li>mapas</li><li>comentarios</li><li>diccionarios</li><li>cronologías</li><li>arqueología</li><li>idiomas bíblicos</li></ul>
+          </div>
+        </details>
+
+        <details id="s10" class="section-card">
+          <summary>
+            <span class="medallion">X</span>
+            <span class="section-head"><span class="emoji">🔥</span><span class="section-title">El orden ideal para estudiar</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Yo lo pondría así:</p>
+            <p class="step">1️⃣ Texto bíblico</p>
+            <p>Primero lo que Dios dice.</p>
+            <p class="step">2️⃣ Contexto histórico</p>
+            <p>Luego entender dónde, cuándo y por qué.</p>
+            <p class="step">3️⃣ Historia completa de la redención</p>
+            <p>Ubicar el pasaje dentro de la gran historia.</p>
+            <p class="step">4️⃣ Tema teológico</p>
+            <p>Ver qué gran tema aparece.</p>
+            <p class="step">5️⃣ Cristo</p>
+            <p>Preguntar cómo se conecta con Él.</p>
+            <p class="step">6️⃣ Aplicación</p>
+            <p>Preguntar qué demanda de mi vida.</p>
+            <p class="step">7️⃣ Otros autores</p>
+            <p>Usarlos como conversación, apoyo y reflexión.</p>
+            <p>Ese orden es sano.</p>
+            <p>Porque evita que C. S. Lewis, la historia, la arqueología o los comentarios se sienten en el trono.</p>
+            <p>El trono lo ocupa la Escritura.</p>
+          </div>
+        </details>
+
+        <details id="s11" class="section-card">
+          <summary>
+            <span class="medallion">XI</span>
+            <span class="section-head"><span class="emoji">🧩</span><span class="section-title">Ejemplo práctico con Marcos</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Si estudiamos Marcos, podríamos organizarlo así:</p>
+            <div class="area-chip"><span>Texto</span><strong>Texto Bíblico</strong></div>
+            <ul class="clean-list"><li>Evangelio de Marcos</li></ul>
+            <div class="area-chip"><span>Historia</span><strong>Historia Bíblica</strong></div>
+            <ul class="clean-list"><li>Jesús aparece después de Juan el Bautista</li><li>Israel espera al Mesías</li><li>El reino de Dios se ha acercado</li></ul>
+            <div class="area-chip"><span>Mundo</span><strong>Mundo Histórico</strong></div>
+            <ul class="clean-list"><li>Roma domina Israel</li><li>Herodes tiene poder político</li><li>los fariseos tienen influencia religiosa</li><li>el templo domina la vida judía</li></ul>
+            <div class="area-chip"><span>Teología</span><strong>Temas Teológicos</strong></div>
+            <ul class="clean-list"><li>reino de Dios</li><li>autoridad de Cristo</li><li>discipulado</li><li>sufrimiento</li><li>servicio</li><li>cruz</li></ul>
+            <div class="area-chip"><span>Cristo</span><strong>Cristo como centro</strong></div>
+            <ul class="clean-list"><li>Cristo como Siervo</li><li>Cristo como Rey</li><li>Cristo como Pastor</li><li>Cristo como Rescatador</li><li>Cristo como Hijo de Dios</li></ul>
+            <div class="area-chip"><span>Vida</span><strong>Vida Cristiana</strong></div>
+            <ul class="clean-list"><li>seguir a Cristo</li><li>negarse a uno mismo</li><li>servir</li><li>cargar la cruz</li><li>anunciar el evangelio</li></ul>
+            <div class="area-chip"><span>Autores</span><strong>Autores de Apoyo</strong></div>
+            <ul class="clean-list"><li>C. S. Lewis sobre orgullo, obediencia, fe y deseo</li><li>Bonhoeffer sobre discipulado costoso</li><li>N. T. Wright sobre reino de Dios y contexto judío</li></ul>
+            <p>Eso ya no es lectura suelta.</p>
+            <p>Eso es un sistema.</p>
+          </div>
+        </details>
+
+        <details id="s12" class="section-card">
+          <summary>
+            <span class="medallion ornament">✦</span>
+            <span class="section-head"><span class="emoji">✅</span><span class="section-title">Resumen final — La estructura madre</span></span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="section-body">
+            <p>Para estudiar mejor las Escrituras, podemos organizar todo así:</p>
+            <p class="step">📖 La Biblia como centro</p>
+            <p class="step">🏛️ La historia bíblica como línea del tiempo</p>
+            <p class="step">🌍 La historia mundial como contexto</p>
+            <p class="step">🧠 La teología bíblica como mapa de temas</p>
+            <p class="step">✝️ Cristo como cumplimiento</p>
+            <p class="step">🧎 La vida cristiana como respuesta</p>
+            <p class="step">🧓 Los pensadores cristianos como compañeros</p>
+            <p class="step">🛠️ Las herramientas como apoyo</p>
+            <p>La idea clave sería esta:</p>
+            <blockquote>La Escritura es el sol. La historia, los autores y las herramientas son planetas alrededor de ella.</blockquote>
+          </div>
+        </details>
+
+        <section class="final-card">
+          <p>La Escritura es el sol. La historia, los autores y las herramientas son planetas alrededor de ella.</p>
+        </section>
+
+        <p class="print-note">Usa el botón «Imprimir / PDF» para guardar esta página como PDF desde tu navegador.</p>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const allDetails = [...document.querySelectorAll('details.section-card')];
+    const toggleAllBtn = document.getElementById('toggleAll');
+    const themeToggle = document.getElementById('themeToggle');
+    const progressBar = document.querySelector('.progress-bar');
+    const tocLinks = [...document.querySelectorAll('nav.toc a')];
+
+    // --- Load persisted state ---
+    try {
+      const savedOpen = JSON.parse(localStorage.getItem('study-open') || 'null');
+      if (Array.isArray(savedOpen)) {
+        // Close the default-open section first
+        allDetails.forEach(d => d.open = false);
+        savedOpen.forEach(id => {
+          const d = document.getElementById(id);
+          if (d) d.open = true;
+        });
+      }
+      if (localStorage.getItem('study-theme') === 'night') {
+        document.body.classList.add('night');
+        themeToggle.textContent = '☀ Modo día';
+      }
+    } catch (e) { /* localStorage may be unavailable */ }
+
+    updateToggleAllLabel();
+
+    function saveOpen() {
+      try {
+        const open = allDetails.filter(d => d.open).map(d => d.id);
+        localStorage.setItem('study-open', JSON.stringify(open));
+      } catch (e) {}
+    }
+
+    function updateToggleAllLabel() {
+      toggleAllBtn.textContent = allDetails.every(d => d.open) ? 'Cerrar todo' : 'Abrir todo';
+    }
+
+    // --- Per-section listener ---
+    allDetails.forEach(d => {
+      d.addEventListener('toggle', () => {
+        updateToggleAllLabel();
+        saveOpen();
+      });
+    });
+
+    // --- Open / close all ---
+    toggleAllBtn.addEventListener('click', () => {
+      const shouldOpen = !allDetails.every(d => d.open);
+      allDetails.forEach(d => d.open = shouldOpen);
+      toggleAllBtn.textContent = shouldOpen ? 'Cerrar todo' : 'Abrir todo';
+      saveOpen();
+    });
+
+    // --- Theme toggle ---
+    themeToggle.addEventListener('click', () => {
+      const isNight = document.body.classList.toggle('night');
+      themeToggle.textContent = isNight ? '☀ Modo día' : '🌙 Modo noche';
+      try { localStorage.setItem('study-theme', isNight ? 'night' : 'day'); } catch (e) {}
+    });
+
+    // --- Reading progress ---
+    function updateProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      progressBar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // --- TOC scroll-spy ---
+    const tocMap = new Map();
+    tocLinks.forEach(link => {
+      const id = link.getAttribute('href').slice(1);
+      tocMap.set(id, link);
+    });
+
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const link = tocMap.get(entry.target.id);
+        if (!link) return;
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+
+    allDetails.forEach(d => spy.observe(d));
+
+    // --- TOC click: also open the target section ---
+    tocLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        const id = link.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (target && !target.open) {
+          target.open = true;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
