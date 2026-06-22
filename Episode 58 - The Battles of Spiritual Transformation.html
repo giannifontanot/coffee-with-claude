@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crecer es pelear — Las batallas de la transformación en Marcos 4–6</title>
+
+<!-- ===================================================================
+  CAFÉ CON CLAUDE · "Crecer es pelear"
+  Transformación espiritual en el Evangelio de Marcos (4–6)
+  Página autocontenida · persianas (acordeones) para lectura pausada
+  Tipografía: Fraunces (display) + Spectral (cuerpo)
+  ==================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --terracotta:#b04e29;
+  --amber:#cf9136;
+  --olive:#6c7240;
+  --plum:#6c3a4f;
+  --ink:#2d261d;
+  --cream:#f2e8d6;
+  --paper:#f7efe0;
+  --paper-deep:#ece0c9;
+  --rule:#d8c7a6;
+  --ink-soft:#5b5142;
+
+  --fs-base:1.16rem;
+  --display:"Fraunces",Georgia,serif;
+  --body:"Spectral",Georgia,serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);
+  font-size:var(--fs-base);
+  line-height:1.72;
+  color:var(--ink);
+  background:var(--cream);
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(176,78,41,.035), transparent 45%),
+    radial-gradient(circle at 85% 78%, rgba(108,114,64,.045), transparent 50%);
+}
+
+/* ---- barra de progreso de lectura ---- */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--terracotta),var(--amber));
+  z-index:60;transition:width .12s ease-out;
+}
+
+/* ---- estructura ---- */
+.wrap{
+  display:grid;
+  grid-template-columns:268px minmax(0,1fr);
+  max-width:1180px;margin:0 auto;
+}
+
+/* ---- riel lateral ---- */
+.rail{
+  position:sticky;top:0;align-self:start;height:100vh;
+  padding:2.6rem 1.6rem 2rem 2rem;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--rule);
+}
+.rail .mark{
+  font-family:var(--display);
+  font-weight:500;font-size:.78rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--terracotta);
+  margin-bottom:.2rem;
+}
+.rail .mark-sub{
+  font-size:.82rem;color:var(--ink-soft);font-style:italic;
+  margin-bottom:1.9rem;line-height:1.4;
+}
+nav.toc{flex:1;overflow-y:auto;margin-bottom:1.2rem}
+nav.toc a{
+  display:flex;gap:.7rem;align-items:baseline;
+  text-decoration:none;color:var(--ink-soft);
+  padding:.32rem 0;font-size:.92rem;line-height:1.32;
+  border:none;background:none;cursor:pointer;text-align:left;width:100%;
+  transition:color .2s ease;
+}
+nav.toc a .num{
+  font-family:var(--display);font-variant:small-caps;
+  font-size:.74rem;letter-spacing:.05em;
+  color:var(--amber);min-width:2.1em;flex-shrink:0;
+  font-feature-settings:"smcp";
+}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.active{color:var(--terracotta)}
+nav.toc a.active .num{color:var(--terracotta)}
+
+.rail-tools{
+  border-top:1px solid var(--rule);padding-top:1.1rem;
+  display:flex;flex-direction:column;gap:.85rem;
+}
+.fontctl{display:flex;align-items:center;gap:.55rem}
+.fontctl span{font-size:.74rem;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.fontctl button{
+  font-family:var(--display);
+  width:30px;height:30px;border:1px solid var(--rule);
+  background:var(--paper);color:var(--ink);border-radius:50%;
+  cursor:pointer;font-size:.9rem;line-height:1;transition:all .18s ease;
+}
+.fontctl button:hover{border-color:var(--terracotta);color:var(--terracotta)}
+.rail-tools a.home{
+  font-size:.82rem;color:var(--ink-soft);text-decoration:none;
+  letter-spacing:.02em;transition:color .2s ease;
+}
+.rail-tools a.home:hover{color:var(--terracotta)}
+
+/* ---- contenido ---- */
+main{padding:3.4rem 4.2rem 6rem;max-width:760px}
+
+.hero{margin-bottom:3rem}
+.hero .eyebrow{
+  font-family:var(--display);font-variant:small-caps;
+  letter-spacing:.13em;color:var(--olive);
+  font-size:.92rem;margin-bottom:.9rem;
+}
+.hero h1{
+  font-family:var(--display);
+  font-weight:400;font-size:clamp(2.5rem,5.5vw,3.7rem);
+  line-height:1.04;letter-spacing:-.015em;color:var(--ink);
+  margin-bottom:1.1rem;
+}
+.hero h1 em{font-style:italic;color:var(--terracotta)}
+.hero .sub{
+  font-size:1.22rem;color:var(--ink-soft);font-style:italic;
+  line-height:1.5;max-width:34em;
+}
+.hero .lede{
+  margin-top:1.7rem;font-size:1.12rem;line-height:1.7;
+  padding-left:1.2rem;border-left:2px solid var(--amber);
+  color:var(--ink);
+}
+
+/* ---- las persianas ---- */
+.slat-rule{
+  display:flex;align-items:center;gap:1rem;
+  margin:0 0 1.6rem;color:var(--ink-soft);
+  font-family:var(--display);font-size:.82rem;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.slat-rule::before,.slat-rule::after{
+  content:"";flex:1;height:0;border-top:1px solid var(--rule);
+}
+
+.persiana{
+  border-bottom:1px solid var(--rule);
+}
+.persiana:first-of-type{border-top:1px solid var(--rule)}
+
+.persiana > button.lever{
+  width:100%;text-align:left;cursor:pointer;
+  background:none;border:none;color:var(--ink);
+  display:flex;align-items:baseline;gap:1.1rem;
+  padding:1.5rem .3rem 1.5rem 0;
+  font-family:var(--display);transition:color .2s ease;
+}
+.persiana > button.lever:hover{color:var(--terracotta)}
+.persiana > button.lever:focus-visible{
+  outline:2px solid var(--amber);outline-offset:4px;border-radius:3px;
+}
+.lever .roman{
+  font-variant:small-caps;font-feature-settings:"smcp";
+  color:var(--amber);font-size:1rem;letter-spacing:.06em;
+  min-width:2.6em;flex-shrink:0;padding-top:.18em;
+}
+.persiana[data-open="true"] .lever .roman{color:var(--terracotta)}
+.lever .title{
+  flex:1;font-weight:400;font-size:1.42rem;line-height:1.18;
+  letter-spacing:-.01em;
+}
+/* el tirador de la persiana: listones que se pliegan */
+.lever .pull{
+  flex-shrink:0;align-self:center;width:22px;height:14px;
+  position:relative;transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.lever .pull span{
+  position:absolute;left:0;right:0;height:2px;border-radius:2px;
+  background:var(--ink-soft);transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.lever .pull span:nth-child(1){top:0}
+.lever .pull span:nth-child(2){top:6px;opacity:.55}
+.lever .pull span:nth-child(3){top:12px;opacity:.25}
+.persiana[data-open="true"] .lever .pull span{background:var(--terracotta)}
+.persiana[data-open="true"] .lever .pull span:nth-child(1){top:6px;transform:rotate(0)}
+.persiana[data-open="true"] .lever .pull span:nth-child(2){opacity:0;transform:scaleX(.2)}
+.persiana[data-open="true"] .lever .pull span:nth-child(3){top:6px;opacity:1}
+
+/* el cuerpo plegable */
+.persiana .blinds{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .42s cubic-bezier(.4,0,.2,1);
+}
+.persiana[data-open="true"] .blinds{grid-template-rows:1fr}
+.persiana .blinds-inner{
+  overflow:hidden;
+  opacity:0;transform:translateY(-4px);
+  transition:opacity .35s ease .05s,transform .35s ease .05s;
+}
+.persiana[data-open="true"] .blinds-inner{opacity:1;transform:none}
+.panel-body{padding:.2rem 0 2.2rem 3.7rem}
+
+@media(max-width:680px){
+  .panel-body{padding-left:0}
+}
+
+.panel-body p{margin-bottom:1.05rem}
+.panel-body p:last-child{margin-bottom:0}
+.panel-body .lead{
+  font-size:1.12rem;color:var(--ink);font-style:italic;
+  color:var(--plum);
+}
+.panel-body strong{font-weight:600;color:var(--ink)}
+.panel-body em{font-style:italic}
+
+/* sub-bloques: las cinco batallas, los suelos, etc. */
+.facet{
+  margin:1.4rem 0;padding:1rem 1.3rem;
+  background:var(--paper);border-radius:3px;
+  border-left:3px solid var(--olive);
+}
+.facet h4{
+  font-family:var(--display);font-weight:500;font-size:1.06rem;
+  color:var(--ink);margin-bottom:.35rem;letter-spacing:-.005em;
+}
+.facet h4 .kicker{
+  display:block;font-size:.72rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--olive);
+  font-variant:normal;margin-bottom:.25rem;
+}
+.facet p{margin-bottom:0;font-size:1.04rem;line-height:1.6}
+.facet.amber{border-left-color:var(--amber)}
+.facet.plum{border-left-color:var(--plum)}
+.facet.terra{border-left-color:var(--terracotta)}
+
+ul.clean{list-style:none;margin:1.1rem 0}
+ul.clean li{
+  padding-left:1.5rem;position:relative;margin-bottom:.85rem;line-height:1.6;
+}
+ul.clean li::before{
+  content:"";position:absolute;left:0;top:.62em;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--amber);
+}
+ul.clean li strong{color:var(--terracotta);font-weight:600}
+
+.refs{
+  margin-top:1.5rem;padding-top:.9rem;border-top:1px dotted var(--rule);
+  font-size:.88rem;color:var(--ink-soft);font-style:italic;
+}
+.refs a{color:var(--olive);text-decoration:none;border-bottom:1px solid var(--rule)}
+.refs a:hover{color:var(--terracotta);border-color:var(--terracotta)}
+
+.scripture{
+  font-style:italic;color:var(--plum);
+}
+
+/* cierre */
+.coda{
+  margin-top:3.4rem;padding-top:2rem;border-top:1px solid var(--rule);
+  font-style:italic;color:var(--ink-soft);font-size:1.06rem;line-height:1.7;
+}
+.coda .signoff{
+  display:block;margin-top:1.2rem;font-family:var(--display);
+  font-style:normal;font-size:.86rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--terracotta);
+}
+
+/* ---- móvil ---- */
+.hamburger{
+  display:none;position:fixed;top:1rem;left:1rem;z-index:55;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--paper);border:1px solid var(--rule);
+  cursor:pointer;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(45,38,29,.12);
+}
+.hamburger span{
+  display:block;width:20px;height:2px;background:var(--ink);
+  position:relative;transition:.3s;
+}
+.hamburger span::before,.hamburger span::after{
+  content:"";position:absolute;left:0;width:20px;height:2px;
+  background:var(--ink);transition:.3s;
+}
+.hamburger span::before{top:-6px}
+.hamburger span::after{top:6px}
+body.menu-open .hamburger span{background:transparent}
+body.menu-open .hamburger span::before{top:0;transform:rotate(45deg)}
+body.menu-open .hamburger span::after{top:0;transform:rotate(-45deg)}
+
+.scrim{
+  display:none;position:fixed;inset:0;background:rgba(45,38,29,.4);
+  z-index:48;
+}
+
+@media(max-width:880px){
+  .wrap{grid-template-columns:1fr}
+  .hamburger{display:flex}
+  .rail{
+    position:fixed;top:0;left:0;z-index:50;width:280px;
+    background:var(--cream);
+    transform:translateX(-100%);transition:transform .32s ease;
+    box-shadow:4px 0 24px rgba(45,38,29,.16);
+  }
+  body.menu-open .rail{transform:translateX(0)}
+  body.menu-open .scrim{display:block}
+  main{padding:4.4rem 1.6rem 4rem}
+  .panel-body{padding-left:0}
+  .lever .roman{min-width:2em}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Abrir índice">
+  <span></span>
+</button>
+<div class="scrim" id="scrim"></div>
+
+<div class="wrap">
+
+  <!-- ===================== RIEL ===================== -->
+  <aside class="rail" id="rail">
+    <div class="mark">Café con Claude</div>
+    <div class="mark-sub">Sala de lectura · Marcos 4–6</div>
+
+    <nav class="toc" id="toc">
+      <a data-target="s1"><span class="num">I</span><span>La tesis: nadie crece sin pelear</span></a>
+      <a data-target="s2"><span class="num">II</span><span>Para qué este recorrido</span></a>
+      <a data-target="s3"><span class="num">III</span><span>Las cinco batallas</span></a>
+      <a data-target="s4"><span class="num">IV</span><span>El hilo del argumento</span></a>
+      <a data-target="s5"><span class="num">V</span><span>Lectura del texto</span></a>
+      <a data-target="s6"><span class="num">VI</span><span>Lo que queda grabado</span></a>
+      <a data-target="s7"><span class="num">VII</span><span>Las ilustraciones</span></a>
+      <a data-target="s8"><span class="num">VIII</span><span>Qué hacer con esto</span></a>
+      <a data-target="s9"><span class="num">IX</span><span>Conclusión</span></a>
+      <a data-target="s10"><span class="num">X</span><span>La pregunta que queda abierta</span></a>
+    </nav>
+
+    <div class="rail-tools">
+      <div class="fontctl">
+        <span>Texto</span>
+        <button id="fminus" aria-label="Reducir tamaño de letra">A−</button>
+        <button id="fplus" aria-label="Aumentar tamaño de letra">A+</button>
+      </div>
+      <a class="home" href="https://giannifontanot.github.io/coffee-with-claude/">← Volver a la sala</a>
+    </div>
+  </aside>
+
+  <!-- ===================== CONTENIDO ===================== -->
+  <main>
+
+    <header class="hero">
+      <div class="eyebrow">Transformación espiritual en el Evangelio de Marcos</div>
+      <h1>Crecer <em>es</em> pelear</h1>
+      <p class="sub">El cambio que Jesús pide no llega por inercia. Llega como una serie de batallas —del corazón, del miedo, de la comunidad, del cansancio y de lo conocido— que el discípulo aprende a nombrar y a atravesar.</p>
+      <p class="lede">Seguir a Jesús no es pasar de admirarlo a estar de acuerdo con él. Es <em>metanoia</em>: un cambio entero de marco y de costumbres. Y como el reino desordena zonas de confort, economías e identidades, la resistencia no es la excepción del camino, sino su clima habitual.</p>
+    </header>
+
+    <div class="slat-rule">Abre cada persiana a tu ritmo</div>
+
+    <!-- ===== I ===== -->
+    <section class="persiana" id="s1" data-open="true">
+      <button class="lever" aria-expanded="true">
+        <span class="roman">I</span>
+        <span class="title">La tesis: nadie crece sin pelear</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="lead">La transformación espiritual no es un proceso pasivo ni fácil, sino una sucesión de batallas —internas, espirituales, comunitarias y relacionales— que el discípulo debe atravesar para seguir a Jesús de verdad.</p>
+        <p>La fe verdadera no se mide por el asentimiento intelectual, sino por una confianza entregada a la presencia de Dios en medio del conflicto, y por una perseverancia capaz de sostener el cambio cuando este se vuelve lento o costoso.</p>
+        <p>Por eso el discípulo no «decide» una vez y descansa: se dedica al trabajo constante de <em>labrar</em> el corazón para seguir siendo tierra receptiva. La pregunta no es si habrá fricción, sino qué clase de fricción estoy enfrentando hoy.</p>
+      </div></div></div>
+    </section>
+
+    <!-- ===== II ===== -->
+    <section class="persiana" id="s2" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">II</span>
+        <span class="title">Para qué este recorrido</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p>El punto de partida es una experiencia muy común: queremos cambiar y no podemos, y no entendemos por qué. Casi siempre hay una resistencia que no vemos.</p>
+        <p>Detrás está un malentendido: creer que la fe es una decisión intelectual de una sola vez, en lugar de una vida entera de transformación. Al nombrar batallas concretas, el recorrido busca preparar al creyente para la fricción inevitable —sus propias inseguridades y hábitos, y también las expectativas de los que lo rodean— para que no abandone cuando el avance se sienta caro o demasiado lento.</p>
+      </div></div></div>
+    </section>
+
+    <!-- ===== III ===== -->
+    <section class="persiana" id="s3" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">III</span>
+        <span class="title">Las cinco batallas</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p>El recorrido por Marcos 4–6 destila cinco frentes. No son etapas que se superan, sino terrenos que vuelven.</p>
+
+        <div class="facet olive">
+          <h4><span class="kicker">Interna · el corazón</span>La batalla por la tierra</h4>
+          <p>Con la parábola del sembrador, el crecimiento depende del «suelo» del corazón. La pelea es identificar y quitar los <em>ladrillos</em> del trauma, las <em>malas hierbas</em> de las lealtades en competencia y la <em>dureza</em> que dejó el escepticismo, para que la palabra eche raíz.</p>
+        </div>
+
+        <div class="facet amber">
+          <h4><span class="kicker">Externa · lo espiritual</span>La batalla del miedo</h4>
+          <p>La tensión entre temor y fe durante las «tormentas» de la vida. La tormenta no prueba que Dios esté ausente o indiferente: muchas veces es justo el vehículo que obliga al discípulo a verlo de un modo nuevo y más hondo.</p>
+        </div>
+
+        <div class="facet plum">
+          <h4><span class="kicker">Social · económica</span>La batalla con la comunidad y el costo</h4>
+          <p>En el endemoniado gadareno, la comunidad puede resistirse a la transformación de uno si ese cambio desordena el statu quo o tiene un costo social o económico real.</p>
+        </div>
+
+        <div class="facet terra">
+          <h4><span class="kicker">Física · emocional</span>La batalla del sufrimiento y la demora</h4>
+          <p>En las historias entrelazadas de Jairo y la mujer con hemorragias, la transformación pide perseverancia radical a través de largos tramos de dolor o de circunstancias desesperadas.</p>
+        </div>
+
+        <div class="facet">
+          <h4><span class="kicker">Relacional</span>La batalla con lo conocido</h4>
+          <p>La resistencia que viene de quienes mejor nos conocen. En Nazaret, la <em>familiaridad</em> puede cegar a la gente ante la obra de Dios en alguien que creen tener ya entendido.</p>
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== IV ===== -->
+    <section class="persiana" id="s4" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">IV</span>
+        <span class="title">El hilo del argumento</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p>El razonamiento avanza desde el interior de la persona hacia las presiones del mundo, en una progresión que tiene su lógica.</p>
+        <ul class="clean">
+          <li><strong>Recepción primero.</strong> Empieza en el corazón —los suelos—: la apertura interior es el requisito de cualquier obra de Dios.</li>
+          <li><strong>Prueba de la confianza.</strong> Sembrada la semilla, llega la tormenta: la crisis revela si la fe era intelectual o una confianza entregada.</li>
+          <li><strong>Expansión al mundo.</strong> La transformación interna choca con sistemas externos (la comunidad de Legión) y con pruebas largas (el sufrimiento, la muerte): la fe tiene que ser durable.</li>
+          <li><strong>El obstáculo de la identidad.</strong> Lo más personal: lo familiar. Crecer suele exigir soltar las etiquetas y expectativas heredadas de los nuestros.</li>
+          <li><strong>Conclusión por la práctica.</strong> Como la resistencia tiene muchas caras, el discípulo adopta prácticas concretas para mantener «buena tierra».</li>
+        </ul>
+      </div></div></div>
+    </section>
+
+    <!-- ===== V ===== -->
+    <section class="persiana" id="s5" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">V</span>
+        <span class="title">Lectura del texto</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="scripture">Marcos 4:13 entrega la clave de lectura: Jesús enseña que las realidades físicas —labrar, sembrar— se corresponden con las espirituales (el corazón). Quien no entiende esta parábola no entenderá las demás.</p>
+
+        <div class="facet olive">
+          <h4>La parábola de los suelos · Marcos 4</h4>
+          <p><strong>El camino:</strong> un corazón endurecido por el escepticismo o las malas experiencias, donde la palabra no penetra.<br>
+          <strong>Pedregal:</strong> una respuesta entusiasta pero sin raíz, que se marchita cuando llega la dificultad.<br>
+          <strong>Espinos:</strong> lealtades en competencia; las distracciones y el deseo de comodidad ahogan el crecimiento.<br>
+          <strong>Buena tierra:</strong> apertura a ser enseñado y disposición a cambiar la propia perspectiva por la de Dios.</p>
+        </div>
+
+        <p><strong>Marcos 4:35–41 · la tormenta calmada.</strong> No es solo un milagro sobre la naturaleza, sino un desafío a la definición de fe de los discípulos. Que Jesús reprenda al viento y luego pregunte por su fe sugiere que confiar es fiarse de su presencia aun cuando parece «dormido» o inactivo en plena crisis.</p>
+
+        <p><strong>Marcos 5:1–20 · Legión.</strong> Es la batalla comunitaria. Cuando el pueblo le pide a Jesús que se marche tras la sanidad, revela que muchas comunidades prefieren una disfunción «cómoda» antes que una transformación «costosa».</p>
+
+        <p><strong>Marcos 5:21–43 · Jairo y la mujer con hemorragias.</strong> El tema es la perseverancia. Los doce años de lucha de ella y la desesperación de él —un líder religioso— muestran que acercarse a Jesús suele exigir atravesar el agotamiento social y económico.</p>
+
+        <p><strong>Marcos 6:1–6 · Jesús en Nazaret.</strong> La familiaridad puede generar una «falta de fe» que frena el poder de Dios. La ofensa de los vecinos ante su sabiduría enseña cómo la percepción antigua de alguien estorba para aceptar su autoridad espiritual presente.</p>
+
+        <p class="scripture">Job 2:10 y Santiago 1:4 sostienen el conjunto: aceptar «lo malo» junto a «lo bueno» y dejar que la constancia «complete su obra» son parte del proceso de madurar.</p>
+
+        <div class="refs">
+          Pasajes (DHH):
+          <a href="https://www.biblegateway.com/passage/?search=Marcos+4&version=DHH" target="_blank" rel="noopener">Marcos 4</a>,
+          <a href="https://www.biblegateway.com/passage/?search=Marcos+5&version=DHH" target="_blank" rel="noopener">Marcos 5</a>,
+          <a href="https://www.biblegateway.com/passage/?search=Marcos+6%3A1-6&version=DHH" target="_blank" rel="noopener">Marcos 6:1–6</a>,
+          <a href="https://www.biblegateway.com/passage/?search=Job+2%3A10&version=DHH" target="_blank" rel="noopener">Job 2:10</a>,
+          <a href="https://www.biblegateway.com/passage/?search=Santiago+1%3A4&version=DHH" target="_blank" rel="noopener">Santiago 1:4</a>.
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== VI ===== -->
+    <section class="persiana" id="s6" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">VI</span>
+        <span class="title">Lo que queda grabado</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <ul class="clean">
+          <li><strong>La fe es entrega.</strong> No es entender, es confiar en la presencia de Dios dentro de la tormenta.</li>
+          <li><strong>Sanar tiene costo comunitario.</strong> La transformación desordena economías y vínculos; un pueblo puede rechazar el milagro si le cuesta sus «cerdos» —su sustento o su comodidad—.</li>
+          <li><strong>La tierra se labra siempre.</strong> La buena «tierra» del corazón no es un estado permanente: pide labranza constante, como la del campo por estaciones.</li>
+          <li><strong>Lo familiar es punto ciego.</strong> Quienes más nos conocen pueden ser los más ofendidos por nuestro cambio, porque desafía la imagen que tenían de nosotros.</li>
+          <li><strong>Hasta Jesús volvió «distinto».</strong> El texto insinúa que regresó a casa diferente de como salió: un crecimiento que a otros les resultó asombroso —y hasta ofensivo—.</li>
+          <li><strong>Nombrar la resistencia.</strong> Un paso clave es decir con precisión qué clase de resistencia siento: «estoy en un lugar de tierra con espinos».</li>
+        </ul>
+      </div></div></div>
+    </section>
+
+    <!-- ===== VII ===== -->
+    <section class="persiana" id="s7" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">VII</span>
+        <span class="title">Las ilustraciones</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <div class="facet olive">
+          <h4>Los ladrillos en el jardín</h4>
+          <p>Sharon Gauthier cuenta que, al plantar un jardín, dio con ladrillos viejos enterrados justo bajo la superficie. Las «zonas duras» —el trauma, ciertos rasgos— pueden esconderse bajo una capa fina de «buena tierra» y hay que desenterrarlas antes de que algo crezca.</p>
+        </div>
+        <div class="facet amber">
+          <h4>Los agricultores de Illinois</h4>
+          <p>Siempre están en el campo, labrando y abonando incluso después de la cosecha. La preparación del corazón es algo continuo, no un acto de una sola vez.</p>
+        </div>
+        <div class="facet plum">
+          <h4>Ministros juveniles a los 64</h4>
+          <p>Darren y Sharon Gauthier fueron llamados al ministerio juvenil pasados los sesenta. Resistir lo «familiar» y cómodo de treinta años de ministerio para abrazar una curva de aprendizaje empinada.</p>
+        </div>
+        <div class="facet terra">
+          <h4>El ahorro de la mujer con hemorragias</h4>
+          <p>Había gastado los ahorros de su vida en médicos, sin resultado. El detalle marca la desesperación total y la perseverancia radical que su transformación exigió.</p>
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== VIII ===== -->
+    <section class="persiana" id="s8" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">VIII</span>
+        <span class="title">Qué hacer con esto</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <ul class="clean">
+          <li><strong>Nombrar la resistencia.</strong> Decir con honestidad dónde estoy: de corazón duro, distraído entre espinos, o reacio al cambio que pide la comunidad.</li>
+          <li><strong>La oración de desasimiento.</strong> Una oración de entrega: soltar el control del «guion» y del final de una situación.</li>
+          <li><strong>Buscar voces diversas.</strong> No un solo mentor, sino varios directores espirituales que desafíen y no solo confirmen, sobre todo al entrar en nuevas etapas.</li>
+          <li><strong>Perseverar activamente.</strong> Sostener el rumbo aun cuando Dios parece tardar, confiando en que llega en el «momento justo».</li>
+        </ul>
+      </div></div></div>
+    </section>
+
+    <!-- ===== IX ===== -->
+    <section class="persiana" id="s9" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">IX</span>
+        <span class="title">Conclusión</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p>Avanzar en el reino de Dios nunca es sencillo: es algo por lo que se pelea. Las batallas de Marcos 4–6 no son señal de fracaso, sino rasgos normales del camino de seguir a Jesús.</p>
+        <p>La madurez espiritual es fruto de perseverancia larga, humildad y disposición a dejarse «labrar» por Dios en cada estación de la vida.</p>
+      </div></div></div>
+    </section>
+
+    <!-- ===== X ===== -->
+    <section class="persiana" id="s10" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">X</span>
+        <span class="title">La pregunta que queda abierta</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p>Queda un detalle sin explorar, que daría para una conversación entera: ¿por qué los demonios —Legión— pidieron quedarse precisamente en esa región, y por qué Jesús les concedió entrar en los cerdos?</p>
+        <p class="scripture">Una rendija que el texto deja entreabierta, a propósito.</p>
+      </div></div></div>
+    </section>
+
+    <div class="coda">
+      Cinco frentes, un solo trabajo: mantener el corazón como tierra que se deja abrir. Lo demás —la tormenta, el pueblo que se incomoda, la demora, los que creen conocernos— viene con el clima.
+      <span class="signoff">Café con Claude · Marcos 4–6</span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* ---- 1 · persianas (acordeón con grid-rows) ---- */
+document.querySelectorAll('.persiana > .lever').forEach(function(lever){
+  lever.addEventListener('click', function(){
+    var p = lever.closest('.persiana');
+    var open = p.getAttribute('data-open') === 'true';
+    p.setAttribute('data-open', String(!open));
+    lever.setAttribute('aria-expanded', String(!open));
+  });
+});
+
+/* ---- 2 · índice: abre la persiana y baja a ella ---- */
+document.querySelectorAll('#toc a').forEach(function(link){
+  link.addEventListener('click', function(){
+    var id = link.getAttribute('data-target');
+    var p = document.getElementById(id);
+    if(p){
+      p.setAttribute('data-open','true');
+      p.querySelector('.lever').setAttribute('aria-expanded','true');
+      p.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+    document.body.classList.remove('menu-open'); /* cierra menú móvil */
+  });
+});
+
+/* ---- 3 · scroll-spy del riel ---- */
+var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var id = e.target.id;
+      links.forEach(function(l){
+        l.classList.toggle('active', l.getAttribute('data-target') === id);
+      });
+    }
+  });
+},{rootMargin:'-15% 0px -70% 0px', threshold:0});
+document.querySelectorAll('.persiana').forEach(function(s){spy.observe(s);});
+
+/* ---- 4 · barra de progreso ---- */
+var bar = document.getElementById('progress');
+function onScroll(){
+  var h = document.documentElement;
+  var scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  bar.style.width = (scrolled*100) + '%';
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+/* ---- 5 · tamaño de letra ---- */
+var size = 1.16, root = document.documentElement;
+document.getElementById('fplus').addEventListener('click',function(){
+  size = Math.min(size + .06, 1.44); root.style.setProperty('--fs-base', size+'rem');
+});
+document.getElementById('fminus').addEventListener('click',function(){
+  size = Math.max(size - .06, 0.98); root.style.setProperty('--fs-base', size+'rem');
+});
+
+/* ---- 6 · menú móvil ---- */
+var ham = document.getElementById('hamburger');
+var scrim = document.getElementById('scrim');
+ham.addEventListener('click', function(){ document.body.classList.toggle('menu-open'); });
+scrim.addEventListener('click', function(){ document.body.classList.remove('menu-open'); });
+</script>
+</body>
+</html>
