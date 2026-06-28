@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<!-- ===================================================================== -->
+<!-- ZONA 0 · CABECERA DEL DOCUMENTO · meta, tipografías, estilos          -->
+<!-- ===================================================================== -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lo mejor, no lo que sobra · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* --- Paleta y variables ------------------------------------------------ */
+:root{
+  --crema:        #f5ecdc;
+  --crema-card:   #efe2cc;
+  --crema-hueco:  #ece0c8;
+  --tinta:        #322d27;
+  --tinta-suave:  #5f574c;
+  --tinta-tenue:  #8a8073;
+  --terracota:    #b14a2b;
+  --terracota-cl: #c66a44;
+  --ambar:        #c2872a;
+  --oliva:        #6c7440;
+  --ciruela:      #743b54;
+  --linea:        #dac9ab;
+  --linea-suave:  #e6d9bf;
+  --sombra:       0 1px 0 rgba(50,45,39,.04), 0 18px 40px -28px rgba(50,45,39,.45);
+  --rail-w:       16.5rem;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--crema);
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(194,135,42,.05), transparent 42%),
+    radial-gradient(circle at 86% 78%, rgba(116,59,84,.05), transparent 46%);
+  color:var(--tinta);
+  font-family:'Spectral', Georgia, serif;
+  font-size:1.20rem;
+  line-height:1.72;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(177,74,43,.18);}
+
+/* ===================================================================== */
+/* ZONA 1 · BARRA DE PROGRESO DE LECTURA                                  */
+/* ===================================================================== */
+#progreso{
+  position:fixed; top:0; left:0; height:3px; width:0%;
+  background:linear-gradient(90deg, var(--ambar), var(--terracota), var(--ciruela));
+  z-index:120; transition:width .12s ease-out;
+}
+
+/* ===================================================================== */
+/* ZONA 2 · RAIL LATERAL · navegación con números romanos                */
+/* ===================================================================== */
+#rail{
+  position:fixed; top:0; left:0; width:var(--rail-w); height:100vh;
+  padding:2.6rem 1.6rem 2rem 2rem;
+  border-right:1px solid var(--linea);
+  background:linear-gradient(180deg, rgba(245,236,220,.96), rgba(236,224,200,.96));
+  backdrop-filter:blur(2px);
+  display:flex; flex-direction:column; gap:1.6rem;
+  z-index:100; overflow-y:auto;
+}
+#rail .marca{
+  font-family:'Fraunces',serif; font-weight:600; font-size:.82rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--terracota);
+}
+#rail .marca a{color:inherit; text-decoration:none;}
+#rail .marca a:hover{color:var(--ciruela);}
+#rail .titulo-rail{
+  font-family:'Fraunces',serif; font-weight:600; font-size:1.18rem;
+  line-height:1.25; color:var(--tinta); margin:0;
+}
+#rail .titulo-rail em{font-style:italic; color:var(--ciruela);}
+#rail nav{display:flex; flex-direction:column; gap:.15rem; margin-top:.2rem;}
+#rail nav a{
+  display:grid; grid-template-columns:2.6rem 1fr; align-items:baseline;
+  gap:.4rem; padding:.42rem .4rem; border-radius:7px;
+  text-decoration:none; color:var(--tinta-suave);
+  font-size:.96rem; line-height:1.25; transition:background .18s, color .18s;
+}
+#rail nav a .num{
+  font-family:'Fraunces',serif; font-weight:500; font-size:.86rem;
+  color:var(--tinta-tenue); letter-spacing:.04em; text-align:right;
+}
+#rail nav a:hover{background:rgba(177,74,43,.07); color:var(--tinta);}
+#rail nav a.activo{background:rgba(177,74,43,.12); color:var(--terracota);}
+#rail nav a.activo .num{color:var(--terracota);}
+#rail .pie-rail{
+  margin-top:auto; font-size:.78rem; color:var(--tinta-tenue);
+  line-height:1.5; border-top:1px solid var(--linea-suave); padding-top:1rem;
+}
+
+/* Botón hamburguesa (oculto en escritorio) */
+#hamburguesa{
+  position:fixed; top:1rem; left:1rem; z-index:110;
+  display:none; width:2.9rem; height:2.9rem; border:1px solid var(--linea);
+  border-radius:9px; background:var(--crema-card); cursor:pointer;
+  align-items:center; justify-content:center;
+}
+#hamburguesa span, #hamburguesa span::before, #hamburguesa span::after{
+  content:""; display:block; width:18px; height:2px; background:var(--tinta);
+  position:relative; transition:transform .25s, opacity .2s;
+}
+#hamburguesa span::before{position:absolute; top:-6px;}
+#hamburguesa span::after{position:absolute; top:6px;}
+body.menu-abierto #hamburguesa span{background:transparent;}
+body.menu-abierto #hamburguesa span::before{transform:translateY(6px) rotate(45deg);}
+body.menu-abierto #hamburguesa span::after{transform:translateY(-6px) rotate(-45deg);}
+#velo{
+  position:fixed; inset:0; background:rgba(50,45,39,.32); z-index:90;
+  opacity:0; pointer-events:none; transition:opacity .25s;
+}
+body.menu-abierto #velo{opacity:1; pointer-events:auto;}
+
+/* ===================================================================== */
+/* ZONA 3 · LIENZO PRINCIPAL                                              */
+/* ===================================================================== */
+main{
+  margin-left:var(--rail-w);
+  max-width:46rem; padding:5rem 2.4rem 7rem;
+  margin-right:auto;
+}
+.eyebrow{
+  font-family:'Fraunces',serif; font-weight:600; font-size:.8rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--terracota);
+  margin:0 0 1.1rem;
+}
+h1{
+  font-family:'Fraunces',serif; font-weight:600; font-size:clamp(2.5rem,6vw,3.7rem);
+  line-height:1.04; letter-spacing:-.015em; margin:0 0 1.1rem; color:var(--tinta);
+}
+h1 em{font-style:italic; color:var(--ciruela);}
+.subtitulo{
+  font-size:1.28rem; color:var(--tinta-suave); font-style:italic;
+  line-height:1.5; margin:0 0 2.2rem; max-width:34rem;
+}
+.regla-hero{
+  height:1px; border:0; margin:2.4rem 0;
+  background:linear-gradient(90deg, var(--terracota), transparent);
+}
+
+/* Secciones */
+section{padding-top:3.4rem; scroll-margin-top:2rem;}
+section > .cabecera-seccion{display:flex; align-items:baseline; gap:1rem; margin-bottom:.4rem;}
+section .num-romano{
+  font-family:'Fraunces',serif; font-weight:500; font-style:italic;
+  font-size:1.35rem; color:var(--terracota); flex:none;
+}
+h2{
+  font-family:'Fraunces',serif; font-weight:600; font-size:clamp(1.7rem,3.6vw,2.15rem);
+  line-height:1.12; letter-spacing:-.01em; margin:0; color:var(--tinta);
+}
+.referencia{
+  font-family:'Fraunces',serif; font-style:italic; font-size:1rem;
+  color:var(--oliva); margin:.2rem 0 1.5rem 0;
+  display:flex; align-items:center; gap:.55rem;
+}
+.referencia::before{content:""; width:1.4rem; height:1px; background:var(--oliva);}
+p{margin:0 0 1.25rem;}
+strong{font-weight:600; color:var(--tinta);}
+em{color:var(--tinta);}
+a.enlace{color:var(--terracota); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:2px;}
+a.enlace:hover{color:var(--ciruela);}
+
+/* Cita destacada de la Escritura */
+.escritura{
+  margin:1.6rem 0; padding:1.3rem 1.5rem;
+  border-left:3px solid var(--ambar);
+  background:var(--crema-hueco); border-radius:0 10px 10px 0;
+  font-style:italic; color:var(--tinta); font-size:1.15rem; line-height:1.6;
+}
+.escritura .ref-dhh{
+  display:block; margin-top:.6rem; font-style:normal; font-size:.85rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--tinta-tenue);
+  font-family:'Fraunces',serif; font-weight:500;
+}
+
+/* Persianas (acordeones) */
+.persiana{
+  margin:1.4rem 0; border:1px solid var(--linea);
+  border-radius:11px; overflow:hidden; background:var(--crema-card);
+}
+.persiana > button{
+  width:100%; text-align:left; cursor:pointer; border:0; background:transparent;
+  padding:1.05rem 1.3rem; display:flex; align-items:center; gap:.8rem;
+  font-family:'Fraunces',serif; font-weight:600; font-size:1.04rem; color:var(--tinta);
+}
+.persiana > button .etiqueta{
+  font-family:'Spectral',serif; font-style:italic; font-weight:400;
+  font-size:.82rem; color:var(--oliva); letter-spacing:.04em;
+  margin-right:.1rem; flex:none;
+}
+.persiana > button .signo{
+  margin-left:auto; flex:none; width:1.4rem; height:1.4rem; position:relative;
+  transition:transform .3s ease;
+}
+.persiana > button .signo::before, .persiana > button .signo::after{
+  content:""; position:absolute; background:var(--terracota); border-radius:2px;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+}
+.persiana > button .signo::before{width:13px; height:2px;}
+.persiana > button .signo::after{width:2px; height:13px; transition:transform .3s;}
+.persiana.abierta > button .signo::after{transform:translate(-50%,-50%) scaleY(0);}
+.persiana .cuerpo{
+  max-height:0; overflow:hidden; transition:max-height .42s cubic-bezier(.4,0,.2,1);
+}
+.persiana .cuerpo-interno{padding:0 1.3rem 1.2rem; font-size:1.04rem; color:var(--tinta-suave);}
+.persiana .cuerpo-interno p:last-child{margin-bottom:0;}
+
+/* Mesa redonda · voces */
+.mesa{margin:1.6rem 0;}
+.voz{display:grid; grid-template-columns:auto 1fr; gap:.85rem; margin:0 0 1.1rem; align-items:start;}
+.voz .quien{
+  font-family:'Fraunces',serif; font-weight:600; font-size:.92rem;
+  white-space:nowrap; padding-top:.18rem;
+}
+.voz.narrador .quien{color:var(--tinta-tenue);}
+.voz.exegeta .quien{color:var(--oliva);}
+.voz.profeta .quien{color:var(--terracota);}
+.voz.rey .quien{color:var(--ambar);}
+.voz.esceptico .quien{color:var(--ciruela);}
+.voz .dice{margin:0; font-size:1.06rem; line-height:1.6;}
+
+/* Cierre / síntesis */
+.crescendo{list-style:none; padding:0; margin:1.6rem 0;}
+.crescendo li{
+  display:grid; grid-template-columns:auto 1fr; gap:1rem; align-items:baseline;
+  padding:.7rem 0; border-bottom:1px dashed var(--linea);
+}
+.crescendo li:last-child{border-bottom:0;}
+.crescendo .paso{font-family:'Fraunces',serif; font-style:italic; color:var(--terracota); font-size:1rem; white-space:nowrap;}
+.crescendo .glosa strong{color:var(--tinta);}
+
+/* ===================================================================== */
+/* ZONA 12 · PIE Y FUENTES                                                */
+/* ===================================================================== */
+footer{
+  margin-top:4rem; padding-top:2rem; border-top:1px solid var(--linea);
+  font-size:.92rem; color:var(--tinta-suave);
+}
+footer h3{
+  font-family:'Fraunces',serif; font-weight:600; font-size:1rem;
+  letter-spacing:.05em; color:var(--tinta); margin:0 0 .8rem;
+}
+footer ul{margin:0 0 1.4rem; padding-left:1.1rem;}
+footer li{margin:.3rem 0;}
+footer a{color:var(--terracota); text-decoration:none;}
+footer a:hover{text-decoration:underline;}
+footer .nota{font-size:.82rem; color:var(--tinta-tenue); font-style:italic;}
+
+/* ===================================================================== */
+/* ZONA 13 · RESPONSIVO                                                   */
+/* ===================================================================== */
+@media (max-width:900px){
+  #hamburguesa{display:flex;}
+  #rail{transform:translateX(-102%); transition:transform .3s ease; box-shadow:var(--sombra);}
+  body.menu-abierto #rail{transform:translateX(0);}
+  main{margin-left:0; padding:4.5rem 1.4rem 5rem;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto !important; transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ZONA 1 · barra de progreso -->
+<div id="progreso" aria-hidden="true"></div>
+
+<!-- ZONA 2 · botón hamburguesa + velo -->
+<button id="hamburguesa" aria-label="Abrir índice"><span></span></button>
+<div id="velo" aria-hidden="true"></div>
+
+<!-- ZONA 2 · rail lateral -->
+<aside id="rail">
+  <div class="marca"><a href="https://giannifontanot.github.io/thread-learning-notes/">☕ Café con Claude</a></div>
+  <p class="titulo-rail">Lo mejor,<br>no lo que <em>sobra</em></p>
+  <nav id="indice">
+    <a href="#intro"><span class="num">·</span><span>Una pregunta que crece</span></a>
+    <a href="#desborde"><span class="num">I</span><span>El desborde</span></a>
+    <a href="#semilla"><span class="num">II</span><span>La semilla</span></a>
+    <a href="#codigo"><span class="num">III</span><span>El código</span></a>
+    <a href="#grito"><span class="num">IV</span><span>El grito</span></a>
+    <a href="#costo"><span class="num">V</span><span>El costo</span></a>
+    <a href="#consumacion"><span class="num">VI</span><span>La consumación</span></a>
+    <a href="#sintesis"><span class="num">VII</span><span>El crescendo</span></a>
+  </nav>
+  <div class="pie-rail">Citas de la Escritura según<br><strong>Dios Habla Hoy</strong> (DHH).</div>
+</aside>
+
+<!-- ZONA 3 · contenido -->
+<main>
+
+  <!-- ZONA 3 · hero -->
+  <p class="eyebrow">Estudio · La ofrenda y el corazón</p>
+  <h1>Lo mejor,<br>no lo que <em>sobra</em></h1>
+  <p class="subtitulo">La Biblia no responde con un solo versículo, sino con una insistencia que va subiendo de tono: desde la primera ofrenda de Abel hasta el frasco roto en Betania.</p>
+  <hr class="regla-hero">
+
+  <!-- ZONA 4 · introducción -->
+  <section id="intro">
+    <p>Solemos recordar el Tabernáculo: levantado con lo más fino que el pueblo poseía. Y está bien. Pero ese episodio es solo un eslabón. Si seguimos el hilo hacia atrás y hacia adelante, descubrimos que «dar a Dios lo mejor» no es un mandato aislado, sino una melodía que la Escritura repite en clave cada vez más alta —hasta que deja de hablar de animales y empieza a hablar de nosotros.</p>
+    <p>Lo que sigue es ese recorrido, en seis movimientos y una síntesis. El hilo que los cose no es la calidad del regalo, sino lo que el regalo revela del corazón que lo entrega.</p>
+  </section>
+
+  <!-- ZONA 5 · I · El desborde -->
+  <section id="desborde">
+    <div class="cabecera-seccion">
+      <span class="num-romano">I</span>
+      <h2>El desborde</h2>
+    </div>
+    <p class="referencia">Éxodo 25:1-9 · 35:4-29 · 36:5-7</p>
+    <p>Aquí empieza tu recuerdo, Gianni. Dios pide una ofrenda para el santuario, pero con una condición que lo cambia todo: que la traigan solo <strong>quienes lo deseen de corazón</strong>. No es un impuesto, es un anhelo. Y el pueblo responde trayendo oro, plata, bronce, telas finas, piedras preciosas —lo mejor que sacaron de Egipto.</p>
+    <p>El detalle más hermoso llega en Éxodo 36: traen tanto, y tan bueno, que los artesanos tienen que pedir a Moisés que <strong>ordene parar</strong>. Lo mejor no se les arrancó: se les desbordó. Esa es la primera lección del tema —cuando el corazón está bien orientado, la generosidad no hay que exigirla, hay que contenerla.</p>
+    <div class="persiana">
+      <button type="button"><span class="etiqueta">de cerca</span> El corazón antes que la cantidad
+        <span class="signo" aria-hidden="true"></span></button>
+      <div class="cuerpo"><div class="cuerpo-interno">
+        <p>El verbo clave de Éxodo 25:2 (DHH) es el deseo: la ofrenda la presentan «todos los que sientan deseos de traérmela». Antes de pedir materiales, Dios pide voluntad. El Tabernáculo no se construye con lo mejor del bolsillo, sino con lo mejor de la disposición —y lo segundo arrastra a lo primero.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ZONA 6 · II · La semilla -->
+  <section id="semilla">
+    <div class="cabecera-seccion">
+      <span class="num-romano">II</span>
+      <h2>La semilla</h2>
+    </div>
+    <p class="referencia">Génesis 4:3-5 · Proverbios 3:9</p>
+    <p>El principio es más antiguo que el Tabernáculo. Va hasta la segunda generación humana. Caín presenta «del fruto de la tierra»; Abel presenta <strong>las primeras crías</strong> de su rebaño, lo mejor de ellas. El texto no condena la agricultura ni premia la ganadería: señala la diferencia entre <em>lo primero y mejor</em> y <em>lo que había a mano</em>.</p>
+    <p>De ahí nace la teología de las primicias, que Proverbios convierte en mandato sereno:</p>
+    <div class="escritura">
+      «Honra al Señor con tus riquezas y con los primeros frutos de tus cosechas.»
+      <span class="ref-dhh">Proverbios 3:9 · DHH</span>
+    </div>
+    <p>No con lo último ni con lo que quedó después de cubrir todo lo demás: con <strong>lo primero</strong>. Dar las primicias es una declaración de prioridad antes que de cantidad —es decidir, en el orden mismo de la cosecha, quién va primero.</p>
+  </section>
+
+  <!-- ZONA 7 · III · El código -->
+  <section id="codigo">
+    <div class="cabecera-seccion">
+      <span class="num-romano">III</span>
+      <h2>El código</h2>
+    </div>
+    <p class="referencia">Levítico 22:17-25 · Deuteronomio 15:21</p>
+    <p>Lo que en Abel era instinto y en Proverbios consejo, la Ley lo vuelve norma. El animal del sacrificio debe ser <strong>sin defecto</strong>: ni ciego, ni cojo, ni enfermo, ni mutilado. La lógica de fondo es tan simple como incómoda: si Dios merece adoración, merece una adoración que no esté hecha con los descartes.</p>
+    <p>Los estudiosos lo resumen así: el criterio dominante era que la ofrenda fuera siempre íntegra, <strong>porque la idea subyacente es que Dios merece solo lo mejor</strong>. La pureza ritual no era manía estética; era una pedagogía del valor.</p>
+    <div class="persiana">
+      <button type="button"><span class="etiqueta">el giro</span> Cuidado con leerlo como perfeccionismo
+        <span class="signo" aria-hidden="true"></span></button>
+      <div class="cuerpo"><div class="cuerpo-interno">
+        <p>El «sin defecto» no exige que tengamos vidas perfectas para acercarnos —el resto de Levítico está lleno de provisiones para el que falla. Exige que no le ofrezcamos a Dios, deliberadamente, lo que ya descartamos para todo lo demás. La diferencia entre una herida que traemos y una basura que tiramos al altar.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ZONA 8 · IV · El grito -->
+  <section id="grito">
+    <div class="cabecera-seccion">
+      <span class="num-romano">IV</span>
+      <h2>El grito</h2>
+    </div>
+    <p class="referencia">Malaquías 1:6-14</p>
+    <p>Y aquí Dios pierde la paciencia con las sobras. Siglos después de Levítico, los sacerdotes traen al altar exactamente lo prohibido: animales ciegos, cojos y enfermos. Malaquías les lanza la pregunta que debería incomodar a cualquier adorador de cualquier época —imagina ofrecerle ese mismo animal a tu gobernador: <strong>¿se pondría contento contigo?</strong> Lo que no te atreverías a regalarle a tu jefe, ¿se lo das a Dios?</p>
+    <div class="escritura">
+      «Maldito sea el tramposo que me promete un animal sano de su rebaño y luego me sacrifica uno que tiene defecto. Yo soy el gran Rey.»
+      <span class="ref-dhh">Malaquías 1:14 · DHH</span>
+    </div>
+    <p>De este reproche se extrae el principio más claro de todo el tema: <strong>honramos y agradamos al Señor cuando le damos lo mejor de nosotros</strong>. Y «lo mejor» abarca tres cosas a la vez —el esfuerzo de la ofrenda, la disposición del corazón y la calidad de lo ofrecido según nuestra capacidad. No es tener más; es no escatimar.</p>
+    <div class="mesa">
+      <div class="voz profeta"><span class="quien">🔥 El Profeta</span><p class="dice">El problema no era la pobreza del pueblo. Tenían animales sanos. Guardaban lo mejor para sí y traían lo enfermo al altar. El pecado no fue dar poco: fue calcular cuánto podían escatimarle a Dios.</p></div>
+      <div class="voz esceptico"><span class="quien">🤔 El Escéptico</span><p class="dice">Entonces el reproche no va contra el que tiene poco que dar. Va contra el que, teniendo de sobra, le aparta a Dios la porción de menor valor. Es un problema de cálculo, no de capacidad.</p></div>
+    </div>
+  </section>
+
+  <!-- ZONA 9 · V · El costo -->
+  <section id="costo">
+    <div class="cabecera-seccion">
+      <span class="num-romano">V</span>
+      <h2>El costo</h2>
+    </div>
+    <p class="referencia">2 Samuel 24:24 · Marcos 12:41-44</p>
+    <p>Si Malaquías define lo mejor por la calidad, David lo define por el precio. Arauna quiere <strong>regalarle</strong> a David la era y los bueyes para el sacrificio. Gratis. Y David se niega, con una frase que es el corazón de todo el tema: no le ofrecerá a Dios «algo que no me haya costado nada».</p>
+    <div class="escritura">
+      «Yo no puedo ofrecerle a Dios algo que no me haya costado nada.»
+      <span class="ref-dhh">2 Samuel 24:24 · DHH</span>
+    </div>
+    <p>El verdadero sacrificio, dirá el comentario clásico, no es el que no nos cuesta nada, sino el que <strong>brota de un corazón dispuesto a dar lo mejor de sí</strong>. «Lo mejor», entonces, no se mide en quilates: se mide en lo que te cuesta —tu tiempo, tu orgullo, tu comodidad.</p>
+    <div class="persiana">
+      <button type="button"><span class="etiqueta">contrapeso</span> La viuda y las dos moneditas
+        <span class="signo" aria-hidden="true"></span></button>
+      <div class="cuerpo"><div class="cuerpo-interno">
+        <p>Cuidado con convertir esto en una teología del lujo, donde «lo mejor» significa «lo más caro». La viuda de Marcos 12 echó dos moneditas y dio más que los ricos, porque dio todo lo que tenía. Mismo principio, signo invertido: lo mejor es proporcional al costo interior, no al monto exterior. Una ofrenda que no toca nada en mí no es ofrenda; es trámite.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ZONA 10 · VI · La consumación -->
+  <section id="consumacion">
+    <div class="cabecera-seccion">
+      <span class="num-romano">VI</span>
+      <h2>La consumación</h2>
+    </div>
+    <p class="referencia">Marcos 14:3-9 · Romanos 12:1</p>
+    <p>El Nuevo Testamento no abarata el principio: lo radicaliza. Una mujer quiebra en Betania un frasco de nardo puro —casi un año de salario— y lo derrama sobre Jesús. Ante el reproche de «¡qué desperdicio!», Él la defiende: hizo <strong>lo que pudo</strong>. El extravío del amor, lejos de ser despilfarro, resulta ser la única medida adecuada.</p>
+    <p>Y entonces Pablo mueve el altar de la era al cuerpo. La ofrenda ya no es un animal sin defecto —eres tú entero:</p>
+    <div class="escritura">
+      Presenten su propio cuerpo como sacrificio vivo, dedicado y agradable a Dios; este es el culto verdadero que deben ofrecer.
+      <span class="ref-dhh">Romanos 12:1 · DHH (paráfrasis)</span>
+    </div>
+    <p>El Tabernáculo que recordabas se ha vuelto interior. El oro y las telas finas se han convertido en una vida entregada. Lo mejor que el pueblo trajo al desierto, ahora lo trae el creyente trayéndose a sí mismo.</p>
+  </section>
+
+  <!-- ZONA 11 · VII · El crescendo -->
+  <section id="sintesis">
+    <div class="cabecera-seccion">
+      <span class="num-romano">VII</span>
+      <h2>El crescendo</h2>
+    </div>
+    <p class="referencia">Una sola melodía, siete tonos</p>
+    <p>La respuesta a tu pregunta no es un versículo: es un <em>crescendo</em>. Cada movimiento añade una nota sin borrar la anterior.</p>
+    <ul class="crescendo">
+      <li><span class="paso">Abel</span><span class="glosa">planta la semilla — <strong>lo primero</strong>, no lo que sobra.</span></li>
+      <li><span class="paso">Proverbios</span><span class="glosa">lo vuelve prioridad — <strong>las primicias</strong> antes que el resto.</span></li>
+      <li><span class="paso">Levítico</span><span class="glosa">lo codifica — <strong>sin defecto</strong>, no los descartes.</span></li>
+      <li><span class="paso">Malaquías</span><span class="glosa">lo grita — <strong>no las sobras</strong> que no darías a tu gobernador.</span></li>
+      <li><span class="paso">David</span><span class="glosa">lo encarna — <strong>lo que cuesta</strong>, nunca lo gratuito e indoloro.</span></li>
+      <li><span class="paso">Tabernáculo</span><span class="glosa">lo celebra — lo mejor <strong>hasta desbordar</strong>.</span></li>
+      <li><span class="paso">Jesús</span><span class="glosa">lo consuma — <strong>todo tú</strong>, sacrificio vivo.</span></li>
+    </ul>
+    <p>El hilo que los cose no es la calidad del regalo, sino lo que el regalo revela del corazón que lo da. Dar a Dios lo mejor nunca fue, en el fondo, una pregunta sobre el regalo. Siempre fue una pregunta sobre quién va primero.</p>
+
+    <!-- ZONA 12 · pie y fuentes -->
+    <footer>
+      <h3>Para profundizar</h3>
+      <ul>
+        <li><a href="https://www.americanbible.org/engage/lectura-biblica-diaria/articulos/malaquias-11-14/">Malaquías 1:1-14 — American Bible Society</a></li>
+        <li><a href="https://www.escuelabiblica.com/estudio-biblico.php?id=1235">Estudio de Malaquías 1 — Escuela Bíblica</a></li>
+        <li><a href="https://www.churchofjesuschrist.org/study/manual/old-testament-study-guide-for-home-study-seminary-students-2015/introduction-to-malachi/unit-32-day-3-malachi-1-2?lang=spa">Malaquías 1–2 — Guía de estudio (principio: dar lo mejor)</a></li>
+        <li><a href="https://www.bibleref.com/espanol/2-Samuel/24/2-Samuel-capitulo-24.html">2 Samuel 24 — comentario (el costo de la adoración)</a></li>
+        <li><a href="https://www.biblia.es/biblia-buscar-libros-1.php?libro=proverbios&capitulo=3&version=dhh">Proverbios 3 — Dios Habla Hoy</a></li>
+      </ul>
+      <p class="nota">Texto bíblico de la versión Dios Habla Hoy © Sociedades Bíblicas Unidas. Citas breves usadas con fin de estudio; las redacciones extensas se parafrasean.</p>
+    </footer>
+  </section>
+
+</main>
+
+<!-- ===================================================================== -->
+<!-- ZONA 13 · COMPORTAMIENTO · progreso, scroll-spy, persianas, menú      -->
+<!-- ===================================================================== -->
+<script>
+(function(){
+  "use strict";
+
+  /* --- 13.1 · barra de progreso de lectura --- */
+  var barra = document.getElementById('progreso');
+  function actualizarProgreso(){
+    var alto = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = alto > 0 ? (window.scrollY / alto) * 100 : 0;
+    barra.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', actualizarProgreso, {passive:true});
+  window.addEventListener('resize', actualizarProgreso);
+  actualizarProgreso();
+
+  /* --- 13.2 · scroll-spy con IntersectionObserver --- */
+  var enlaces = Array.prototype.slice.call(document.querySelectorAll('#indice a'));
+  var mapa = {};
+  enlaces.forEach(function(a){ mapa[a.getAttribute('href').slice(1)] = a; });
+  var secciones = enlaces
+    .map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); })
+    .filter(Boolean);
+
+  var observador = new IntersectionObserver(function(entradas){
+    entradas.forEach(function(e){
+      if(e.isIntersecting){
+        enlaces.forEach(function(a){ a.classList.remove('activo'); });
+        var activo = mapa[e.target.id];
+        if(activo) activo.classList.add('activo');
+      }
+    });
+  }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
+
+  secciones.forEach(function(s){ observador.observe(s); });
+
+  /* --- 13.3 · persianas (acordeones) --- */
+  document.querySelectorAll('.persiana > button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var p = btn.parentElement;
+      var cuerpo = p.querySelector('.cuerpo');
+      var abierta = p.classList.toggle('abierta');
+      cuerpo.style.maxHeight = abierta ? (cuerpo.scrollHeight + 'px') : '0px';
+    });
+  });
+
+  /* --- 13.4 · menú hamburguesa (móvil) --- */
+  var hamb = document.getElementById('hamburguesa');
+  var velo = document.getElementById('velo');
+  function cerrarMenu(){ document.body.classList.remove('menu-abierto'); }
+  hamb.addEventListener('click', function(){ document.body.classList.toggle('menu-abierto'); });
+  velo.addEventListener('click', cerrarMenu);
+  document.querySelectorAll('#indice a').forEach(function(a){ a.addEventListener('click', cerrarMenu); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cerrarMenu(); });
+
+})();
+</script>
+
+</body>
+</html>
