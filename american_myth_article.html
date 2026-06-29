@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The American Myth • Nikhil Pal Singh • The Guardian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Source+Sans+3:wght@400;500;600&amp;display=swap');
+        
+        :root {
+            --primary: #111827;
+        }
+        
+        body {
+            font-family: 'Source Sans 3', system_ui, sans-serif;
+        }
+        
+        .heading-serif {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .article-body {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+
+        details {
+            transition: all 0.2s ease;
+        }
+        
+        details[open] {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+
+        summary {
+            cursor: pointer;
+            list-style: none;
+            position: relative;
+        }
+        
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .accordion-chevron {
+            transition: transform 0.2s ease;
+        }
+        
+        details[open] .accordion-chevron {
+            transform: rotate(180deg);
+        }
+
+        .section-number {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .key-quote {
+            border-left: 4px solid #b91c1c;
+            background-color: #fef2f2;
+            padding: 1.25rem 1.5rem;
+            font-style: italic;
+        }
+
+        .highlight {
+            background-color: #fefce8;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .nav-active {
+            border-bottom: 2px solid #b91c1c;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900">
+    <!-- Top Navigation -->
+    <nav class="bg-white border-b border-zinc-200 sticky top-0 z-50">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-x-3">
+                    <div class="flex items-center gap-x-2">
+                        <i class="fa-solid fa-newspaper text-red-700 text-2xl"></i>
+                        <span class="font-semibold tracking-tight text-xl">The Guardian</span>
+                    </div>
+                    <div class="hidden md:block text-xs px-3 py-1 bg-zinc-100 text-zinc-500 rounded-full font-medium">RE-FORMATTED FOR READABILITY</div>
+                </div>
+                
+                <div class="flex items-center gap-x-2 text-sm">
+                    <button onclick="expandAll()" 
+                            class="px-4 py-2 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg flex items-center gap-x-2 text-sm font-medium transition-colors">
+                        <i class="fa-solid fa-expand-alt"></i>
+                        <span class="hidden sm:inline">Expand All</span>
+                    </button>
+                    <button onclick="collapseAll()" 
+                            class="px-4 py-2 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg flex items-center gap-x-2 text-sm font-medium transition-colors">
+                        <i class="fa-solid fa-compress-alt"></i>
+                        <span class="hidden sm:inline">Collapse All</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero / Header -->
+    <header class="bg-white border-b border-zinc-200">
+        <div class="max-w-screen-xl mx-auto px-6 pt-10 pb-8">
+            <div class="max-w-3xl">
+                <!-- Category -->
+                <div class="flex items-center gap-x-3 mb-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wider bg-red-100 text-red-700">OPINION / HISTORY</span>
+                    <span class="text-xs text-zinc-500">•</span>
+                    <span class="text-xs text-zinc-500 font-medium">Sun 28 Jun 2026</span>
+                </div>
+
+                <!-- Main Title -->
+                <h1 class="heading-serif text-5xl md:text-6xl leading-[1.05] tracking-tighter text-zinc-950 mb-4">
+                    The American myth always came at someone’s expense.<br>
+                    <span class="text-red-700">Now, it’s all but collapsed.</span>
+                </h1>
+
+                <!-- Author -->
+                <div class="flex items-center gap-x-4 mt-6">
+                    <div>
+                        <div class="font-semibold text-lg">Nikhil Pal Singh</div>
+                        <div class="text-sm text-zinc-600">Chair, Department of Social &amp; Cultural Analysis<br>Professor of History, New York University</div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex items-center gap-x-4 text-sm">
+                    <div class="flex items-center text-emerald-600">
+                        <i class="fa-solid fa-check-circle mr-1.5"></i>
+                        <span class="font-medium">The Guardian</span>
+                    </div>
+                    <div class="text-zinc-400">•</div>
+                    <div class="text-zinc-500 text-sm">250th Anniversary of American Independence • Trump’s Second Term</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-screen-xl mx-auto px-6 pt-8 pb-16">
+        
+        <!-- Introduction / Context -->
+        <div class="max-w-3xl mb-10">
+            <div class="prose prose-zinc max-w-none text-[1.05rem]">
+                <p class="lead text-xl text-zinc-700">Writing during the carnage of the First World War, Randolph Bourne described the American revolutionary inheritance as “a squalid marriage between the town capitalist and plantation patriarch.” Today, as the United States approaches the 250th anniversary of the Declaration of Independence amid deep social fracture, that judgment feels prophetic.</p>
+            </div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="mb-8 max-w-3xl">
+            <h2 class="text-xs uppercase tracking-[1.5px] font-semibold text-zinc-500 mb-3 px-1">CONTENTS • 10 SECTIONS</h2>
+            <div class="flex flex-wrap gap-2">
+                <a href="#section-1" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">1. The Myth in Crisis</a>
+                <a href="#section-2" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">2. Obama vs 1619 Project</a>
+                <a href="#section-3" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">3. Twin Pillars</a>
+                <a href="#section-4" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">4. Douglass’s Question</a>
+                <a href="#section-5" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">5. What Does July 4th Mean?</a>
+                <a href="#section-6" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">6. Postwar Narratives</a>
+                <a href="#section-7" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">7. 1976 Bicentennial</a>
+                <a href="#section-8" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">8. Trump’s 250th</a>
+                <a href="#section-9" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">9. Old Precedents Revived</a>
+                <a href="#section-10" class="text-sm px-4 py-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-full transition-colors text-zinc-700 hover:text-zinc-900">10. MLK &amp; the Future</a>
+            </div>
+        </div>
+
+        <!-- ACCORDIONS -->
+        <div class="max-w-3xl space-y-3">
+
+            <!-- SECTION 1 -->
+            <details id="section-1" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">01</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">The American Myth in Crisis</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">Bourne’s warning • Trump era • The 250th anniversary</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">Writing during the carnage of the first world war, the iconoclast intellectual <strong>Randolph Bourne</strong> described the American revolutionary inheritance as a squalid marriage between the town capitalist and plantation patriarch. Glittering generalities of freedom and democracy, Bourne observed, were indelibly marked by their long captivity to the money counters and owners of human chattel.</p>
+                    
+                    <p class="mb-4">In the land lorded over by the likes of <strong>Donald Trump</strong>, leader of one of the most indecently corrupt, violently inept administrations in the country’s history, the 250th anniversary of the American Declaration of Independence would seem to affirm this judgment. Our moment, defined by the mobilization of market frenzy, machineries of war, deportation deliriums and nativist passions, echoes Bourne’s; it is a time of social fracture, moral failure and hegemonic collapse, with cynical reason ascendant.</p>
+                    
+                    <div class="key-quote my-6 rounded-r-xl">
+                        <p class="text-zinc-800">“In the days ahead, the US origin story will be told again with fanfare and at great expense, dressed in the garb of Christian nationalism and gaudy militarism, but drained of its narrative power as a world-making event – the idea that ‘the cause of America’, in the words of Thomas Paine’s 1776 revolutionary pamphlet <em>Common Sense</em>, ‘is the cause of all mankind’.”</p>
+                    </div>
+                    
+                    <p>It is easy in the current context to forget that not long ago, this redemptive idea still resonated. On the night of his election to the presidency, <strong>Barack Obama</strong> framed his victory as an event that decisively narrowed the gap between the nation’s democratic ideals and its often flawed reality.</p>
+                </div>
+            </details>
+
+            <!-- SECTION 2 -->
+            <details id="section-2" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">02</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">Obama’s Universalist Narrative &amp; the 1619 Project</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">“Our better history” • Post-WWII consensus • New founding debate</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">Celebrating ordinary people as the authors of “our better history”, Obama used his rhetorical gifts to trace a narrative arc – linking women’s suffrage to the New Deal, the civil rights movement and marriage equality, part of a continuous, unfinished march toward a “more perfect union”.</p>
+                    
+                    <p class="mb-4">The outlines of this American universalist narrative first emerged during the second world war, advancing upon claims to anti-fascism and anti-racism that gained sway even over conservative elites. During the post-second world war era, with anti-discrimination principles increasingly consecrated in law and culture, US history was defined as a series of emancipatory milestones that vindicated the domestic ruling order and US claims to global leadership.</p>
+                    
+                    <div class="my-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <p class="font-medium text-amber-900 mb-1">The 1619 Project Challenge</p>
+                        <p class="text-sm text-amber-800">Recent years have seen growing numbers of mainstream detractors from this consensus history – among the most prominent, the <em>New York Times</em>’s 1619 Project, which offered an account of a “new founding” adjacent to the one championed by civil rights liberals, but wildly traducing the original. The revolutionary war, its lead author <strong>Nikole Hannah-Jones</strong> argued, was primarily motivated by the tawdry desire to give a free hand to plantation patriarchs “in order to ensure that slavery would continue”.</p>
+                    </div>
+                    
+                    <p>Conservatives howled at this re-telling of the founding. But generally glossed over – by both the 1619 Project and the ensuing debate – was the fact that <strong>land hunger, and westward expansion</strong>, was a major impetus of revolutionary energies.</p>
+                </div>
+            </details>
+
+            <!-- SECTION 3 -->
+            <details id="section-3" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">03</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">Emancipation &amp; Expansion: Twin Pillars</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">The revolutionary dialectic • Frederick Douglass • Dred Scott</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4"><strong>Emancipation and expansion are twin pillars of the American revolutionary narrative.</strong> Both are closely bound to the histories of slavery and freedom, mobile frontiers and the United States’ continental and global reach, and both have been variously used to support the idea of a democracy upholding opportunity and affluence for the majority of US citizens and residents.</p>
+                    
+                    <p class="mb-4">In the great muddle of the present moment, however, the idea of a virtuous expansionist-emancipatory dialectic has fallen on hard times, undone by growing wealth inequality, civil rights reversals, violent policing and unpopular wars of choice.</p>
+                    
+                    <div class="key-quote my-6">
+                        <p class="text-zinc-800">“What to the Slave is the Fourth of July?” asked the formerly enslaved <strong>Frederick Douglass</strong> on 4 July 1852, in a moment of similar contention and uncertainty.</p>
+                        <p class="mt-3 text-sm not-italic">At that time, the recently passed Fugitive Slave Act meant that free states could no longer offer Douglass sanctuary against capture, rendition and return to slavery: “What have I, or those I represent, to do with your national independence? Are the great principles of political freedom and of natural justice, embodied in that Declaration of Independence, extended to us?”</p>
+                    </div>
+                    
+                    <p>In 1857, just before the civil war, the US supreme court’s <strong>Dred Scott</strong> decision answered him, attempting to resolve any doubts about the constitutional meaning of slavery: Africans and their descendants could never be citizens, as they held no rights “which the white man was bound to respect”.</p>
+                </div>
+            </details>
+
+            <!-- SECTION 4 -->
+            <details id="section-4" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">04</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">The Long Road After the Civil War</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">Emancipation won in blood • 1619 Project’s real significance</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">It took a bloody civil war to achieve a resoundingly affirmative answer to Douglass’s question, for slavery’s descendants. That it took another century for Black Americans to achieve substantive political and civil rights indicates ambivalence and backsliding that persist to this day.</p>
+                    
+                    <div class="bg-zinc-900 text-white p-5 rounded-2xl my-5">
+                        <p class="uppercase text-xs tracking-widest text-zinc-400 mb-2">KEY INSIGHT</p>
+                        <p class="text-lg">Quibbles aside, what was most important about the 1619 Project was its demonstration that <strong>the established synthesis of nationalist and progressive history is broken</strong>. The meaning of the American founding and its relationship to the country’s present is now firmly up for grabs.</p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- SECTION 5 -->
+            <details id="section-5" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">05</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">What Does the Fourth of July Mean?</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">Historical evasions • 1876 • 1893 World’s Fair • Turner’s frontier thesis</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">Fourth of July celebrations have consistently invited Americans to ask, and in some cases re-litigate, fundamental questions about the political character of the country. The historical record of such celebrations suggests a propensity for <strong>evasion, rather than scrutiny</strong>.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+                        <div class="border border-zinc-200 rounded-xl p-4">
+                            <div class="text-xs uppercase tracking-wider text-red-700 font-semibold mb-1">1876 Centennial</div>
+                            <p class="text-sm">At the end of the bitter Reconstruction period, barely mentioned slavery, focusing instead on the US’s emerging industrial might and expansion across the continent and into the Pacific world.</p>
+                        </div>
+                        <div class="border border-zinc-200 rounded-xl p-4">
+                            <div class="text-xs uppercase tracking-wider text-red-700 font-semibold mb-1">1893 Chicago World’s Fair</div>
+                            <p class="text-sm">A time of racial segregation, anti-Black terror and imperial adventurism. Historian Frederick Jackson Turner described movements across western “frontiers” as the motor force of US democratic expansion in which “the slavery question” was but “an incident”.</p>
+                        </div>
+                    </div>
+                    
+                    <p>The US’s entry into the second world war marked sustained historical reconsideration of the meaning of US independence and expansion.</p>
+                </div>
+            </details>
+
+            <!-- SECTION 6 -->
+            <details id="section-6" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">06</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">Postwar Narratives: Jackson as Populist Hero</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">Schlesinger’s <em>Age of Jackson</em> • Ho Chi Minh quotes the Declaration</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">Popular histories like Arthur Schlesinger’s Pulitzer prize-winning book from 1945, <em>The Age of Jackson</em>, identified the first semi-centennial of 4 July 1826 – coincidentally the day both John Adams and Thomas Jefferson died – with the passing of the torch of the revolutionary generation to the movement led by Andrew Jackson.</p>
+                    
+                    <p class="mb-4">Although Jackson was popularly known as an “Indian killer” and was an enslaver himself, Schlesinger framed Jackson as a populist hero – comparing his extension of the franchise to white men without property to the working-class struggles of the New Deal era. In this line of thought, the real emancipatory kernel of the Declaration of Independence was empowering the “producing classes” against what Jefferson had called the “moneyed aristocracy”.</p>
+                    
+                    <div class="my-5 p-4 bg-emerald-50 border-l-4 border-emerald-600 rounded-r-xl">
+                        <p class="font-medium">Global Echo: Ho Chi Minh, 1945</p>
+                        <p class="text-sm mt-1">The very year Schlesinger’s book was published, in front of a crowd of several hundred thousand people in Hanoi, <strong>Ho Chi Minh</strong> marked the end of Japanese occupation and French rule in Vietnam with the following words: “All men are created equal. They are endowed by their Creator with certain unalienable Rights; among these are Life, Liberty, and the pursuit of Happiness.”</p>
+                        <p class="text-xs mt-2 text-emerald-700">He later sent a copy of Vietnam’s Declaration of Independence to the Truman administration, calling for US support of Vietnamese self-determination. The letters were met with silence.</p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- SECTION 7 -->
+            <details id="section-7" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">07</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">The 1976 Bicentennial: Nostalgia &amp; Corporate Kitsch</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">Plantation nostalgia • Freedom Train • Rise of Trump &amp; Reagan</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">Coming at the end of the long, brutal US war in Vietnam, and a contentious civil rights era, the US’s 1976 bicentennial celebrations reverted to plantation nostalgia and commemorative kitsch.</p>
+                    
+                    <ul class="space-y-2 text-sm mb-5 pl-1">
+                        <li class="flex gap-x-3"><span class="text-red-600 mt-1">•</span> A tall-ship parade circumnavigated lower Manhattan</li>
+                        <li class="flex gap-x-3"><span class="text-red-600 mt-1">•</span> A “freedom train” sponsored by Prudential, Pepsi and General Motors crisscrossed the country loaded with artifacts of Americana (MLK’s robes alongside Judy Garland’s Dorothy dress)</li>
+                        <li class="flex gap-x-3"><span class="text-red-600 mt-1">•</span> Jimmy Carter rode in a horse-drawn carriage through an antebellum-themed village in Lumpkin, Georgia</li>
+                    </ul>
+                    
+                    <p class="mb-4">At the same time, in Philadelphia, a “July Fourth coalition” led by Black, Latino and Native American organizers staged a counter-celebration calling for a “bicentennial without colonies” and demanding “jobs and a decent standard of living”.</p>
+                    
+                    <div class="bg-zinc-100 p-4 rounded-xl text-sm">
+                        <p>In New York City, a 30-year-old developer named <strong>Donald Trump</strong>, embroiled in federal litigation over racial discrimination by his family’s real estate holding company, was just then bursting on the scene, soon to become the avatar of Randolph Bourne’s town capitalist. Shortly after, Ronald Reagan rose to the presidency with classic frontier-expansionist themes and cowboy bellicosity.</p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- SECTION 8 -->
+            <details id="section-8" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">08</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">The 250th Anniversary in the Age of Trump</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">Grandin’s <em>End of the Myth</em> • Birthright citizenship • Expansionist revival</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">With Trump in the White House, it is easy to see that the big anniversary ahead will pass over the fact that the US’s revolutionaries instituted one of the world’s richest, most powerful slave societies, which their descendants overthrew. Showcased instead will be paeans to the pioneer spirit, military power and business civilization.</p>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 my-5">
+                        <div class="flex-1 border border-zinc-200 rounded-xl p-4 text-sm">
+                            <div class="font-semibold text-red-700 mb-1">Planned Celebrations</div>
+                            <p>Andrew Jackson’s plantation, the Hermitage in Tennessee, has planned a sweeping celebration featuring 1,776 US flags. A newly restored Reconciliation Monument (formerly the Confederate Memorial) at Arlington will provide a backdrop to official celebrations in Washington DC.</p>
+                        </div>
+                        <div class="flex-1 border border-zinc-200 rounded-xl p-4 text-sm">
+                            <div class="font-semibold text-red-700 mb-1">Greg Grandin’s Diagnosis</div>
+                            <p>Published during Trump’s first administration, Greg Grandin’s Pulitzer prize-winning history <em>The End of the Myth</em> noted that what might be most distinctive about the current moment is the exhaustion of forward movement – not “the end of history”, but its foreclosure.</p>
+                        </div>
+                    </div>
+                    
+                    <p class="mb-3"><strong>Day One of Trump’s second administration:</strong> Canceled, by executive order, the principle of birthright citizenship for the children of unauthorized immigrants. This was followed by surging military-style immigration policing into US cities and ramping up coercive diplomacy across the hemisphere, including threats to annex Canada and Greenland.</p>
+                </div>
+            </details>
+
+            <!-- SECTION 9 -->
+            <details id="section-9" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">09</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">Reviving Old Precedents: Citizenship, Territory &amp; Power</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">Insular Cases • Korematsu • Jefferson’s “merciless Indian savages”</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">While Trump has bucked precedent in countless ways, the reality of racial and colonial prerequisites to US citizenship was never definitively settled.</p>
+                    
+                    <div class="space-y-4 my-5">
+                        <div class="flex gap-4">
+                            <div class="w-5 h-5 mt-1 flex-shrink-0 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">1</div>
+                            <div class="text-sm"><strong>Insular Cases (early 1900s):</strong> Determined that inhabitants of newly acquired US territories in Puerto Rico, Guam and the Philippines did not automatically possess constitutional rights, establishing de facto colonial rule that continues in many respects today.</div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-5 h-5 mt-1 flex-shrink-0 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">2</div>
+                            <div class="text-sm"><strong>Korematsu v. United States (1944):</strong> Held that Japanese people and their American-born children could be classed as “enemy aliens” and incarcerated on national security grounds. Only formally repudiated by the Supreme Court in 2018.</div>
+                        </div>
+                    </div>
+                    
+                    <p class="mb-4">Jefferson’s declaration was evasive on the question of slavery, but decisive when it came to what it described as “merciless Indian savages whose known rule of warfare is an undistinguished destruction of all ages, sexes and conditions.”</p>
+                    
+                    <p class="text-sm italic text-zinc-600">Reflecting on US wars in Iraq and Afghanistan, philosopher Paul Berman mused: “If you reject the Indian wars, you reject America.”</p>
+                </div>
+            </details>
+
+            <!-- SECTION 10 -->
+            <details id="section-10" class="group bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm" open>
+                <summary class="flex items-center justify-between px-6 py-5 hover:bg-zinc-50 transition-colors">
+                    <div class="flex items-center gap-x-4">
+                        <div class="w-8 h-8 flex-shrink-0 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-mono text-sm font-bold">10</div>
+                        <div>
+                            <span class="font-semibold text-xl tracking-tight">Martin Luther King Jr. &amp; An Inheritance Waiting to Be Born</span>
+                            <span class="block text-xs text-zinc-500 mt-0.5">“At bargain rates” • The unfinished project • Revolutionary inheritance</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron text-zinc-400 group-open:text-red-600 transition-colors"></i>
+                </summary>
+                <div class="px-6 pb-7 pt-1 article-body text-[1.02rem] text-zinc-700 leading-relaxed border-t border-zinc-100">
+                    <p class="mb-4">The most convincing democratic alternative to the expansionist-emancipatory tension was given to us by <strong>Martin Luther King Jr.</strong> Even before he was taken by an assassin’s bullet, King had lost favor with the establishment for arguing that freedom as self-determination was not the exclusive property of Americans, and that the Vietnamese too had a righteous claim.</p>
+                    
+                    <div class="key-quote my-6">
+                        <p class="text-zinc-800">“It is a sad fact that because of comfort, complacency, a morbid fear of communism and our proneness to adjust to injustice, the western nations that initiated so much of the revolutionary spirit of the modern world have now become the arch anti-revolutionaries.”</p>
+                        <p class="mt-4 text-sm not-italic">— Martin Luther King Jr.</p>
+                    </div>
+                    
+                    <p class="mb-4">King observed something else that has since been mostly forgotten: <strong>American universalism was weak because it had been purchased “at bargain rates” – and often at someone else’s expense.</strong> The Black freedom struggle, in this sense, was about “more than the rights of Negroes”, as it revealed “systemic rather than superficial flaws” in US society.</p>
+                    
+                    <div class="bg-red-950 text-white p-6 rounded-2xl my-6">
+                        <p class="font-medium mb-2">Final Diagnosis</p>
+                        <p class="leading-snug">In Trump’s second term, the expansionist pole of the American dialectic has instead returned with a vengeance, untethered from its worn-out emancipatory partner. The violence and corruption of the current era, however, lacks any legitimating or moralizing framework, and is unlikely to be laundered as easily as it was in 2008 if and when the Democrats return to power. In the eyes of the world, the US is no longer “the cause of all mankind”, but its scourge.</p>
+                    </div>
+                    
+                    <p class="text-lg font-medium text-zinc-900">Reanimating stalled pretensions to racial progress, or other such bargain basement promises, will not absolve the empire this time. The town capitalists and plantation patriarchs are in the saddle – while our revolutionary inheritance, Paine’s “universal struggle for liberty”, awaits its next reinvention.</p>
+                    
+                    <div class="mt-8 pt-6 border-t text-sm text-zinc-500">
+                        <strong>Nikhil Pal Singh</strong> is the chair of the department of social and cultural analysis and professor of history at New York University.
+                    </div>
+                </div>
+            </details>
+
+        </div>
+
+        <!-- Footer / Source -->
+        <div class="max-w-3xl mt-12 pt-8 border-t border-zinc-200 text-xs text-zinc-500 flex flex-col md:flex-row md:items-center gap-y-2 md:justify-between">
+            <div>
+                Originally published in <span class="font-medium text-zinc-700">The Guardian</span> • 28 June 2026<br>
+                Reformatted with accordions for improved readability and navigation.
+            </div>
+            <div class="text-[10px] md:text-xs">
+                This is a reader-friendly presentation of the original article.<br>
+                All text © Nikhil Pal Singh / The Guardian.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#b91c1c');
+        }
+        
+        // Accordion controls
+        function expandAll() {
+            document.querySelectorAll('details').forEach(detail => {
+                detail.open = true;
+            });
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('details').forEach(detail => {
+                detail.open = false;
+            });
+        }
+        
+        // Keyboard support for accessibility
+        function addKeyboardSupport() {
+            document.querySelectorAll('summary').forEach(summary => {
+                summary.setAttribute('tabindex', '0');
+                summary.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const details = this.parentElement;
+                        details.open = !details.open;
+                    }
+                });
+            });
+        }
+        
+        // Smooth scroll for TOC links
+        function addSmoothScroll() {
+            document.querySelectorAll('a[href^="#section-"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        e.preventDefault();
+                        // Open the accordion if closed
+                        if (!target.open) {
+                            target.open = true;
+                        }
+                        // Scroll into view
+                        setTimeout(() => {
+                            target.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start' 
+                            });
+                        }, 50);
+                    }
+                });
+            });
+        }
+        
+        // Initialize everything
+        function init() {
+            initializeTailwind();
+            addKeyboardSupport();
+            addSmoothScroll();
+            
+            // Optional: Open first few sections by default for better UX
+            const firstFew = document.querySelectorAll('details');
+            if (firstFew.length > 0) firstFew[0].open = true;
+            if (firstFew.length > 1) firstFew[1].open = true;
+            
+            // Easter egg: Press "?" to expand/collapse all
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '?') {
+                    e.preventDefault();
+                    const anyOpen = Array.from(document.querySelectorAll('details')).some(d => d.open);
+                    if (anyOpen) {
+                        collapseAll();
+                    } else {
+                        expandAll();
+                    }
+                }
+            });
+            
+            console.log('%c[American Myth Article] HTML page initialized with accordions.', 'color:#64748b');
+        }
+        
+        window.onload = init;
+    </script>
+</body>
+</html>

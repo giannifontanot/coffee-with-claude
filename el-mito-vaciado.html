@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El mito vaciado · América a los 250 — Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4EDDC;
+    --cream-2:#EFE6D1;
+    --parchment:#FBF7EC;
+    --ink:#2E2620;
+    --ink-soft:#5C5044;
+    --ink-faint:#857562;
+    --terracotta:#B5532E;
+    --amber:#BC881F;
+    --olive:#6C7236;
+    --plum:#7A3B57;
+    --teal:#3E6B63;
+    --rust:#A85344;
+    --line:#DAC9A8;
+    --line-soft:#E6D9BD;
+    --shadow:rgba(46,38,32,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Spectral",Georgia,serif;
+    font-weight:400;
+    font-size:1.06rem;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  /* faint paper grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(181,83,46,.04), transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(108,114,54,.04), transparent 42%);
+  }
+
+  /* progress bar */
+  #progress-track{position:fixed;top:0;left:0;right:0;height:4px;background:transparent;z-index:60}
+  #progress{height:100%;width:0%;background:linear-gradient(90deg,var(--terracotta),var(--amber));transition:width .08s linear}
+
+  /* layout */
+  .shell{display:flex;align-items:flex-start}
+  .sidebar{
+    position:fixed;top:0;left:0;width:266px;height:100vh;overflow-y:auto;
+    background:var(--cream-2);border-right:1px solid var(--line);
+    padding:30px 22px 40px;z-index:50;
+  }
+  .brand{display:flex;align-items:baseline;gap:.5rem;margin-bottom:.2rem}
+  .brand .cup{font-size:1.15rem}
+  .brand .name{font-family:"Fraunces";font-weight:600;font-size:1.02rem;letter-spacing:.01em;color:var(--ink)}
+  .brand .sep{color:var(--terracotta)}
+  .brand .serie{font-family:"Fraunces";font-style:italic;font-weight:400;font-size:.92rem;color:var(--ink-soft)}
+  .side-rule{height:1px;background:var(--line);margin:18px 0 16px}
+  .side-label{font-family:"Fraunces";font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px}
+  nav.toc{display:flex;flex-direction:column;gap:1px}
+  nav.toc a{
+    display:flex;gap:.7rem;align-items:baseline;
+    text-decoration:none;color:var(--ink-soft);
+    padding:7px 10px;border-radius:8px;line-height:1.3;
+    transition:background .2s,color .2s;
+  }
+  nav.toc a .rn{font-family:"Fraunces";font-weight:600;font-size:.78rem;color:var(--amber);min-width:2.1em;letter-spacing:.02em}
+  nav.toc a .tt{font-family:"Spectral";font-size:.92rem}
+  nav.toc a:hover{background:var(--parchment);color:var(--ink)}
+  nav.toc a.is-active{background:var(--parchment);color:var(--terracotta)}
+  nav.toc a.is-active .rn{color:var(--terracotta)}
+  nav.toc a.is-active{box-shadow:inset 3px 0 0 var(--terracotta)}
+
+  .content{margin-left:266px;width:calc(100% - 266px);position:relative;z-index:1}
+  .wrap{max-width:760px;margin:0 auto;padding:0 32px 120px}
+
+  /* hero */
+  .hero{padding:88px 0 30px}
+  .kicker{font-family:"Fraunces";font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--terracotta);margin-bottom:22px}
+  h1{
+    font-family:"Fraunces";font-weight:600;font-size:clamp(2.7rem,6vw,4.3rem);
+    line-height:1.02;letter-spacing:-.015em;margin:0 0 .35em;color:var(--ink);
+  }
+  .subtitle{font-family:"Fraunces";font-style:italic;font-weight:400;font-size:clamp(1.15rem,2.4vw,1.5rem);color:var(--ink-soft);line-height:1.4;max-width:38ch;margin:0 0 30px}
+  .sourceline{font-size:.92rem;color:var(--ink-faint);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:0 0 36px}
+  .sourceline a{color:var(--terracotta);text-decoration:none;border-bottom:1px solid var(--line)}
+  .sourceline a:hover{border-color:var(--terracotta)}
+
+  .thesis{
+    background:var(--parchment);border:1px solid var(--line);border-left:4px solid var(--terracotta);
+    border-radius:12px;padding:26px 28px;margin:8px 0 10px;box-shadow:0 1px 0 var(--shadow);
+  }
+  .thesis p{margin:0;font-size:1.18rem;font-family:"Fraunces";font-weight:400;line-height:1.5;color:var(--ink)}
+  .thesis .lead{color:var(--terracotta);font-weight:600}
+
+  /* voice legend */
+  .legend{margin:30px 0 0;border:1px dashed var(--line);border-radius:12px;padding:20px 22px;background:rgba(251,247,236,.55)}
+  .legend h3{font-family:"Fraunces";font-weight:600;font-size:.95rem;margin:0 0 12px;color:var(--ink)}
+  .legend ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 22px}
+  .legend li{font-size:.9rem;color:var(--ink-soft);line-height:1.35}
+  .legend .who{font-family:"Fraunces";font-weight:600;font-size:.84rem}
+  @media(max-width:560px){.legend ul{grid-template-columns:1fr}}
+
+  /* sections */
+  section{padding:54px 0 8px;scroll-margin-top:48px}
+  .eyebrow{display:flex;align-items:center;gap:.7rem;margin-bottom:14px}
+  .eyebrow .num{font-family:"Fraunces";font-weight:600;font-size:.8rem;letter-spacing:.06em;color:#fff;background:var(--terracotta);padding:.15rem .6rem;border-radius:999px}
+  .eyebrow .tag{font-family:"Fraunces";font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+  h2{font-family:"Fraunces";font-weight:600;font-size:clamp(1.7rem,3.4vw,2.35rem);line-height:1.12;letter-spacing:-.01em;margin:0 0 .55em;color:var(--ink)}
+  section p{margin:0 0 1.1em}
+  .drop::first-letter{
+    font-family:"Fraunces";font-weight:600;font-size:3.1rem;line-height:.8;float:left;
+    padding:.06em .12em 0 0;color:var(--terracotta);
+  }
+
+  /* persona card */
+  .persona{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;margin:0 0 22px;background:var(--parchment);border:1px solid var(--line)}
+  .persona .dot{width:14px;height:14px;border-radius:50%;flex:none}
+  .persona .pn{font-family:"Fraunces";font-weight:600;font-size:1.02rem;line-height:1.15}
+  .persona .pe{font-size:.86rem;color:var(--ink-faint);font-style:italic}
+
+  /* persianas (accordions) */
+  .persiana{border:1px solid var(--line);border-radius:11px;background:var(--parchment);margin:12px 0;overflow:hidden;box-shadow:0 1px 0 var(--shadow)}
+  .persiana__header{
+    width:100%;border:0;background:transparent;cursor:pointer;text-align:left;
+    display:flex;align-items:center;gap:.85rem;padding:16px 18px;
+    font-family:"Fraunces";font-weight:600;font-size:1.02rem;color:var(--ink);line-height:1.3;
+  }
+  .persiana__header:hover{background:rgba(181,83,46,.05)}
+  .persiana__header:focus-visible{outline:2px solid var(--terracotta);outline-offset:-2px}
+  .persiana__header .marca{font-family:"Fraunces";font-weight:600;font-size:.82rem;color:var(--amber);min-width:1.6em}
+  .persiana__header .titulo{flex:1}
+  .chev{flex:none;width:18px;height:18px;transition:transform .35s ease;color:var(--terracotta)}
+  .persiana.is-open .chev{transform:rotate(90deg)}
+  .persiana__panel{max-height:0;overflow:hidden;transition:max-height .42s cubic-bezier(.4,0,.2,1)}
+  .persiana__inner{padding:2px 18px 18px;border-top:1px solid var(--line-soft)}
+  .persiana__inner p{margin:.85em 0 0;font-size:1rem;color:var(--ink-soft)}
+  .persiana__inner p:first-child{margin-top:.85em}
+  .persiana__inner strong{color:var(--ink);font-weight:600}
+  .persiana__inner em{color:var(--plum);font-style:italic}
+
+  /* pull quote */
+  .pull{border-left:3px solid var(--amber);padding:4px 0 4px 20px;margin:24px 0;font-family:"Fraunces";font-style:italic;font-size:1.22rem;line-height:1.45;color:var(--ink)}
+
+  /* dialogue */
+  .mesa{margin:18px 0 6px}
+  .turno{display:flex;gap:.7rem;margin:0 0 16px;align-items:baseline}
+  .quien{flex:none;font-family:"Fraunces";font-weight:600;font-size:.74rem;letter-spacing:.02em;color:#fff;padding:.18rem .6rem;border-radius:999px;white-space:nowrap;margin-top:.15rem}
+  .dice{font-size:1.02rem;line-height:1.6;color:var(--ink)}
+  .q-mito{background:var(--amber)}
+  .q-bourne{background:var(--plum)}
+  .q-slot{background:var(--olive)}
+  .q-hist{background:var(--terracotta)}
+  .q-bellah{background:var(--teal)}
+  .q-guion{background:var(--rust)}
+  .q-narr{background:#4a3f33}
+
+  /* takeaways */
+  .llevar{background:var(--cream-2);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin:24px 0}
+  .llevar h3{font-family:"Fraunces";font-weight:600;font-size:1.05rem;margin:0 0 14px;display:flex;align-items:center;gap:.5rem}
+  .llevar ol{margin:0;padding-left:1.25rem}
+  .llevar li{margin:0 0 .7rem;color:var(--ink-soft);font-size:1rem;line-height:1.55}
+  .llevar li strong{color:var(--ink)}
+
+  /* fuentes */
+  .fuentes{margin:22px 0 0;font-size:.85rem;color:var(--ink-faint);line-height:1.6;border-top:1px dotted var(--line);padding-top:12px}
+  .fuentes .fl{font-family:"Fraunces";font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-right:.4rem}
+  .fuentes a{color:var(--terracotta);text-decoration:none;border-bottom:1px solid var(--line-soft)}
+  .fuentes a:hover{border-color:var(--terracotta)}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);margin-top:70px;padding:34px 0 10px;color:var(--ink-faint);font-size:.9rem}
+  footer .fbrand{font-family:"Fraunces";font-weight:600;color:var(--ink-soft)}
+  footer a{color:var(--terracotta);text-decoration:none}
+
+  /* hamburger + scrim */
+  #ham{
+    position:fixed;top:14px;left:14px;z-index:70;display:none;
+    width:46px;height:46px;border-radius:11px;border:1px solid var(--line);
+    background:var(--cream-2);cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px var(--shadow);
+  }
+  #ham span{display:block;width:20px;height:2px;background:var(--ink);position:relative}
+  #ham span::before,#ham span::after{content:"";position:absolute;left:0;width:20px;height:2px;background:var(--ink);transition:transform .3s,top .3s}
+  #ham span::before{top:-6px}#ham span::after{top:6px}
+  body.nav-open #ham span{background:transparent}
+  body.nav-open #ham span::before{top:0;transform:rotate(45deg)}
+  body.nav-open #ham span::after{top:0;transform:rotate(-45deg)}
+  #scrim{position:fixed;inset:0;background:rgba(46,38,32,.42);z-index:45;opacity:0;visibility:hidden;transition:opacity .3s}
+  body.nav-open #scrim{opacity:1;visibility:visible}
+
+  @media(max-width:900px){
+    #ham{display:flex}
+    .sidebar{transform:translateX(-100%);transition:transform .32s cubic-bezier(.4,0,.2,1);box-shadow:6px 0 24px rgba(46,38,32,.18)}
+    body.nav-open .sidebar{transform:translateX(0)}
+    .content{margin-left:0;width:100%}
+    .wrap{padding:0 22px 90px}
+    .hero{padding:78px 0 24px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important}
+  }
+</style>
+</head>
+<body>
+<div id="progress-track"><div id="progress"></div></div>
+
+<button id="ham" aria-label="Abrir navegación" aria-expanded="false"><span></span></button>
+<div id="scrim"></div>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="cup">☕</span>
+      <span class="name">Café con Claude</span>
+    </div>
+    <div class="serie">Lectura crítica de un ensayo</div>
+    <div class="side-rule"></div>
+    <div class="side-label">Recorrido</div>
+    <nav class="toc">
+      <a href="#umbral"><span class="rn">I</span><span class="tt">El umbral</span></a>
+      <a href="#anatomia"><span class="rn">II</span><span class="tt">Anatomía de un mito</span></a>
+      <a href="#bourne"><span class="rn">III</span><span class="tt">El fantasma de Bourne</span></a>
+      <a href="#cinica"><span class="rn">IV</span><span class="tt">La razón cínica</span></a>
+      <a href="#jubileos"><span class="rn">V</span><span class="tt">Tres jubileos, un patrón</span></a>
+      <a href="#dosel"><span class="rn">VI</span><span class="tt">El dosel sagrado</span></a>
+      <a href="#carpinteria"><span class="rn">VII</span><span class="tt">La carpintería del relato</span></a>
+      <a href="#mesa"><span class="rn">VIII</span><span class="tt">Mesa redonda</span></a>
+      <a href="#espejo"><span class="rn">IX</span><span class="tt">El espejo de los 250</span></a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <div class="wrap">
+
+      <!-- HERO -->
+      <header class="hero">
+        <div class="kicker">Café con Claude · América a los 250</div>
+        <h1>El mito vaciado</h1>
+        <p class="subtitle">Por qué la historia de origen de Estados Unidos se cuenta más fuerte justo cuando se cree menos.</p>
+        <p class="sourceline">A partir del ensayo interactivo de <em>The Guardian</em>, “America 250: origin myth and narrative power” (28 de junio de 2026). Esta página no reproduce el texto: lo traduce, lo desarma y lo pone a discutir. <a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">Leer el original →</a></p>
+
+        <div class="thesis">
+          <p><span class="lead">La tesis, en una línea:</span> el 4 de julio de 2026 el relato fundacional volverá a contarse con más pólvora que nunca —envuelto en nacionalismo cristiano y liturgia militar— y, sin embargo, vaciado del poder narrativo que alguna vez tuvo.</p>
+        </div>
+
+        <div class="legend">
+          <h3>Seis voces en la mesa</h3>
+          <ul>
+            <li><span class="who" style="color:var(--amber)">El Mitólogo</span> — qué hace un relato de origen.</li>
+            <li><span class="who" style="color:var(--plum)">Randolph Bourne</span> — el fantasma de 1918.</li>
+            <li><span class="who" style="color:var(--olive)">Peter Sloterdijk</span> — la razón cínica.</li>
+            <li><span class="who" style="color:var(--terracotta)">La Historiadora</span> — los jubileos como prueba.</li>
+            <li><span class="who" style="color:var(--teal)">Robert Bellah</span> — la religión civil.</li>
+            <li><span class="who" style="color:var(--rust)">La Guionista</span> — la carpintería del relato.</li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- I -->
+      <section id="umbral">
+        <div class="eyebrow"><span class="num">I</span><span class="tag">El umbral</span></div>
+        <h2>Una hoja de pergamino, doscientos cincuenta años después</h2>
+        <p class="drop">En una mañana de verano en Filadelfia, una sola hoja de pergamino anunció que pretendía cambiar el mundo. Dos siglos y medio más tarde, una nación de cientos de millones se reunirá bajo fuegos artificiales para celebrar ese anuncio y para discutir —como hacen siempre los estadounidenses— si han cumplido la promesa que firmaron. El ensayo de <em>The Guardian</em> parte de esa escena conocida para señalar algo incómodo: cuanto más alto suena la celebración, más delgada se vuelve la creencia que debería sostenerla.</p>
+        <p>El argumento central no es que el mito esté siendo atacado por sus críticos. Es algo más sutil y más grave: un mito no muere cuando lo discuten, muere cuando se representa sin fe. Y eso —dice el texto— es lo que está ocurriendo. La maquinaria oficial del aniversario produce espectáculo a gran escala, pero el relato que debía darle sentido suena hueco por dentro.</p>
+        <p class="pull">Un mito no muere cuando lo atacan. Muere cuando se sigue celebrando sin que nadie lo crea.</p>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">a</span><span class="titulo">¿Qué es exactamente el “poder narrativo”?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El <strong>poder narrativo</strong> es la capacidad de una historia para organizar el sentido que una comunidad tiene de sí misma: explicar de dónde viene, justificar por qué vive como vive y prometer hacia dónde va. Cuando ese poder está vivo, el relato hace que el sacrificio valga la pena y cose el pasado con el futuro.</p>
+            <p>Una historia con poder narrativo no necesita gritar. Cuando un relato empieza a depender del volumen —más banderas, más fuegos, más solemnidad— suele ser señal de que el poder ya se está fugando y el ruido intenta tapar el vacío.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">b</span><span class="titulo">Cómo leer esta página</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Cada sección abre una idea del ensayo y la confía a una de seis voces invitadas. Las <em>persianas</em> —como esta— guardan las definiciones y los rodeos para quien quiera profundizar, sin entorpecer la lectura corrida de quien va de paso.</p>
+            <p>Al final del recorrido, las seis voces se sientan en la misma mesa (sección VIII) para discutir lo que ninguna resuelve sola. Las fuentes van agrupadas al cierre de cada sección.</p>
+          </div></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a></p>
+      </section>
+
+      <!-- II -->
+      <section id="anatomia">
+        <div class="eyebrow"><span class="num">II</span><span class="tag">La función del mito</span></div>
+        <h2>Anatomía de un relato de origen</h2>
+        <div class="persona"><span class="dot" style="background:var(--amber)"></span><div><div class="pn">El Mitólogo</div><div class="pe">estudioso de los relatos fundacionales, en la estela de Joseph Campbell</div></div></div>
+
+        <p>Toda nación se sostiene sobre una historia que cuenta de sí misma. No es un adorno: es infraestructura. El relato de origen hace tres trabajos a la vez —explica de dónde venimos, legitima el orden presente y proyecta un destino— y mientras sus miembros pueden ubicarse dentro de él, la historia mantiene a la comunidad unida sin necesidad de coerción.</p>
+        <p>El mito estadounidense es nítido: el pergamino, las verdades “evidentes por sí mismas”, la libertad que se expande y el arco moral que —se decía— se inclina hacia la justicia. El problema no es que ese relato sea falso. El problema empieza cuando demasiada gente ya no logra encontrarse dentro de él, o se encuentra en él como su víctima.</p>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">a</span><span class="titulo">El monomito y la nación</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Campbell describió un patrón que reaparece en mil culturas: un héroe deja lo conocido, atraviesa una prueba y vuelve transformado con algo para los suyos. Las naciones aplican ese molde a sí mismas: la colonia que se rebela, cruza la prueba de la guerra y regresa convertida en república portadora de un don —la libertad— para el mundo.</p>
+            <p>El molde es poderoso porque ofrece a cada ciudadano un papel dentro de una aventura compartida. Pierde fuerza en el instante en que el protagonista colectivo ya no se reconoce en el espejo del relato.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">b</span><span class="titulo">Mito no es sinónimo de mentira</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>En el sentido técnico, <strong>mito</strong> no significa “falsedad”, sino relato orientador: la historia mediante la cual un grupo interpreta su lugar en el tiempo. Una nación necesita uno tanto como necesita leyes.</p>
+            <p>El peligro no es tener un mito. El peligro es <em>olvidar que es un relato</em> —confundirlo con un hecho natural— y, en el otro extremo, gastarlo hasta que se vuelve una cáscara que se repite por inercia.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">c</span><span class="titulo">Cuándo un mito empieza a fallar</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Un relato de origen se resquebraja cuando la conducta presente contradice de forma demasiado visible el ideal fundacional. Celebrar una “nación de inmigrantes” mientras se rechaza a esos mismos inmigrantes en la frontera produce una <strong>disonancia</strong> que el público percibe aunque no sepa nombrarla.</p>
+            <p>Cuando un país no puede reconciliar lo que hace con lo que dice que es, la fiesta se desinfla. La grieta no la abren los enemigos del mito: la abre la distancia entre el guion y la actuación.</p>
+          </div></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a>, <a href="https://en.wikipedia.org/wiki/The_Power_of_Myth" target="_blank" rel="noopener">Campbell — El poder del mito</a>, <a href="https://historycollection.com/america-250-anniversary/" target="_blank" rel="noopener">Historia de los jubileos</a></p>
+      </section>
+
+      <!-- III -->
+      <section id="bourne">
+        <div class="eyebrow"><span class="num">III</span><span class="tag">El testigo incómodo</span></div>
+        <h2>El fantasma de Randolph Bourne</h2>
+        <div class="persona"><span class="dot" style="background:var(--plum)"></span><div><div class="pn">Randolph Bourne (1886–1918)</div><div class="pe">el progresista cuyo idealismo se agrió antes de morir a los 32</div></div></div>
+
+        <p>El ensayo invoca a un muerto preciso. Bourne fue un escritor radical de la generación de la Primera Guerra Mundial, formado en Columbia, colaborador de revistas como <em>The Seven Arts</em>, que murió a los treinta y dos en la pandemia de gripe de 1918. Es el testigo que el texto necesita porque vivió el mismo desencanto que hoy regresa: ver cómo una promesa amplia se canjea por una más estrecha y más ruidosa.</p>
+        <p>De él viene la frase que el ensayo deja resonando: <strong>“la guerra es la salud del Estado”</strong>. Bourne sostenía que la guerra fusiona a la población con el poder, fabrica unidad por la vía del enemigo y silencia toda crítica en nombre de la emergencia. Frente a esa deriva propuso otra cosa: una <em>América transnacional</em>, tejida de muchas culturas en vez de fundida a la fuerza en un molde único.</p>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">a</span><span class="titulo">“La guerra es la salud del Estado”</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>La idea, tomada de su ensayo inconcluso <em>The State</em>, es que el Estado encuentra su mayor vigor en la guerra: el conflicto exterior cohesiona al rebaño, convierte la obediencia en virtud y vuelve sospechosa cualquier disidencia.</p>
+            <p>Por eso la liturgia militar resulta tan tentadora en un aniversario: ofrece unidad instantánea. Pero es una unidad prestada —se sostiene sobre un enemigo, no sobre un ideal compartido— y Bourne la veía como lo contrario de la verdadera vida democrática.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">b</span><span class="titulo">La América transnacional</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Contra el “crisol” que disuelve a todos en una conformidad anglosajona, Bourne imaginó una nación que se fortalecía precisamente por <strong>no</strong> homogeneizar: un tejido de culturas que conservan su hilo y enriquecen el conjunto.</p>
+            <p>Es el contra-mito que el ensayo levanta frente al relato militarista: dos historias de origen disponibles, una fácil y excluyente, otra difícil y plural. El texto sugiere que 2026 está eligiendo la primera.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">c</span><span class="titulo">Por qué su fantasma vuelve en 2026</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El ensayo lee el presente como un eco del de Bourne: frenesí de mercado, maquinaria de guerra, fervor deportador y pasión nativista. Una época de fractura social, fracaso moral y un poder hegemónico que cruje —con el cinismo en ascenso.</p>
+            <p>Y hay una advertencia en la biografía: el propio idealismo de Bourne se convirtió en desesperación antes de que la gripe lo matara. Su fantasma señala lo que pasa cuando la promesa transnacional se entrega a cambio de la militarista: el relato gana volumen y pierde alma.</p>
+          </div></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a>, <a href="https://en.wikipedia.org/wiki/Randolph_Bourne" target="_blank" rel="noopener">Randolph Bourne</a>, <a href="http://www.davidmhart.com/liberty/AmericanLibertarians/Bourne/1919-UntimelyPapers/index.html" target="_blank" rel="noopener">Untimely Papers (1919)</a></p>
+      </section>
+
+      <!-- IV -->
+      <section id="cinica">
+        <div class="eyebrow"><span class="num">IV</span><span class="tag">El diagnóstico</span></div>
+        <h2>La razón cínica: por qué el mito “perdió poder”</h2>
+        <div class="persona"><span class="dot" style="background:var(--olive)"></span><div><div class="pn">Peter Sloterdijk</div><div class="pe">filósofo de la “falsa conciencia ilustrada”</div></div></div>
+
+        <p>Aquí está el enigma que organiza el ensayo: si casi todos intuyen que el relato es, al menos en parte, falso, ¿por qué se sigue representando con tanta pompa? La respuesta la ofrece la fórmula de Sloterdijk: el cinismo moderno es una <strong>falsa conciencia ilustrada</strong>. Ya no es la inocencia de quien no sabe; es la lucidez de quien sabe y, aun así, sigue adelante. <em>Saben lo que hacen, y lo hacen de todos modos.</em></p>
+        <p>Eso explica con precisión la expresión “poder narrativo vaciado”. La forma sobrevive a la fe: continúan los fuegos, las banderas, los himnos, pero la creencia que los animaba ya no está. El nacionalismo cristiano y la liturgia militar funcionan entonces como una cáscara más dura y más sonora alrededor de un centro hueco. El volumen no es señal de convicción: es su sustituto.</p>
+        <p class="pull">La forma sobrevive a la fe. Suben los decibeles justo cuando baja la creencia.</p>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">a</span><span class="titulo">Falsa conciencia ilustrada</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>La conciencia ingenua cree el mito. La conciencia crítica lo denuncia. El cínico ilustrado hace algo distinto: lo ve a través, comprende que es un montaje y, sin embargo, ocupa su puesto en la ceremonia como si nada.</p>
+            <p>No es hipocresía simple —que finge creer— sino una distancia desencantada que igual cumple el rito. Es el clima anímico exacto de un aniversario donde se aplaude sin convicción.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">b</span><span class="titulo">El volumen como compensación</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Cuando una creencia es robusta, se sostiene en voz baja. Cuando se debilita, tiende a compensarse con estridencia: más solemnidad, más espectáculo, más exigencia de lealtad visible.</p>
+            <p>El ensayo lee la magnificencia del 250 en esa clave. La grandilocuencia no contradice el vaciamiento: lo confirma. Es la prótesis sonora de un relato que ya no se sostiene por sí mismo.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">c</span><span class="titulo">El kitsch patriótico</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Cuando el símbolo sagrado se desprende de su creencia, no desaparece: se convierte en utilería y en mercancía. La bandera deja de orientar y pasa a decorar; el rito deja de convocar y pasa a vender.</p>
+            <p>Ese deslizamiento del altar a la góndola es uno de los síntomas más claros del mito vaciado: se conserva la estética y se pierde la fe que le daba peso.</p>
+          </div></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a>, <a href="https://monoskop.org/images/7/7b/Sloterdijk_Peter_Critique_of_Cynical_Reason.pdf" target="_blank" rel="noopener">Sloterdijk — Crítica de la razón cínica</a></p>
+      </section>
+
+      <!-- V -->
+      <section id="jubileos">
+        <div class="eyebrow"><span class="num">V</span><span class="tag">El patrón histórico</span></div>
+        <h2>Tres jubileos, un mismo patrón</h2>
+        <div class="persona"><span class="dot" style="background:var(--terracotta)"></span><div><div class="pn">La Historiadora</div><div class="pe">guardiana de los aniversarios y sus letras pequeñas</div></div></div>
+
+        <p>Los aniversarios nunca son inocentes. Son los momentos en que una sociedad elige qué historias contar sobre sí misma, qué memorias honrar y qué futuro imaginar. Cada cincuenta años, Estados Unidos ha montado un jubileo, y cada uno ha funcionado como una <strong>prueba de esfuerzo</strong>: el instante en que los ideales fundacionales chocan en público con las ansiedades del presente, bajo guirnaldas y al ritmo de la música.</p>
+        <p>Mirados juntos, los tres grandes jubileos previos dibujan una lección clara. Los aniversarios que resuenan son los que <em>sostienen</em> la contradicción; los que se apagan son los que la <em>tapan</em>.</p>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">a</span><span class="titulo">1876 — la reconciliación con factura</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El centenario coincidió con el final de la Reconstrucción. Los blancos del Norte y del Sur se reconciliaron al precio de abandonar a los estadounidenses negros al terror de Jim Crow. El relato que se construyó —el de hermanos reunidos tras una discordia pasajera— borró las posibilidades revolucionarias que habían parpadeado tras la Guerra Civil.</p>
+            <p>Tuvo, eso sí, un motor narrativo: la guerra reciente como telón de fondo oscuro hacía que la supervivencia valiera la pena celebrarse. La contradicción estaba ahí, viva, aunque la fiesta la maquillara.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">b</span><span class="titulo">1926 — el jubileo sin motor</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El sesquicentenario fue plano y olvidable. No tenía herida que vendar ni drama que lo animara, y la disonancia era flagrante: se celebraba una “nación de inmigrantes” en plena época de cierre migratorio. El público lo intuyó, aunque no supiera nombrarlo.</p>
+            <p>El resultado fue un hito que se sintió como una obligación de calendario más que como un verdadero ajuste de cuentas nacional. La moraleja para cualquier organizador: un jubileo necesita un motor, y los motores funcionan con conflicto o con algo en juego.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">c</span><span class="titulo">1976 — sostener la contradicción</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El bicentenario llegó tras los terremotos de los años sesenta y apenas logró salir bien parado. Lo consiguió por una razón concreta: <strong>dejó espacio para la disidencia</strong>. No fingió que las contradicciones estuvieran resueltas antes de encender los fuegos.</p>
+            <p>De ahí la lección más útil del ensayo: una celebración que admite la distancia entre el ideal y la realidad no es una celebración fracasada, es una celebración democrática.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">d</span><span class="titulo">El patrón: cada jubileo es una prueba de esfuerzo</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El hilo que une 1876, 1926 y 1976 es que ninguno fue solo una fiesta: todos fueron <em>tests</em> de cuánta verdad podía soportar el relato nacional sin romperse. Los que aguantaron la tensión dejaron huella; el que la evitó se evaporó.</p>
+            <p>2026 hereda esa misma prueba, agravada por una polarización aguda. El riesgo es doble: caer en un mitin partidista que aliena a media nación, o en una papilla inofensiva que no conmueve a nadie.</p>
+          </div></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a>, <a href="https://historycollection.com/america-250-anniversary/" target="_blank" rel="noopener">Historia de los jubileos de independencia</a>, <a href="https://medium.com/@hfwnbq/prologue-the-250-year-mirror-87a49d620bf7" target="_blank" rel="noopener">El espejo de los 250 años</a></p>
+      </section>
+
+      <!-- VI -->
+      <section id="dosel">
+        <div class="eyebrow"><span class="num">VI</span><span class="tag">La capa teológica</span></div>
+        <h2>El dosel sagrado: la religión civil y su mutación</h2>
+        <div class="persona"><span class="dot" style="background:var(--teal)"></span><div><div class="pn">Robert Bellah</div><div class="pe">sociólogo de la “religión civil en América”</div></div></div>
+
+        <p>Hay una capa que el ensayo roza al hablar de “nacionalismo cristiano”, y conviene desplegarla. Bellah llamó <strong>religión civil</strong> al conjunto de símbolos, ritos y creencias que sacralizan a la nación por encima de cualquier iglesia: la Declaración leída casi como escritura, los fundadores como profetas, la bandera, el “bajo Dios”. Es un sistema sagrado paralelo, con sus salmos y sus mártires.</p>
+        <p>Esa religión civil tiene dos modos. En su modo <em>profético</em>, llama a la nación a estar a la altura de sus ideales y la juzga cuando los traiciona —es la voz de Lincoln o de Martin Luther King. En su modo <em>idolátrico</em>, en cambio, sacraliza a la nación misma, su poder, su sangre y su suelo. El nacionalismo cristiano que el ensayo señala es esa mutación idolátrica: funde cruz y bandera hasta convertir al Estado en objeto de culto.</p>
+        <p class="pull">La religión civil puede llamar a la nación a su conciencia o convertirla en su propio ídolo. La diferencia lo es todo.</p>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">a</span><span class="titulo">Qué es la religión civil</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>No es la fe de una denominación, sino una capa sagrada compartida que da a la vida pública sus liturgias: juramentos, monumentos, días santos cívicos. Permite que personas de credos distintos —o de ninguno— habiten un mismo relato trascendente sobre su país.</p>
+            <p>Mientras ese dosel está tenso, ofrece lenguaje común para la esperanza y para el duelo nacionales. Cuando se rasga, el lenguaje común se pierde.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">b</span><span class="titulo">Profética vs. idolátrica</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>La versión <strong>profética</strong> mantiene una distancia crítica: ama al país lo suficiente como para confrontarlo con sus propias promesas incumplidas. La <strong>idolátrica</strong> borra esa distancia: el país deja de ser juzgado por un ideal y pasa a ser el ideal.</p>
+            <p>Toda la diferencia está ahí. Una versión empuja a la nación a mejorar; la otra la blinda contra cualquier crítica y bautiza el poder tal como es.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">c</span><span class="titulo">El nacionalismo cristiano como mutación</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El nacionalismo cristiano no es simplemente cristianos que aman su país. Es la fusión que confunde el reino con la república: pone la cruz al servicio de la bandera y convierte la pertenencia nacional en una prueba de fe.</p>
+            <p>Para una mirada teológica seria, eso es precisamente idolatría: dar a lo penúltimo —la nación— el lugar de lo último. Y por eso vacía: un símbolo que se idolatra deja de señalar más allá de sí mismo.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">d</span><span class="titulo">El dosel roto: dos Américas, dos altares</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Cuando la memoria sagrada compartida se fractura, no queda una sola religión civil debilitada: quedan <strong>varias en paralelo</strong>, cada una venerando una América distinta. Unos celebran una nación que por fin ajusta cuentas con sus pecados de origen; otros perciben una civilización bajo asalto.</p>
+            <p>El mito no murió: se partió. Y un dosel partido ya no cubre a todos bajo la misma historia —de ahí que en 2026 no haya un relato de consenso, sino realidades paralelas que apenas se tocan.</p>
+          </div></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a>, <a href="https://en.wikipedia.org/wiki/Civil_religion" target="_blank" rel="noopener">Religión civil (Bellah)</a>, <a href="https://medium.com/@hfwnbq/prologue-the-250-year-mirror-87a49d620bf7" target="_blank" rel="noopener">El espejo de los 250 años</a></p>
+      </section>
+
+      <!-- VII -->
+      <section id="carpinteria">
+        <div class="eyebrow"><span class="num">VII</span><span class="tag">La capa de oficio</span></div>
+        <h2>La carpintería del relato</h2>
+        <div class="persona"><span class="dot" style="background:var(--rust)"></span><div><div class="pn">La Guionista</div><div class="pe">arquitecta de historias; piensa en estructura, no en moraleja</div></div></div>
+
+        <p>Bajemos del cielo de las ideas al taller. ¿Qué hace que <em>cualquier</em> historia funcione? Tres cosas: algo en juego, un conflicto y el coraje de sostener la contradicción en lugar de borrarla. Es pura carpintería, y explica por qué unos jubileos prendieron y otros se apagaron.</p>
+        <p>1876 tenía a la Guerra Civil como telón oscuro: la supervivencia valía la pena celebrarse. 1926 no tenía herida ni motor, y por eso se sintió como un trámite. La lección de oficio es contundente: un relato sin conflicto es una entrada de calendario. Y la friction —la incomodidad de admitir la brecha entre ideal y realidad— no es un defecto del relato: es lo que le da sentido.</p>
+        <p class="pull">La fricción no estropea la historia. La fricción es la historia.</p>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">a</span><span class="titulo">Toda historia necesita un motor</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Sin algo en juego, no hay relato: hay decorado. El motor de un jubileo es la tensión real entre lo que el país dice ser y lo que está siendo. Esa tensión es la que mantiene al público inclinado hacia adelante.</p>
+            <p>Quitarle el conflicto a un aniversario para que no incomode a nadie es como quitarle el motor a un coche para que no haga ruido: queda silencioso y no va a ninguna parte.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">b</span><span class="titulo">Sostener vs. tapar la contradicción</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>El movimiento decisivo, dice el ensayo, es <strong>sostener</strong> la contradicción a la vista en vez de empapelarla. Una celebración que reconoce la distancia entre el ideal y la realidad no se debilita: se vuelve más honesta y, paradójicamente, más conmovedora.</p>
+            <p>La pregunta para 2026 es si sus organizadores tendrán el temple de seguir ese ejemplo, o si la presión por proyectar unidad limará la fricción que da sentido a un jubileo.</p>
+          </div></div>
+        </div>
+
+        <div class="persiana">
+          <button class="persiana__header" aria-expanded="false">
+            <span class="marca">c</span><span class="titulo">Por qué la unidad forzada aplana el relato</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="persiana__panel"><div class="persiana__inner">
+            <p>Una celebración nacional en tiempos de polarización corre hacia dos fracasos opuestos: el <em>mitin</em>, que entusiasma a una mitad y expulsa a la otra; y el <em>beige</em>, tan inofensivo que no mueve a nadie. Ambos comparten un defecto: evitan la contradicción.</p>
+            <p>La unidad impuesta de antemano aplana porque borra lo único que daba relieve: el desacuerdo real sobre qué significa el país. Recuperar poder narrativo no pasa por más espectáculo, sino por más verdad puesta en juego.</p>
+          </div></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a>, <a href="https://historycollection.com/america-250-anniversary/" target="_blank" rel="noopener">Historia de los jubileos</a></p>
+      </section>
+
+      <!-- VIII -->
+      <section id="mesa">
+        <div class="eyebrow"><span class="num">VIII</span><span class="tag">Meta-diálogo</span></div>
+        <h2>Mesa redonda: las seis voces discuten</h2>
+        <p>Las seis voces saben que son personas convocadas por una página de estudio. Aceptan el juego. Lo que ninguna resuelve sola, lo discuten juntas.</p>
+
+        <div class="mesa">
+          <div class="turno"><span class="quien q-hist">Historiadora</span><span class="dice">Queda abierta la sesión. Tema único: ¿el mito de origen está muerto, dormido o solo cambió de manos?</span></div>
+          <div class="turno"><span class="quien q-bourne">Bourne</span><span class="dice">Llevo ciento ocho años muerto y me siguen convocando cada julio. Si yo aprendí algo es esto: el mito militarista es el fácil. El transnacional es el difícil. Y las naciones, bajo presión, eligen siempre el fácil.</span></div>
+          <div class="turno"><span class="quien q-mito">Mitólogo</span><span class="dice">No está muerto, está deshabitado. Toda nación necesita un relato; la pregunta es si los estadounidenses todavía pueden ubicarse dentro del suyo. Demasiados ya no se reconocen en el espejo.</span></div>
+          <div class="turno"><span class="quien q-slot">Sloterdijk</span><span class="dice">Permítanme aguar la fiesta, que para eso me trajeron. Que nadie lo crea no es el problema. El problema es que igual lo representan. La incredulidad con buena puntería ceremonial: esa es la enfermedad.</span></div>
+          <div class="turno"><span class="quien q-bellah">Bellah</span><span class="dice">Yo lo diría distinto: el mito no se vació, se <em>partió</em>. Ahora hay dos altares. Cada bando reza a una América diferente y llama traición a la liturgia del otro.</span></div>
+          <div class="turno"><span class="quien q-guion">Guionista</span><span class="dice">Como nota de oficio: no se arregla un relato hueco con más pirotecnia. Se arregla con algo en juego. Y poner algo en juego significa admitir la herida. Nadie quiere admitir la herida en su propio cumpleaños.</span></div>
+          <div class="turno"><span class="quien q-hist">Historiadora</span><span class="dice">1976 lo logró a duras penas justamente porque dejó entrar la disidencia. 1926 se evaporó por evitarla. El patrón es tozudo.</span></div>
+          <div class="turno"><span class="quien q-slot">Sloterdijk</span><span class="dice">Y aun sabiéndolo, en 2026 subirán el volumen. El volumen siempre llega cuando se va la fe. Es prótesis, no pulso.</span></div>
+          <div class="turno"><span class="quien q-bourne">Bourne</span><span class="dice">Entonces háganme caso por una vez: la historia que vale la pena contar es la difícil, la que admite que la promesa sigue impaga. La fácil ya la probaron. Miren cómo terminé yo creyendo en ella.</span></div>
+          <div class="turno"><span class="quien q-mito">Mitólogo</span><span class="dice">Un mito se rehabita cuando vuelve a hacerle sitio a quien quedó fuera. No se restaura intacto ni se demuele: se vuelve a contar con más gente adentro.</span></div>
+          <div class="turno"><span class="quien q-bellah">Bellah</span><span class="dice">Profético, no idolátrico. Amar al país lo suficiente para confrontarlo, en vez de bautizar el poder tal como está.</span></div>
+          <div class="turno"><span class="quien q-guion">Guionista</span><span class="dice">Resumo el encargo, por si alguien toma notas: stakes, conflicto, y el coraje de no cerrar la herida antes de tiempo. Lo demás es decorado.</span></div>
+          <div class="turno"><span class="quien q-hist">Historiadora</span><span class="dice">Se levanta la sesión sin veredicto, a propósito. Un jubileo no es una vuelta de la victoria: es una prueba de esfuerzo. La de 2026 mide una sola cosa —si alguien tiene el temple de fracasar con honestidad antes que triunfar con cinismo.</span></div>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a></p>
+      </section>
+
+      <!-- IX -->
+      <section id="espejo">
+        <div class="eyebrow"><span class="num">IX</span><span class="tag">Síntesis</span></div>
+        <h2>El espejo de los doscientos cincuenta años</h2>
+        <p>El ensayo, al final, sostiene un espejo de doscientos cincuenta años frente al país. Y lo que devuelve no es la imagen que esperaríamos. El mito de origen no está siendo asesinado por sus críticos; está siendo vaciado por quienes lo gritan más fuerte sin creerlo. El peligro mayor no es la duda, sino el cinismo con buena producción.</p>
+        <p>La salida que el texto deja entrever no es nostálgica ni demoledora. El poder narrativo no vuelve restaurando el viejo mito intacto, ni dinamitándolo, sino contando una historia más verdadera: una lo bastante grande como para sostener la contradicción en lugar de empapelarla. Un relato sigue vivo solo mientras sus miembros pueden encontrarse dentro de él —y eso, hoy, exige hacerle sitio a quien quedó afuera.</p>
+
+        <div class="llevar">
+          <h3>☕ Para llevar</h3>
+          <ol>
+            <li><strong>Un mito muere por inercia, no por ataque.</strong> El riesgo es representarlo sin fe, no discutirlo.</li>
+            <li><strong>El volumen delata el vaciamiento.</strong> Más pólvora y más banderas suelen marcar menos creencia, no más.</li>
+            <li><strong>Los jubileos son pruebas de esfuerzo.</strong> Resuenan los que sostienen la contradicción; se apagan los que la tapan (1876 y 1976 frente a 1926).</li>
+            <li><strong>El nacionalismo cristiano vacía lo que toca.</strong> Idolatrar el símbolo le impide señalar más allá de sí mismo.</li>
+            <li><strong>La fricción es el motor.</strong> Sin algo en juego, una celebración es decorado; admitir la herida es lo que le devuelve sentido.</li>
+          </ol>
+        </div>
+
+        <p class="fuentes"><span class="fl">Fuentes</span><a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">The Guardian — America 250</a>, <a href="https://zeteo.com/p/mythical-america-author-confronts" target="_blank" rel="noopener">Glaude — Mythical America</a>, <a href="https://www.prismnews.com/news/americas-250th-anniversary-aims-to-celebrate-resilience-and" target="_blank" rel="noopener">America250 — marco oficial</a>, <a href="https://www.thetraveler.org/indigenous-voices-reshape-narrative-ahead-of-america-250/" target="_blank" rel="noopener">Voces indígenas y los 250</a></p>
+
+        <footer>
+          <p><span class="fbrand">☕ Café con Claude</span> — Lectura crítica del ensayo de <em>The Guardian</em>, “America 250: origin myth and narrative power” (28 jun 2026). Página de estudio: las ideas se parafrasean y se desarman; el texto original es de sus autores. <a href="https://www.theguardian.com/us-news/ng-interactive/2026/jun/28/america-250-origin-myth-narrative-power" target="_blank" rel="noopener">Ir a la fuente</a>.</p>
+        </footer>
+
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // ---- progress bar ----
+  var progress = document.getElementById('progress');
+  function updateProgress(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    progress.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  // ---- persianas (accordions) ----
+  var headers = document.querySelectorAll('.persiana__header');
+  headers.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var persiana = btn.closest('.persiana');
+      var panel = persiana.querySelector('.persiana__panel');
+      var willOpen = !persiana.classList.contains('is-open');
+      persiana.classList.toggle('is-open', willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      if (willOpen){
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      } else {
+        // collapse from possible 'none'
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+        void panel.offsetHeight; // force reflow
+        panel.style.maxHeight = '0px';
+      }
+    });
+  });
+  document.querySelectorAll('.persiana__panel').forEach(function(panel){
+    panel.addEventListener('transitionend', function(e){
+      if (e.propertyName !== 'max-height') return;
+      var persiana = panel.closest('.persiana');
+      if (persiana.classList.contains('is-open')){
+        panel.style.maxHeight = 'none'; // allow content/resize to grow
+      }
+    });
+  });
+
+  // ---- scroll-spy ----
+  var navLinks = document.querySelectorAll('nav.toc a');
+  var linkById = {};
+  navLinks.forEach(function(a){ linkById[a.getAttribute('href').slice(1)] = a; });
+  var sections = document.querySelectorAll('main section[id]');
+  if ('IntersectionObserver' in window){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          navLinks.forEach(function(a){ a.classList.remove('is-active'); });
+          var link = linkById[entry.target.id];
+          if (link) link.classList.add('is-active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function(s){ spy.observe(s); });
+  }
+
+  // ---- mobile nav (hamburger) ----
+  var ham = document.getElementById('ham');
+  var scrim = document.getElementById('scrim');
+  function setNav(open){
+    document.body.classList.toggle('nav-open', open);
+    ham.setAttribute('aria-expanded', open ? 'true' : 'false');
+    ham.setAttribute('aria-label', open ? 'Cerrar navegación' : 'Abrir navegación');
+  }
+  ham.addEventListener('click', function(){ setNav(!document.body.classList.contains('nav-open')); });
+  scrim.addEventListener('click', function(){ setNav(false); });
+  navLinks.forEach(function(a){
+    a.addEventListener('click', function(){ if (window.innerWidth < 900) setNav(false); });
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setNav(false); });
+</script>
+</body>
+</html>

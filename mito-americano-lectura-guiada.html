@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El mito americano · Lectura guiada — Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4ECDD;
+    --paper:#FBF6EC;
+    --paper-2:#F0E6D3;
+    --ink:#2A2420;
+    --muted:#7A6C58;
+    --soft:#9A8A72;
+    --terracotta:#B14B2C;
+    --terracotta-d:#974024;
+    --amber:#C2872E;
+    --olive:#6B6F3C;
+    --plum:#6E3552;
+    --rule:#E4D7BE;
+    --rule-d:#D8C7A6;
+    --shadow:0 1px 0 rgba(42,36,32,.04), 0 18px 40px -28px rgba(42,36,32,.35);
+    --maxw:50rem;
+    --sidebar:16.5rem;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(194,135,46,.10), transparent 60%),
+      radial-gradient(1000px 500px at -10% 110%, rgba(110,53,82,.07), transparent 60%),
+      var(--cream);
+    color:var(--ink);
+    font-family:"Spectral",Georgia,serif;
+    font-weight:400;
+    font-size:1.075rem;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* ---------- reading progress ---------- */
+  #progress{position:fixed;top:0;left:0;right:0;height:4px;background:transparent;z-index:60}
+  #progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--terracotta),var(--amber));transition:width .08s linear}
+
+  /* ---------- layout ---------- */
+  .shell{display:grid;grid-template-columns:var(--sidebar) 1fr;align-items:start;max-width:78rem;margin:0 auto}
+
+  /* ---------- sidebar ---------- */
+  aside{
+    position:sticky;top:0;height:100vh;
+    padding:2.4rem 1.6rem 2rem 2.2rem;
+    border-right:1px solid var(--rule);
+    display:flex;flex-direction:column;gap:1.5rem;
+    background:linear-gradient(180deg, rgba(251,246,236,.5), rgba(251,246,236,0));
+  }
+  .brand{display:flex;align-items:center;gap:.55rem;font-family:"Fraunces",serif;font-weight:600;font-size:1.18rem;letter-spacing:.01em}
+  .brand .dot{width:.62rem;height:.62rem;border-radius:50%;background:var(--terracotta);box-shadow:0 0 0 3px rgba(177,75,44,.16)}
+  .brand small{display:block;font-family:"Spectral",serif;font-weight:400;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:.15rem}
+  nav.toc{margin-top:.2rem}
+  nav.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.1rem}
+  nav.toc a{
+    display:grid;grid-template-columns:1.9rem 1fr;align-items:baseline;gap:.5rem;
+    padding:.5rem .55rem;border-radius:.5rem;text-decoration:none;color:var(--muted);
+    transition:background .2s,color .2s;line-height:1.3;
+  }
+  nav.toc a .rn{font-family:"Fraunces",serif;font-weight:600;font-size:.92rem;color:var(--soft);font-feature-settings:"lnum";letter-spacing:.02em}
+  nav.toc a .lbl{font-size:.95rem}
+  nav.toc a:hover{background:rgba(216,199,166,.28);color:var(--ink)}
+  nav.toc a.active{background:rgba(177,75,44,.10);color:var(--terracotta-d)}
+  nav.toc a.active .rn{color:var(--terracotta)}
+  .aside-foot{margin-top:auto;font-size:.78rem;line-height:1.6;color:var(--soft);border-top:1px solid var(--rule);padding-top:1rem}
+
+  /* ---------- main ---------- */
+  main{padding:3.4rem clamp(1.2rem,4vw,3.4rem) 5rem;min-width:0}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+
+  /* hero */
+  .hero{margin-bottom:2.6rem}
+  .eyebrow{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--terracotta);font-weight:500;margin:0 0 1.1rem}
+  h1{
+    font-family:"Fraunces",serif;font-weight:600;
+    font-size:clamp(2.1rem,5.4vw,3.35rem);line-height:1.04;letter-spacing:-.012em;
+    margin:0 0 .9rem;color:var(--ink);
+  }
+  .deck{font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:clamp(1.15rem,2.6vw,1.4rem);line-height:1.4;color:var(--plum);margin:0 0 1.4rem;max-width:38rem}
+  .source-line{font-size:.92rem;color:var(--muted);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:.75rem 0;margin-bottom:1.9rem}
+  .source-line b{font-weight:600;color:var(--ink)}
+  .orient{font-size:1.1rem}
+  .orient p{margin:0 0 1.05rem}
+  .orient p:last-child{margin-bottom:0}
+  .lede::first-letter{
+    font-family:"Fraunces",serif;font-weight:600;float:left;font-size:3.5rem;line-height:.78;
+    padding:.18rem .55rem .1rem 0;color:var(--terracotta);
+  }
+
+  /* ---------- persianas (accordions) ---------- */
+  .persianas{margin-top:2.2rem;display:flex;flex-direction:column;gap:1rem}
+  .persiana{
+    background:var(--paper);
+    border:1px solid var(--rule-d);
+    border-radius:.9rem;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    scroll-margin-top:1.2rem;
+  }
+  .persiana-head{
+    width:100%;display:grid;grid-template-columns:2.6rem 1fr 1.4rem;align-items:center;gap:.85rem;
+    background:transparent;border:0;cursor:pointer;text-align:left;
+    padding:1.15rem 1.3rem;color:inherit;font-family:inherit;
+  }
+  .persiana-head:focus-visible{outline:2.5px solid var(--terracotta);outline-offset:-3px;border-radius:.6rem}
+  .persiana-head .num{
+    font-family:"Fraunces",serif;font-weight:600;font-size:1.5rem;color:var(--terracotta);
+    line-height:1;justify-self:center;font-feature-settings:"lnum"
+  }
+  .persiana.open .persiana-head .num{color:var(--terracotta-d)}
+  .head-text{display:flex;flex-direction:column;gap:.18rem;min-width:0}
+  .head-text .kicker{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);font-weight:500}
+  .head-text .title{font-family:"Fraunces",serif;font-weight:600;font-size:1.32rem;line-height:1.18;letter-spacing:-.005em}
+  .chev{width:1.1rem;height:1.1rem;position:relative;justify-self:end;color:var(--muted)}
+  .chev::before,.chev::after{content:"";position:absolute;background:currentColor;border-radius:2px}
+  .chev::before{left:0;right:0;top:50%;height:2px;transform:translateY(-50%)}
+  .chev::after{top:0;bottom:0;left:50%;width:2px;transform:translateX(-50%);transition:opacity .3s,transform .3s}
+  .persiana.open > .persiana-head .chev::after{opacity:0;transform:translateX(-50%) rotate(90deg)}
+
+  .persiana-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1)}
+  .persiana.open > .persiana-body{grid-template-rows:1fr}
+  .persiana-inner{overflow:hidden;min-height:0}
+  .persiana-content{padding:.2rem 1.5rem 1.55rem;border-top:1px solid var(--rule)}
+  .persiana-content > p:first-child{margin-top:1.15rem}
+  .persiana-content p{margin:0 0 1.05rem}
+  .persiana-content p:last-child{margin-bottom:0}
+
+  /* pull quote */
+  .pull{
+    font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.28rem;line-height:1.32;
+    color:var(--plum);margin:1.3rem 0 1.5rem;padding:.2rem 0 .2rem 1.3rem;
+    border-left:3px solid var(--terracotta);
+  }
+  .pull cite{display:block;font-style:normal;font-family:"Spectral",serif;font-weight:500;
+    font-size:.82rem;letter-spacing:.04em;color:var(--muted);margin-top:.6rem;text-transform:none}
+  .pull cite::before{content:"— "}
+
+  /* sub-persianas */
+  .sub{display:flex;flex-direction:column;gap:.65rem;margin-top:1.3rem}
+  .subp{border:1px solid var(--rule);border-radius:.65rem;background:var(--paper-2);overflow:hidden}
+  .subp-head{
+    width:100%;display:flex;align-items:center;gap:.7rem;justify-content:space-between;
+    background:transparent;border:0;cursor:pointer;text-align:left;padding:.85rem 1rem;
+    font-family:"Fraunces",serif;font-weight:600;font-size:1.04rem;color:var(--ink);
+  }
+  .subp-head:focus-visible{outline:2.5px solid var(--terracotta);outline-offset:-3px;border-radius:.5rem}
+  .subp-head .tag{font-family:"Spectral",serif;font-weight:500;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    color:#fff;background:var(--olive);padding:.16rem .5rem;border-radius:1rem;white-space:nowrap}
+  .subp-head .tag.t-amber{background:var(--amber)}
+  .subp-head .tag.t-plum{background:var(--plum)}
+  .subp-head .tag.t-terra{background:var(--terracotta)}
+  .subp-head .ttl{flex:1;min-width:0}
+  .subp-head .mk{color:var(--muted);font-family:"Spectral",serif;font-weight:600;font-size:1.2rem;line-height:1;transition:transform .3s}
+  .subp.open .subp-head .mk{transform:rotate(45deg)}
+  .subp-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
+  .subp.open > .subp-body{grid-template-rows:1fr}
+  .subp-inner{overflow:hidden;min-height:0}
+  .subp-content{padding:.1rem 1.05rem 1.1rem;font-size:1.02rem}
+  .subp-content > p:first-child{margin-top:.9rem}
+  .subp-content p{margin:0 0 .9rem}
+  .subp-content p:last-child{margin-bottom:0}
+
+  /* balance note */
+  .balance{background:rgba(107,111,60,.08);border:1px dashed var(--rule-d);border-radius:.6rem;padding:.1rem 1.05rem 1.05rem}
+  .balance .badge{display:inline-block;font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--olive);font-weight:600;margin-top:.95rem}
+
+  /* mesa redonda voices */
+  .voice{border-left:3px solid var(--rule-d);padding:.1rem 0 .1rem 1.15rem;margin:1.35rem 0}
+  .voice .who{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin-bottom:.4rem}
+  .voice .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.1rem}
+  .voice .role{font-size:.82rem;color:var(--muted);font-style:italic}
+  .voice p{margin:0}
+  .voice.v-olive{border-color:var(--olive)} .voice.v-olive .name{color:var(--olive)}
+  .voice.v-plum{border-color:var(--plum)} .voice.v-plum .name{color:var(--plum)}
+  .voice.v-terra{border-color:var(--terracotta)} .voice.v-terra .name{color:var(--terracotta-d)}
+  .voice.v-amber{border-color:var(--amber)} .voice.v-amber .name{color:#9a6a1f}
+  .voice.v-ink{border-color:var(--ink)} .voice.v-ink .name{color:var(--ink)}
+  .panel-note{font-size:.86rem;font-style:italic;color:var(--muted);margin:.2rem 0 1.4rem}
+
+  /* glossary */
+  .gloss{margin:1.2rem 0 0}
+  .gloss dt{font-family:"Fraunces",serif;font-weight:600;font-size:1.04rem;color:var(--terracotta-d);margin-top:1.05rem}
+  .gloss dd{margin:.2rem 0 0;font-size:1rem;color:var(--ink)}
+
+  /* fuentes / footer */
+  footer{max-width:var(--maxw);margin:3rem auto 0;padding-top:1.8rem;border-top:2px solid var(--rule-d)}
+  footer h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.25rem;margin:0 0 1rem}
+  .fuente-primary{font-size:.98rem;margin:0 0 1.2rem}
+  .fuente-primary b{font-weight:600}
+  .links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.55rem}
+  .links a{color:var(--terracotta-d);text-decoration:none;border-bottom:1px solid rgba(177,75,44,.3);font-weight:500;transition:border-color .2s}
+  .links a:hover{border-color:var(--terracotta-d)}
+  .links span{color:var(--muted);font-size:.92rem}
+  .colophon{margin-top:2.2rem;font-size:.84rem;color:var(--soft);display:flex;align-items:center;gap:.5rem}
+  .colophon .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--terracotta);opacity:.7}
+
+  a.inl{color:var(--terracotta-d);text-decoration:none;border-bottom:1px solid rgba(177,75,44,.28)}
+  a.inl:hover{border-color:var(--terracotta-d)}
+
+  /* ---------- mobile ---------- */
+  #burger{display:none}
+  #backdrop{display:none}
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr}
+    aside{
+      position:fixed;z-index:50;top:0;left:0;width:min(82vw,20rem);height:100vh;
+      transform:translateX(-102%);transition:transform .32s cubic-bezier(.4,0,.2,1);
+      background:var(--cream);border-right:1px solid var(--rule-d);
+      box-shadow:0 0 60px -10px rgba(42,36,32,.4);overflow-y:auto
+    }
+    body.nav-open aside{transform:translateX(0)}
+    #burger{
+      display:flex;align-items:center;gap:.5rem;position:fixed;z-index:55;top:.85rem;left:.85rem;
+      background:var(--paper);border:1px solid var(--rule-d);border-radius:.6rem;
+      padding:.55rem .8rem;cursor:pointer;font-family:"Spectral",serif;font-weight:500;
+      font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);
+      box-shadow:var(--shadow)
+    }
+    #burger .bars{width:1.1rem;height:.8rem;position:relative;display:inline-block}
+    #burger .bars::before,#burger .bars::after,#burger .bars span{content:"";position:absolute;left:0;right:0;height:2px;background:var(--terracotta);border-radius:2px}
+    #burger .bars::before{top:0}#burger .bars span{top:50%;transform:translateY(-50%)}#burger .bars::after{bottom:0}
+    body.nav-open #backdrop{display:block;position:fixed;inset:0;z-index:45;background:rgba(42,36,32,.42)}
+    main{padding-top:4.6rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"><span></span></div>
+
+<button id="burger" aria-label="Abrir índice"><span class="bars"><span></span></span>Índice</button>
+<div id="backdrop"></div>
+
+<div class="shell">
+
+  <aside id="sidebar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>Café con Claude
+        <small>Lectura guiada</small>
+      </span>
+    </div>
+    <nav class="toc" aria-label="Índice del documento">
+      <ol>
+        <li><a href="#sec-1"><span class="rn">I</span><span class="lbl">El matrimonio sórdido</span></a></li>
+        <li><a href="#sec-2"><span class="rn">II</span><span class="lbl">Los dos pilares</span></a></li>
+        <li><a href="#sec-3"><span class="rn">III</span><span class="lbl">¿Qué significa el 4 de julio?</span></a></li>
+        <li><a href="#sec-4"><span class="rn">IV</span><span class="lbl">Una herencia por nacer</span></a></li>
+        <li><a href="#sec-5"><span class="rn">V</span><span class="lbl">La mesa redonda</span></a></li>
+        <li><a href="#sec-6"><span class="rn">VI</span><span class="lbl">Glosario</span></a></li>
+      </ol>
+    </nav>
+    <div class="aside-foot">
+      Una guía de lectura del ensayo de Nikhil Pal Singh.<br>
+      Abre cada persiana para avanzar por el argumento.
+    </div>
+  </aside>
+
+  <main>
+    <div class="wrap">
+
+      <header class="hero">
+        <p class="eyebrow">El mito americano · ensayo de Nikhil Pal Singh</p>
+        <h1>El mito americano siempre se pagó a costa de alguien</h1>
+        <p class="deck">Y hoy está prácticamente en ruinas. Una lectura guiada, en vísperas del aniversario 250 de la Independencia.</p>
+        <p class="source-line"><b>Fuente:</b> Nikhil Pal Singh, <i>The Guardian</i>, 28 de junio de 2026 &nbsp;·&nbsp; Guía de estudio en español, no es el texto original.</p>
+
+        <div class="orient">
+          <p class="lede">En vísperas del aniversario 250 de la Declaración de Independencia, el historiador Nikhil Pal Singh —profesor de la Universidad de Nueva York— escribe una especie de elegía. Su tesis es incómoda y elegante: el relato fundacional de Estados Unidos nunca descansó sobre un solo pilar, sino sobre dos que casi nunca se nombran juntos —la <b>emancipación</b> (libertad, igualdad) y la <b>expansión</b> (territorio, frontera, imperio)—, y ambos estuvieron desde el principio enredados con la esclavitud y la conquista.</p>
+          <p>Lo que distingue al momento actual, dice Singh, es que el pilar expansionista ha vuelto «desamarrado» de su socio emancipador: el imperio sigue en marcha, pero ya sin una historia moral que lo justifique.</p>
+          <p>Esta guía no reemplaza el ensayo: lo ordena. Cada persiana abre uno de los movimientos del argumento, con nombres y fechas clave traducidos y explicados. Al final hay una <b>mesa redonda</b> —voces que discuten el texto desde la historia, la sociología de la religión y la teología— y un glosario. La voz de Singh es deliberadamente polémica; aquí se reporta su tesis con fidelidad y luego se la somete a contrapesos. Lee con lápiz.</p>
+        </div>
+      </header>
+
+      <div class="persianas">
+
+        <!-- ================= I ================= -->
+        <section class="persiana open" id="sec-1">
+          <button class="persiana-head" aria-expanded="true">
+            <span class="num">I</span>
+            <span class="head-text"><span class="kicker">El diagnóstico</span><span class="title">El matrimonio sórdido</span></span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="persiana-body"><div class="persiana-inner"><div class="persiana-content">
+            <p class="pull">La causa de América es la causa de toda la humanidad.<cite>Thomas Paine, <i>Sentido común</i> (1776)</cite></p>
+            <p>Singh arranca con <b>Randolph Bourne</b>, intelectual disidente que escribió durante la matanza de la Primera Guerra Mundial. Bourne describió la herencia revolucionaria estadounidense como un <i>matrimonio sórdido</i> entre el capitalista del pueblo y el patriarca de la plantación: las hermosas palabras sobre libertad y democracia nacieron, según él, encadenadas a quienes contaban el dinero y poseían seres humanos como propiedad.</p>
+            <p>Para Singh, el presente confirma a Bourne. Describe la administración de Donald Trump como una de las más corruptas e ineptas de la historia del país, y lee el aniversario 250 como una celebración vaciada de su antigua fuerza: un relato de origen revestido de nacionalismo cristiano y militarismo ostentoso, pero sin el poder que alguna vez tuvo de presentarse como un acontecimiento de alcance universal.</p>
+            <p>No siempre fue así. Singh recuerda que la idea redentora —resumida en la frase de Paine— todavía resonaba hace poco. La noche de su elección, en 2008, <b>Barack Obama</b> presentó su victoria como prueba de que el país podía acortar la distancia entre sus ideales democráticos y su realidad imperfecta. Su discurso trazó un arco —del sufragio femenino al New Deal, de los derechos civiles al matrimonio igualitario— como una marcha continua hacia «una unión más perfecta». Ese relato universalista, observa Singh, se forjó durante la Segunda Guerra Mundial sobre banderas antifascistas y antirracistas que convencieron incluso a las élites conservadoras: la historia de Estados Unidos quedó definida como una serie de hitos emancipadores que legitimaban a la vez el orden interno y el liderazgo global.</p>
+          </div></div></div>
+        </section>
+
+        <!-- ================= II ================= -->
+        <section class="persiana" id="sec-2">
+          <button class="persiana-head" aria-expanded="false">
+            <span class="num">II</span>
+            <span class="head-text"><span class="kicker">El análisis central</span><span class="title">Los dos pilares: emancipación y expansión</span></span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="persiana-body"><div class="persiana-inner"><div class="persiana-content">
+            <p class="pull">¿Qué es para el esclavo el 4 de julio?<cite>Frederick Douglass (1852)</cite></p>
+            <p>Aquí está el corazón analítico del ensayo. <b>Emancipación y expansión</b>, dice Singh, son pilares gemelos del relato revolucionario. Ambos están atados a las historias de esclavitud y libertad, de fronteras móviles y del alcance continental y global de Estados Unidos; ambos se usaron para sostener la imagen de una democracia que ofrecía oportunidad y prosperidad a la mayoría. En el presente, esa «dialéctica virtuosa» entre expansión y emancipación se ha venido abajo, corroída por la desigualdad creciente, los retrocesos en derechos civiles, la violencia policial y guerras impopulares.</p>
+
+            <div class="sub">
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag">1852–1865</span><span class="ttl">De Douglass a Dred Scott</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>En 1852, en otro momento de incertidumbre, Frederick Douglass —antes esclavizado— preguntó qué significaba el 4 de julio para quienes seguían en cadenas. La recién aprobada Ley de Esclavos Fugitivos hacía que ni los estados libres pudieran ofrecerle refugio frente a la captura y la devolución a la esclavitud.</p>
+                  <p>En 1857, la Corte Suprema le respondió con el fallo <b>Dred Scott</b>: los africanos y sus descendientes nunca podrían ser ciudadanos, pues no tenían —en la fórmula infame del juez Taney— derechos «que el hombre blanco estuviera obligado a respetar». Hizo falta una guerra civil sangrienta para responder afirmativamente a Douglass, y otro siglo para que los afroamericanos alcanzaran derechos civiles sustantivos. La ambivalencia y los retrocesos, advierte Singh, persisten hasta hoy.</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag t-plum">2019</span><span class="ttl">El Proyecto 1619 y la síntesis rota</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>En años recientes creció el número de voces que rompieron con esa «historia de consenso». La más sonada fue el <b>Proyecto 1619</b> del <i>New York Times</i> (2019), que propuso una especie de «nueva fundación». Su autora principal, Nikole Hannah-Jones, sostuvo que la guerra de independencia estuvo motivada en parte por el deseo de proteger la esclavitud.</p>
+                  <p>Pero —observa Singh— tanto el proyecto como el debate que desató pasaron por alto algo decisivo: el hambre de tierra y la expansión hacia el oeste como motor de las energías revolucionarias. Para Singh, lo más importante del Proyecto 1619 no fueron sus tesis particulares, sino la demostración de que la vieja síntesis entre la historia nacionalista y la progresista está rota. El significado de la fundación —y su relación con el presente— quedó, en sus palabras, «en disputa».</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag t-amber">Contrapeso</span><span class="ttl">La otra orilla del debate</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content balance">
+                  <span class="badge">Para equilibrar la lectura</span>
+                  <p>Conviene salir un momento del ensayo. Las afirmaciones más fuertes del Proyecto 1619 fueron cuestionadas por historiadores de prestigio y de orientaciones diversas —entre ellos Gordon Wood, James McPherson, Sean Wilentz, James Oakes y Victoria Bynum—, que objetaron datos concretos; el <i>New York Times</i> terminó matizando la idea de que proteger la esclavitud fuera la motivación «principal» de la revolución.</p>
+                  <p>Existe además una lectura rival, sostenida con seriedad: que la misma fundación que toleró la esclavitud engendró los primeros grandes movimientos antiesclavistas del mundo moderno, y que la Declaración aportó el lenguaje con el que la esclavitud sería luego abolida. Singh no niega del todo esta tensión —la menciona—, pero su apuesta interpretativa se inclina al otro lado. Tenerlo presente es parte de leer bien.</p>
+                </div></div></div>
+              </div>
+            </div>
+          </div></div></div>
+        </section>
+
+        <!-- ================= III ================= -->
+        <section class="persiana" id="sec-3">
+          <button class="persiana-head" aria-expanded="false">
+            <span class="num">III</span>
+            <span class="head-text"><span class="kicker">La historia del rito</span><span class="title">¿Qué significa el 4 de julio?</span></span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="persiana-body"><div class="persiana-inner"><div class="persiana-content">
+            <p class="pull">La cuestión de la esclavitud fue apenas un incidente.<cite>Frederick Jackson Turner (1893), sobre la tesis de la frontera</cite></p>
+            <p>Las celebraciones del 4 de julio, dice Singh, han invitado una y otra vez a los estadounidenses a preguntarse por el carácter político de su país. Pero el registro histórico muestra más <b>evasión</b> que examen. Cada gran aniversario eligió qué recordar y qué silenciar.</p>
+
+            <div class="sub">
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag">1876 · 1893</span><span class="ttl">La frontera como coartada</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>El centenario de 1876, al final de la Reconstrucción, apenas mencionó la esclavitud: celebró el poderío industrial y la expansión por el continente y hacia el Pacífico. La Feria Mundial de Chicago, inaugurada el 4 de julio de 1893 —en plena segregación, terror antinegro y aventura imperial—, ratificó ese relato.</p>
+                  <p>Allí el historiador <b>Frederick Jackson Turner</b> pronunció su célebre conferencia sobre la «frontera»: el avance hacia el oeste sería el verdadero motor de la democracia estadounidense, y la esclavitud, apenas «un incidente» frente a la inmensa generosidad geográfica que habría permitido crear una sociedad libre de propietarios individuales.</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag t-plum">1945</span><span class="ttl">Jackson convertido en héroe popular</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>La entrada en la Segunda Guerra Mundial trajo una relectura sostenida del significado de la independencia y la expansión. En <i>La era de Jackson</i> (1945, Premio Pulitzer), <b>Arthur Schlesinger</b> ubicó el semicentenario de 1826 —el día en que, por coincidencia, murieron tanto John Adams como Thomas Jefferson— como el relevo entre la generación revolucionaria y el movimiento de Andrew Jackson.</p>
+                  <p>Aunque Jackson fue esclavista y tristemente conocido como «matador de indios», Schlesinger lo presentó como héroe populista, comparando su ampliación del voto a los hombres blancos sin propiedad con las luchas obreras del New Deal. El verdadero núcleo emancipador de la Declaración pasaba a ser, en esta lectura, el empoderamiento de las «clases productoras» frente a la «aristocracia del dinero». La ironía, señala Singh, es que ese relato omitía la represión de las luchas antiesclavistas, el apoyo a la expulsión de los pueblos indígenas y la hostilidad de Jackson al voto femenino.</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag t-terra">1945–46</span><span class="ttl">Ho Chi Minh: la Declaración viaja al sur global</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>Y sin embargo, la idea de que la Declaración autorizaba insurgencias «desde abajo» llegó lejos. El mismo año en que apareció el libro de Schlesinger, ante cientos de miles de personas en Hanói, <b>Ho Chi Minh</b> marcó el fin de la ocupación japonesa y del dominio francés citando las palabras del documento estadounidense: «Todos los hombres son creados iguales…».</p>
+                  <p>Poco después envió a la administración Truman una copia de la Declaración de Independencia de la República Democrática de Vietnam y pidió apoyo para la autodeterminación vietnamita. Esa carta —y varias más en los años siguientes— recibieron silencio. No toda insurgencia, concluye Singh con ironía, fue tratada como igual.</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag">1976</span><span class="ttl">Nostalgia, kitsch y un joven promotor inmobiliario</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>El bicentenario de 1976, tras la larga y brutal guerra de Vietnam y una era convulsa de derechos civiles, derivó hacia la nostalgia de la plantación y el <i>kitsch</i> conmemorativo: un desfile de veleros rodeó Manhattan mientras un «tren de la libertad» patrocinado por Prudential, Pepsi y General Motors recorría el país cargado de reliquias —la túnica clerical de Martin Luther King junto al vestido a cuadros de Dorothy en <i>El mago de Oz</i>—. El candidato Jimmy Carter celebró paseando en carruaje por una aldea de temática sureña anterior a la guerra.</p>
+                  <p>En Filadelfia, en cambio, una coalición de organizadores negros, latinos e indígenas montó una contracelebración que exigía un «bicentenario sin colonias» y «empleos y un nivel de vida digno». Mientras tanto, un promotor inmobiliario de treinta años llamado <b>Donald Trump</b> —entonces enredado en un litigio federal por discriminación racial en las propiedades de su familia— irrumpía en escena, y Ronald Reagan se preparaba para la presidencia con temas de frontera y bravuconería de vaquero. Trump, dice Singh, ya afinaba sus instintos: la demagogia racial sobre el crimen y la decadencia, y la queja de que demasiados productos del «supermercado» estadounidense venían de fuera.</p>
+                </div></div></div>
+              </div>
+            </div>
+          </div></div></div>
+        </section>
+
+        <!-- ================= IV ================= -->
+        <section class="persiana" id="sec-4">
+          <button class="persiana-head" aria-expanded="false">
+            <span class="num">IV</span>
+            <span class="head-text"><span class="kicker">Lo que está en juego</span><span class="title">Una herencia esperando nacer</span></span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="persiana-body"><div class="persiana-inner"><div class="persiana-content">
+            <p class="pull">No es el fin de la historia, sino su clausura.<cite>paráfrasis de Greg Grandin, <i>El fin del mito</i></cite></p>
+            <p>En la última parte, Singh nombra lo que está en juego: un país que ya no avanza hacia adelante, sino que se atrinchera.</p>
+
+            <div class="sub">
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag">Grandin</span><span class="ttl">El agotamiento del movimiento hacia adelante</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>Apoyándose en <i>El fin del mito</i> de <b>Greg Grandin</b> (Premio Pulitzer), Singh sugiere que lo más distintivo del momento es el agotamiento del movimiento hacia adelante: no «el fin de la historia», sino su clausura. En lugar de buscar nuevas fuentes de expansión —morales o materiales—, la época estadounidense sería ahora una de desgaste y expectativas a la baja: patios pequeños, cercas altas, nuevas barreras comerciales, mortalidad creciente en la mediana edad, muros fronterizos y barrotes de prisión.</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag t-terra">Día uno</span><span class="ttl">Revocar la ciudadanía por decreto</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>Como señal de los nuevos tiempos, Singh apunta que en el primer día de su segundo mandato Trump canceló por decreto el principio de <b>ciudadanía por nacimiento</b> —consagrado en la Decimocuarta Enmienda y confirmado por precedentes de fines del siglo XIX— para los hijos de inmigrantes sin autorización.</p>
+                  <p>A esto siguieron, según el ensayo, otras provocaciones: una vigilancia migratoria de estilo militar en las ciudades, una diplomacia coercitiva y acciones militares por todo el hemisferio, e incluso amenazas de anexar Canadá y Groenlandia. Cada apuesta, escribe Singh, se apoya en razonamientos legales y morales endebles; pero la sola idea de que los derechos de ciudadanía pueden revocarse por decreto resucita precedentes que se creían repudiados.</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag t-plum">Precedentes</span><span class="ttl">Lo que nunca se saldó del todo</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>Porque —y este es un matiz fino— los requisitos raciales y coloniales de la ciudadanía nunca quedaron del todo zanjados. A inicios del siglo XX, los llamados <b>Casos Insulares</b> determinaron que los habitantes de Puerto Rico, Guam y Filipinas no poseían automáticamente derechos constitucionales, estableciendo una situación de gobierno colonial de hecho que en buena medida continúa.</p>
+                  <p>Durante la Segunda Guerra Mundial, el fallo <b>Korematsu</b> permitió clasificar a las personas de origen japonés —y a sus hijos nacidos en el país— como «extranjeros enemigos» y encarcelarlos por razones de seguridad nacional; la Corte Suprema solo lo repudió formalmente en 2018. Singh escucha sus ecos en la pretensión presidencial de suspender derechos básicos invocando esa misma seguridad nacional.</p>
+                </div></div></div>
+              </div>
+              <div class="subp">
+                <button class="subp-head" aria-expanded="false"><span class="tag t-amber">La alternativa</span><span class="ttl">King, Madison y la otra fundación</span><span class="mk" aria-hidden="true">+</span></button>
+                <div class="subp-body"><div class="subp-inner"><div class="subp-content">
+                  <p>Al reactivar la conquista territorial, expulsar a residentes del interior del país y vender las nuevas fronteras de la inteligencia artificial y las finanzas como el camino del hombre común hacia la riqueza, Trump 2.0 —según Singh— reafirma el mito expansionista por encima del relato «woke» de una emancipación inconclusa. ¿Para qué discutir sobre igualdad, ironiza el autor, si puedes conjurar bárbaros invasores? En esto, añade, Trump está en buena compañía: la Declaración de Jefferson fue evasiva sobre la esclavitud, pero tajante al hablar de «despiadados salvajes indios»; y <b>James Madison</b> sostenía que la emancipación no podía avanzar sin su gemelo expansionista —«extender la esfera»—, alimentando en la gente de medios modestos el sueño de riquezas y el miedo a los de afuera.</p>
+                  <p>La alternativa democrática más convincente, para Singh, la encarna <b>Martin Luther King</b>: una «segunda fundación» finalmente libre tanto de la esclavitud como del imperialismo. King perdió el favor del <i>establishment</i> al insistir en que la libertad como autodeterminación no era propiedad exclusiva de los estadounidenses —que también los vietnamitas tenían un reclamo justo—. Y observó algo que, dice Singh, casi se ha olvidado: que el universalismo estadounidense era débil porque se había comprado «a precio de ganga», y a menudo a costa de otros. La lucha por la libertad de los negros, en ese sentido, revelaba fallas sistémicas, no superficiales.</p>
+                  <p>El cierre es sombrío. En el segundo mandato de Trump, dice Singh, el polo expansionista regresa con fuerza, desamarrado de su gastado socio emancipador, pero esta vez sin marco que lo legitime: la violencia y la corrupción actuales no se «lavarán» con tanta facilidad como en 2008. A los ojos del mundo, concluye, Estados Unidos ya no es «la causa de toda la humanidad», sino su azote. Los capitalistas del pueblo y los patriarcas de la plantación están en la silla de montar —mientras la herencia revolucionaria, esa «lucha universal por la libertad» de Paine, espera su próxima reinvención.</p>
+                </div></div></div>
+              </div>
+            </div>
+          </div></div></div>
+        </section>
+
+        <!-- ================= V ================= -->
+        <section class="persiana" id="sec-5">
+          <button class="persiana-head" aria-expanded="false">
+            <span class="num">V</span>
+            <span class="head-text"><span class="kicker">La conversación</span><span class="title">La mesa redonda</span></span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="persiana-body"><div class="persiana-inner"><div class="persiana-content">
+            <p>Cinco voces se sientan a discutir el ensayo. No para «refutarlo» ni para aplaudirlo, sino para iluminarlo desde ángulos distintos.</p>
+            <p class="panel-note">Las posturas de los pensadores reales se resumen a partir de sus obras conocidas; no son citas textuales.</p>
+
+            <div class="voice v-olive">
+              <div class="who"><span class="name">El historiador de la frontera</span><span class="role">la deuda intelectual de Singh</span></div>
+              <p>Singh no inventa esta dialéctica: la hereda de un debate largo. Turner hizo de la frontera el motor de la democracia; los revisionistas —y sobre todo Greg Grandin— mostraron el reverso: que cada avance «emancipador» se financió con expansión, despojo y guerra. La fuerza del ensayo está en negarse a elegir entre «esclavitud» y «libertad» como única clave: insiste en que la tierra, el movimiento hacia el oeste y el imperio son parte del mismo tejido. Su debilidad es la tentación contraria: cuando todo es expansión, se corre el riesgo de aplanar la diferencia real entre un abolicionista y un esclavista.</p>
+            </div>
+
+            <div class="voice v-plum">
+              <div class="who"><span class="name">Reinhold Niebuhr</span><span class="role">teólogo del realismo cristiano</span></div>
+              <p>Niebuhr diría que el problema más profundo no es la hipocresía, sino la inocencia. Una nación convencida de su propia virtud —de portar un destino redentor— es precisamente la más ciega ante el modo en que su poder corrompe sus ideales. La «ironía» de la historia estadounidense es que sus mayores peligros no brotan de sus vicios, sino de sus virtudes mal entendidas. Desde aquí, el relato que Singh ve colapsar no era inocuo: era una forma de autojustificación que confundía el poder con la providencia. Niebuhr no celebraría ese colapso, pero advertiría contra cualquier intento de reconstruir el mito sin humildad.</p>
+            </div>
+
+            <div class="voice v-terra">
+              <div class="who"><span class="name">Robert Bellah</span><span class="role">sociólogo de la religión civil</span></div>
+              <p>Bellah pondría nombre a lo que está muriendo: una <i>religión civil</i>. Estados Unidos tiene un credo nacional con sus propias escrituras (la Declaración), sus profetas (Lincoln, King), sus mártires y sus liturgias (el 4 de julio). El ensayo de Singh es, en clave de Bellah, la crónica del desgarro de ese «dosel sagrado»: cuando los rituales se vacían —veleros, trenes patrocinados, banderas— pero ya nadie cree el relato que sostenían. La pregunta que deja es inquietante: ¿puede una sociedad sobrevivir sin un relato sagrado compartido, o solo cambia de dioses?</p>
+            </div>
+
+            <div class="voice v-amber">
+              <div class="who"><span class="name">La teóloga</span><span class="role">una lectura bíblica desde el Sur</span></div>
+              <p>Desde la Escritura, el imperio tiene nombre: Babilonia, Roma —el poder seductor que se hace adorar a sí mismo—. La ironía que recorre el ensayo es profundamente bíblica: el relato del Éxodo, la liberación de los esclavos, fue invocado una y otra vez por los poderosos (Jackson, e incluso líderes anticoloniales) para fines opuestos. La advertencia profética es justamente contra eso: contra bautizar el poder nacional, contra confundir el Reino con cualquier Estado. Para una iglesia latinoamericana que lee «desde abajo», la lección no es el antiamericanismo fácil, sino el discernimiento: ninguna nación es la Nueva Jerusalén. Si la Iglesia es una red —poder distribuido, nodos activos, el Espíritu como fuente— entonces es, por su forma misma, lo contrario del imperio: no centraliza la gloria, la reparte.</p>
+            </div>
+
+            <div class="voice v-ink">
+              <div class="who"><span class="name">El disidente optimista</span><span class="role">el contrapeso necesario</span></div>
+              <p>El fin de Estados Unidos se ha anunciado muchas veces —en 1876, en 1976— y la tradición de la «promesa inconclusa» (Douglass, King, la coalición de Filadelfia) no es una coartada del mito: es parte viva de él, y sigue siendo fértil. El ensayo arriesga convertir todo progreso moral genuino en mero «maquillaje» del poder. Y en el plano de los hechos, conviene recordar que las tesis más fuertes del Proyecto 1619 fueron disputadas por grandes historiadores, y que la misma fundación que toleró la esclavitud engendró el lenguaje y los movimientos que la abolirían. Declarar muerto el relato puede ser, también, una profecía autocumplida.</p>
+            </div>
+          </div></div></div>
+        </section>
+
+        <!-- ================= VI ================= -->
+        <section class="persiana" id="sec-6">
+          <button class="persiana-head" aria-expanded="false">
+            <span class="num">VI</span>
+            <span class="head-text"><span class="kicker">Para orientarse</span><span class="title">Glosario de nombres y términos</span></span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="persiana-body"><div class="persiana-inner"><div class="persiana-content">
+            <dl class="gloss">
+              <dt>Randolph Bourne (1886–1918)</dt>
+              <dd>Ensayista estadounidense, crítico del belicismo y del nacionalismo durante la Primera Guerra Mundial. Su imagen del «matrimonio sórdido» entre capital y esclavitud abre el ensayo.</dd>
+              <dt>Thomas Paine · <i>Sentido común</i> (1776)</dt>
+              <dd>Panfleto que galvanizó la causa independentista; de él procede la frase «la causa de América es la causa de toda la humanidad».</dd>
+              <dt>Frederick Douglass (c. 1818–1895)</dt>
+              <dd>Abolicionista, antes esclavizado. Su discurso de 1852 «¿Qué es para el esclavo el 4 de julio?» es uno de los textos antiesclavistas más citados.</dd>
+              <dt>Dred Scott (1857)</dt>
+              <dd>Fallo de la Corte Suprema que negó la ciudadanía a los afroamericanos; precipitó la guerra civil.</dd>
+              <dt>Tesis de la frontera · Frederick Jackson Turner (1893)</dt>
+              <dd>La idea de que la expansión hacia el oeste —no la esclavitud— fue el verdadero motor de la democracia estadounidense.</dd>
+              <dt>Arthur Schlesinger · <i>La era de Jackson</i> (1945)</dt>
+              <dd>Historia popular que convirtió a Andrew Jackson en héroe populista, modelo de las luchas del New Deal.</dd>
+              <dt>Andrew Jackson (1767–1845)</dt>
+              <dd>Presidente, esclavista y promotor de la expulsión de los pueblos indígenas; Trump lo ha invocado como referente.</dd>
+              <dt>Ho Chi Minh (1890–1969)</dt>
+              <dd>Líder vietnamita que abrió la independencia de Vietnam (1945) citando la Declaración estadounidense y pidió, sin éxito, el apoyo de EE. UU.</dd>
+              <dt>Greg Grandin · <i>El fin del mito</i> (2019)</dt>
+              <dd>Historia premiada con el Pulitzer sobre la frontera como mito fundacional y su agotamiento.</dd>
+              <dt>Decimocuarta Enmienda · ciudadanía por nacimiento</dt>
+              <dd>Garantiza la ciudadanía a quienes nacen en suelo estadounidense; su revocación por decreto es uno de los hechos que Singh subraya.</dd>
+              <dt>Casos Insulares (c. 1901)</dt>
+              <dd>Fallos que negaron derechos constitucionales plenos a Puerto Rico, Guam y Filipinas; base de un dominio colonial de hecho.</dd>
+              <dt>Korematsu v. Estados Unidos (1944)</dt>
+              <dd>Avaló el encarcelamiento de personas de origen japonés; la Corte solo lo repudió formalmente en 2018.</dd>
+              <dt>Religión civil (Robert Bellah, 1967)</dt>
+              <dd>El conjunto de símbolos, ritos y creencias «sagradas» en torno a la nación, distinto de las iglesias.</dd>
+              <dt>La ironía de la historia estadounidense (Reinhold Niebuhr, 1952)</dt>
+              <dd>La tesis de que la virtud y la inocencia percibidas de una nación pueden ser su mayor peligro.</dd>
+              <dt>Proyecto 1619 (<i>The New York Times</i>, 2019)</dt>
+              <dd>Serie que situó la esclavitud en el centro del relato fundacional; influyente y muy disputada.</dd>
+            </dl>
+          </div></div></div>
+        </section>
+
+      </div>
+
+      <footer>
+        <h2>Fuentes</h2>
+        <p class="fuente-primary"><b>Ensayo de origen:</b> Nikhil Pal Singh, «The American myth always came at someone's expense. Now, it's all but collapsed», <i>The Guardian</i>, 28 de junio de 2026.</p>
+        <ul class="links">
+          <li><a href="https://www.wbur.org/onpoint/2026/04/02/deportations-trump-homeland-empire" target="_blank" rel="noopener">On Point — «Homeland Empire» (WBUR)</a> <span>· Singh sobre el giro imperial del segundo mandato.</span></li>
+          <li><a href="https://www.thedriftmag.com/interview-with-nikhil-pal-singh/" target="_blank" rel="noopener">Entrevista en The Drift</a> <span>· sobre el Proyecto 1619, Grandin y «extender la esfera».</span></li>
+          <li><a href="https://truthout.org/articles/trumps-violent-memes-expose-long-simmering-truths-about-us-imperialism/" target="_blank" rel="noopener">Truthout — Singh y Grandin</a> <span>· la dialéctica expansión / emancipación.</span></li>
+          <li><a href="https://www.lannan.org/bios/nikhil-pal-singh" target="_blank" rel="noopener">Perfil del autor — Lannan Foundation</a></li>
+        </ul>
+        <div class="colophon"><span class="dot"></span> Café con Claude · Lectura guiada — una guía de estudio, no el texto original.</div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- accordion toggling (works for both .persiana and .subp) ---- */
+  function toggle(item, headBtn){
+    var open = item.classList.toggle('open');
+    if(headBtn) headBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  document.querySelectorAll('.persiana-head').forEach(function(btn){
+    btn.addEventListener('click', function(){ toggle(btn.closest('.persiana'), btn); });
+  });
+  document.querySelectorAll('.subp-head').forEach(function(btn){
+    btn.addEventListener('click', function(){ toggle(btn.closest('.subp'), btn); });
+  });
+
+  /* ---- reading progress ---- */
+  var bar = document.querySelector('#progress > span');
+  function updateProgress(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
+    bar.style.width = (pct * 100).toFixed(2) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  /* ---- scroll-spy via IntersectionObserver ---- */
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.persiana[id]'));
+  var navLinks = {};
+  document.querySelectorAll('nav.toc a').forEach(function(a){
+    navLinks[a.getAttribute('href').slice(1)] = a;
+  });
+  function setActive(id){
+    for(var k in navLinks){ navLinks[k].classList.toggle('active', k === id); }
+  }
+  if('IntersectionObserver' in window){
+    var visible = {};
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var best = null, bestRatio = 0;
+      sections.forEach(function(s){
+        var r = visible[s.id] || 0;
+        if(r >= bestRatio){ bestRatio = r; best = s.id; }
+      });
+      if(best && bestRatio > 0) setActive(best);
+    }, {rootMargin:'-12% 0px -68% 0px', threshold:[0,0.25,0.5,1]});
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+
+  /* ---- nav click: open target + scroll ---- */
+  document.querySelectorAll('nav.toc a').forEach(function(a){
+    a.addEventListener('click', function(ev){
+      ev.preventDefault();
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if(!target) return;
+      var head = target.querySelector('.persiana-head');
+      if(!target.classList.contains('open')) toggle(target, head);
+      setActive(id);
+      document.body.classList.remove('nav-open');
+      target.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'start'});
+    });
+  });
+
+  /* ---- mobile sidebar ---- */
+  var burger = document.getElementById('burger');
+  var backdrop = document.getElementById('backdrop');
+  burger.addEventListener('click', function(){ document.body.classList.toggle('nav-open'); });
+  backdrop.addEventListener('click', function(){ document.body.classList.remove('nav-open'); });
+})();
+</script>
+</body>
+</html>
