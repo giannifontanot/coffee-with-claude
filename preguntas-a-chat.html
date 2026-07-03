@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Las Preguntas que Vale la Pena Hacerle a un LLM</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Spectral:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --cream:#f7f1e5;
+    --ink:#2b2118;
+    --line:#d8cdb7;
+    --terracotta:#b4532a;
+    --olive:#6b7a3f;
+    --gold:#c98a2d;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Spectral',serif;
+    line-height:1.75;
+    padding:60px 25px;
+}
+
+.wrapper{
+    max-width:900px;
+    margin:auto;
+}
+
+h1{
+    font-family:'Fraunces',serif;
+    font-size:2.7rem;
+    margin-bottom:.5rem;
+}
+
+.subtitle{
+    font-style:italic;
+    color:#6a5b48;
+    margin-bottom:3rem;
+}
+
+.card{
+
+    border-left:5px solid var(--terracotta);
+    padding:28px 30px;
+    margin-bottom:28px;
+
+    background:white;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.04);
+}
+
+.card h2{
+    font-family:'Fraunces',serif;
+    color:var(--terracotta);
+    margin-bottom:14px;
+}
+
+.question{
+
+    margin:18px 0;
+
+    padding:16px 20px;
+
+    background:#faf6ee;
+
+    border-left:4px solid var(--gold);
+
+    font-style:italic;
+
+}
+
+.summary{
+
+    margin-top:50px;
+
+    padding:28px;
+
+    background:#fdfbf6;
+
+    border-left:6px solid var(--olive);
+
+}
+
+.summary h2{
+
+    color:var(--olive);
+
+    font-family:'Fraunces',serif;
+
+    margin-bottom:15px;
+
+}
+
+.footer{
+
+    margin-top:50px;
+
+    color:#7a6e61;
+
+    text-align:center;
+
+    font-size:.9rem;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<h1>Las Preguntas que Vale la Pena Hacerle a un LLM</h1>
+
+<p class="subtitle">
+Una conversación sobre cómo utilizar un modelo de lenguaje como compañero de investigación,
+más que como un simple proveedor de respuestas.
+</p>
+
+<div class="card">
+
+<h2>🧠 1. ¿Qué no estoy viendo?</h2>
+
+<p>
+Más que buscar respuestas, busca puntos ciegos.
+</p>
+
+<div class="question">
+"Estoy diseñando una serie sobre Marcos.
+¿Qué supuestos estoy dando por ciertos sin haberlos examinado?"
+</div>
+
+<div class="question">
+"¿Qué experto estaría en desacuerdo conmigo?"
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🔍 2. ¿Qué pregunta debería hacer después?</h2>
+
+<p>
+Los investigadores buenos hacen buenas preguntas.
+Los investigadores extraordinarios descubren cuál es la siguiente pregunta.
+</p>
+
+<div class="question">
+"Después de estudiar Marcos 8,
+¿cuáles serían las cinco preguntas cuya respuesta cambiaría más mi comprensión del evangelio?"
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🧩 3. Construyamos un modelo</h2>
+
+<p>
+No preguntes solamente qué es algo.
+Pregunta cómo funciona.
+</p>
+
+<div class="question">
+"Construyamos un modelo del discipulado como si fuera un ecosistema."
+</div>
+
+<div class="question">
+"Diseñemos un modelo matemático simplificado."
+</div>
+
+<div class="question">
+"Haz un mapa de dependencias."
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>⚔️ 4. Destrúyelo</h2>
+
+<p>
+Presenta una idea y pide al modelo que intente refutarla con rigor.
+</p>
+
+<div class="question">
+"Aquí está mi teoría.
+Intenta demostrar que estoy equivocado."
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎓 5. Enséñamelo como...</h2>
+
+<p>
+Cambiar de perspectiva cambia la comprensión.
+</p>
+
+<div class="question">
+"Enséñamelo como físico."
+</div>
+
+<div class="question">
+"Enséñamelo como historiador."
+</div>
+
+<div class="question">
+"Enséñamelo como entrenador olímpico."
+</div>
+
+<div class="question">
+"Enséñamelo como arquitecto."
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🧪 6. Diseña un experimento</h2>
+
+<p>
+En lugar de preguntar si algo es cierto, pregunta cómo comprobarlo.
+</p>
+
+<div class="question">
+"¿Cómo podríamos verificar esta hipótesis?"
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🧭 7. ¿Qué cambiaría tu respuesta?</h2>
+
+<p>
+Explora qué evidencia modificaría por completo una explicación.
+</p>
+
+<div class="question">
+"¿Qué tendría que descubrirse para que cambiaras de opinión?"
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🏗️ 8. Ayúdame a construir un sistema</h2>
+
+<p>
+Los hábitos aislados suelen romperse.
+Los sistemas se sostienen mutuamente.
+</p>
+
+<div class="question">
+"Diseña un sistema donde los hábitos se apoyen entre sí."
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🌍 9. Conecta mundos</h2>
+
+<p>
+Las mejores ideas suelen aparecer entre disciplinas.
+</p>
+
+<div class="question">
+"¿Qué tienen en común Marcos, Deming y Donella Meadows?"
+</div>
+
+<div class="question">
+"¿Qué aprendería un ingeniero leyendo Proverbios?"
+</div>
+
+<div class="question">
+"¿Cómo explicaría un biólogo la iglesia primitiva?"
+</div>
+
+</div>
+
+<div class="summary">
+
+<h2>✨ La pregunta que podría acompañarte toda la vida</h2>
+
+<div class="question">
+"Si dedicara los próximos cinco años a entender profundamente este tema,
+¿qué camino de aprendizaje seguirías para que al final no solo supiera más,
+sino que pensara de manera diferente?"
+</div>
+
+<p>
+No se trata simplemente de acumular conocimiento.
+Se trata de transformar la manera en que piensas.
+</p>
+
+<br>
+
+<p>
+Las preguntas más poderosas suelen pertenecer a cinco familias:
+</p>
+
+<ul style="margin-left:25px;margin-top:15px;">
+
+<li><strong>Descubrir</strong> — ¿Qué aún no entiendo?</li>
+
+<li><strong>Conectar</strong> — ¿Qué relación tiene con otros campos?</li>
+
+<li><strong>Modelar</strong> — ¿Cómo funciona como sistema?</li>
+
+<li><strong>Poner a prueba</strong> — ¿Dónde falla esta idea?</li>
+
+<li><strong>Aplicar</strong> — ¿Cómo cambia mi manera de vivir, enseñar o construir?</li>
+
+</ul>
+
+</div>
+
+<div class="footer">
+
+"Las respuestas tienen un final.<br>
+Las buenas preguntas generan una cadena de descubrimientos."
+
+</div>
+
+</div>
+
+</body>
+</html>
