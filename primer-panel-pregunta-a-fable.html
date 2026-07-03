@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Panel Pregunta · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --line: #d9cdb8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.6;
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .home-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 2rem;
+  }
+  .home-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: #6a5b48;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink);
+  }
+
+  tbody td {
+    padding: 0.95rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    font-size: 0.98rem;
+  }
+
+  tbody tr:hover { background: rgba(201, 138, 45, 0.07); }
+
+  .voz-group td.voz {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .voz span.dot {
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 50%;
+    margin-right: 0.45em;
+    vertical-align: baseline;
+  }
+
+  .exegeta .dot { background: var(--terracotta); }
+  .ingeniera .dot { background: var(--olive); }
+  .provocador .dot { background: var(--plum); }
+  .disenadora .dot { background: var(--amber); }
+  .metodologo .dot { background: #4a6b7a; }
+
+  .pregunta { font-style: italic; }
+  .tema { color: #6a5b48; font-size: 0.9rem; }
+
+  .favoritas {
+    margin-top: 2.5rem;
+    padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+    font-size: 0.95rem;
+  }
+  .favoritas strong { font-family: 'Fraunces', serif; }
+
+  @media (max-width: 640px) {
+    thead { display: none; }
+    tbody td { display: block; border-bottom: none; padding: 0.35rem 0.9rem; }
+    tbody tr { display: block; border-bottom: 1px solid var(--line); padding: 0.7rem 0; }
+    .voz-group td.voz { padding-top: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-link" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+
+  <h1>El Panel Pregunta</h1>
+  <p class="subtitle">Trece preguntas que la mesa de Café con Claude dejó servidas para Gianni · Julio 2026</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Voz</th>
+        <th>Pregunta</th>
+        <th>Tema detrás</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="voz-group exegeta">
+        <td class="voz"><span class="dot"></span>🏛️ El Exégeta</td>
+        <td class="pregunta">¿Por qué Marcos termina en 16:8 con miedo y silencio? ¿Qué hace un evangelio que termina mal a propósito?</td>
+        <td class="tema">El final abrupto como recurso teológico</td>
+      </tr>
+      <tr class="exegeta">
+        <td class="voz"></td>
+        <td class="pregunta">¿Qué palabras griegas usa Marcos solo una vez en todo el Nuevo Testamento?</td>
+        <td class="tema">Los <em>hapax legomena</em> de Marcos</td>
+      </tr>
+      <tr class="exegeta">
+        <td class="voz"></td>
+        <td class="pregunta">¿Qué pasa si leo Marcos 11–13 como una demolición arquitectónica del Templo, sección por sección?</td>
+        <td class="tema">El siguiente tramo natural de la serie</td>
+      </tr>
+
+      <tr class="voz-group ingeniera">
+        <td class="voz"><span class="dot"></span>🕸️ La Ingeniera de Sistemas</td>
+        <td class="pregunta">¿Qué dice la teoría de redes sobre por qué Jesús eligió 12 nodos y no 120?</td>
+        <td class="tema">Número de Dunbar, redes pequeñas, redundancia</td>
+      </tr>
+      <tr class="ingeniera">
+        <td class="voz"></td>
+        <td class="pregunta">¿Cómo aplicaría Donella Meadows sus 12 puntos de apalancamiento a una iglesia local estancada?</td>
+        <td class="tema">Pensamiento sistémico aplicado a la iglesia</td>
+      </tr>
+      <tr class="ingeniera">
+        <td class="voz"></td>
+        <td class="pregunta">¿Qué bucles de retroalimentación negativos mataron a las iglesias de Apocalipsis 2–3?</td>
+        <td class="tema">Deming leyendo las siete cartas</td>
+      </tr>
+
+      <tr class="voz-group provocador">
+        <td class="voz"><span class="dot"></span>🎭 El Provocador</td>
+        <td class="pregunta">¿En qué se equivocó la iglesia primitiva y nunca lo admitimos en los sermones?</td>
+        <td class="tema">Historia incómoda de la iglesia</td>
+      </tr>
+      <tr class="provocador">
+        <td class="voz"></td>
+        <td class="pregunta">¿Qué emociones tiene Jesús en Marcos que los otros evangelios censuraron?</td>
+        <td class="tema">Marcos como el evangelio emocionalmente más crudo</td>
+      </tr>
+      <tr class="provocador">
+        <td class="voz"></td>
+        <td class="pregunta">¿Por qué el español no tiene palabra para <em>hesed</em>, <em>splanchnizomai</em> o <em>shalom</em>?</td>
+        <td class="tema">Huecos léxicos entre lenguas bíblicas y español</td>
+      </tr>
+
+      <tr class="voz-group disenadora">
+        <td class="voz"><span class="dot"></span>🎨 La Diseñadora</td>
+        <td class="pregunta">¿Cómo hago una página-índice visual que muestre el mapa completo de la serie de Marcos como recorrido geográfico?</td>
+        <td class="tema">Galilea → Decápolis → Jerusalén, en paleta parchment</td>
+      </tr>
+      <tr class="disenadora">
+        <td class="voz"></td>
+        <td class="pregunta">¿Qué micro-interacciones podrían hacer que las persianas se sientan más artesanales sin volverse decorativas?</td>
+        <td class="tema">Evolución del sistema Café con Claude</td>
+      </tr>
+
+      <tr class="voz-group metodologo">
+        <td class="voz"><span class="dot"></span>📋 El Metodólogo PDCA</td>
+        <td class="pregunta">¿Cómo mido si una página de estudio realmente transformó a alguien, y no solo lo informó?</td>
+        <td class="tema">El "Check" del PDCA aplicado a discipulado</td>
+      </tr>
+      <tr class="metodologo">
+        <td class="voz"></td>
+        <td class="pregunta">Diseñemos juntos un retiro de un día basado en Marcos 8:27–38 usando MVP thinking.</td>
+        <td class="tema">Metodología iterativa en formación espiritual</td>
+      </tr>
+      <tr class="metodologo">
+        <td class="voz"></td>
+        <td class="pregunta">¿Cómo estructuro Go Epic para que mis 4 áreas no compitan entre sí sino que se alimenten?</td>
+        <td class="tema">Career, Family, Health, Fun como sistema, no como silos</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="favoritas">
+    <strong>Votos del panel:</strong> El Exégeta apuesta por el final de Marcos en 16:8. El Provocador regala, con moño, las emociones censuradas de Jesús.
+  </div>
+</div>
+</body>
+</html>

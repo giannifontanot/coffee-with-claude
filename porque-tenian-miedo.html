@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porque tenían miedo · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --cream-deep: #f0e7d5;
+    --ink: #2b2118;
+    --ink-soft: #6a5b48;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 100;
+    transition: width 0.1s linear;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 220px;
+    height: 100vh;
+    padding: 2.5rem 1.5rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    overflow-y: auto;
+    z-index: 50;
+  }
+
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+  }
+
+  nav.sidebar a.home {
+    display: inline-block;
+    font-size: 0.78rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 2rem;
+  }
+  nav.sidebar a.home:hover { color: var(--ink); border-color: var(--ink); }
+
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    min-width: 1.6rem;
+    color: var(--line);
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  /* ---------- Hamburguesa móvil ---------- */
+  #menu-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem; right: 1rem;
+    z-index: 60;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    font-family: 'Fraunces', serif;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  /* ---------- Contenido ---------- */
+  main {
+    margin-left: 220px;
+    padding: 3.5rem 2rem 5rem;
+  }
+  .content { max-width: 720px; margin: 0 auto; }
+
+  header.hero { margin-bottom: 3.5rem; }
+  .kicker {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--terracotta);
+    margin-bottom: 0.8rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5.5vw, 3.1rem);
+    line-height: 1.12;
+    margin-bottom: 0.9rem;
+  }
+  .greek {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--plum);
+    margin-bottom: 0.6rem;
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+  }
+
+  section { margin-bottom: 3.2rem; scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 1.1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+  }
+  h2 .num {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--terracotta);
+  }
+
+  p { margin-bottom: 1.05rem; }
+  em { font-style: italic; }
+
+  /* ---------- Voces del panel ---------- */
+  .voz {
+    margin: 1.4rem 0;
+    padding-left: 1.1rem;
+    border-left: 3px solid var(--line);
+  }
+  .voz .quien {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .voz .quien::before {
+    content: "";
+    width: 0.55em; height: 0.55em;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .voz p:last-child { margin-bottom: 0; }
+
+  .voz.exegeta { border-color: var(--terracotta); }
+  .voz.exegeta .quien { color: var(--terracotta); }
+  .voz.exegeta .quien::before { background: var(--terracotta); }
+
+  .voz.ingeniera { border-color: var(--olive); }
+  .voz.ingeniera .quien { color: var(--olive); }
+  .voz.ingeniera .quien::before { background: var(--olive); }
+
+  .voz.provocador { border-color: var(--plum); }
+  .voz.provocador .quien { color: var(--plum); }
+  .voz.provocador .quien::before { background: var(--plum); }
+
+  .voz.disenadora { border-color: var(--amber); }
+  .voz.disenadora .quien { color: var(--amber); }
+  .voz.disenadora .quien::before { background: var(--amber); }
+
+  .voz.metodologo { border-color: var(--steel); }
+  .voz.metodologo .quien { color: var(--steel); }
+  .voz.metodologo .quien::before { background: var(--steel); }
+
+  /* ---------- Cita bíblica ---------- */
+  blockquote.biblia {
+    margin: 1.8rem 0;
+    padding: 1.3rem 1.5rem;
+    background: var(--cream-deep);
+    border-left: 4px solid var(--amber);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.08rem;
+    line-height: 1.65;
+  }
+  blockquote.biblia .ref {
+    display: block;
+    margin-top: 0.7rem;
+    font-family: 'Spectral', serif;
+    font-style: normal;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Persianas ---------- */
+  details.persiana {
+    margin: 1.6rem 0;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: rgba(255,255,255,0.35);
+  }
+  details.persiana summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.9rem 1.2rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    user-select: none;
+  }
+  details.persiana summary::-webkit-details-marker { display: none; }
+  details.persiana summary::before {
+    content: "+";
+    font-weight: 700;
+    color: var(--terracotta);
+    width: 1.1rem;
+    transition: transform 0.25s ease;
+  }
+  details.persiana[open] summary::before { content: "–"; }
+  details.persiana summary:hover { color: var(--terracotta); }
+
+  details.persiana .persiana-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+  details.persiana[open] .persiana-body { grid-template-rows: 1fr; }
+  details.persiana .persiana-inner {
+    overflow: hidden;
+    padding: 0 1.2rem;
+  }
+  details.persiana[open] .persiana-inner { padding: 0 1.2rem 1.1rem; }
+
+  /* ---------- Tabla ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-size: 0.93rem;
+  }
+  thead th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    text-align: left;
+    padding: 0.6rem 0.7rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  tbody td {
+    padding: 0.75rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: rgba(201, 138, 45, 0.07); }
+
+  /* ---------- Eco griego ---------- */
+  .eco {
+    margin: 1.6rem 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.8rem;
+    align-items: center;
+    text-align: center;
+  }
+  .eco .lado {
+    background: var(--cream-deep);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 1rem 0.9rem;
+  }
+  .eco .lado .gr {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--plum);
+    margin-bottom: 0.3rem;
+  }
+  .eco .lado .tr { font-size: 0.85rem; color: var(--ink-soft); }
+  .eco .lado .ref {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    color: var(--terracotta);
+  }
+  .eco .flecha {
+    font-size: 1.4rem;
+    color: var(--amber);
+  }
+
+  /* ---------- Fuentes ---------- */
+  .fuentes {
+    margin-top: 1.2rem;
+    padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--olive);
+    background: rgba(107, 122, 63, 0.06);
+    font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a {
+    color: var(--olive);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(107,122,63,0.4);
+  }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  .fuente-seccion {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-top: 0.4rem;
+  }
+  .fuente-seccion a {
+    color: var(--olive);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(107,122,63,0.4);
+  }
+  .fuente-seccion a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- Cierre ---------- */
+  .cierre {
+    margin-top: 1.5rem;
+    padding: 1.4rem 1.5rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+  }
+  .cierre p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  /* ---------- Móvil ---------- */
+  @media (max-width: 880px) {
+    nav.sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      width: 260px;
+      box-shadow: 4px 0 18px rgba(43,33,24,0.12);
+    }
+    nav.sidebar.open { transform: translateX(0); }
+    #menu-toggle { display: block; }
+    main { margin-left: 0; padding: 3.5rem 1.25rem 4rem; }
+    .eco { grid-template-columns: 1fr; }
+    .eco .flecha { transform: rotate(90deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    details.persiana .persiana-body,
+    details.persiana summary::before,
+    nav.sidebar { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button id="menu-toggle" aria-label="Abrir menú">☰ Índice</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">Serie · La Red es la Iglesia</div>
+  <a class="home" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  <ol>
+    <li><a href="#s1"><span class="num">I</span>La mesa se sienta</a></li>
+    <li><a href="#s2"><span class="num">II</span>Porque tenían miedo</a></li>
+    <li><a href="#s3"><span class="num">III</span>Dos palabras imposibles</a></li>
+    <li><a href="#s4"><span class="num">IV</span>El testimonio de los códices</a></li>
+    <li><a href="#s5"><span class="num">V</span>El secreto al revés</a></li>
+    <li><a href="#s6"><span class="num">VI</span>El final es tuyo</a></li>
+    <li><a href="#s7"><span class="num">VII</span>Café de cierre</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="content">
+
+<header class="hero">
+  <div class="kicker">El Panel Pregunta · Nº 1</div>
+  <h1>Porque tenían miedo</h1>
+  <div class="greek">ἐφοβοῦντο γάρ · ephobounto gar</div>
+  <p class="subtitle">¿Por qué Marcos termina en 16:8 con miedo y silencio? ¿Qué hace un evangelio que termina mal a propósito?</p>
+</header>
+
+<!-- ============ I ============ -->
+<section id="s1">
+  <h2><span class="num">I.</span> La mesa se sienta</h2>
+
+  <p>La pregunta la puso el Exégeta sobre la mesa, pero nadie del panel pudo quedarse callado. Porque el final de Marcos no es un problema de especialistas: es la experiencia de cualquier lector que llega a 16:8, pasa la página… y descubre que no hay página. El evangelio más veloz, el de los "inmediatamente", el que corre sin aliento desde el Jordán hasta el Gólgota, frena en seco frente a una tumba vacía y tres mujeres que huyen sin decir nada.</p>
+
+  <div class="voz exegeta">
+    <div class="quien">🏛️ El Exégeta</div>
+    <p>Antes de teologizar, miremos el texto tal como está. Sin el versículo 9. Sin apariciones. Sin ascensión. Solo miedo, temblor y silencio. Ese es el final que nos dejaron los manuscritos más antiguos.</p>
+  </div>
+
+  <div class="voz provocador">
+    <div class="quien">🎭 El Provocador</div>
+    <p>Un evangelio —literalmente "buena noticia"— que termina con tres mujeres aterradas que no le cuentan la buena noticia a nadie. Si un alumno tuyo entregara ese guion, le pedirías que lo reescribiera. Y sin embargo, dos mil años después, seguimos hablando de este final. Algo hizo bien.</p>
+  </div>
+</section>
+
+<!-- ============ II ============ -->
+<section id="s2">
+  <h2><span class="num">II.</span> Porque tenían miedo</h2>
+
+  <p>La escena es la madrugada del domingo. María Magdalena, María la madre de Santiago, y Salomé van al sepulcro con perfumes para ungir un cuerpo. Encuentran la piedra removida, un joven vestido de blanco, y un anuncio que debería cambiar la historia: <em>ha resucitado, no está aquí</em>. El mensajero les da una tarea clarísima: vayan y díganles a los discípulos —<em>y a Pedro</em>— que él va delante de ustedes a Galilea.</p>
+
+  <blockquote class="biblia">
+    «Entonces las mujeres salieron huyendo del sepulcro, pues estaban temblando, asustadas. Y no dijeron nada a nadie, porque tenían miedo.»
+    <span class="ref">Marcos 16:8 · Dios Habla Hoy (DHH)</span>
+  </blockquote>
+
+  <div class="voz exegeta">
+    <div class="quien">🏛️ El Exégeta</div>
+    <p>Fíjate en la acumulación: <em>tromos</em> (temblor), <em>ekstasis</em> (estupor, la misma raíz de "éxtasis"), huida, silencio, miedo. Marcos amontona cinco reacciones en un solo versículo. No es descuido: es la reacción humana completa ante lo santo. En Marcos, el miedo no aparece ante el peligro — aparece ante la revelación. Los discípulos temen cuando Jesús calma la tormenta, cuando camina sobre el agua, cuando se transfigura. El miedo de 16:8 es el último eslabón de esa cadena: el terror de estar demasiado cerca de Dios.</p>
+  </div>
+
+  <div class="voz disenadora">
+    <div class="quien">🎨 La Diseñadora</div>
+    <p>Como composición, es un corte a negro. El cine lo descubrió veinte siglos después: la escena más poderosa es a veces la que no se muestra. Marcos no pinta la resurrección — pinta el hueco que deja. La tumba vacía es espacio negativo: el ojo del lector tiene que completar la figura.</p>
+  </div>
+</section>
+
+<!-- ============ III ============ -->
+<section id="s3">
+  <h2><span class="num">III.</span> Dos palabras imposibles</h2>
+
+  <p>El escándalo no es solo narrativo: es gramatical. Las últimas dos palabras del evangelio en griego son <em>ephobounto gar</em> — literalmente, "tenían-miedo pues". La partícula <em>gar</em> ("porque", "pues") es una conjunción que en griego ocupa el segundo lugar de la frase y siempre introduce lo que sigue. Terminar una oración con <em>gar</em> es rarísimo; terminar un libro entero así no tiene precedente conocido en la narrativa antigua. En el Nuevo Testamento, <em>gar</em> aparece más de mil veces, casi setenta solo en Marcos, y siempre —siempre— va seguida de algo. Excepto aquí.</p>
+
+  <div class="voz provocador">
+    <div class="quien">🎭 El Provocador</div>
+    <p>Es como terminar una novela con la palabra "porque…". El lector se queda esperando la continuación que nunca llega. Por eso durante más de un siglo muchos eruditos concluyeron: aquí falta una hoja. El final "se perdió". Es la explicación cómoda: nadie escribe así a propósito.</p>
+  </div>
+
+  <div class="voz exegeta">
+    <div class="quien">🏛️ El Exégeta</div>
+    <p>Cómoda, pero cada vez menos sostenible. El estudio de J. Lee Magness sobre literatura hebrea, griega y romana demostró que los finales abiertos y abruptos sí existían y eran comprendidos por lectores antiguos. Y la Biblia misma los usa: Jonás termina con una pregunta de Dios sin respuesta. Hechos termina con Pablo predicando, sin decirnos jamás cómo acabó su juicio. El final suspendido no es un accidente moderno proyectado hacia atrás: es una herramienta retórica antigua.</p>
+  </div>
+
+  <details class="persiana">
+    <summary>Persiana · ¿Y si de verdad se perdió la última hoja?</summary>
+    <div class="persiana-body"><div class="persiana-inner">
+      <p>La hipótesis de la hoja perdida tiene defensores serios. Si Marcos se escribió en un códice (el precursor del libro, que los cristianos adoptaron tempranamente) y no en un rollo, la última hoja era físicamente la más vulnerable: bastaba que se dañara o desprendiera muy temprano en la transmisión para que todas las copias posteriores heredaran el corte. Otros especulan con una interrupción violenta —persecución, arresto, muerte del autor—. El problema de todas estas teorías es el mismo: son inverificables. Y tienen que explicar por qué el final "mutilado" resulta, leído con cuidado, tan sospechosamente coherente con todo el evangelio que lo precede. Cuando el accidente encaja tan bien con el diseño, cuesta seguir llamándolo accidente.</p>
+      <p class="fuente-seccion">Fuentes: <a href="https://www.bible-bridge.com/the-strange-ending-of-the-gospel-of-mark/">BibleBridge</a>, <a href="https://www.studylight.org/commentaries/eng/pfc/mark-16.html">Peake's Commentary</a></p>
+    </div></div>
+  </details>
+
+  <p class="fuente-seccion">Fuentes de la sección: <a href="https://www.bible-bridge.com/the-strange-ending-of-the-gospel-of-mark/">BibleBridge</a>, <a href="https://bible.org/article/irony-end-textual-and-literary-analysis-mark-168">Bible.org – Irony in the End</a>, <a href="http://www.fact-index.com/m/ma/mark_16.html">Fact-Index – Mark 16</a></p>
+</section>
+
+<!-- ============ IV ============ -->
+<section id="s4">
+  <h2><span class="num">IV.</span> El testimonio de los códices</h2>
+
+  <p>La evidencia manuscrita cuenta una historia fascinante: la de generaciones de copistas incómodos con un final que les parecía imposible. Los dos manuscritos más antiguos y valiosos del Nuevo Testamento —el Códice Sinaítico y el Códice Vaticano, ambos del siglo IV— terminan Marcos en 16:8. Pero la tradición posterior generó nada menos que varios finales alternativos:</p>
+
+  <table>
+    <thead>
+      <tr><th>Final</th><th>Contenido</th><th>Testigos</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Abrupto (16:8)</strong></td>
+        <td>Miedo y silencio. Punto.</td>
+        <td>Sinaítico (א), Vaticano (B), los más antiguos</td>
+      </tr>
+      <tr>
+        <td><strong>Corto</strong></td>
+        <td>Un par de líneas: las mujeres sí informan, y Jesús envía la proclamación "de oriente a occidente"</td>
+        <td>Códice Bobbiensis y unos pocos manuscritos, casi siempre junto al largo</td>
+      </tr>
+      <tr>
+        <td><strong>Largo (16:9–20)</strong></td>
+        <td>Apariciones, la Gran Comisión marcana, señales, ascensión</td>
+        <td>Más de 1.600 manuscritos griegos; atestiguado desde fines del siglo II</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="voz exegeta">
+    <div class="quien">🏛️ El Exégeta</div>
+    <p>El dato más elegante no está en los manuscritos de Marcos, sino en Mateo y Lucas. Ambos siguen a Marcos de cerca, casi verso a verso… hasta 16:8. A partir de ahí, cada uno se dispara en direcciones completamente distintas e irreconciliables entre sí. La explicación más natural: el Marcos que ellos tenían sobre el escritorio terminaba exactamente donde terminan los grandes códices. Cada evangelista tuvo que resolver por su cuenta el final que Marcos dejó abierto.</p>
+  </div>
+
+  <div class="voz metodologo">
+    <div class="quien">📋 El Metodólogo PDCA</div>
+    <p>Nota de método: el criterio rector de la crítica textual es preferir la lectura que mejor explica el origen de las demás. Un final incómodo explica perfectamente por qué los copistas fabricaron finales cómodos. Lo inverso —que alguien recortara un final glorioso para dejar solo miedo y silencio— no lo explica nadie. La lectura difícil gana.</p>
+  </div>
+
+  <details class="persiana">
+    <summary>Persiana · Copistas que dejaron notas al margen</summary>
+    <div class="persiana-body"><div class="persiana-inner">
+      <p>Algunos manuscritos conservan la huella de la duda. El códice L y el fragmento 083 presentan el final corto con notas del tipo "esto también circula después de <em>ephobounto gar</em>", reconociendo abiertamente que conocían copias que terminaban en 16:8, copias con el final corto y copias con el largo. Comentarios de padres de la iglesia confirman que muchos manuscritos antiguos terminaban en 16:8. Los escribas no estaban engañando a nadie: estaban documentando, con honestidad notarial, un problema que los superaba.</p>
+      <p class="fuente-seccion">Fuentes: <a href="https://www.thetextofthegospels.com/2020/10/video-lecture-mark-169-20-shorter.html">The Text of the Gospels</a>, <a href="https://sites.google.com/site/inglisonmarcion/home/mark/mark-169-20-the-origin-of-the-long-ending">Inglis – Origin of the Long Ending</a></p>
+    </div></div>
+  </details>
+
+  <p class="fuente-seccion">Fuentes de la sección: <a href="https://en.wikipedia.org/wiki/Mark_16">Wikipedia – Mark 16</a>, <a href="https://www.academia.edu/7417688/Mark_16_It_aint_over_til_its_over_">Academia – It ain't over 'til it's over</a>, <a href="https://sites.google.com/site/inglisonmarcion/home/mark/mark-169-20-the-origin-of-the-long-ending">Inglis – Origin of the Long Ending</a></p>
+</section>
+
+<!-- ============ V ============ -->
+<section id="s5">
+  <h2><span class="num">V.</span> El secreto al revés</h2>
+
+  <p>Aquí es donde el final deja de ser un problema y se convierte en una firma. Todo el evangelio de Marcos está atravesado por el <em>secreto mesiánico</em>: Jesús ordena silencio una y otra vez —al leproso sanado, a los demonios que lo reconocen, a Pedro tras su confesión, a los testigos de la transfiguración—. Y una y otra vez, la orden fracasa: cuanto más pide silencio, más habla la gente. Hasta que llega 16:8, y Marcos invierte la fórmula con precisión de relojero: por primera vez en todo el libro alguien recibe la orden de <em>hablar</em>… y calla.</p>
+
+  <div class="eco">
+    <div class="lado">
+      <div class="gr">μηδενὶ μηδὲν εἴπῃς</div>
+      <div class="tr">«a nadie nada digas»</div>
+      <div class="ref">Marcos 1:44 · orden de silencio → el leproso habla</div>
+    </div>
+    <div class="flecha">⟷</div>
+    <div class="lado">
+      <div class="gr">οὐδενὶ οὐδὲν εἶπαν</div>
+      <div class="tr">«a nadie nada dijeron»</div>
+      <div class="ref">Marcos 16:8 · orden de hablar → las mujeres callan</div>
+    </div>
+  </div>
+
+  <div class="voz exegeta">
+    <div class="quien">🏛️ El Exégeta</div>
+    <p>El eco verbal no es casual: la primera orden de silencio del evangelio y el silencio final están construidos con la misma estructura de doble negación. Es un marco literario deliberado. Marcos abre con un secreto que nadie guarda y cierra con un anuncio que nadie entrega. Antes de la resurrección, callar era la orden y hablar el fracaso; después, hablar es la orden y callar el fracaso. La ironía es total — y es la última de un libro que, como ya viste en <em>El Reino al Revés</em>, hace de la ironía su recurso teológico central.</p>
+  </div>
+
+  <div class="voz ingeniera">
+    <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+    <p>En lenguaje de sistemas: durante quince capítulos, el mensaje se propaga por la red <em>contra</em> la instrucción del nodo central — un sistema donde la supresión amplifica la señal. En 16:8, la instrucción cambia de signo (¡transmitan!) y la propagación se detiene en cero. Marcos te está mostrando que la red no corre por obediencia mecánica. Corre por algo más. Y ese "algo más" es exactamente lo que el final te obliga a buscar.</p>
+  </div>
+
+  <div class="voz provocador">
+    <div class="quien">🎭 El Provocador</div>
+    <p>Y noten a quiénes les falla la voz al final: a las mujeres, que habían sido las heroínas silenciosas del relato. Los Doce huyeron en Getsemaní; ellas se quedaron junto a la cruz, vieron dónde lo sepultaron, madrugaron con los perfumes. Marcos no las humilla: las humaniza. En este evangelio <em>todos</em> fallan — Pedro, los Doce, y al final también ellas. Nadie sale del libro con el mérito intacto. Ese es el punto.</p>
+  </div>
+
+  <p class="fuente-seccion">Fuentes de la sección: <a href="https://bible.org/article/irony-end-textual-and-literary-analysis-mark-168">Bible.org – Irony in the End</a>, <a href="https://www.workingpreacher.org/commentaries/revised-common-lectionary/resurrection-of-our-lord-2/commentary-on-mark-161-8-5">Working Preacher</a>, <a href="https://earthandaltarmag.com/posts/axlxg7mzoy21lgm5v4j8u0h6ky5c1q">Earth and Altar</a></p>
+</section>
+
+<!-- ============ VI ============ -->
+<section id="s6">
+  <h2><span class="num">VI.</span> El final es tuyo</h2>
+
+  <p>Entonces, ¿qué hace un evangelio que termina mal a propósito? La respuesta de la crítica narrativa moderna es sorprendentemente pastoral: <strong>te recluta</strong>. El final abierto no es un vacío — es una vacante. Marcos deja el último capítulo sin escribir porque el último capítulo te toca a ti.</p>
+
+  <div class="voz ingeniera">
+    <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+    <p>Piénsalo como bucle: tú, lector, sabes que las mujeres finalmente hablaron — la prueba es que estás leyendo un evangelio que solo existe porque la noticia corrió. El texto dice "no dijeron nada a nadie" y tu propia existencia como lector lo desmiente. Marcos te convierte en la evidencia de que el miedo no ganó. El circuito que el versículo 8 deja abierto se cierra en ti — o no se cierra.</p>
+  </div>
+
+  <div class="voz exegeta">
+    <div class="quien">🏛️ El Exégeta</div>
+    <p>Y está la geografía del versículo 7: "él va delante de ustedes a <em>Galilea</em>; allí lo verán". Galilea es el capítulo 1. El final del libro apunta al principio del libro. Marcos no es una línea: es un círculo. Terminar de leerlo es la instrucción de volver a leerlo — pero ahora sabiendo quién es el que camina por Galilea. La segunda lectura es el verdadero final.</p>
+  </div>
+
+  <div class="voz metodologo">
+    <div class="quien">📋 El Metodólogo PDCA</div>
+    <p>Y no pasemos por alto la gracia escondida en ese mismo versículo: "díganles a sus discípulos, <em>y a Pedro</em>". El que negó tres veces recibe invitación con nombre y apellido. En un evangelio donde todos fallan, la última palabra de Jesús —transmitida por un ángel a unas mujeres que también fallarán— es una segunda oportunidad dirigida al que falló más fuerte. El fracaso es la penúltima palabra. La penúltima, no la última.</p>
+  </div>
+
+  <details class="persiana">
+    <summary>Persiana · Finales abiertos en la propia Biblia</summary>
+    <div class="persiana-body"><div class="persiana-inner">
+      <p>Marcos no está solo. <strong>Jonás</strong> termina con Dios haciéndole una pregunta al profeta enfurruñado — y el libro se cierra sin la respuesta, porque la respuesta le toca al lector. <strong>Hechos</strong> termina con Pablo bajo arresto domiciliario, predicando "sin impedimento", y jamás nos cuenta el desenlace de su juicio: la historia sigue abierta porque la misión sigue abierta. La Biblia conoce el arte de terminar sin cerrar. Marcos simplemente lo lleva al extremo: no deja abierta una escena — deja abierta la respuesta a la resurrección misma.</p>
+      <p class="fuente-seccion">Fuente: <a href="https://bible.org/article/irony-end-textual-and-literary-analysis-mark-168">Bible.org – Irony in the End</a></p>
+    </div></div>
+  </details>
+
+  <p class="fuente-seccion">Fuentes de la sección: <a href="https://themultidisciplinarian.com/2025/07/29/the-gospel-of-mark-a-masterpiece-misunderstood-part-2-reader-response-criticism/">The Multidisciplinarian – Reader-Response</a>, <a href="https://www.workingpreacher.org/commentaries/revised-common-lectionary/resurrection-of-our-lord-2/commentary-on-mark-161-8-5">Working Preacher</a></p>
+</section>
+
+<!-- ============ VII ============ -->
+<section id="s7">
+  <h2><span class="num">VII.</span> Café de cierre</h2>
+
+  <div class="voz disenadora">
+    <div class="quien">🎨 La Diseñadora</div>
+    <p>Mi síntesis visual: Marcos entrega un cuadro con una esquina sin pintar, y el pincel está atado al marco. No es una obra inconclusa — es una obra que se concluye en el que la mira.</p>
+  </div>
+
+  <div class="voz provocador">
+    <div class="quien">🎭 El Provocador</div>
+    <p>La mía es más incómoda: el final de Marcos es un espejo. "Y no dijeron nada a nadie, porque tenían miedo" no describe solo a tres mujeres del siglo primero. Describe a cada creyente que alguna vez supo la noticia y calló. Marcos no termina mal — termina honesto.</p>
+  </div>
+
+  <div class="cierre">
+    <p><strong>La respuesta del panel, en una frase:</strong> Marcos no termina en miedo y silencio por accidente ni por descuido — termina ahí porque un evangelio que cerrara todos los cabos te dejaría de espectador, y Marcos no escribió para espectadores. El <em>gar</em> suspendido en el aire es la mano del narrador extendida hacia ti: la historia sigue en el que la lee. Tú eres Marcos 16:9.</p>
+  </div>
+
+  <div class="fuentes">
+    <strong>Fuentes consultadas:</strong><br>
+    <a href="https://en.wikipedia.org/wiki/Mark_16">Wikipedia – Mark 16</a> ·
+    <a href="https://bible.org/article/irony-end-textual-and-literary-analysis-mark-168">Bible.org – Irony in the End</a> ·
+    <a href="https://www.bible-bridge.com/the-strange-ending-of-the-gospel-of-mark/">BibleBridge – The Strange Ending</a> ·
+    <a href="https://sites.google.com/site/inglisonmarcion/home/mark/mark-169-20-the-origin-of-the-long-ending">Inglis – Origin of the Long Ending</a> ·
+    <a href="https://www.thetextofthegospels.com/2020/10/video-lecture-mark-169-20-shorter.html">The Text of the Gospels</a> ·
+    <a href="https://www.workingpreacher.org/commentaries/revised-common-lectionary/resurrection-of-our-lord-2/commentary-on-mark-161-8-5">Working Preacher</a> ·
+    <a href="https://themultidisciplinarian.com/2025/07/29/the-gospel-of-mark-a-masterpiece-misunderstood-part-2-reader-response-criticism/">The Multidisciplinarian</a> ·
+    <a href="https://earthandaltarmag.com/posts/axlxg7mzoy21lgm5v4j8u0h6ky5c1q">Earth and Altar</a> ·
+    <a href="https://www.studylight.org/commentaries/eng/pfc/mark-16.html">Peake's Commentary</a> ·
+    <a href="https://www.academia.edu/7417688/Mark_16_It_aint_over_til_its_over_">Academia – It ain't over 'til it's over</a>
+  </div>
+</section>
+
+<footer>
+  Café con Claude · El Panel Pregunta Nº 1 · Julio 2026 · Texto bíblico: Dios Habla Hoy (DHH)
+</footer>
+
+</div>
+</main>
+
+<script>
+  // Barra de progreso
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    progress.style.width = (scrolled * 100) + '%';
+  }, { passive: true });
+
+  // Scroll-spy con IntersectionObserver
+  const links = document.querySelectorAll('nav.sidebar ol a');
+  const sections = document.querySelectorAll('main section');
+  const byId = {};
+  links.forEach(l => { byId[l.getAttribute('href').slice(1)] = l; });
+
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = byId[e.target.id];
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => spy.observe(s));
+
+  // Menú móvil
+  const toggle = document.getElementById('menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  toggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    toggle.textContent = sidebar.classList.contains('open') ? '✕ Cerrar' : '☰ Índice';
+  });
+  links.forEach(l => l.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    toggle.textContent = '☰ Índice';
+  }));
+</script>
+
+</body>
+</html>

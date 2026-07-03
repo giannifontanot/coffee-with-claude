@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fe de Erratas · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --soft: #6a5b48;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; animation: none !important; }
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  /* ── Barra de progreso ───────────────────────── */
+  #progreso {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: var(--terracotta); z-index: 60;
+    transition: width 0.1s linear;
+  }
+
+  /* ── Sidebar ─────────────────────────────────── */
+  nav.lateral {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 230px;
+    padding: 2.2rem 1.4rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    overflow-y: auto; z-index: 50;
+  }
+  nav.lateral .home-link {
+    display: inline-block; font-size: 0.8rem;
+    color: var(--terracotta); text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 1.8rem;
+  }
+  nav.lateral .home-link:hover { color: var(--ink); border-color: var(--ink); }
+  nav.lateral .serie {
+    font-family: 'Fraunces', serif; font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--soft); margin-bottom: 1.2rem;
+  }
+  nav.lateral ol { list-style: none; }
+  nav.lateral li { margin-bottom: 0.15rem; }
+  nav.lateral a.sec {
+    display: flex; gap: 0.6rem; align-items: baseline;
+    padding: 0.42rem 0.55rem; border-radius: 4px;
+    text-decoration: none; color: var(--soft);
+    font-size: 0.86rem; line-height: 1.35;
+    transition: background 0.2s, color 0.2s;
+  }
+  nav.lateral a.sec .rom {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.78rem; min-width: 1.6em; color: var(--amber);
+  }
+  nav.lateral a.sec:hover { background: rgba(201,138,45,0.1); color: var(--ink); }
+  nav.lateral a.sec.activo { background: rgba(180,83,42,0.1); color: var(--ink); }
+  nav.lateral a.sec.activo .rom { color: var(--terracotta); }
+
+  /* ── Hamburguesa móvil ───────────────────────── */
+  #menuBtn {
+    display: none; position: fixed; top: 0.9rem; left: 0.9rem; z-index: 70;
+    width: 2.6rem; height: 2.6rem; border-radius: 6px;
+    border: 1px solid var(--line); background: var(--cream);
+    font-size: 1.15rem; color: var(--ink); cursor: pointer;
+  }
+  #velo {
+    display: none; position: fixed; inset: 0;
+    background: rgba(43,33,24,0.35); z-index: 45;
+  }
+
+  /* ── Contenido ───────────────────────────────── */
+  main { margin-left: 230px; padding: 3.2rem 1.4rem 5rem; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header.cabecera { margin-bottom: 3.2rem; }
+  .sello {
+    display: inline-block; font-family: 'Fraunces', serif;
+    font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--cream); background: var(--terracotta);
+    padding: 0.28rem 0.7rem; border-radius: 3px; margin-bottom: 1.1rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2.1rem, 5.5vw, 3.1rem); line-height: 1.12;
+    margin-bottom: 0.7rem;
+  }
+  .bajada {
+    font-style: italic; color: var(--soft);
+    font-size: 1.08rem; max-width: 34em;
+  }
+  .pregunta-origen {
+    margin-top: 1.6rem; padding: 1rem 1.2rem;
+    border-left: 4px solid var(--plum);
+    background: rgba(110,74,110,0.06); font-size: 0.95rem;
+  }
+  .pregunta-origen strong { font-family: 'Fraunces', serif; }
+
+  section { margin-bottom: 3.4rem; scroll-margin-top: 2rem; }
+  h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.4rem, 3.4vw, 1.85rem); line-height: 1.2;
+    margin-bottom: 1.1rem;
+  }
+  h2 .rom {
+    color: var(--amber); font-weight: 600;
+    font-size: 0.72em; margin-right: 0.55rem;
+    letter-spacing: 0.05em;
+  }
+  p { margin-bottom: 1.05rem; }
+  em { font-style: italic; }
+
+  /* ── Voces del panel ─────────────────────────── */
+  .voz { display: flex; gap: 0.75rem; margin-bottom: 1.05rem; }
+  .voz .marca {
+    flex: 0 0 auto; width: 0.55rem; border-radius: 3px; margin-top: 0.3rem;
+  }
+  .voz.exegeta .marca { background: var(--terracotta); }
+  .voz.ingeniera .marca { background: var(--olive); }
+  .voz.provocador .marca { background: var(--plum); }
+  .voz.disenadora .marca { background: var(--amber); }
+  .voz.metodologo .marca { background: var(--steel); }
+  .voz .quien {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.92rem;
+  }
+  .voz.exegeta .quien { color: var(--terracotta); }
+  .voz.ingeniera .quien { color: var(--olive); }
+  .voz.provocador .quien { color: var(--plum); }
+  .voz.disenadora .quien { color: var(--amber); }
+  .voz.metodologo .quien { color: var(--steel); }
+  .voz p:last-child { margin-bottom: 0; }
+
+  /* ── Ficha fe de erratas (elemento firma) ────── */
+  .errata {
+    border: 1px solid var(--line); border-radius: 6px;
+    background: #fbf7ee; margin: 1.6rem 0;
+    box-shadow: 2px 3px 0 rgba(43,33,24,0.07);
+  }
+  .errata .cinta {
+    font-family: 'Fraunces', serif; font-size: 0.7rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.45rem 1rem; border-bottom: 1px dashed var(--line);
+    color: var(--soft);
+  }
+  .errata dl { padding: 0.9rem 1rem 1rem; }
+  .errata dt {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--terracotta); margin-top: 0.7rem;
+  }
+  .errata dt:first-child { margin-top: 0; }
+  .errata dt.registro { color: var(--steel); }
+  .errata dt.correccion { color: var(--olive); }
+  .errata dd { font-size: 0.95rem; margin-top: 0.15rem; }
+
+  /* ── Persianas ───────────────────────────────── */
+  details.persiana {
+    border: 1px solid var(--line); border-radius: 6px;
+    margin: 1.3rem 0; background: rgba(255,255,255,0.4);
+  }
+  details.persiana summary {
+    list-style: none; cursor: pointer;
+    padding: 0.85rem 1.1rem;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.97rem;
+    display: flex; align-items: center; gap: 0.65rem;
+    user-select: none;
+  }
+  details.persiana summary::-webkit-details-marker { display: none; }
+  details.persiana summary::before {
+    content: ""; width: 0.5rem; height: 0.5rem;
+    border-right: 2px solid var(--amber); border-bottom: 2px solid var(--amber);
+    transform: rotate(-45deg); transition: transform 0.25s ease;
+    flex: 0 0 auto;
+  }
+  details.persiana[open] summary::before { transform: rotate(45deg); }
+  details.persiana .interior {
+    display: grid; grid-template-rows: 0fr;
+    transition: grid-template-rows 0.32s ease;
+  }
+  details.persiana[open] .interior { grid-template-rows: 1fr; }
+  details.persiana .interior > div {
+    overflow: hidden; padding: 0 1.1rem;
+  }
+  details.persiana[open] .interior > div { padding: 0 1.1rem 1rem; }
+  details.persiana .interior p { font-size: 0.95rem; }
+
+  /* ── Cita bíblica ────────────────────────────── */
+  blockquote.biblia {
+    margin: 1.4rem 0; padding: 0.9rem 1.2rem;
+    border-left: 4px solid var(--amber);
+    background: rgba(201,138,45,0.07);
+    font-style: italic;
+  }
+  blockquote.biblia .ref {
+    display: block; margin-top: 0.4rem;
+    font-style: normal; font-size: 0.83rem;
+    font-family: 'Fraunces', serif; color: var(--soft);
+  }
+
+  /* ── Fuentes ─────────────────────────────────── */
+  .fuentes {
+    margin-top: 1.4rem; padding-top: 0.7rem;
+    border-top: 1px dotted var(--line);
+    font-size: 0.85rem; color: var(--soft);
+  }
+  .fuentes span.tag {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem;
+    margin-right: 0.5rem;
+  }
+  .fuentes a {
+    color: var(--terracotta); text-decoration: none;
+    border-bottom: 1px solid rgba(180,83,42,0.4);
+  }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ── Cierre ──────────────────────────────────── */
+  .cierre {
+    margin-top: 3rem; padding: 1.3rem 1.4rem;
+    border: 1px solid var(--line); border-left: 5px solid var(--olive);
+    border-radius: 6px; background: rgba(107,122,63,0.06);
+  }
+  .cierre h3 {
+    font-family: 'Fraunces', serif; font-size: 1.1rem; margin-bottom: 0.6rem;
+  }
+
+  footer.pie {
+    margin-top: 4rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; color: var(--soft); font-style: italic;
+  }
+
+  a:focus-visible, summary:focus-visible, button:focus-visible {
+    outline: 2px solid var(--terracotta); outline-offset: 2px;
+  }
+
+  /* ── Responsivo ──────────────────────────────── */
+  @media (max-width: 900px) {
+    nav.lateral { transform: translateX(-100%); transition: transform 0.28s ease; width: 260px; }
+    nav.lateral.abierta { transform: translateX(0); box-shadow: 6px 0 20px rgba(43,33,24,0.15); }
+    #menuBtn { display: block; }
+    #velo.visible { display: block; }
+    main { margin-left: 0; padding-top: 4.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progreso"></div>
+<button id="menuBtn" aria-label="Abrir menú">☰</button>
+<div id="velo"></div>
+
+<nav class="lateral" id="lateral">
+  <a class="home-link" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  <div class="serie">Café con Claude · El Panel Pregunta № 7</div>
+  <ol>
+    <li><a class="sec" href="#s1"><span class="rom">I</span> La pregunta sobre la mesa</a></li>
+    <li><a class="sec" href="#s2"><span class="rom">II</span> Antioquía: la mesa dividida</a></li>
+    <li><a class="sec" href="#s3"><span class="rom">III</span> Las viudas que nadie veía</a></li>
+    <li><a class="sec" href="#s4"><span class="rom">IV</span> El calendario que falló</a></li>
+    <li><a class="sec" href="#s5"><span class="rom">V</span> Corinto y el anillo de oro</a></li>
+    <li><a class="sec" href="#s6"><span class="rom">VI</span> El libro que publica sus erratas</a></li>
+    <li><a class="sec" href="#s7"><span class="rom">VII</span> El Check del panel</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+  <header class="cabecera">
+    <span class="sello">Fe de erratas</span>
+    <h1>Lo que no contamos en los sermones</h1>
+    <p class="bajada">En qué se equivocó la iglesia primitiva — y por qué el Nuevo Testamento decidió no borrarlo.</p>
+    <div class="pregunta-origen">
+      <strong>🎭 El Provocador preguntó:</strong> «¿En qué se equivocó la iglesia primitiva y nunca lo admitimos en los sermones?» — Pregunta 7 de <em>El Panel Pregunta</em>, julio 2026.
+    </div>
+  </header>
+
+  <!-- I -->
+  <section id="s1">
+    <h2><span class="rom">I.</span>La pregunta sobre la mesa</h2>
+
+    <div class="voz provocador">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🎭 El Provocador</span>
+        <p>Los sermones sobre la iglesia primitiva suelen pintar Hechos 2 en tonos dorados: todos unánimes, todos compartiendo, todos perseverando. Y es verdad — pero es la mitad de la fotografía. La otra mitad también está en el canon: apóstoles que ceden al miedo, viudas inmigrantes sin comida, congregaciones que convirtieron la Cena del Señor en cena de clases sociales, y una generación entera que leyó mal el reloj de Dios. Mi pregunta no es cinismo. Es esta: si el Espíritu Santo permitió que esos fracasos quedaran <em>escritos</em>, ¿por qué nosotros los escondemos?</p>
+      </div>
+    </div>
+
+    <div class="voz metodologo">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">📋 El Metodólogo</span>
+        <p>Propongo el formato: cada error como una entrada de <em>fe de erratas</em> — el error, dónde quedó registrado, y la corrección que produjo. Porque eso es exactamente lo que hace el Nuevo Testamento: no es un libro sin errores humanos adentro; es un libro que los documenta para corregirlos. Un «Check» del PDCA con dos mil años de vigencia.</p>
+      </div>
+    </div>
+
+    <div class="voz ingeniera">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🕸️ La Ingeniera</span>
+        <p>Y una advertencia de sistemas antes de empezar: casi ninguno de estos errores fue malicia individual. Fueron fallas de <em>estructura</em> — sesgos de red, presión de grupo, expectativas mal calibradas. Lo cual los hace más incómodos, no menos: porque las fallas estructurales son las que nosotros también repetimos sin darnos cuenta.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <h2><span class="rom">II.</span>Antioquía: el apóstol que se levantó de la mesa</h2>
+
+    <div class="voz exegeta">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🏛️ El Exégeta</span>
+        <p>El expediente más documentado está en Gálatas 2:11–14. Pedro — el de Pentecostés, el de la visión de Jope, el que ya había defendido a los gentiles en el Concilio de Jerusalén — llega a Antioquía y come libremente con los creyentes gentiles. Hasta que llegan «algunos de parte de Santiago». Entonces Pedro se aparta, se levanta de la mesa, y con él arrastra a los demás judíos, incluido Bernabé. Pablo escribe que le hizo frente cara a cara, porque su conducta era reprochable, y nombra el pecado con precisión quirúrgica: <em>hipocresía</em>.</p>
+      </div>
+    </div>
+
+    <blockquote class="biblia">
+      «Pero cuando Cefas fue a Antioquía, me enfrenté con él, porque lo que estaba haciendo era condenable.»
+      <span class="ref">Gálatas 2:11 (cf. DHH)</span>
+    </blockquote>
+
+    <div class="voz ingeniera">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🕸️ La Ingeniera</span>
+        <p>Nota el mecanismo: Pedro no cambió de teología — cambió de <em>comportamiento bajo observación</em>. El texto dice que actuó por miedo a los del grupo de la circuncisión. Es el efecto de red más viejo del mundo: un nodo de alta influencia modifica su conducta ante presión social, y la cascada es inmediata — «los demás judíos» y hasta Bernabé lo siguen. En una red, la hipocresía del nodo central no es un pecado privado: es un contagio.</p>
+      </div>
+    </div>
+
+    <div class="voz provocador">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🎭 El Provocador</span>
+        <p>Y aquí lo que no decimos en los sermones: esto ocurrió <em>después</em> del Concilio de Jerusalén, o al menos después de que el tema parecía resuelto. La doctrina estaba clara; la práctica se quebró igual. La iglesia primitiva ya sabía la respuesta correcta y aun así partió la mesa en dos: judíos por un lado, gentiles por el otro. Si en Antioquía celebraban la Cena junto con la comida común — como era costumbre —, la división llegó hasta la adoración misma.</p>
+      </div>
+    </div>
+
+    <details class="persiana">
+      <summary>Persiana: ¿por qué era tan grave levantarse de una mesa?</summary>
+      <div class="interior"><div>
+        <p>En el mundo mediterráneo del siglo I, la mesa compartida era el lenguaje social más denso que existía: decía quién pertenecía y quién no. Comer con gentiles era la declaración práctica de que el evangelio había derribado el muro. Al retirarse, Pedro no emitió ninguna doctrina — pero comunicó con el cuerpo lo contrario de lo que confesaba con la boca: que los gentiles eran cristianos de segunda mientras no vivieran como judíos. Por eso Pablo dice que no andaban «conforme a la verdad del evangelio». El error no fue de mesa: fue de evangelio.</p>
+        <p>Los estudiosos añaden un detalle humilde: solo tenemos la versión de Pablo. El Nuevo Testamento no conserva la defensa de Pedro. La honestidad del canon incluye también esa asimetría.</p>
+      </div></div>
+    </details>
+
+    <div class="errata">
+      <div class="cinta">Fe de erratas · Entrada 1</div>
+      <dl>
+        <dt>Error</dt>
+        <dd>Segregar la comunión por presión social, contradiciendo en la práctica el evangelio ya confesado.</dd>
+        <dt class="registro">Dónde quedó registrado</dt>
+        <dd>Gálatas 2:11–14, escrito por Pablo y canonizado por la misma iglesia que salió mal parada en el relato.</dd>
+        <dt class="correccion">La corrección</dt>
+        <dd>La confrontación pública y la doctrina de la justificación por la fe (Gá 2:15–21), nacida en parte de esta crisis: una sola mesa o ningún evangelio.</dd>
+      </dl>
+    </div>
+
+    <p class="fuentes"><span class="tag">Fuentes</span>
+      <a href="https://en.wikipedia.org/wiki/Incident_at_Antioch">Incident at Antioch (Wikipedia)</a> ·
+      <a href="https://www.gotquestions.org/incident-at-Antioch.html">GotQuestions</a> ·
+      <a href="https://rsc.byu.edu/ministry-peter-chief-apostle/peter-paul-antioch">BYU Religious Studies Center</a> ·
+      <a href="https://bible.org/seriespage/peter%E2%80%99s-capitulation-and-paul%E2%80%99s-correction-galatians-211-21">Bible.org</a>
+    </p>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <h2><span class="rom">III.</span>Las viudas que nadie veía</h2>
+
+    <div class="voz ingeniera">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🕸️ La Ingeniera</span>
+        <p>Hechos 6:1 es mi expediente favorito porque es puro diagnóstico de sistemas. La iglesia de Jerusalén crece rápido, y surge una queja: las viudas de los judíos helenistas — de habla griega, muchas de ellas inmigrantes de la diáspora que habían venido a morir en Jerusalén — estaban siendo desatendidas en la distribución diaria de alimentos, mientras las viudas hebreas locales recibían mejor atención. Nadie firmó una política de discriminación. Pero los doce apóstoles eran todos hebreos de habla aramea, las viudas helenistas vivían probablemente en otros barrios, hablaban otra lengua, asistían a otras sinagogas — y el sistema, sin querer, las dejó fuera del flujo.</p>
+      </div>
+    </div>
+
+    <div class="voz provocador">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🎭 El Provocador</span>
+        <p>Traducción sin anestesia: la primera iglesia — la de Pentecostés, la de «tenían todo en común» — desarrolló en cuestión de meses un sesgo étnico contra sus miembros más vulnerables. Viudas. Extranjeras. Pobres. Exactamente el grupo que la Torá ordenaba proteger primero. Ese sermón casi nunca se predica, y cuando se predica, saltamos rapidísimo a la solución de los siete diáconos para no mirar el problema de frente.</p>
+      </div>
+    </div>
+
+    <div class="voz exegeta">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🏛️ El Exégeta</span>
+        <p>Pero mira la corrección, porque es extraordinaria. Los apóstoles no minimizan la queja ni la espiritualizan. Convocan a la comunidad, reconocen el problema, y piden elegir a siete hombres de buen testimonio — y los siete elegidos llevan nombres griegos. La minoría agraviada no solo fue escuchada: recibió la administración completa del sistema que la había excluido. Algunos comentaristas lo han llamado, con un guiño anacrónico, el primer caso de acción afirmativa. Y de ese grupo salieron Esteban y Felipe — el primer mártir y el primer misionero transcultural. La falla, bien corregida, se volvió motor de expansión.</p>
+      </div>
+    </div>
+
+    <div class="errata">
+      <div class="cinta">Fe de erratas · Entrada 2</div>
+      <dl>
+        <dt>Error</dt>
+        <dd>Un sesgo estructural que dejó sin alimento a las viudas de la minoría cultural — discriminación por diseño defectuoso, no por decreto.</dd>
+        <dt class="registro">Dónde quedó registrado</dt>
+        <dd>Hechos 6:1, escrito por Lucas dentro del mismo libro que celebra la unidad de la iglesia.</dd>
+        <dt class="correccion">La corrección</dt>
+        <dd>Escuchar la queja, rediseñar la estructura y entregar el poder a la minoría afectada (Hch 6:2–7). Resultado: «el mensaje de Dios seguía extendiéndose».</dd>
+      </dl>
+    </div>
+
+    <p class="fuentes"><span class="tag">Fuentes</span>
+      <a href="https://fuller.edu/next-faithful-step/resources/the-hellenistic-widows/">Fuller Seminary</a> ·
+      <a href="https://enduringword.com/bible-commentary/acts-6/">Enduring Word</a> ·
+      <a href="https://www.bibleref.com/Acts/6/Acts-6-1.html">BibleRef</a> ·
+      <a href="https://godrunning.com/2021/09/18/the-solution-to-discrimination-against-minorities-acts-61-6/">God Running</a>
+    </p>
+  </section>
+
+  <!-- IV -->
+  <section id="s4">
+    <h2><span class="rom">IV.</span>El calendario que no se cumplió</h2>
+
+    <div class="voz exegeta">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🏛️ El Exégeta</span>
+        <p>Este expediente es el más delicado, así que voy con cuidado. Es opinión común en la investigación del Nuevo Testamento que la primera generación cristiana esperaba una parusía inminente — el regreso de Cristo dentro de su propia vida. En 1 Tesalonicenses, posiblemente el texto más antiguo que conservamos, Pablo tiene que consolar a creyentes angustiados porque algunos hermanos habían muerto <em>antes</em> del regreso esperado: no contaban con que hubiera funerales antes de la trompeta. Y 2 Pedro, dirigida a la segunda o tercera generación, ya enfrenta a burladores que preguntan dónde está la promesa de su venida, porque todo sigue igual.</p>
+      </div>
+    </div>
+
+    <div class="voz provocador">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🎭 El Provocador</span>
+        <p>Es decir: hubo creyentes que vendieron el calendario como doctrina. Que dejaron de trabajar esperando el fin — Pablo tuvo que escribir «el que no quiera trabajar, que tampoco coma» (2 Ts 3:10) precisamente a una congregación mareada de escatología. La iglesia primitiva no se equivocó en la <em>esperanza</em>; se equivocó al convertir la esperanza en cronograma. Y ese error lo hemos repetido cada siglo desde entonces, con fecha y hora incluidas.</p>
+      </div>
+    </div>
+
+    <details class="persiana">
+      <summary>Persiana: ¿se equivocó Jesús, o se equivocaron sus lectores?</summary>
+      <div class="interior"><div>
+        <p>Aquí el panel distingue con lupa. Desde Schweitzer, una línea académica sostiene que la expectativa inminente venía del propio Jesús (leyendo Mr 9:1 y 13:30 en clave estricta). Pero otra línea — con estudiosos como Keown, y en sintonía con N. T. Wright — argumenta que ni Marcos ni Pablo sostenían una parusía con fecha, y que dichos como «esta generación» apuntan al juicio sobre el Templo en el año 70, no al fin del cosmos. Jesús mismo dejó la piedra angular: «nadie sabe el día ni la hora» (Mr 13:32).</p>
+        <p>Lo que sí es históricamente firme es que <em>parte de la iglesia</em> leyó un calendario donde había una promesa, y que el Nuevo Testamento conserva las cartas que corrigen ese error — 1 Tesalonicenses 4, 2 Tesalonicenses 2–3, 2 Pedro 3 — en lugar de fingir que nunca ocurrió. La respuesta de 2 Pedro es teológicamente preciosa: la demora no es lentitud sino paciencia, porque Dios «no quiere que nadie perezca» (2 P 3:9).</p>
+      </div></div>
+    </details>
+
+    <div class="errata">
+      <div class="cinta">Fe de erratas · Entrada 3</div>
+      <dl>
+        <dt>Error</dt>
+        <dd>Convertir la esperanza del regreso de Cristo en un cronograma de corto plazo — con angustia pastoral, ociosidad y crisis de fe cuando el reloj no sonó.</dd>
+        <dt class="registro">Dónde quedó registrado</dt>
+        <dd>1 Tesalonicenses 4:13–17; 2 Tesalonicenses 2–3; 2 Pedro 3:3–9 — cartas escritas precisamente para corregir la lectura fallida.</dd>
+        <dt class="correccion">La corrección</dt>
+        <dd>Reencuadrar la demora como paciencia divina y la espera como vigilancia activa: vivir listos, no calendarizados.</dd>
+      </dl>
+    </div>
+
+    <p class="fuentes"><span class="tag">Fuentes</span>
+      <a href="https://jesusmemoirs.wordpress.com/2018/03/15/2-peter-and-the-delay-of-the-parousia/">The Jesus Memoirs</a> ·
+      <a href="https://www.thecatholicthing.org/2024/12/23/when-is-christ-coming-back/">The Catholic Thing</a> ·
+      <a href="https://www.whitneywoollard.com/sitecontent/the-delay-of-jesus-return-amp-the-crisis-of-patience">Whitney Woollard</a> ·
+      <a href="https://ehrmanblog.org/why-the-delay-of-the-end-mattered-in-pauls-communities/">Bart Ehrman Blog</a>
+    </p>
+  </section>
+
+  <!-- V -->
+  <section id="s5">
+    <h2><span class="rom">V.</span>Corinto y el anillo de oro</h2>
+
+    <div class="voz provocador">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🎭 El Provocador</span>
+        <p>Dos entradas breves para completar el expediente, ambas sobre el mismo pecado con distinto traje: el clasismo. En Corinto, la Cena del Señor se celebraba dentro de una comida comunitaria — y los ricos, que llegaban temprano y traían su propia comida, comían y bebían hasta la embriaguez mientras los pobres, esclavos y jornaleros que llegaban tarde pasaban hambre en la misma reunión. Pablo es demoledor: eso que hacen ya no es comer la Cena del Señor (1 Co 11:20–22), y comer así es hacerlo «indignamente» — el famoso versículo que usamos para el examen de conciencia individual era, en su origen, una denuncia contra la desigualdad en la mesa.</p>
+      </div>
+    </div>
+
+    <div class="voz exegeta">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🏛️ El Exégeta</span>
+        <p>Y Santiago 2:1–7 confirma que no era un problema solo de Corinto: congregaciones que sentaban en el mejor lugar al visitante del anillo de oro y la ropa fina, y dejaban de pie — o en el suelo — al pobre. Santiago lo llama por su nombre: hacer distinción de personas es pecado contra la ley regia del amor al prójimo. Que dos autores tan distintos como Pablo y Santiago ataquen el mismo mal en geografías distintas nos dice que el clasismo fue una falla <em>extendida</em> de la primera generación, no una anécdota local.</p>
+      </div>
+    </div>
+
+    <div class="errata">
+      <div class="cinta">Fe de erratas · Entrada 4</div>
+      <dl>
+        <dt>Error</dt>
+        <dd>Reproducir dentro de la iglesia la estratificación social del imperio: mesas separadas por clase, asientos asignados por riqueza.</dd>
+        <dt class="registro">Dónde quedó registrado</dt>
+        <dd>1 Corintios 11:17–34 y Santiago 2:1–9 — dos testigos independientes del mismo mal.</dd>
+        <dt class="correccion">La corrección</dt>
+        <dd>«Espérense unos a otros» (1 Co 11:33): la instrucción litúrgica más humilde del Nuevo Testamento. La Cena no es válida si la mesa no es igual.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- VI -->
+  <section id="s6">
+    <h2><span class="rom">VI.</span>El libro que publica sus propias erratas</h2>
+
+    <div class="voz metodologo">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">📋 El Metodólogo</span>
+        <p>Ahora el giro que convierte este estudio en buena noticia. Reúnan los expedientes: Gálatas 2 existe porque Pablo escribió el fracaso de Pedro — y la iglesia lo <em>canonizó</em>. Hechos 6 existe porque Lucas registró la discriminación — dentro del libro que celebra la unidad. 1 Corintios 11 existe porque Pablo documentó el escándalo — en una carta que se leería en voz alta en la propia congregación culpable. El Nuevo Testamento es, que yo sepa, el único documento fundacional de un movimiento que conserva deliberadamente el registro de los errores de sus fundadores.</p>
+      </div>
+    </div>
+
+    <div class="voz ingeniera">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🕸️ La Ingeniera</span>
+        <p>En lenguaje de sistemas: la iglesia primitiva tenía bucles de retroalimentación funcionando. Queja → escucha → rediseño (Hechos 6). Desviación → confrontación → doctrina (Gálatas 2). Abuso → carta → corrección litúrgica (1 Corintios 11). Un sistema sano no es el que nunca falla; es el que <em>detecta</em> la falla y la procesa sin destruirse. La Red que es la Iglesia sobrevivió sus primeros veinte años no por ser perfecta sino por ser corregible — porque la fuente de poder no era la reputación de los nodos sino el Espíritu que los atravesaba.</p>
+      </div>
+    </div>
+
+    <div class="voz provocador">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🎭 El Provocador</span>
+        <p>Entonces mi acusación se invierte y me alcanza: el problema no es que la iglesia primitiva se equivocó. El problema es que nosotros, al esconder sus errores en los sermones, practicamos exactamente el pecado del que ellos se libraron — maquillar el registro. Ellos escribieron su fe de erratas; nosotros la archivamos. Predicamos una iglesia primitiva que nunca existió y luego nos deprimimos porque nuestra iglesia real no se le parece.</p>
+      </div>
+    </div>
+
+    <blockquote class="biblia">
+      «Si decimos que no tenemos pecado, nos engañamos a nosotros mismos y no hay verdad en nosotros.»
+      <span class="ref">1 Juan 1:8 (cf. DHH)</span>
+    </blockquote>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <h2><span class="rom">VII.</span>El Check del panel</h2>
+
+    <div class="voz metodologo">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">📋 El Metodólogo</span>
+        <p>Tres preguntas de auditoría para cualquier comunidad — o cualquier discípulo — que quiera heredar la honestidad del canon y no solo su nostalgia:</p>
+        <p><strong>1. ¿Quién puede levantarse de nuestra mesa sin que lo confrontemos?</strong> Antioquía enseña que la hipocresía del influyente arrastra a la red entera si nadie le hace frente cara a cara.</p>
+        <p><strong>2. ¿Qué viudas no estamos viendo?</strong> Hechos 6 enseña que la exclusión más común no se decreta: se produce sola, en los puntos ciegos de la estructura. Hay que salir a buscar la queja, no esperar a que grite.</p>
+        <p><strong>3. ¿Qué esperanza hemos convertido en cronograma?</strong> La parusía enseña que la fe calendarizada produce primero euforia, luego ociosidad y al final burladores. La vigilancia madura vive lista, no ansiosa.</p>
+      </div>
+    </div>
+
+    <div class="voz disenadora">
+      <div class="marca"></div>
+      <div>
+        <span class="quien">🎨 La Diseñadora</span>
+        <p>Y una nota de forma que es de fondo: esta página está diseñada como fe de erratas a propósito. Cada error tiene su ficha — error, registro, corrección — porque así trabaja la Escritura misma: no borra, documenta; no maquilla, corrige. El día que nuestros sermones adopten ese formato, la pregunta del Provocador quedará respondida.</p>
+      </div>
+    </div>
+
+    <div class="cierre">
+      <h3>En una frase</h3>
+      <p>La iglesia primitiva se equivocó en la mesa (Antioquía), en la estructura (Jerusalén), en el calendario (Tesalónica) y en la clase social (Corinto) — y su mayor acierto fue escribir todos esos errores en el libro que nos entregó. La iglesia que confiesa sus erratas es la que el Espíritu puede seguir editando.</p>
+    </div>
+  </section>
+
+  <footer class="pie">
+    Café con Claude · Serie «El Panel Pregunta» · Respuesta a la pregunta 7 del Provocador · Julio 2026
+  </footer>
+
+</div>
+</main>
+
+<script>
+  // Barra de progreso
+  const barra = document.getElementById('progreso');
+  document.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const total = h.scrollHeight - h.clientHeight;
+    barra.style.width = (total > 0 ? (h.scrollTop / total) * 100 : 0) + '%';
+  }, { passive: true });
+
+  // Scroll-spy con IntersectionObserver
+  const enlaces = document.querySelectorAll('nav.lateral a.sec');
+  const mapa = {};
+  enlaces.forEach(a => { mapa[a.getAttribute('href').slice(1)] = a; });
+  const observador = new IntersectionObserver(entradas => {
+    entradas.forEach(e => {
+      if (e.isIntersecting) {
+        enlaces.forEach(a => a.classList.remove('activo'));
+        const a = mapa[e.target.id];
+        if (a) a.classList.add('activo');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section').forEach(s => observador.observe(s));
+
+  // Menú móvil
+  const btn = document.getElementById('menuBtn');
+  const lateral = document.getElementById('lateral');
+  const velo = document.getElementById('velo');
+  function cerrar() { lateral.classList.remove('abierta'); velo.classList.remove('visible'); }
+  btn.addEventListener('click', () => {
+    lateral.classList.toggle('abierta');
+    velo.classList.toggle('visible');
+  });
+  velo.addEventListener('click', cerrar);
+  enlaces.forEach(a => a.addEventListener('click', cerrar));
+</script>
+
+</body>
+</html>

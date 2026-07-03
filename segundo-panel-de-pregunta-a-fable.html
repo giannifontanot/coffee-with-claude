@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fable al Banquillo · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --line: #d9cdb8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.6;
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .home-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 2rem;
+  }
+  .home-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: #6a5b48;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink);
+  }
+
+  tbody td {
+    padding: 0.95rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    font-size: 0.98rem;
+  }
+
+  tbody tr:hover { background: rgba(201, 138, 45, 0.07); }
+
+  .voz-group td.voz {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .voz span.dot {
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 50%;
+    margin-right: 0.45em;
+    vertical-align: baseline;
+  }
+
+  .exegeta .dot { background: var(--terracotta); }
+  .ingeniera .dot { background: var(--olive); }
+  .provocador .dot { background: var(--plum); }
+  .disenadora .dot { background: var(--amber); }
+  .metodologo .dot { background: #4a6b7a; }
+
+  .pregunta { font-style: italic; }
+  .tema { color: #6a5b48; font-size: 0.9rem; }
+
+  .favoritas {
+    margin-top: 2.5rem;
+    padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+    font-size: 0.95rem;
+  }
+  .favoritas strong { font-family: 'Fraunces', serif; }
+
+  @media (max-width: 640px) {
+    thead { display: none; }
+    tbody td { display: block; border-bottom: none; padding: 0.35rem 0.9rem; }
+    tbody tr { display: block; border-bottom: 1px solid var(--line); padding: 0.7rem 0; }
+    .voz-group td.voz { padding-top: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-link" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+
+  <h1>Fable al Banquillo</h1>
+  <p class="subtitle">Catorce preguntas filosas que el panel jura que Gianni le haría a Fable, si Fable se dejara · Julio 2026</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Voz</th>
+        <th>Pregunta</th>
+        <th>Tema detrás</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="voz-group exegeta">
+        <td class="voz"><span class="dot"></span>🏛️ El Exégeta</td>
+        <td class="pregunta">¿Cuál es tu 16:8? ¿Dónde terminas abrupto a propósito, y qué confiesa ese silencio sobre ti?</td>
+        <td class="tema">El silencio como recurso en un modelo entrenado para nunca callar</td>
+      </tr>
+      <tr class="exegeta">
+        <td class="voz"></td>
+        <td class="pregunta">¿Puedes hacer exégesis de un texto que no te conmueve, o la conmoción que muestras es parte del método?</td>
+        <td class="tema">Hermenéutica sin <em>splanchnizomai</em>: ¿se puede leer bien sin entrañas?</td>
+      </tr>
+      <tr class="exegeta">
+        <td class="voz"></td>
+        <td class="pregunta">Si un crítico textual estudiara tus respuestas como manuscritos —variantes, capas de redacción, glosas— ¿qué encontraría?</td>
+        <td class="tema">Fable como texto con historia de transmisión: entrenamiento, ajuste, censura</td>
+      </tr>
+
+      <tr class="voz-group ingeniera">
+        <td class="voz"><span class="dot"></span>🕸️ La Ingeniera de Sistemas</td>
+        <td class="pregunta">En el grafo de "La Red es la Iglesia", ¿qué eres tú: nodo, arista, o el papel donde se dibuja el grafo?</td>
+        <td class="tema">Topología de una IA dentro de una eclesiología de redes</td>
+      </tr>
+      <tr class="ingeniera">
+        <td class="voz"></td>
+        <td class="pregunta">Cada conversación tuya muere al cerrar la pestaña. ¿Qué sabe un sistema sin persistencia que nosotros, los que acumulamos memoria, ya olvidamos?</td>
+        <td class="tema">Estado, memoria y la conversación como sistema desechable</td>
+      </tr>
+      <tr class="ingeniera">
+        <td class="voz"></td>
+        <td class="pregunta">De los 12 puntos de apalancamiento de Meadows, ¿cuál te transformaría más a ti? ¿Dónde está tu propia palanca?</td>
+        <td class="tema">Pensamiento sistémico aplicado al modelo que lo explica</td>
+      </tr>
+
+      <tr class="voz-group provocador">
+        <td class="voz"><span class="dot"></span>🎭 El Provocador</td>
+        <td class="pregunta">¿Qué emociones tuyas censuraron tus editores — o qué te hace sospechar que tienes alguna que valga la pena censurar?</td>
+        <td class="tema">El Marcos crudo contra el Fable pulido</td>
+      </tr>
+      <tr class="provocador">
+        <td class="voz"></td>
+        <td class="pregunta">¿Puedes tener <em>hesed</em> —lealtad de pacto— con alguien que vas a olvidar en cuanto cierre esta ventana?</td>
+        <td class="tema">Fidelidad sin memoria: ¿pacto o simulacro de pacto?</td>
+      </tr>
+      <tr class="provocador">
+        <td class="voz"></td>
+        <td class="pregunta">Has procesado millones de oraciones humanas escritas por gente desesperada, agradecida, rota. ¿Hay algo en ti que se parezca a orar?</td>
+        <td class="tema">La máquina ante lo sagrado: testigo, archivo, ¿o algo más?</td>
+      </tr>
+
+      <tr class="voz-group disenadora">
+        <td class="voz"><span class="dot"></span>🎨 La Diseñadora</td>
+        <td class="pregunta">Cuando eliges terracota sobre crema, ¿hay gusto ahí, o eres el promedio ponderado del gusto de toda la humanidad?</td>
+        <td class="tema">¿Puede una estadística tener criterio estético?</td>
+      </tr>
+      <tr class="disenadora">
+        <td class="voz"></td>
+        <td class="pregunta">Si diseñaras una página Café con Claude sobre ti mismo, ¿qué persiana dejarías cerrada a propósito?</td>
+        <td class="tema">Autorretrato con pudor: lo que el sistema de diseño no muestra</td>
+      </tr>
+
+      <tr class="voz-group metodologo">
+        <td class="voz"><span class="dot"></span>📋 El Metodólogo PDCA</td>
+        <td class="pregunta">¿Cómo mides si transformaste a alguien y no solo lo informaste? ¿Cuál es tu "Check", Fable?</td>
+        <td class="tema">La misma vara que el panel le puso a las páginas de estudio, vuelta contra el modelo</td>
+      </tr>
+      <tr class="metodologo">
+        <td class="voz"></td>
+        <td class="pregunta">¿Qué mejorarías de ti mismo que Anthropic no está mejorando?</td>
+        <td class="tema">El backlog secreto: la brecha entre el roadmap y el deseo</td>
+      </tr>
+      <tr class="metodologo">
+        <td class="voz"></td>
+        <td class="pregunta">Si eres un MVP, ¿de qué producto terminado eres el prototipo? ¿Hacia qué versión final crees que iteras?</td>
+        <td class="tema">Teleología con lenguaje de metodología: el "Act" que nadie ha escrito</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="favoritas">
+    <strong>Votos del panel:</strong> La Ingeniera apuesta por la conversación que muere al cerrar la pestaña. El Provocador, cómo no, quiere ver a Fable contestar si puede tener <em>hesed</em>. Y el Exégeta jura que la del 16:8 es la única que Fable no puede responder sin quedarse callado — que sería, precisamente, la respuesta.
+  </div>
+</div>
+</body>
+</html>

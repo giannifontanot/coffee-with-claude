@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piedra sobre piedra · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --slate: #4a6b7a;
+    --line: #d9cdb8;
+    --soft: #6a5b48;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.75;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Progress bar ---------- */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 4px; width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 200;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: 230px;
+    padding: 2.4rem 1.4rem 2rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  nav.sidebar .brand a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    font-size: 0.8rem;
+    font-family: 'Spectral', serif;
+    font-weight: 400;
+  }
+  nav.sidebar .brand a:hover { color: var(--ink); border-color: var(--ink); }
+
+  nav.sidebar .serie {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--soft);
+    margin: 1rem 0 1.6rem;
+  }
+
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar li { margin-bottom: 0.15rem; }
+  nav.sidebar a.navlink {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.42rem 0.55rem;
+    color: var(--soft);
+    text-decoration: none;
+    font-size: 0.86rem;
+    border-left: 3px solid transparent;
+    border-radius: 0 4px 4px 0;
+    transition: color .2s, border-color .2s, background .2s;
+  }
+  nav.sidebar a.navlink .rn {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    min-width: 1.6em;
+    font-size: 0.82rem;
+  }
+  nav.sidebar a.navlink:hover { color: var(--ink); background: rgba(201,138,45,0.08); }
+  nav.sidebar a.navlink.active {
+    color: var(--terracotta);
+    border-left-color: var(--terracotta);
+    background: rgba(180,83,42,0.06);
+  }
+
+  /* ---------- Hamburger (mobile) ---------- */
+  .hamburger {
+    display: none;
+    position: fixed; top: 0.9rem; left: 0.9rem; z-index: 300;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--ink);
+    box-shadow: 0 2px 8px rgba(43,33,24,0.12);
+  }
+
+  /* ---------- Main ---------- */
+  main {
+    margin-left: 230px;
+    padding: 3.5rem 2rem 5rem;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header.hero { margin-bottom: 3rem; }
+  .kicker {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--terracotta);
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5.5vw, 3rem);
+    line-height: 1.12;
+    margin-bottom: 0.9rem;
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--soft);
+    font-size: 1.12rem;
+    margin-bottom: 1.4rem;
+  }
+  .lede { font-size: 1.06rem; }
+
+  /* ---------- Sections ---------- */
+  section { margin: 3.4rem 0; scroll-margin-top: 2rem; }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 0.35rem;
+  }
+  h2 .rn {
+    color: var(--terracotta);
+    margin-right: 0.5rem;
+  }
+  .h2sub {
+    font-style: italic;
+    color: var(--soft);
+    margin-bottom: 1.2rem;
+    font-size: 0.98rem;
+  }
+  section p { margin-bottom: 1.1rem; }
+  em { font-style: italic; }
+  strong { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  /* ---------- Verse blocks ---------- */
+  blockquote.verso {
+    margin: 1.5rem 0;
+    padding: 1rem 1.3rem;
+    border-left: 4px solid var(--amber);
+    background: rgba(201,138,45,0.07);
+    font-style: italic;
+    font-size: 1.02rem;
+  }
+  blockquote.verso .ref {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-size: 0.82rem;
+    color: var(--soft);
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+  }
+
+  /* ---------- Greek term ---------- */
+  .griego {
+    font-style: italic;
+    color: var(--plum);
+    font-weight: 600;
+  }
+
+  /* ---------- Signature: demolition plan ---------- */
+  figure.plano {
+    margin: 2.4rem 0 2.8rem;
+  }
+  figure.plano figcaption {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--soft);
+    margin-bottom: 0.9rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    text-align: center;
+  }
+  .muro { display: flex; flex-direction: column; gap: 5px; max-width: 560px; margin: 0 auto; }
+  .hilada { display: flex; gap: 5px; }
+  .piedra {
+    flex: 1;
+    padding: 0.55rem 0.8rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    background: #efe6d3;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    text-align: center;
+    transition: transform .35s ease, opacity .35s ease, background .35s ease;
+    cursor: default;
+  }
+  .piedra b {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+  .piedra span { color: var(--soft); font-size: 0.72rem; }
+  .piedra:hover { transform: translateX(10px) rotate(0.8deg); opacity: 0.55; background: #e7d9bd; }
+  .piedra.cimiento {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+  .piedra.cimiento span { color: #cbbfa8; }
+  .piedra.cimiento:hover { transform: none; opacity: 1; }
+  .plano-nota {
+    text-align: center;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--soft);
+    margin-top: 0.7rem;
+  }
+
+  /* ---------- Panel dialogue ---------- */
+  .mesa {
+    margin: 1.8rem 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 1.3rem 0;
+  }
+  .mesa .voz {
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    align-items: baseline;
+  }
+  .mesa .voz:last-child { margin-bottom: 0; }
+  .mesa .quien {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.86rem;
+    white-space: nowrap;
+    min-width: 8.2rem;
+  }
+  .mesa .quien::before {
+    content: '';
+    display: inline-block;
+    width: 0.55em; height: 0.55em;
+    border-radius: 50%;
+    margin-right: 0.4em;
+  }
+  .mesa .exegeta .quien::before { background: var(--terracotta); }
+  .mesa .ingeniera .quien::before { background: var(--olive); }
+  .mesa .provocador .quien::before { background: var(--plum); }
+  .mesa .disenadora .quien::before { background: var(--amber); }
+  .mesa .metodologo .quien::before { background: var(--slate); }
+  .mesa .dice { font-size: 0.95rem; }
+
+  /* ---------- Persianas ---------- */
+  details.persiana {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin: 1.2rem 0;
+    background: rgba(255,255,255,0.35);
+    overflow: hidden;
+  }
+  details.persiana summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.9rem 1.2rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    user-select: none;
+  }
+  details.persiana summary::-webkit-details-marker { display: none; }
+  details.persiana summary::after {
+    content: '+';
+    font-size: 1.3rem;
+    color: var(--terracotta);
+    transition: transform .3s;
+    flex-shrink: 0;
+  }
+  details.persiana[open] summary::after { transform: rotate(45deg); }
+  details.persiana summary:hover { background: rgba(201,138,45,0.07); }
+  .persiana-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .4s ease;
+  }
+  details.persiana[open] .persiana-body { grid-template-rows: 1fr; }
+  .persiana-inner { overflow: hidden; }
+  .persiana-inner > div { padding: 0.2rem 1.2rem 1.2rem; font-size: 0.96rem; }
+  .persiana-inner p { margin-bottom: 0.9rem; }
+  .persiana-inner p:last-child { margin-bottom: 0; }
+
+  /* ---------- Citations ---------- */
+  .fuentes {
+    font-size: 0.83rem;
+    color: var(--soft);
+    margin-top: 0.4rem;
+  }
+  .fuentes a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180,83,42,0.4);
+  }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- Callout ---------- */
+  .clave {
+    margin: 1.8rem 0;
+    padding: 1.2rem 1.4rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180,83,42,0.06);
+  }
+  .clave .titulo {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--terracotta);
+    margin-bottom: 0.5rem;
+  }
+
+  /* ---------- Table ---------- */
+  table.muros {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.4rem 0;
+    font-size: 0.9rem;
+  }
+  table.muros th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.55rem 0.7rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  table.muros td {
+    padding: 0.7rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.muros tr:hover td { background: rgba(201,138,45,0.06); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--soft);
+    font-style: italic;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    nav.sidebar {
+      transform: translateX(-100%);
+      transition: transform .3s ease;
+      box-shadow: 4px 0 20px rgba(43,33,24,0.15);
+      width: 260px;
+    }
+    nav.sidebar.open { transform: translateX(0); }
+    .hamburger { display: block; }
+    main { margin-left: 0; padding: 4.5rem 1.25rem 4rem; }
+    .mesa .voz { flex-direction: column; gap: 0.2rem; }
+    .mesa .quien { min-width: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .piedra, .persiana-body, nav.sidebar { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button class="hamburger" id="hamburger" aria-label="Abrir menú">☰</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand">Café con Claude</div>
+  <div class="brand"><a href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a></div>
+  <div class="serie">Serie · La Red es la Iglesia<br>Marcos 11–13</div>
+  <ol>
+    <li><a class="navlink" href="#s1"><span class="rn">I</span> El plano del edificio</a></li>
+    <li><a class="navlink" href="#s2"><span class="rn">II</span> Día 1: La inspección</a></li>
+    <li><a class="navlink" href="#s3"><span class="rn">III</span> Día 2: El acta de condena</a></li>
+    <li><a class="navlink" href="#s4"><span class="rn">IV</span> Día 3: Los muros de carga</a></li>
+    <li><a class="navlink" href="#s5"><span class="rn">V</span> La última piedra viva</a></li>
+    <li><a class="navlink" href="#s6"><span class="rn">VI</span> La orden de demolición</a></li>
+    <li><a class="navlink" href="#s7"><span class="rn">VII</span> El edificio que sigue en pie</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">Café con Claude · Estudio de Marcos</div>
+  <h1>Piedra sobre piedra</h1>
+  <p class="subtitle">Marcos 11–13 como una demolición arquitectónica del Templo, sección por sección</p>
+  <p class="lede">Hay una manera de leer los capítulos 11 al 13 de Marcos que los convierte en tres días de obra: el primer día llega el inspector, el segundo día se firma el acta de condena, y el tercer día se retiran los muros de carga uno por uno, hasta que solo queda dictar la sentencia. Marcos no cuenta una visita al Templo. Cuenta su demolición — y los planos del edificio que lo reemplaza.</p>
+
+  <figure class="plano">
+    <figcaption>Plano de demolición · Marcos 11–13</figcaption>
+    <div class="muro">
+      <div class="hilada">
+        <div class="piedra"><b>13:1–37</b><span>La sentencia: piedra sobre piedra no quedará</span></div>
+      </div>
+      <div class="hilada">
+        <div class="piedra"><b>12:38–44</b><span>La viuda devorada</span></div>
+        <div class="piedra"><b>12:35–37</b><span>El Hijo de David</span></div>
+      </div>
+      <div class="hilada">
+        <div class="piedra"><b>12:13–17</b><span>El César</span></div>
+        <div class="piedra"><b>12:18–27</b><span>La resurrección</span></div>
+        <div class="piedra"><b>12:28–34</b><span>El mandamiento</span></div>
+      </div>
+      <div class="hilada">
+        <div class="piedra"><b>11:27–33</b><span>¿Con qué autoridad?</span></div>
+        <div class="piedra"><b>12:1–12</b><span>Los labradores malvados</span></div>
+      </div>
+      <div class="hilada">
+        <div class="piedra"><b>11:12–14</b><span>La higuera maldecida</span></div>
+        <div class="piedra"><b>11:15–19</b><span>Las mesas volcadas</span></div>
+        <div class="piedra"><b>11:20–25</b><span>La higuera seca</span></div>
+      </div>
+      <div class="hilada">
+        <div class="piedra cimiento"><b>11:1–11</b><span>La inspección — Jesús entra, lo mira todo, y se va</span></div>
+      </div>
+    </div>
+    <p class="plano-nota">Pasa el cursor sobre cada piedra: todas se sueltan, menos el cimiento.</p>
+  </figure>
+</header>
+
+<!-- ============ I ============ -->
+<section id="s1">
+  <h2><span class="rn">I.</span> El plano del edificio</h2>
+  <p class="h2sub">Por qué esta lectura no es una metáfora forzada, sino la estructura del texto</p>
+
+  <p>Marcos organiza el capítulo 11 con una precisión de cronograma de obra que ninguno de los otros evangelios conserva. Tres días, tres entradas a Jerusalén, tres salidas a Betania. El primer día termina con Jesús mirando el Templo y marchándose sin decir nada (11:11). El segundo día abre con la higuera maldecida en el camino, sigue con las mesas volcadas en el Templo, y cierra con otra salida al atardecer (11:12–19). El tercer día comienza con la higuera seca desde las raíces (11:20) y desemboca en la batería de controversias que ocupa todo el capítulo 12. Mateo comprime la higuera en un solo día y Lucas la omite por completo: la estructura de tres días es una decisión deliberada de Marcos, no un accidente de la tradición.</p>
+
+  <p>Y esa decisión tiene nombre técnico: <span class="griego">intercalación</span>, el famoso "sándwich marcano". La purificación del Templo (11:15–19) queda emparedada entre la maldición de la higuera (11:12–14) y su marchitamiento (11:20–25), en un patrón A–B–A donde cada historia interpreta a la otra. Algunos estudiosos han propuesto incluso una <em>triple</em> intercalación que abarca desde 11:1 hasta 12:12, con introducciones y conclusiones que se responden en espejo. El mensaje del montaje es inequívoco: lo que le pasa a la higuera es lo que le va a pasar al Templo.</p>
+
+  <div class="clave">
+    <div class="titulo">La clave de lectura</div>
+    <p>Marcos 11–13 no es una colección de episodios en Jerusalén. Es una sola secuencia con lógica de demolición: inspección → acta de condena → prueba de los muros → sentencia → planos del edificio nuevo. Cada pieza está donde está porque sostiene esa secuencia.</p>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.cambridge.org/core/journals/new-testament-studies/article/abs/tree-and-the-temple-echoes-of-a-new-ingathering-and-renewed-exile-mark-111221/6B5F0E14C15E5F51565D46D027DB600C">New Testament Studies (Cambridge)</a>, <a href="https://www.academia.edu/4604824/Mark_11_1_12_12_A_Triple_Intercalation">Mark 11:1–12:12: A Triple Intercalation</a>, <a href="https://grokipedia.com/page/Mark_11">Estructura de Marcos 11</a></p>
+</section>
+
+<!-- ============ II ============ -->
+<section id="s2">
+  <h2><span class="rn">II.</span> Día 1: La inspección</h2>
+  <p class="h2sub">Marcos 11:1–11 · El anticlímax más elocuente del evangelio</p>
+
+  <p>La entrada triunfal de Marcos termina en el versículo más anticlimático de todo el Nuevo Testamento. Después de los mantos en el camino, de las ramas, del "¡Hosana!", del "¡Bendito el que viene en el nombre del Señor!" — después de todo ese crescendo mesiánico — el lector espera algo. Un discurso. Un milagro. Una coronación.</p>
+
+  <blockquote class="verso">
+    "Entró Jesús en Jerusalén y fue al templo. Después de mirarlo todo a su alrededor, se fue a Betania con los doce discípulos, porque ya era tarde."
+    <span class="ref">Marcos 11:11 · DHH</span>
+  </blockquote>
+
+  <p>Lo miró todo. Y se fue. El griego usa <span class="griego">periblepsámenos pánta</span> — una mirada circular, panorámica, exhaustiva. Es el verbo favorito de Marcos para las miradas cargadas de Jesús (lo usa seis veces; los demás evangelios, casi nunca). No es la mirada de un turista deslumbrado. Es la mirada de un inspector de obras que recorre el edificio, toma nota de cada grieta, y se retira a redactar el informe. La extrañeza del versículo es intencional: obliga al lector a preguntarse qué vio Jesús — y la respuesta llega al día siguiente, con una higuera y un látigo de indignación.</p>
+
+  <div class="mesa">
+    <div class="voz exegeta">
+      <div class="quien">🏛️ El Exégeta</div>
+      <div class="dice">Hay un eco profético aquí que Marcos espera que oigamos: Malaquías 3:1 — "el Señor, a quien ustedes buscan, vendrá de repente a su templo". Vino. Miró. Y lo que encontró no fue un templo: fue un expediente.</div>
+    </div>
+    <div class="voz metodologo">
+      <div class="quien">📋 El Metodólogo</div>
+      <div class="dice">En términos de PDCA, el día 1 es puro <em>Plan</em>: recolección de datos sin intervención. Jesús no actúa en caliente. La purificación del día 2 no es un arrebato — es una acción planificada sobre una inspección del día anterior. Eso cambia completamente cómo leemos su "enojo".</div>
+    </div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.academia.edu/4604824/Mark_11_1_12_12_A_Triple_Intercalation">Mark 11:1–12:12: A Triple Intercalation</a>, <a href="https://grokipedia.com/page/Mark_11">Marcos 11 — cronología de los tres días</a></p>
+</section>
+
+<!-- ============ III ============ -->
+<section id="s3">
+  <h2><span class="rn">III.</span> Día 2: El acta de condena</h2>
+  <p class="h2sub">Marcos 11:12–25 · Una higuera, un látigo y dos profetas citados con precisión quirúrgica</p>
+
+  <p>El segundo día, Jesús firma el acta. Y la firma dos veces: primero en símbolo, luego en acción. Camino a Jerusalén maldice una higuera con hojas pero sin fruto — "porque no era tiempo de higos", anota Marcos con toda intención. El detalle que a tantos lectores les resulta escandaloso es precisamente el punto: Jesús no está castigando a un árbol por incumplir el calendario agrícola. Está ejecutando una acción profética, del mismo género que Jeremías rompiendo la vasija o Ezequiel acostado sobre su costado. La higuera con follaje impresionante y cero fruto <em>es</em> el Templo: toda apariencia, ninguna sustancia.</p>
+
+  <p>Los profetas ya habían usado la higuera estéril como imagen del juicio sobre Israel — Jeremías 8:13, Oseas 9:10, Miqueas 7:1, Joel 1:7. Cuando Jesús maldice el árbol, cualquier oyente formado en las Escrituras reconoce el género literario: esto es un veredicto, no un berrinche.</p>
+
+  <details class="persiana">
+    <summary>Persiana · Las dos citas del acta: Isaías 56 y Jeremías 7</summary>
+    <div class="persiana-body"><div class="persiana-inner"><div>
+      <p>En medio de las mesas volcadas, Jesús cita dos textos, y la selección es quirúrgica. El primero es Isaías 56:7 — "mi casa será declarada casa de oración <strong>para todas las naciones</strong>". Marcos es el único evangelista que conserva la frase "para todas las naciones", y no es casualidad: el mercado de animales y cambistas operaba en el atrio de los gentiles, el único espacio del complejo donde las naciones podían acercarse a orar. El negocio no era solo corrupto: bloqueaba físicamente el acceso de los pueblos a Dios. Para un evangelio escrito para gentiles, ese detalle es el corazón de la acusación.</p>
+      <p>La segunda cita es todavía más grave. "Cueva de ladrones" viene de Jeremías 7:11 — el famoso sermón del Templo, donde Jeremías anuncia que el santuario de Jerusalén correrá la misma suerte que Silo: destrucción total. En Jeremías, la "cueva de ladrones" no es el lugar donde se roba, sino el escondite donde los ladrones se sienten seguros después de robar afuera. La acusación no es "aquí hay sobreprecio en las palomas". Es: "ustedes usan este edificio como refugio de una vida entera de injusticia, creyendo que el ritual los protege". Y quien cita Jeremías 7:11 está citando, implícitamente, el resto del capítulo: la demolición.</p>
+    </div></div></div>
+  </details>
+
+  <blockquote class="verso">
+    "¿No dice la Escritura: 'Mi casa será declarada casa de oración para todas las naciones'? Pero ustedes han hecho de ella una cueva de ladrones."
+    <span class="ref">Marcos 11:17 · DHH</span>
+  </blockquote>
+
+  <p>Y entonces el sándwich se cierra. A la mañana siguiente los discípulos pasan junto a la higuera y la encuentran seca — no marchita en las hojas, sino seca <strong>desde las raíces</strong> (11:20). El diagnóstico estructural está completo: el problema del edificio no es cosmético. Es de cimientos. No se repara. Se demuele.</p>
+
+  <div class="mesa">
+    <div class="voz provocador">
+      <div class="quien">🎭 El Provocador</div>
+      <div class="dice">Nota lo que Jesús <em>no</em> hace el día 2: no propone una reforma del sistema de cambistas, no sugiere tarifas justas para las palomas, no funda un comité de transparencia. La purificación detiene la operación del Templo por unas horas — y eso es todo lo que necesita, porque no vino a arreglarlo. Vino a firmar el acta.</div>
+    </div>
+    <div class="voz ingeniera">
+      <div class="quien">🕸️ La Ingeniera</div>
+      <div class="dice">Desde la teoría de sistemas: Jesús no ataca los síntomas (los precios), ataca el <em>propósito</em> del sistema — el punto de apalancamiento más profundo de Meadows. Un sistema cuyo propósito real se ha vuelto extraer en lugar de conectar no se corrige ajustando parámetros. Se reemplaza.</div>
+    </div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.researchgate.net/publication/374199223_CURSING_OF_THE_BARREN_FIG_TREE_MARK_1112-14_20-25_AND_ITS_IMPLICATIONS_FOR_CATHOLIC_CHRISTIANS_IN_NIGERIA">La higuera estéril como acción profética</a>, <a href="https://www.bibleref.com/Mark/11/Mark-11-17.html">BibleRef — Marcos 11:17</a>, <a href="https://www.gotquestions.org/house-prayer-den-thieves.html">Casa de oración y cueva de ladrones</a>, <a href="https://www.studylight.org/commentary/mark/11-17.html">StudyLight — el atrio de los gentiles</a></p>
+</section>
+
+<!-- ============ IV ============ -->
+<section id="s4">
+  <h2><span class="rn">IV.</span> Día 3: Los muros de carga</h2>
+  <p class="h2sub">Marcos 11:27–12:37 · Cinco controversias, cinco muros retirados</p>
+
+  <p>El tercer día, la demolición cambia de herramienta. Ya no hay látigo: hay preguntas. Las autoridades del Templo — sumos sacerdotes, escribas, ancianos, fariseos, herodianos, saduceos, todo el organigrama — se turnan para hacerle a Jesús las preguntas que deberían derrumbarlo. Y en cada intercambio ocurre lo contrario: cada pregunta expone un muro de carga del sistema, y Jesús lo retira frente a todos. Léelas en secuencia y el patrón es imposible de ignorar:</p>
+
+  <table class="muros">
+    <thead>
+      <tr><th>Pasaje</th><th>El muro que sostiene al Templo</th><th>Cómo cae</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>11:27–33</strong></td>
+        <td>La autoridad institucional: ¿quién autoriza a quién?</td>
+        <td>La pregunta sobre Juan deja a las autoridades confesando públicamente que no saben distinguir lo que viene de Dios. El muro de la legitimidad cae solo.</td>
+      </tr>
+      <tr>
+        <td><strong>12:1–12</strong></td>
+        <td>La administración: la viña pertenece a sus administradores</td>
+        <td>La parábola de los labradores declara lo impensable: la viña les será quitada y dada a otros. Ellos mismos entienden que habla de ellos.</td>
+      </tr>
+      <tr>
+        <td><strong>12:13–17</strong></td>
+        <td>La economía: el Templo como intermediario financiero de Dios</td>
+        <td>"Den al César lo que es del César, y a Dios lo que es de Dios" — y lo que es de Dios (lo que lleva Su imagen) es la persona, no la moneda del atrio.</td>
+      </tr>
+      <tr>
+        <td><strong>12:18–27</strong></td>
+        <td>La teología saducea: sin resurrección, el Templo es el único punto de encuentro con Dios</td>
+        <td>"Dios no es Dios de muertos, sino de vivos". Si hay resurrección, la relación con Dios no depende de un edificio.</td>
+      </tr>
+      <tr>
+        <td><strong>12:28–34</strong></td>
+        <td>El sistema sacrificial mismo</td>
+        <td>Un escriba honesto lo dice en voz alta, dentro del Templo: amar a Dios y al prójimo "vale más que todos los holocaustos y sacrificios". Jesús responde: "No estás lejos del reino".</td>
+      </tr>
+      <tr>
+        <td><strong>12:35–37</strong></td>
+        <td>La cristología domesticada: un Mesías subordinado al sistema</td>
+        <td>Si David lo llama Señor, el Mesías no es un funcionario más del Templo. Es su dueño — el Señor que vino de repente a su templo.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Y entonces Marcos anota la frase que sella la fase: <em>"y ya nadie se atrevía a hacerle más preguntas"</em> (12:34). En lenguaje de obra: no queda ningún muro que probar. La estructura ya no tiene defensa argumental, teológica ni institucional. Solo queda en pie por inercia — y por las piedras magníficas que tanto impresionaban a los turistas.</p>
+
+  <div class="mesa">
+    <div class="voz ingeniera">
+      <div class="quien">🕸️ La Ingeniera</div>
+      <div class="dice">Es una secuencia de pruebas de carga: aplicas presión a cada muro y documentas cuáles resisten. Ninguno resiste. Lo fascinante es que las autoridades creían estar probando a Jesús — y el texto invierte quién inspecciona a quién. Ellos hacían las preguntas; el edificio de ellos era el examinado.</div>
+    </div>
+    <div class="voz exegeta">
+      <div class="quien">🏛️ El Exégeta</div>
+      <div class="dice">Y no pierdas de vista dónde ocurre todo esto: <em>dentro</em> del Templo (11:27). Marcos hace que la demolición argumental suceda en el propio edificio condenado. Jesús desmonta el Templo desde su atrio, con las autoridades como asistentes involuntarios de obra.</div>
+    </div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.bibleref.com/Mark/12/Mark-chapter-12.html">BibleRef — Marcos 12</a>, <a href="https://kgbuckeye.wordpress.com/2012/11/10/devouring-widows-houses/">Marcos 11–12 como crítica al sistema del Templo</a></p>
+</section>
+
+<!-- ============ V ============ -->
+<section id="s5">
+  <h2><span class="rn">V.</span> La última piedra viva</h2>
+  <p class="h2sub">Marcos 12:38–44 · La viuda que el edificio se comió</p>
+
+  <p>Antes de dictar sentencia, Jesús presenta la prueba final. Y no es un argumento: es una persona. Primero la acusación contra los escribas — les gustan las túnicas largas, los saludos en las plazas, los primeros asientos... y "les quitan sus casas a las viudas" mientras hacen largas oraciones para disimular (12:38–40). Inmediatamente después, sin ninguna pausa temática, Jesús se sienta frente al arca de las ofrendas y ve llegar a una viuda pobre que deposita dos moneditas: todo lo que tenía para vivir.</p>
+
+  <p>Durante siglos hemos predicado esta escena como un modelo de generosidad — y la generosidad de la viuda es real y conmovedora. Pero el montaje de Marcos cuenta otra historia encima de esa: la lectura contextual que muchos estudiosos defienden hoy ve en la viuda la <strong>exhibición del delito</strong> recién denunciado. Jesús acaba de decir que este sistema devora las casas de las viudas — y acto seguido el texto nos muestra, en vivo, a una viuda siendo devorada. El sistema le ha enseñado que entregar su sustento completo a la tesorería es piedad. Nadie la detiene. Ningún escriba de túnica larga le dice "guarda una moneda para tu pan".</p>
+
+  <details class="persiana">
+    <summary>Persiana · ¿Elogio o lamento? Las dos lecturas de la viuda</summary>
+    <div class="persiana-body"><div class="persiana-inner"><div>
+      <p>La lectura tradicional subraya que Jesús destaca la ofrenda de la viuda por encima de las de los ricos: ellos dieron de su abundancia, ella de su pobreza dio todo. Es verdad, y la proporción del sacrificio sigue siendo una enseñanza válida sobre el corazón que Dios mira.</p>
+      <p>Pero la lectura contextual añade la capa que el montaje exige: no hay corte entre "devoran las casas de las viudas" (12:40) y la viuda que entrega "todo lo que tenía para vivir" (12:44). Varios comentaristas señalan que las viudas quedaban en bancarrota entregando su dinero a la tesorería, y que Marcos deja la impresión de que el liderazgo del Templo practicaba una forma de robo religiosamente legitimada. Bajo esta lectura, Jesús no está diciendo "sean como ella dando todo al sistema". Está diciendo: "miren lo que este edificio le hace a la gente que debería proteger". Deuteronomio ordenaba que el diezmo alimentara a la viuda; aquí la viuda alimenta al diezmo.</p>
+      <p>Y la conexión con lo que sigue es devastadora: la primera frase de Jesús después de la viuda es la sentencia de demolición (13:1–2). El edificio que se come a sus viudas no merece seguir en pie.</p>
+    </div></div></div>
+  </details>
+
+  <div class="mesa">
+    <div class="voz provocador">
+      <div class="quien">🎭 El Provocador</div>
+      <div class="dice">Aquí está la pregunta que incomoda desde el año 30 hasta hoy: ¿cuántos de nuestros edificios — literales o institucionales — se sostienen sobre las dos moneditas de gente que no puede permitírselas, mientras los de túnica larga ocupan los primeros asientos? La demolición de Marcos 11–13 no es un dato arqueológico. Es un espejo.</div>
+    </div>
+    <div class="voz metodologo">
+      <div class="quien">📋 El Metodólogo</div>
+      <div class="dice">Métrica brutal pero exacta: un sistema religioso se mide por lo que le pasa a su participante más vulnerable. El "Check" del Templo dio negativo en la persona de una viuda. Ese es el indicador que Jesús eligió presentar antes del veredicto — no la teología de los saduceos, sino el saldo de una viuda.</div>
+    </div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.workingpreacher.org/commentaries/narrative-lectionary/scribes-and-the-widow/commentary-on-mark-1238-44">Working Preacher — Marcos 12:38–44</a>, <a href="https://www.cbeinternational.org/resource/poor-widow-who-gave-temple-narrative-logic-mark/">CBE — La lógica narrativa de la viuda</a>, <a href="https://robertwimer.com/the-widows-mite-a-tragic-offering-not-a-model-of-stewardship/">La ofrenda trágica</a>, <a href="https://redeeminggod.com/devouring-widows-houses/">Devorando las casas de las viudas</a></p>
+</section>
+
+<!-- ============ VI ============ -->
+<section id="s6">
+  <h2><span class="rn">VI.</span> La orden de demolición</h2>
+  <p class="h2sub">Marcos 13:1–2 · La salida definitiva y la sentencia</p>
+
+  <p>Y entonces, el gesto que corona toda la secuencia: <em>"Al salir Jesús del templo..."</em> (13:1). En Marcos, Jesús nunca vuelve a entrar. Es la salida definitiva. Un discípulo, todavía en modo turista, señala hacia atrás: "¡Maestro, mira qué piedras y qué edificios!". Tenía razones para admirarse — el complejo de Herodes era una de las maravillas del mundo antiguo, con piedras de tamaños que aún hoy asombran a los arqueólogos. Y Jesús responde con el acta final:</p>
+
+  <blockquote class="verso">
+    "¿Ves estos grandes edificios? Pues no quedará aquí piedra sobre piedra: todo será destruido."
+    <span class="ref">Marcos 13:2 · DHH</span>
+  </blockquote>
+
+  <p>Luego Marcos añade un detalle de geografía cargado de teología: Jesús se sienta en el monte de los Olivos, <strong>frente al templo</strong> (13:3), y desde allí pronuncia el discurso sobre su destrucción. El lector que conoce a Ezequiel siente el escalofrío: cuando la gloria de Dios abandonó el primer Templo, salió del santuario, cruzó el umbral y se detuvo "sobre el monte que está al oriente de la ciudad" — el monte de los Olivos (Ezequiel 11:23). Marcos está dibujando la misma escena. La Presencia ha salido del edificio y lo contempla desde el monte del oriente. El Templo queda, literalmente, deshabitado.</p>
+
+  <details class="persiana">
+    <summary>Persiana · El año 70: cuando la profecía se volvió escombro</summary>
+    <div class="persiana-body"><div class="persiana-inner"><div>
+      <p>Unos cuarenta años después, durante la primera guerra judeo-romana, las legiones de Tito destruyeron Jerusalén y su Templo. Josefo — testigo presencial — relata que el fuego consumió el edificio y que César ordenó demoler la ciudad y el santuario por completo. Según la tradición recogida por los comentaristas, el oro del techo se derritió entre las junturas de las piedras, y los soldados desmantelaron los bloques uno por uno para recuperarlo: piedra sobre piedra, literalmente, no quedó. La destrucción fue tan completa que localizar la posición exacta del santuario sigue siendo debatido.</p>
+      <p>Para los primeros lectores de Marcos — que leyeron el evangelio en torno a esos mismos años — Marcos 13 no era una curiosidad apocalíptica. Era la explicación teológica del cataclismo de su generación: el edificio no cayó a pesar de Dios, sino que su suerte había sido sellada tres días de una semana de Pascua, décadas atrás.</p>
+    </div></div></div>
+  </details>
+
+  <div class="mesa">
+    <div class="voz exegeta">
+      <div class="quien">🏛️ El Exégeta</div>
+      <div class="dice">Nota la inclusión perfecta: la secuencia abre con Jesús <em>entrando</em> al Templo para mirarlo todo (11:11) y cierra con Jesús <em>saliendo</em> del Templo para no volver (13:1). Entre esas dos bisagras, Marcos ha desmontado el edificio completo: su fruto, su culto, su autoridad, su economía, su teología y su víctima. El capítulo 13 solo pone fecha a lo que los capítulos 11 y 12 ya habían decidido.</div>
+    </div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://enduringword.com/bible-commentary/mark-13/">Enduring Word — Marcos 13</a>, <a href="https://blueletterbible.org/Comm/guzik_david/StudyGuide_Mar/Mar_13.cfm">Blue Letter Bible — Guzik</a>, <a href="https://www.bibleref.com/Mark/13/Mark-chapter-13.html">BibleRef — Marcos 13</a>, <a href="https://bibleask.org/what-is-the-olivet-discourse/">El discurso del monte de los Olivos</a></p>
+</section>
+
+<!-- ============ VII ============ -->
+<section id="s7">
+  <h2><span class="rn">VII.</span> El edificio que sigue en pie</h2>
+  <p class="h2sub">Marcos 14:58, 15:38 · Los planos del templo nuevo — y por qué la Red es la Iglesia</p>
+
+  <p>Una demolición sin proyecto de reemplazo es solo destrucción. Pero Marcos deja los planos del edificio nuevo a la vista, en dos versículos que funcionan como epílogo de toda la secuencia. El primero aparece en el juicio, en boca de los testigos falsos — que, como suele pasar en Marcos, dicen la verdad sin saberlo: "Le hemos oído decir: 'Yo destruiré este templo hecho por manos de hombres, y en tres días levantaré otro <strong>no hecho por manos</strong>'" (14:58). El segundo llega en el instante de la muerte de Jesús: "el velo del templo se rasgó en dos, de arriba abajo" (15:38). El edificio condenado pierde su cortina; el acceso a Dios ya no tiene atrio, ni tarifa, ni cambistas.</p>
+
+  <p>¿Y qué es un templo "no hecho por manos"? El Nuevo Testamento responde sin ambigüedad: personas. "Ustedes también, como piedras vivas, son edificados como casa espiritual" (1 Pedro 2:5). El templo nuevo no es un edificio mejor: es una <strong>red de piedras vivas</strong>, donde la Presencia no habita en un santuario central custodiado por intermediarios, sino en cada nodo y — sobre todo — en las conexiones entre los nodos. El Espíritu como fuente de poder; los discípulos como red. La demolición de Marcos 11–13 es el requisito arquitectónico de Pentecostés: para que el templo pudiera ser la red, el templo-edificio tenía que quedar sin función.</p>
+
+  <div class="clave">
+    <div class="titulo">Piedra sobre piedra, versión red</div>
+    <p>El Templo antiguo apilaba piedras muertas alrededor de un centro vacío al que casi nadie podía entrar. El templo nuevo conecta piedras vivas alrededor de un Centro que habita en todas. La primera arquitectura se sostenía por gravedad y jerarquía; la segunda, por relación y Espíritu. Por eso una podía derrumbarse — y la otra, cuando la persiguen, se multiplica.</p>
+  </div>
+
+  <div class="mesa">
+    <div class="voz ingeniera">
+      <div class="quien">🕸️ La Ingeniera</div>
+      <div class="dice">En términos de redes: el Templo era una topología de estrella con un único punto de falla — el santuario y su casta. Roma atacó el nodo central y la topología entera colapsó. La iglesia de Hechos es una malla distribuida: puedes quitar nodos (y los quitaron, con violencia) y la red se reconfigura y crece. Jesús no solo predijo la caída del edificio; diseñó la arquitectura que la sobreviviría.</div>
+    </div>
+    <div class="voz provocador">
+      <div class="quien">🎭 El Provocador</div>
+      <div class="dice">Última incomodidad, para llevar: cada generación de la iglesia siente la tentación de reconstruir el modelo demolido — recentralizar, re-jerarquizar, volver a poner cortinas y cajas de ofrendas junto a viudas. Marcos 11–13 queda en el canon como advertencia permanente: lo que Jesús demolió, no lo reconstruyamos nosotros con mejores materiales.</div>
+    </div>
+    <div class="voz disenadora">
+      <div class="quien">🎨 La Diseñadora</div>
+      <div class="dice">Y por eso el plano de esta página tiene una sola piedra que no se suelta al pasar el cursor: el cimiento. "La piedra que los constructores despreciaron llegó a ser la piedra principal" — Marcos 12:10, en el centro exacto de la demolición. Hay una Piedra que ninguna demolición toca.</div>
+    </div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.videobible.com/meaning/mark-11-17">El templo y el nuevo culto (Jn 2:19–21; 1 Co 6:19)</a>, <a href="https://enduringword.com/bible-commentary/mark-13/">Enduring Word — Marcos 13</a></p>
+</section>
+
+<footer>
+  <p>Café con Claude · Serie "La Red es la Iglesia" · Marcos 11–13 · Citas bíblicas de la versión Dios Habla Hoy (DHH). Continúa el recorrido que dejó "La gracia no se mide" (Marcos 8–10): de camino a Jerusalén... y ahora, dentro de sus piedras.</p>
+</footer>
+
+</div>
+</main>
+
+<script>
+  // Reading progress bar
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    progress.style.width = pct + '%';
+  }, { passive: true });
+
+  // Mobile sidebar
+  const sidebar = document.getElementById('sidebar');
+  const hamburger = document.getElementById('hamburger');
+  hamburger.addEventListener('click', () => sidebar.classList.toggle('open'));
+  sidebar.querySelectorAll('a.navlink').forEach(a =>
+    a.addEventListener('click', () => sidebar.classList.remove('open'))
+  );
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 900 && sidebar.classList.contains('open') &&
+        !sidebar.contains(e.target) && e.target !== hamburger) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // Scroll-spy with IntersectionObserver
+  const links = Array.from(document.querySelectorAll('nav.sidebar a.navlink'));
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const link = map.get(entry.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px' });
+  document.querySelectorAll('main section').forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

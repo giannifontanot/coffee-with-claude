@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palabras sin aduana · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --cream-deep: #efe6d3;
+    --ink: #2e2418;
+    --ink-soft: #5a4c3a;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: rgba(90, 76, 58, 0.22);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Spectral', serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 1.05rem;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  #progreso {
+    position: fixed; top: 0; left: 0; height: 4px; width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--plum), var(--olive));
+    z-index: 200; transition: width 0.1s linear;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.lateral {
+    position: fixed; top: 0; left: 0; width: 250px; height: 100vh;
+    background: var(--cream-deep);
+    border-right: 1px solid var(--line);
+    padding: 2.4rem 1.6rem;
+    overflow-y: auto; z-index: 100;
+  }
+  nav.lateral .marca {
+    font-family: 'Fraunces', serif;
+    font-weight: 700; font-size: 1.05rem; color: var(--terracotta);
+    letter-spacing: 0.02em; margin-bottom: 0.3rem;
+  }
+  nav.lateral .serie {
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--ink-soft); margin-bottom: 2rem;
+  }
+  nav.lateral a.inicio {
+    display: inline-block; font-size: 0.85rem; color: var(--steel);
+    text-decoration: none; margin-bottom: 1.6rem; border-bottom: 1px dotted var(--steel);
+  }
+  nav.lateral a.inicio:hover { color: var(--terracotta); border-color: var(--terracotta); }
+  nav.lateral ol { list-style: none; }
+  nav.lateral ol li { margin-bottom: 0.85rem; }
+  nav.lateral ol a {
+    display: flex; gap: 0.7rem; align-items: baseline;
+    text-decoration: none; color: var(--ink-soft); font-size: 0.9rem;
+    transition: color 0.25s;
+  }
+  nav.lateral ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    color: var(--amber); min-width: 1.6rem;
+  }
+  nav.lateral ol a:hover { color: var(--terracotta); }
+  nav.lateral ol a.activo { color: var(--terracotta); font-weight: 600; }
+  nav.lateral ol a.activo .num { color: var(--terracotta); }
+
+  /* ---------- Hamburguesa ---------- */
+  #hamburguesa {
+    display: none; position: fixed; top: 1rem; left: 1rem; z-index: 300;
+    background: var(--cream-deep); border: 1px solid var(--line); border-radius: 8px;
+    width: 44px; height: 44px; cursor: pointer; flex-direction: column;
+    justify-content: center; align-items: center; gap: 5px;
+  }
+  #hamburguesa span {
+    display: block; width: 20px; height: 2px; background: var(--ink);
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  #hamburguesa.abierto span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  #hamburguesa.abierto span:nth-child(2) { opacity: 0; }
+  #hamburguesa.abierto span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ---------- Contenido ---------- */
+  main { margin-left: 250px; padding: 4rem 3rem 6rem; max-width: 860px; }
+
+  header.portada { margin-bottom: 4rem; }
+  .etiqueta {
+    display: inline-block; font-size: 0.75rem; text-transform: uppercase;
+    letter-spacing: 0.18em; color: var(--amber); border: 1px solid var(--amber);
+    padding: 0.25rem 0.8rem; border-radius: 999px; margin-bottom: 1.4rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.12;
+    color: var(--ink); margin-bottom: 1rem;
+  }
+  h1 em { font-style: italic; color: var(--terracotta); }
+  .bajada {
+    font-size: 1.2rem; font-weight: 300; font-style: italic;
+    color: var(--ink-soft); max-width: 620px;
+  }
+  .pregunta-origen {
+    margin-top: 2rem; padding: 1.2rem 1.5rem; border-left: 4px solid var(--amber);
+    background: var(--cream-deep); font-style: italic; color: var(--ink-soft);
+    border-radius: 0 10px 10px 0;
+  }
+
+  section { margin-bottom: 4.5rem; scroll-margin-top: 2rem; }
+  h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.2; margin-bottom: 1.6rem;
+    display: flex; align-items: baseline; gap: 0.9rem;
+  }
+  h2 .romano {
+    font-size: 0.95rem; font-weight: 600; color: var(--amber);
+    letter-spacing: 0.05em;
+  }
+  section p { margin-bottom: 1.2rem; }
+  section p:last-child { margin-bottom: 0; }
+
+  /* Colores por palabra */
+  .c-hesed { color: var(--terracotta); }
+  .c-splan { color: var(--plum); }
+  .c-shalom { color: var(--olive); }
+  h2.h-hesed { border-bottom: 3px solid var(--terracotta); padding-bottom: 0.5rem; }
+  h2.h-splan { border-bottom: 3px solid var(--plum); padding-bottom: 0.5rem; }
+  h2.h-shalom { border-bottom: 3px solid var(--olive); padding-bottom: 0.5rem; }
+
+  /* ---------- Voces del panel ---------- */
+  .voz { margin-bottom: 1.4rem; }
+  .voz .nombre {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 0.82rem;
+    text-transform: uppercase; letter-spacing: 0.12em; display: block; margin-bottom: 0.2rem;
+  }
+  .voz.filologa .nombre { color: var(--steel); }
+  .voz.rabino .nombre { color: var(--terracotta); }
+  .voz.helenista .nombre { color: var(--plum); }
+  .voz.pastor .nombre { color: var(--olive); }
+  .voz .acot { font-style: italic; color: var(--ink-soft); font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+  /* ---------- Cita bíblica ---------- */
+  blockquote.biblia {
+    margin: 1.8rem 0; padding: 1.4rem 1.8rem;
+    background: var(--cream-deep); border-radius: 12px;
+    font-family: 'Fraunces', serif; font-size: 1.12rem; font-weight: 400;
+    font-style: italic; line-height: 1.6;
+  }
+  blockquote.biblia footer {
+    margin-top: 0.7rem; font-family: 'Spectral', serif; font-size: 0.85rem;
+    font-style: normal; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Tarjetas de palabra ---------- */
+  .palabra-hero {
+    display: flex; align-items: baseline; gap: 1.2rem; flex-wrap: wrap;
+    margin-bottom: 1.4rem;
+  }
+  .palabra-hero .original {
+    font-family: 'Fraunces', serif; font-size: 2.6rem; font-weight: 300;
+  }
+  .palabra-hero .trans { font-size: 1rem; font-style: italic; color: var(--ink-soft); }
+
+  /* ---------- Tabla comparativa ---------- */
+  table.contraste {
+    width: 100%; border-collapse: collapse; margin: 1.8rem 0; font-size: 0.95rem;
+  }
+  table.contraste th, table.contraste td {
+    padding: 0.75rem 0.9rem; text-align: left; border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.contraste th {
+    font-family: 'Fraunces', serif; font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--ink-soft);
+  }
+
+  /* ---------- Persianas ---------- */
+  details.persiana {
+    margin: 1.6rem 0; border: 1px solid var(--line); border-radius: 12px;
+    background: rgba(239, 230, 211, 0.55); overflow: hidden;
+  }
+  details.persiana summary {
+    cursor: pointer; list-style: none; padding: 1rem 1.4rem;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1rem;
+    display: flex; align-items: center; gap: 0.7rem; user-select: none;
+    transition: background 0.25s;
+  }
+  details.persiana summary::-webkit-details-marker { display: none; }
+  details.persiana summary:hover { background: rgba(201, 138, 45, 0.1); }
+  details.persiana summary .flecha {
+    display: inline-block; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--amber); font-size: 0.85rem;
+  }
+  details.persiana[open] summary .flecha { transform: rotate(90deg); }
+  .persiana-cuerpo {
+    display: grid; grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  details.persiana[open] .persiana-cuerpo { grid-template-rows: 1fr; }
+  .persiana-inner { overflow: hidden; }
+  .persiana-inner > div { padding: 0.2rem 1.4rem 1.4rem; }
+
+  /* ---------- Persiana-semilla ---------- */
+  details.semilla {
+    border: 2px solid var(--olive);
+    background: linear-gradient(160deg, rgba(107,122,63,0.08), rgba(201,138,45,0.08));
+  }
+  details.semilla summary { color: var(--olive); font-size: 1.1rem; }
+  .dia-practica {
+    display: flex; gap: 1rem; margin-bottom: 1rem; align-items: baseline;
+  }
+  .dia-practica .dia {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--olive);
+    min-width: 4.4rem;
+  }
+
+  /* ---------- Fuentes ---------- */
+  .fuentes {
+    margin-top: 1.6rem; padding-top: 0.9rem; border-top: 1px dotted var(--line);
+    font-size: 0.88rem; color: var(--ink-soft);
+  }
+  .fuentes a { color: var(--steel); text-decoration: none; border-bottom: 1px dotted var(--steel); }
+  .fuentes a:hover { color: var(--terracotta); border-color: var(--terracotta); }
+
+  /* ---------- Cierre ---------- */
+  footer.cierre {
+    margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--line);
+    font-size: 0.88rem; color: var(--ink-soft); font-style: italic;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    nav.lateral { transform: translateX(-100%); transition: transform 0.35s ease; width: 270px; }
+    nav.lateral.visible { transform: translateX(0); box-shadow: 4px 0 30px rgba(46,36,24,0.2); }
+    #hamburguesa { display: flex; }
+    main { margin-left: 0; padding: 5rem 1.4rem 4rem; }
+    .palabra-hero .original { font-size: 2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progreso"></div>
+
+<button id="hamburguesa" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+
+<nav class="lateral" id="menuLateral">
+  <div class="marca">☕ Café con Claude</div>
+  <div class="serie">La Red es la Iglesia</div>
+  <a class="inicio" href="index.html">← Volver al índice</a>
+  <ol>
+    <li><a href="#s1"><span class="num">I</span> La mesa se sirve</a></li>
+    <li><a href="#s2"><span class="num">II</span> El mito del idioma pobre</a></li>
+    <li><a href="#s3"><span class="num">III</span> Hesed</a></li>
+    <li><a href="#s4"><span class="num">IV</span> Splanchnizomai</a></li>
+    <li><a href="#s5"><span class="num">V</span> Shalom</a></li>
+    <li><a href="#s6"><span class="num">VI</span> Las tres aduanas</a></li>
+    <li><a href="#s7"><span class="num">VII</span> La brecha como invitación</a></li>
+    <li><a href="#s8"><span class="num">✦</span> Semilla de siete días</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<header class="portada">
+  <span class="etiqueta">Panel de expertos · Pregunta 9</span>
+  <h1>Palabras <em>sin aduana</em></h1>
+  <p class="bajada">Por qué el español no tiene palabra para <span class="c-hesed"><em>hesed</em></span>, <span class="c-splan"><em>splanchnizomai</em></span> o <span class="c-shalom"><em>shalom</em></span> — y por qué esa brecha es un regalo disfrazado.</p>
+  <div class="pregunta-origen">
+    «¿Por qué el español no tiene palabra para <em>hesed</em>, <em>splanchnizomai</em> o <em>shalom</em>?» — La mesa de Café con Claude, julio 2026.
+  </div>
+</header>
+
+<!-- ==================== I ==================== -->
+<section id="s1">
+  <h2><span class="romano">I.</span> La mesa se sirve</h2>
+  <p>Tres palabras. Una hebrea del desierto, una griega de los evangelios, otra hebrea que hasta hoy se usa como saludo. Las tres aparecen cientos de veces en la Biblia. Las tres llegan al español golpeadas, reducidas, con el equipaje confiscado en la frontera. <em>Hesed</em> se convierte en «misericordia». <em>Splanchnizomai</em> se convierte en «tuvo compasión». <em>Shalom</em> se convierte en «paz». Ninguna traducción es falsa. Ninguna es suficiente.</p>
+  <p>El panel de hoy tiene cuatro sillas: <strong>La Filóloga</strong> (que estudia por qué las lenguas tienen huecos), <strong>El Rabino</strong> (que custodia el hebreo), <strong>La Helenista</strong> (que defiende el griego del Nuevo Testamento) y <strong>El Pastor</strong> (que quiere saber qué hacemos con todo esto el domingo). El café está caliente. Empezamos.</p>
+</section>
+
+<!-- ==================== II ==================== -->
+<section id="s2">
+  <h2><span class="romano">II.</span> El mito del idioma pobre</h2>
+
+  <div class="voz filologa">
+    <span class="nombre">La Filóloga <span class="acot">(ajustando sus lentes)</span></span>
+    <p>Antes de tocar la Biblia, desmontemos un mito: ninguna lengua «carece» de palabras por descuido. Las lenguas lexicalizan lo que sus hablantes necesitan nombrar con frecuencia, y las diferencias culturales se reflejan directamente en la estructura del vocabulario. Los lingüistas llamamos a esto <em>brecha léxica</em> (lexical gap): no existe equivalencia uno-a-uno entre una palabra de la lengua fuente y una de la lengua meta. Pero atención al matiz — la denotación casi siempre puede traducirse con suficiente circunloquio; lo que se vuelve inefable es la connotación, la carga, el eco.</p>
+  </div>
+
+  <div class="voz rabino">
+    <span class="nombre">El Rabino</span>
+    <p>Es decir: puedo <em>explicarte</em> hesed en un párrafo. Lo que no puedo darte es una palabra española que la comunidad hispanohablante haya cargado durante tres mil años con pactos, éxodos y salmos. La palabra no es solo un significado; es una mochila.</p>
+  </div>
+
+  <div class="voz filologa">
+    <span class="nombre">La Filóloga</span>
+    <p>Y el español también tiene sus intraducibles — <em>sobremesa</em>, <em>madrugar</em>, <em>estrenar</em>. Cada lengua es un mapa incompleto del territorio. La pregunta correcta no es «¿por qué al español le falta esto?», sino «¿qué necesitaba nombrar Israel que Roma no necesitaba?». Ahí se pone interesante.</p>
+  </div>
+
+  <p class="fuentes">📚 Fuentes: <a href="https://www.researchgate.net/publication/342493281_Lexical_Gaps_and_untraslatability_in_Translation" target="_blank">Lexical Gaps and Untranslatability</a>, <a href="https://global-lingo.com/100-lexical-gaps-you-cant-help-but-share/" target="_blank">Global Lingo — Lexical Gaps</a>, <a href="https://www.omniglot.com/language/articles/untranslatables.htm" target="_blank">Omniglot — Untranslatables</a></p>
+</section>
+
+<!-- ==================== III ==================== -->
+<section id="s3">
+  <h2 class="h-hesed"><span class="romano">III.</span> <span class="c-hesed">Hesed</span> — el amor con contrato y músculos</h2>
+
+  <div class="palabra-hero">
+    <span class="original c-hesed">חֶסֶד</span>
+    <span class="trans">ḥesed · sustantivo hebreo · ~250 apariciones en el Antiguo Testamento</span>
+  </div>
+
+  <div class="voz rabino">
+    <span class="nombre">El Rabino <span class="acot">(sirviéndose café)</span></span>
+    <p>Hesed aparece unas 250 veces en el Antiguo Testamento y se ha traducido como «misericordia», «bondad», «amor inquebrantable» y «amor fiel», entre otras — precisamente porque no existe una palabra equivalente exacta en español. Pero ninguna atrapa el animal completo. Hesed designa la totalidad de deberes entre quienes están unidos por vínculo de sangre, parentela, amistad, hospitalidad o alianza. No es solo sentimiento: es acción, bondad activa, comportamiento eficaz. Es la lealtad de Rut que se queda con Noemí cuando nada la obliga. Es David sentando al nieto de Saúl en la mesa del rey.</p>
+  </div>
+
+  <div class="voz pastor">
+    <span class="nombre">El Pastor</span>
+    <p>O sea: amor con contrato firmado y músculos. El español me da «misericordia», que mira de arriba hacia abajo, del fuerte al débil. Me da «lealtad», que suena a ejército o a perro fiel. Me da «bondad», que suena a abuelita. Pero no me da la palabra que fusiona pacto + ternura + acción sostenida en el tiempo.</p>
+  </div>
+
+  <blockquote class="biblia">
+    «¡El Señor! ¡El Señor! ¡Dios tierno y compasivo, paciente y grande en amor y verdad!»
+    <footer>Éxodo 34:6 · Dios Habla Hoy — donde «amor» traduce <em>hesed</em></footer>
+  </blockquote>
+
+  <div class="voz rabino">
+    <span class="nombre">El Rabino</span>
+    <p>Nota el detalle: los actos de hesed se hacen libremente, sin obligación ni temor a represalias; nacen de la relación misma. Y va más allá de las expectativas sociales, las emociones fluctuantes o lo que la otra persona merece. En el judaísmo actual, enterrar a un muerto que no puede pagar el favor se considera <em>hesed shel emet</em> — el hesed más puro, porque el beneficiado jamás podrá devolverlo.</p>
+  </div>
+
+  <details class="persiana">
+    <summary><span class="flecha">▶</span> Persiana: Rut, la novela corta del hesed</summary>
+    <div class="persiana-cuerpo"><div class="persiana-inner"><div>
+      <p>El libro de Rut es un laboratorio narrativo del concepto. Noemí, viuda y vacía, no tiene nada que ofrecer. Rut decide quedarse — «tu pueblo será mi pueblo, y tu Dios será mi Dios» — y Booz nombra esa decisión con la palabra exacta: llama hesed a la bondad de Rut, un compromiso que va más allá del deber y de la conveniencia (Rut 3:10). La estructura del libro es una cadena de hesed: Rut hacia Noemí, Booz hacia Rut, y Dios — que nunca habla en todo el libro — actuando silenciosamente a través de las lealtades humanas. Para tu marco de red, Gianni: hesed es el protocolo de transmisión entre nodos. Sin hesed, la red se cae.</p>
+    </div></div></div>
+  </details>
+
+  <p class="fuentes">📚 Fuentes: <a href="https://www.compellingtruth.org/Espanol/significado-de-hesed.html" target="_blank">Compelling Truth — Hesed</a>, <a href="https://www.gotquestions.org/Espanol/significado-de-hesed.html" target="_blank">GotQuestions — Hesed</a>, <a href="https://www.ciudadredonda.org/articulo/la-misericordia-las-3-palabras-biblicas/" target="_blank">Ciudad Redonda — Las 3 palabras</a>, <a href="https://www.cooperadores-pma.org/.cm4all/uproc.php/0/2019-2020/Tema%202.%20El%20Hesed%20de%20Dios.pdf?cdp=a&_=16d7421f308" target="_blank">El Hesed de Dios (PDF)</a></p>
+</section>
+
+<!-- ==================== IV ==================== -->
+<section id="s4">
+  <h2 class="h-splan"><span class="romano">IV.</span> <span class="c-splan">Splanchnizomai</span> — cuando a Dios le duelen las entrañas</h2>
+
+  <div class="palabra-hero">
+    <span class="original c-splan">σπλαγχνίζομαι</span>
+    <span class="trans">splanchnízomai · verbo griego · 12 apariciones, todas en los evangelios</span>
+  </div>
+
+  <div class="voz helenista">
+    <span class="nombre">La Helenista</span>
+    <p>Esta es la más física de las tres. El verbo viene de <em>splanchna</em>, las entrañas — pulmones, corazón, hígado — que los griegos consideraban la base de los sentimientos, del amor, de la conmiseración. Es la más expresiva de las palabras que traducimos por «compasión», porque no solo supone un sentimiento de pena ante el sufrimiento, sino además un fuerte deseo de aliviarlo o suprimirlo. Cuando Marcos dice que Jesús vio al leproso y <em>esplanchnisthē</em>, no dice que «sintió lástima». Dice que se le retorcieron las vísceras.</p>
+  </div>
+
+  <blockquote class="biblia">
+    «Jesús tuvo compasión de él; lo tocó con la mano y dijo: —Quiero. ¡Queda limpio!»
+    <footer>Marcos 1:41 · Dios Habla Hoy — donde «tuvo compasión» traduce <em>splanchnizomai</em></footer>
+  </blockquote>
+
+  <div class="voz helenista">
+    <span class="nombre">La Helenista</span>
+    <p>Nuestra «compasión» viene del latín <em>com-pati</em>, «sufrir con». Hermosa palabra — pero mental, ordenada, sin tripas. Splanchnizomai es un sentimiento que produce movimiento, acción; y lamentablemente no tiene traducción directa al español. Lo más cerca que llegamos es la frase «se le removieron las entrañas»… que curiosamente es <em>exacta</em>. Pero son cinco palabras, no una.</p>
+  </div>
+
+  <div class="voz pastor">
+    <span class="nombre">El Pastor <span class="acot">(inclinándose hacia adelante)</span></span>
+    <p>Y aquí hay un dato que me eriza la piel: en los evangelios, este verbo se usa casi exclusivamente para Jesús — y para los personajes de sus parábolas que representan a Dios: el padre del hijo pródigo que corre, el samaritano que se detiene, el rey que perdona la deuda. Es como si los evangelistas hubieran reservado la palabra más visceral del idioma para describir lo que Dios siente al vernos. Esto conecta directo con nuestra página de las emociones censuradas de Jesús en Marcos.</p>
+  </div>
+
+  <details class="persiana">
+    <summary><span class="flecha">▶</span> Persiana: dónde se le retuercen las entrañas a Dios</summary>
+    <div class="persiana-cuerpo"><div class="persiana-inner"><div>
+      <p><strong>En Jesús directamente:</strong> ante el leproso (Marcos 1:41), ante la multitud como ovejas sin pastor (Marcos 6:34), ante la multitud hambrienta (Marcos 8:2), ante el padre del muchacho poseído (Marcos 9:22), ante los ciegos de Jericó (Mateo 20:34), ante la viuda de Naín (Lucas 7:13).</p>
+      <p><strong>En las parábolas, como retrato del corazón de Dios:</strong> el rey que perdona la deuda impagable (Mateo 18:27), el samaritano ante el hombre medio muerto (Lucas 10:33), el padre que ve al pródigo desde lejos y corre (Lucas 15:20). Tres parábolas, tres veces la misma palabra, tres veces la compasión visceral como el punto de giro de la historia. La estructura no es casualidad: en la gramática de Jesús, la conmoción de entrañas es lo que separa a los personajes que actúan como Dios de los que no.</p>
+    </div></div></div>
+  </details>
+
+  <p class="fuentes">📚 Fuentes: <a href="https://www.conferenciapastoral.org/the-disposition-of-the-pastor-ii-a-compassionate-heart/" target="_blank">Conferencia Pastoral — Splanchnizomai</a>, <a href="https://bibliasholman.lifeway.com/que-es-el-termino-compasion/" target="_blank">Biblias Holman — Compasión</a>, <a href="https://rsanzcarrera2.wordpress.com/2025/07/29/la-compasion-divina-un-analisis-etimologico-y-teologico-de-%CE%B5%CF%83%CF%80%CE%BB%CE%B1%CE%B3%CF%87%CE%BD%CE%B9%CF%83%CE%B8%CE%B7-esplagchnisthe/" target="_blank">Escritura Sagrada — Análisis de esplagchnisthē</a>, <a href="https://lecturadevocional.wordpress.com/2012/02/06/splagchnizomai-mateo-936/" target="_blank">Lectura Devocional — Mateo 9:36</a></p>
+</section>
+
+<!-- ==================== V ==================== -->
+<section id="s5">
+  <h2 class="h-shalom"><span class="romano">V.</span> <span class="c-shalom">Shalom</span> — la paz que no es ausencia</h2>
+
+  <div class="palabra-hero">
+    <span class="original c-shalom">שָׁלוֹם</span>
+    <span class="trans">shalom · sustantivo hebreo · +200 apariciones en el Tanaj</span>
+  </div>
+
+  <div class="voz rabino">
+    <span class="nombre">El Rabino</span>
+    <p>La más traicionada de las tres, porque parece la más fácil. Shalom viene de la raíz <em>shalem</em>: «estar completo, estar entero, estar íntegro». De la misma raíz sale <em>shillem</em>, «pagar, restituir» — devolver algo a su estado completo. Cuando nosotros pensamos en «paz», pensamos en la ausencia de algo malo: sin guerra, sin ruido, sin conflicto. Pero shalom no es la ausencia de algo. Shalom es la presencia de todo lo bueno: nada falta, nada está roto, todo funciona como fue diseñado.</p>
+  </div>
+
+  <div class="voz filologa">
+    <span class="nombre">La Filóloga</span>
+    <p>Y ahora miren la palabra española. «Paz» viene del latín <em>pax</em>, emparentada con <em>pactum</em>: un acuerdo, un cese de hostilidades. La <em>Pax Romana</em> era exactamente eso — orden impuesto por las legiones. Jurídica, contractual, negativa. Shalom es un jardín floreciendo; pax es un armisticio firmado. El español heredó la palabra del imperio, no la de la alianza.</p>
+  </div>
+
+  <blockquote class="biblia">
+    «Les dejo la paz. Les doy mi paz, pero no se la doy como la dan los que son del mundo.»
+    <footer>Juan 14:27 · Dios Habla Hoy — Jesús distinguiendo su shalom de la pax del mundo</footer>
+  </blockquote>
+
+  <div class="voz pastor">
+    <span class="nombre">El Pastor</span>
+    <p>Con razón Jeremías se enfurece con los profetas que gritan «¡Shalom, shalom!» cuando no hay shalom (Jeremías 6:14). No los acusa de mentir sobre la ausencia de guerra — los acusa de vender la anestesia como si fuera la sanidad. Y con razón Jesús dice «mi paz les doy, no como el mundo la da»: el mundo da pax, tregua vigilada. Él da shalom, restauración de todo lo roto.</p>
+  </div>
+
+  <details class="persiana">
+    <summary><span class="flecha">▶</span> Persiana: shalom en cuatro dimensiones</summary>
+    <div class="persiana-cuerpo"><div class="persiana-inner"><div>
+      <p>El Tanaj usa shalom en capas que la palabra «paz» aplana: <strong>bienestar físico</strong> (José pregunta por el shalom de su padre, Génesis 43:27), <strong>justicia social</strong> (Jeremías manda buscar el shalom de la ciudad, porque en su shalom tendremos shalom — Jeremías 29:7), <strong>plenitud espiritual</strong> (la bendición sacerdotal de Números 6 culmina poniendo shalom sobre el pueblo), y <strong>nombre divino</strong> (Gedeón construye un altar y lo llama <em>Adonai Shalom</em>, «el Señor es Paz», Jueces 6:24). La tradición rabínica llega a enseñar que Shalom es uno de los nombres de Dios — por eso decir «shalom» a alguien no es desearle tranquilidad: es deseárselo a Él.</p>
+    </div></div></div>
+  </details>
+
+  <p class="fuentes">📚 Fuentes: <a href="https://www.guiabiblia.com/blog/que-significa-shalom-en-la-biblia" target="_blank">Guía Biblia — Shalom</a>, <a href="https://www.aprendehebreo.com/shalom-en-la-biblia/" target="_blank">Aprende Hebreo — Shalom</a>, <a href="https://www.shalomisrael.es/judaismo/shalom/" target="_blank">Shalom Israel — Significado</a>, <a href="https://shalomtidings.org/es/el-verdadero-significado-de-shalom/" target="_blank">Shalom Tidings</a></p>
+</section>
+
+<!-- ==================== VI ==================== -->
+<section id="s6">
+  <h2><span class="romano">VI.</span> Las tres aduanas</h2>
+
+  <div class="voz filologa">
+    <span class="nombre">La Filóloga</span>
+    <p>Ahora sí, la respuesta de fondo a la pregunta de Gianni. Estas palabras no cruzaron una frontera: cruzaron <em>tres</em>. Del hebreo al griego (la Septuaginta, siglo III a.C.), del griego al latín (la Vulgata de Jerónimo, siglo IV d.C.), y del latín al español. Cada aduana confiscó algo del equipaje.</p>
+  </div>
+
+  <table class="contraste">
+    <thead>
+      <tr><th>Palabra</th><th>Hebreo / Griego</th><th>Griego (LXX)</th><th>Latín (Vulgata)</th><th>Español</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="c-hesed"><strong>hesed</strong></td>
+        <td>pacto + lealtad + ternura + acción</td>
+        <td><em>éleos</em> (misericordia)</td>
+        <td><em>misericordia</em></td>
+        <td>«misericordia» — solo la mirada hacia abajo</td>
+      </tr>
+      <tr>
+        <td class="c-splan"><strong>splanchnizomai</strong></td>
+        <td>conmoción visceral que actúa</td>
+        <td>— (nace en griego)</td>
+        <td><em>misereor</em></td>
+        <td>«tuvo compasión» — sin las tripas</td>
+      </tr>
+      <tr>
+        <td class="c-shalom"><strong>shalom</strong></td>
+        <td>plenitud, integridad, restauración</td>
+        <td><em>eirēnē</em></td>
+        <td><em>pax</em> (pacto, tregua)</td>
+        <td>«paz» — solo la ausencia de guerra</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="voz helenista">
+    <span class="nombre">La Helenista</span>
+    <p>Y hay evidencia de que la reducción empezó <em>antes</em> del español: cuando Mateo registra a Jesús citando Oseas 6:6 — «hesed quiero, y no sacrificios» — el evangelista ya traduce hesed por el griego <em>éleos</em>, misericordia. El achicamiento venía en cadena.</p>
+  </div>
+
+  <div class="voz rabino">
+    <span class="nombre">El Rabino</span>
+    <p>La razón profunda: el hebreo bíblico piensa en categorías de <strong>pacto y relación</strong> — es el idioma de una tribu en alianza con su Dios. El latín, padre del español, piensa en categorías de <strong>ley y contrato</strong> — es el idioma de un imperio de abogados e ingenieros. Heredamos un vocabulario espiritual forjado en los tribunales de Roma, no en las tiendas del desierto. Cada lengua nombra lo que su cultura vive; Roma vivía pactos jurídicos, Israel vivía alianzas de sangre.</p>
+  </div>
+
+  <p class="fuentes">📚 Fuentes: <a href="https://www.cooperadores-pma.org/.cm4all/uproc.php/0/2019-2020/Tema%202.%20El%20Hesed%20de%20Dios.pdf?cdp=a&_=16d7421f308" target="_blank">El Hesed de Dios (PDF)</a>, <a href="https://www.researchgate.net/publication/342493281_Lexical_Gaps_and_untraslatability_in_Translation" target="_blank">Lexical Gaps and Untranslatability</a>, <a href="https://www.ciudadredonda.org/articulo/la-misericordia-las-3-palabras-biblicas/" target="_blank">Ciudad Redonda — Las 3 palabras</a></p>
+</section>
+
+<!-- ==================== VII ==================== -->
+<section id="s7">
+  <h2><span class="romano">VII.</span> La brecha como invitación</h2>
+
+  <div class="voz pastor">
+    <span class="nombre">El Pastor <span class="acot">(que había estado guardando esto)</span></span>
+    <p>Entonces cierro con la capa que más me importa: <strong>la brecha no es un defecto — es una invitación</strong>. Una palabra sin equivalente te obliga a detenerte. Si «hesed» se tradujera perfecto con una sola palabra española, nadie escribiría páginas de estudio sobre ella. Nadie abriría una persiana. El hueco en el diccionario es el lugar exacto donde el estudio se vuelve encuentro.</p>
+  </div>
+
+  <div class="voz filologa">
+    <span class="nombre">La Filóloga</span>
+    <p>Y hay un consuelo técnico: la denotación siempre puede traducirse; los traductores compensan con préstamos, paráfrasis y explicación. Por eso hay quien propone, con hesed, explicarla desde su etimología, comentar sus matices más profundos… y dejarla sin traducir. Que la palabra hebrea entre al español como entró «shalom» a medio mundo: intacta, con su mochila puesta.</p>
+  </div>
+
+  <div class="voz rabino">
+    <span class="nombre">El Rabino</span>
+    <p>Para tu marco, Gianni: si la red es la iglesia, estas tres palabras son especificaciones del sistema que el manual traducido simplifica. <span class="c-hesed"><strong>Hesed</strong></span> es el protocolo de enlace entre nodos — lealtad activa que no depende del rendimiento del otro. <span class="c-splan"><strong>Splanchnizomai</strong></span> es el sensor: la red sana detecta el dolor de un nodo en las entrañas, no en un reporte. <span class="c-shalom"><strong>Shalom</strong></span> es el estado objetivo del sistema completo: no «sin errores», sino todo funcionando como fue diseñado.</p>
+  </div>
+
+  <div class="voz pastor">
+    <span class="nombre">El Pastor</span>
+    <p>Y la ironía final de la mesa: la Palabra misma hizo esto primero. La encarnación es el acto de traducción más radical de la historia — el Verbo cruzando la aduana hacia la carne, sabiendo que algo del esplendor no cabría en el idioma humano, y viniendo de todos modos. Cada vez que luchamos por explicar hesed en español, repetimos en miniatura ese movimiento. La traducción imperfecta no es fracaso. Es imitación de Cristo.</p>
+  </div>
+</section>
+
+<!-- ==================== SEMILLA ==================== -->
+<section id="s8">
+  <details class="persiana semilla">
+    <summary><span class="flecha">▶</span> 🌱 Semilla de siete días: vivir las palabras que no tenemos</summary>
+    <div class="persiana-cuerpo"><div class="persiana-inner"><div>
+      <p style="margin-bottom:1.4rem;">Una práctica breve por día. No para <em>entender</em> las tres palabras — para eso está la página — sino para <em>habitarlas</em> hasta que el cuerpo aprenda lo que el diccionario no pudo decir.</p>
+      <div class="dia-practica"><span class="dia">Día 1</span><p>Lee Rut 1 completo. Subraya cada decisión que nadie le exigía a Rut. Eso que subrayaste es hesed.</p></div>
+      <div class="dia-practica"><span class="dia">Día 2</span><p>Haz un acto de hesed shel emet: algo bueno por alguien que jamás podrá devolvértelo ni enterarse.</p></div>
+      <div class="dia-practica"><span class="dia">Día 3</span><p>Lee Marcos 1:40–45 despacio. Cuando llegues a «tuvo compasión», detente y pregúntate: ¿cuándo fue la última vez que algo me dolió en el estómago por otra persona?</p></div>
+      <div class="dia-practica"><span class="dia">Día 4</span><p>Hoy, cuando sientas la punzada de splanchnizomai — por pequeña que sea — no la dejes en sentimiento. Conviértela en una acción antes de que anochezca.</p></div>
+      <div class="dia-practica"><span class="dia">Día 5</span><p>Haz un inventario de shalom: en una hoja, tres columnas — cuerpo, relaciones, Dios. Anota qué está entero y qué está roto. Sin juicio; solo el mapa.</p></div>
+      <div class="dia-practica"><span class="dia">Día 6</span><p>Elige una cosa rota de la columna de relaciones y da un paso de restauración (shillem: restituir, devolver a lo completo). Un mensaje cuenta. Una llamada cuenta.</p></div>
+      <div class="dia-practica"><span class="dia">Día 7</span><p>Bendice a alguien en voz alta con Números 6:24–26. Al decir «paz», piensa: <em>que nada te falte, que nada quede roto, que todo en ti funcione como fue diseñado</em>.</p></div>
+    </div></div></div>
+  </details>
+</section>
+
+<footer class="cierre">
+  <p>☕ Café con Claude · Serie «La Red es la Iglesia» · Pregunta 9 del Panel · Julio 2026</p>
+  <p>Citas bíblicas de la versión Dios Habla Hoy (DHH). Las palabras sin traducir se dejaron así a propósito: la brecha es la invitación.</p>
+</footer>
+
+</main>
+
+<script>
+  // Barra de progreso
+  const progreso = document.getElementById('progreso');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    progreso.style.width = pct + '%';
+  }, { passive: true });
+
+  // Hamburguesa
+  const btn = document.getElementById('hamburguesa');
+  const menu = document.getElementById('menuLateral');
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('visible');
+    btn.classList.toggle('abierto');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('visible');
+    btn.classList.remove('abierto');
+  }));
+
+  // Scroll-spy
+  const enlaces = document.querySelectorAll('nav.lateral ol a');
+  const secciones = [...document.querySelectorAll('main section')];
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        enlaces.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  secciones.forEach(s => spy.observe(s));
+</script>
+
+</body>
+</html>

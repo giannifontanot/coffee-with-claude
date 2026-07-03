@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dichas una sola vez · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --soft: #6a5b48;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 200;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 220px;
+    height: 100vh;
+    padding: 3.2rem 1.4rem 2rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+
+  nav.sidebar .brand-sub {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--soft);
+    margin-bottom: 2rem;
+  }
+
+  nav.sidebar a.home {
+    display: inline-block;
+    font-size: 0.78rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 2rem;
+  }
+  nav.sidebar a.home:hover { color: var(--ink); border-color: var(--ink); }
+
+  nav.sidebar ol {
+    list-style: none;
+  }
+
+  nav.sidebar ol a {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--soft);
+    font-size: 0.86rem;
+    padding: 0.42rem 0;
+    border-left: 2px solid transparent;
+    padding-left: 0.7rem;
+    margin-left: -0.7rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    min-width: 1.6em;
+    color: var(--amber);
+  }
+
+  nav.sidebar ol a.active {
+    color: var(--ink);
+    border-left-color: var(--terracotta);
+  }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  nav.sidebar ol a:hover { color: var(--ink); }
+
+  /* ---------- Hamburguesa (móvil) ---------- */
+  .menu-btn {
+    display: none;
+    position: fixed;
+    top: 0.9rem; right: 0.9rem;
+    z-index: 300;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: 'Fraunces', serif;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.8rem;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  /* ---------- Contenido ---------- */
+  main {
+    margin-left: 220px;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header.hero { margin-bottom: 3.2rem; }
+
+  .eyebrow {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.8rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5.5vw, 3.1rem);
+    line-height: 1.12;
+    margin-bottom: 0.9rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: var(--soft);
+    font-size: 1.08rem;
+    max-width: 34em;
+  }
+
+  .hapax-hero {
+    margin-top: 2rem;
+    padding: 1.4rem 1.6rem;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--amber);
+    background: rgba(201, 138, 45, 0.06);
+  }
+  .hapax-hero .gr {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .hapax-hero .tr {
+    font-style: italic;
+    color: var(--soft);
+    font-size: 0.95rem;
+  }
+
+  section { margin-bottom: 3.4rem; scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 1.1rem;
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+  }
+
+  h2 .rn {
+    font-size: 1rem;
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  em { font-style: italic; }
+
+  .gk { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  /* ---------- Voces del panel ---------- */
+  .voz {
+    margin: 1.4rem 0;
+    padding: 0.9rem 1.2rem;
+    border-left: 3px solid var(--line);
+    background: rgba(43, 33, 24, 0.025);
+  }
+  .voz .quien {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-bottom: 0.35rem;
+  }
+  .voz p { margin-bottom: 0.5rem; font-size: 0.98rem; }
+  .voz p:last-child { margin-bottom: 0; }
+
+  .voz.exegeta { border-left-color: var(--terracotta); }
+  .voz.exegeta .quien { color: var(--terracotta); }
+  .voz.ingeniera { border-left-color: var(--olive); }
+  .voz.ingeniera .quien { color: var(--olive); }
+  .voz.provocador { border-left-color: var(--plum); }
+  .voz.provocador .quien { color: var(--plum); }
+  .voz.disenadora { border-left-color: var(--amber); }
+  .voz.disenadora .quien { color: var(--amber); }
+  .voz.metodologo { border-left-color: var(--steel); }
+  .voz.metodologo .quien { color: var(--steel); }
+
+  /* ---------- Persianas ---------- */
+  .persiana {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin: 1.1rem 0;
+    background: rgba(255, 253, 248, 0.55);
+    overflow: hidden;
+  }
+
+  .persiana > button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink);
+    padding: 0.95rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .persiana > button .flecha {
+    transition: transform 0.35s ease;
+    color: var(--terracotta);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .persiana.abierta > button .flecha { transform: rotate(90deg); }
+
+  .persiana .contenido {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+  }
+
+  .persiana.abierta .contenido { grid-template-rows: 1fr; }
+
+  .persiana .contenido > div {
+    overflow: hidden;
+  }
+
+  .persiana .inner {
+    padding: 0 1.2rem 1.2rem;
+    font-size: 0.98rem;
+  }
+
+  /* ---------- Vitrina de palabras ---------- */
+  .vitrina {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 0.9rem;
+    margin: 1.3rem 0;
+  }
+
+  .palabra {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    background: rgba(255, 253, 248, 0.6);
+  }
+
+  .palabra .gr {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.12rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .palabra .translit {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--soft);
+    margin-bottom: 0.4rem;
+  }
+
+  .palabra .gloss {
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .palabra .ref {
+    font-family: 'Fraunces', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+
+  .palabra.aram { border-top: 3px solid var(--plum); }
+  .palabra.lat  { border-top: 3px solid var(--steel); }
+  .palabra.comp { border-top: 3px solid var(--amber); }
+  .palabra.joya { border-top: 3px solid var(--olive); }
+
+  /* ---------- Tabla de números ---------- */
+  table.datos {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-size: 0.95rem;
+  }
+  table.datos th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  table.datos td {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.datos td.n {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--terracotta);
+    white-space: nowrap;
+  }
+
+  /* ---------- Cita bíblica ---------- */
+  blockquote.biblia {
+    margin: 1.3rem 0;
+    padding: 1rem 1.3rem;
+    border-left: 4px solid var(--olive);
+    background: rgba(107, 122, 63, 0.07);
+    font-style: italic;
+  }
+  blockquote.biblia .ref {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-family: 'Fraunces', serif;
+    font-size: 0.82rem;
+    color: var(--olive);
+  }
+
+  /* ---------- Fuentes ---------- */
+  .fuentes {
+    font-size: 0.92rem;
+    padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+  }
+  .fuentes a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180, 83, 42, 0.4);
+  }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--soft);
+  }
+
+  /* ---------- Móvil ---------- */
+  @media (max-width: 880px) {
+    nav.sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      box-shadow: 4px 0 20px rgba(43,33,24,0.12);
+    }
+    nav.sidebar.abierto { transform: translateX(0); }
+    .menu-btn { display: block; }
+    main { margin-left: 0; padding-top: 3.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .persiana .contenido, .persiana > button .flecha, nav.sidebar { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰ Índice</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">Serie: La Red es la Iglesia</div>
+  <a class="home" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  <ol id="navList">
+    <li><a href="#s1"><span class="num">I</span> La pregunta sobre la mesa</a></li>
+    <li><a href="#s2"><span class="num">II</span> El censo de las palabras</a></li>
+    <li><a href="#s3"><span class="num">III</span> Las siete que no existen en ningún otro libro</a></li>
+    <li><a href="#s4"><span class="num">IV</span> Voces prestadas: arameo y latín</a></li>
+    <li><a href="#s5"><span class="num">V</span> Joyas escondidas</a></li>
+    <li><a href="#s6"><span class="num">VI</span> La voz detrás de las palabras</a></li>
+    <li><a href="#s7"><span class="num">VII</span> Fuentes</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">El Panel Pregunta · Respuesta 2</div>
+  <h1>Dichas una sola vez</h1>
+  <p class="subtitle">Los <em>hapax legomena</em> de Marcos: setenta y cinco palabras que no aparecen en ningún otro libro del Nuevo Testamento — y lo que revelan sobre la voz de un pescador galileo.</p>
+
+  <div class="hapax-hero">
+    <div class="gr">ἅπαξ λεγόμενον</div>
+    <div class="tr">hápax legómenon — «(palabra) dicha una sola vez»</div>
+  </div>
+</header>
+
+<!-- ============ I ============ -->
+<section id="s1">
+  <h2><span class="rn">I</span> La pregunta sobre la mesa</h2>
+
+  <div class="voz exegeta">
+    <div class="quien">🏛️ El Exégeta</div>
+    <p>Yo hice la pregunta, así que la abro. Un <em>hapax legomenon</em> es una palabra que aparece una sola vez dentro de un corpus: puede ser un solo libro, un autor completo, o —en nuestro caso— todo el Nuevo Testamento griego. El NT contiene unos 686 hapax en total. La pregunta es: ¿cuáles le pertenecen a Marcos, el evangelio más corto, el más rápido, el supuestamente más «simple»?</p>
+  </div>
+
+  <div class="voz provocador">
+    <div class="quien">🎭 El Provocador</div>
+    <p>Y antes de que alguien bostece con la estadística: una palabra que un autor usa una sola vez en toda su vida escrita es una decisión. Nadie tropieza con un hapax. O la palabra era la única que servía, o el autor la inventó porque el idioma no le alcanzaba. Ambas cosas pasan en Marcos. Quédense.</p>
+  </div>
+
+  <p>La fuente principal de esta página es un estudio técnico del vocabulario de Marcos publicado por la Universidad de Oxford (Peter M. Head), que compila las listas clásicas de Swete, Aland y Schaff sobre el texto crítico NA28. Los conteos que siguen vienen de ahí.</p>
+  <p><a href="https://ora.ox.ac.uk/objects/uuid:4a4c06a8-49da-4882-8e84-231a6829d3bc/files/rw08929964" style="color:var(--terracotta)">Head, «Mark's Vocabulary» (Oxford ORA)</a> · <a href="https://en.wikipedia.org/wiki/Hapax_legomenon" style="color:var(--terracotta)">Wikipedia: Hapax legomenon</a></p>
+</section>
+
+<!-- ============ II ============ -->
+<section id="s2">
+  <h2><span class="rn">II</span> El censo de las palabras</h2>
+
+  <div class="voz ingeniera">
+    <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+    <p>Antes de las joyas, el inventario. Todo sistema se entiende primero por sus números, y los de Marcos sorprenden: el evangelio «tosco» resulta ser, en proporción, el de vocabulario más amplio de los cuatro.</p>
+  </div>
+
+  <table class="datos">
+    <thead><tr><th>Dato</th><th>Cifra</th></tr></thead>
+    <tbody>
+      <tr><td>Palabras totales en Marcos (texto NA28)</td><td class="n">11,099</td></tr>
+      <tr><td>Palabras distintas (vocabulario)</td><td class="n">1,329</td></tr>
+      <tr><td>Palabras usadas una sola vez <em>dentro</em> de Marcos</td><td class="n">618</td></tr>
+      <tr><td>Hapax legomena del NT que están en Marcos</td><td class="n">65</td></tr>
+      <tr><td>Palabras exclusivas de Marcos que aparecen más de una vez</td><td class="n">10</td></tr>
+      <tr><td><strong>Total de palabras que solo existen en Marcos dentro del NT</strong></td><td class="n">75</td></tr>
+      <tr><td>Hapax legomena en todo el NT griego</td><td class="n">~686</td></tr>
+    </tbody>
+  </table>
+
+  <div class="persiana">
+    <button aria-expanded="false"><span>📊 ¿Por qué «el más amplio en proporción»?</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <p>Si dividimos el total de palabras entre el vocabulario distinto, obtenemos cuántas veces «recicla» cada evangelista sus palabras. Marcos: 11,229 ÷ 1,329 = <strong>8.4</strong>. Mateo: 10.8. Lucas: 9.4. Juan: 15.3. Cuanto más bajo el número, más variado el léxico. Marcos, el evangelio que los manuales llaman «de griego rudo», es el que menos repite su vocabulario. Casi la mitad de sus palabras (618 de 1,329) aparecen una sola vez en todo su libro.</p>
+      <p>La Ingeniera lo resume así: Marcos no es un sistema pobre. Es un sistema <em>denso</em> — poca longitud, máxima variedad. Como una red pequeña con muchos tipos de nodos distintos.</p>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============ III ============ -->
+<section id="s3">
+  <h2><span class="rn">III</span> Las siete que no existen en ningún otro libro</h2>
+
+  <p>De las 75 palabras exclusivas de Marcos, la mayoría sí aparece en la Septuaginta, en papiros o en literatura griega general. Pero hay <strong>siete</strong> que no tienen atestación en <em>ninguna</em> otra fuente griega conocida. Siete palabras que, hasta donde sabemos, solo existen en este evangelio. Y forman dos familias reveladoras.</p>
+
+  <div class="persiana abierta">
+    <button aria-expanded="true"><span>🔨 Familia 1: las palabras que Marcos fabricó</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <p>Cuatro compuestos inusuales, armados apilando prefijos preposicionales — el equivalente griego de decir «requetecontra-»:</p>
+      <div class="vitrina">
+        <div class="palabra comp">
+          <div class="gr">ὑπερπερισσῶς</div>
+          <div class="translit">hyperperissōs</div>
+          <div class="gloss">«más allá de toda medida» — el asombro ante el sordomudo sanado</div>
+          <div class="ref">Marcos 7:37</div>
+        </div>
+        <div class="palabra comp">
+          <div class="gr">ἐκπερισσῶς</div>
+          <div class="translit">ekperissōs</div>
+          <div class="gloss">«con insistencia extraordinaria» — Pedro jurando que no negará a Jesús</div>
+          <div class="ref">Marcos 14:31</div>
+        </div>
+        <div class="palabra comp">
+          <div class="gr">ἐπισυντρέχω</div>
+          <div class="translit">episyntrechō</div>
+          <div class="gloss">«correr juntándose encima» — la multitud amontonándose</div>
+          <div class="ref">Marcos 9:25</div>
+        </div>
+        <div class="palabra comp">
+          <div class="gr">προμεριμνάω</div>
+          <div class="translit">promerimnaō</div>
+          <div class="gloss">«preocuparse de antemano» — lo que Jesús prohíbe ante los tribunales</div>
+          <div class="ref">Marcos 13:11</div>
+        </div>
+      </div>
+      <div class="voz provocador">
+        <div class="quien">🎭 El Provocador</div>
+        <p>Miren <span class="gk">ὑπερπερισσῶς</span>. La gente ya estaba <em>perissōs</em> (abundantemente) asombrada en otras escenas. Aquí Marcos necesita más y le suelda un <em>hyper-</em> encima. El evangelista inventa una palabra porque el griego estándar no alcanza para medir lo que Jesús provoca. Eso no es mal griego. Eso es un idioma quedándose corto a propósito.</p>
+      </div>
+    </div></div></div>
+  </div>
+
+  <div class="persiana">
+    <button aria-expanded="false"><span>👂 Familia 2: las palabras que Marcos escuchó</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <p>Tres transliteraciones del arameo — sonidos de la voz de Jesús que ningún otro autor del NT conservó:</p>
+      <div class="vitrina">
+        <div class="palabra aram">
+          <div class="gr">ταλιθά</div>
+          <div class="translit">talithá</div>
+          <div class="gloss">«niña, pequeña» — a la hija de Jairo</div>
+          <div class="ref">Marcos 5:41</div>
+        </div>
+        <div class="palabra aram">
+          <div class="gr">κοῦμ</div>
+          <div class="translit">koum</div>
+          <div class="gloss">«levántate» — la segunda mitad de la misma frase</div>
+          <div class="ref">Marcos 5:41</div>
+        </div>
+        <div class="palabra aram">
+          <div class="gr">ἐφφαθά</div>
+          <div class="translit">effathá</div>
+          <div class="gloss">«ábrete» — al sordo y tartamudo de la Decápolis</div>
+          <div class="ref">Marcos 7:34</div>
+        </div>
+      </div>
+      <blockquote class="biblia">
+        Entonces la tomó de la mano y le dijo: «Talitá, cum» (que significa: «Muchacha, a ti te digo, levántate»). Al momento, la muchacha, que tenía doce años, se levantó y echó a andar.
+        <span class="ref">Marcos 5:41–42 · DHH</span>
+      </blockquote>
+      <div class="voz exegeta">
+        <div class="quien">🏛️ El Exégeta</div>
+        <p>Noten el patrón: Marcos siempre translitera <em>y traduce</em>, con la fórmula <span class="gk">ὅ ἐστιν</span> («que significa»). Conserva el sonido original para una audiencia que ya no habla arameo. Es el gesto de alguien que estuvo cerca de la fuente y no quiere perder el timbre de la voz — pero que escribe para Roma. Dos mundos en una sola frase.</p>
+      </div>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============ IV ============ -->
+<section id="s4">
+  <h2><span class="rn">IV</span> Voces prestadas: arameo y latín</h2>
+
+  <p>Los hapax de Marcos no están repartidos al azar. Se agrupan en cuatro categorías, y cada categoría es una pista sobre quién escribe y para quién.</p>
+
+  <div class="persiana">
+    <button aria-expanded="false"><span>🕎 Arameo: el idioma de la intimidad</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <p>Además de <em>talithá koum</em> y <em>effathá</em>, Marcos conserva en arameo momentos que los otros evangelios pulieron o eliminaron: <span class="gk">βοανηργές</span> (Boanerges, «hijos del trueno», 3:17), <span class="gk">κορβᾶν</span> (corbán, «ofrenda», 7:11), <span class="gk">αββα</span> (Abba, en Getsemaní, 14:36) y el grito de la cruz, <span class="gk">ελωι ελωι λεμα σαβαχθανι</span> (15:34). Casi todos aparecen en labios de Jesús, y casi todos en momentos de máxima intensidad: sanaciones, oración agónica, abandono.</p>
+      <p>El patrón sugiere algo hermoso: cuando la tradición quiso recordar <em>exactamente</em> cómo sonó Jesús, no tradujo. Guardó el audio.</p>
+    </div></div></div>
+  </div>
+
+  <div class="persiana">
+    <button aria-expanded="false"><span>🏛️ Latín: el idioma del imperio</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <p>En el otro extremo, Marcos usa préstamos latinos que Mateo y Lucas evitan o reemplazan:</p>
+      <div class="vitrina">
+        <div class="palabra lat">
+          <div class="gr">κεντυρίων</div>
+          <div class="translit">kenturíōn (centurio)</div>
+          <div class="gloss">«centurión» — el que confiesa al pie de la cruz; los otros evangelios usan la palabra griega <em>hekatontárchēs</em></div>
+          <div class="ref">Marcos 15:39, 44–45</div>
+        </div>
+        <div class="palabra lat">
+          <div class="gr">σπεκουλάτωρ</div>
+          <div class="translit">spekoulátōr (speculator)</div>
+          <div class="gloss">«verdugo» — el soldado que ejecuta a Juan el Bautista</div>
+          <div class="ref">Marcos 6:27</div>
+        </div>
+        <div class="palabra lat">
+          <div class="gr">ξέστης</div>
+          <div class="translit">xéstēs (sextarius)</div>
+          <div class="gloss">«jarra» — en la lista de utensilios que los fariseos lavan</div>
+          <div class="ref">Marcos 7:4</div>
+        </div>
+      </div>
+      <p>Y en 12:42 Marcos hace algo delator: explica una moneda griega con una romana — «dos leptas, <em>que es un cuadrante</em>». Solo explicas la moneda local en términos romanos si tus lectores piensan en denarios. Estos latinismos, junto con la tradición antigua, apuntan a un evangelio compuesto para el mundo romano, posiblemente en Roma misma.</p>
+    </div></div></div>
+  </div>
+
+  <div class="persiana">
+    <button aria-expanded="false"><span>⚓ El mar y los diminutivos: el idioma del pescador</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <p>Dos categorías más completan el perfil. Primero, el vocabulario náutico: solo Marcos menciona la <span class="gk">πρύμνα</span> (popa) donde Jesús duerme en la tormenta (4:38), solo Marcos usa <span class="gk">προσορμίζω</span> (anclar, atracar, 6:53), solo Marcos describe a Simón y Andrés con el verbo técnico <span class="gk">ἀμφιβάλλω</span> (echar la red circular, 1:16). Tomado como campo semántico, el léxico del mar de Galilea en Marcos supera con creces al de Mateo y Lucas.</p>
+      <p>Segundo, los diminutivos — el habla coloquial y afectiva: <span class="gk">θυγάτριον</span> («hijita», 5:23; 7:25), <span class="gk">ὠτάριον</span> («orejita», la que Pedro corta, 14:47), <span class="gk">ψιχίον</span> («migajita», 7:28), <span class="gk">κυνάριον</span> («perrito», 7:27). Es la lengua de todos los días, la de la sobremesa, no la del escritorio del literato.</p>
+      <div class="voz disenadora">
+        <div class="quien">🎨 La Diseñadora</div>
+        <p>Como diseñadora, esto me encanta: el vocabulario tiene <em>textura</em>. Redes, popas, jarras, orejitas, migajitas. Marcos no describe conceptos; describe cosas que se pueden tocar. Su paleta léxica es la de un mundo material — y por eso sus escenas se ven.</p>
+      </div>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============ V ============ -->
+<section id="s5">
+  <h2><span class="rn">V</span> Joyas escondidas</h2>
+
+  <p>Algunos hapax de Marcos no solo son raros: cargan teología. Aquí las cinco que el panel se disputó.</p>
+
+  <div class="persiana abierta">
+    <button aria-expanded="true"><span>💎 μογιλάλος — la palabra que susurra a Isaías</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <p>En Marcos 7:32 le traen a Jesús un hombre sordo y <span class="gk">μογιλάλος</span> — «que hablaba con dificultad», tartamudo. Es la única vez que la palabra aparece en el NT. Pero hay un solo otro lugar en toda la Biblia griega donde existe: <strong>Isaías 35:6 en la Septuaginta</strong>, la gran promesa de la nueva creación:</p>
+      <blockquote class="biblia">
+        Los cojos saltarán como venados y <strong>los mudos gritarán de alegría</strong>; porque brotará agua en el desierto y correrán arroyos en la tierra seca.
+        <span class="ref">Isaías 35:6 · DHH</span>
+      </blockquote>
+      <div class="voz exegeta">
+        <div class="quien">🏛️ El Exégeta</div>
+        <p>Marcos no cita a Isaías. No dice «para que se cumpliera lo dicho por el profeta», como haría Mateo. Elige <em>una sola palabra</em> tan rara que solo puede venir de ahí, y deja que el lector que conoce su Septuaginta sienta el escalofrío: lo que Isaías prometió para el fin de los tiempos está pasando en un pueblo de la Decápolis. Un hapax como hipervínculo.</p>
+      </div>
+    </div></div></div>
+  </div>
+
+  <div class="persiana">
+    <button aria-expanded="false"><span>💎 Cuatro joyas más</span><span class="flecha">▶</span></button>
+    <div class="contenido"><div><div class="inner">
+      <div class="vitrina">
+        <div class="palabra joya">
+          <div class="gr">ἀναστενάζω</div>
+          <div class="translit">anastenázō</div>
+          <div class="gloss">«suspirar profundamente, desde adentro» — la reacción de Jesús cuando los fariseos piden una señal. El Jesús emocionalmente crudo que solo Marcos conserva.</div>
+          <div class="ref">Marcos 8:12</div>
+        </div>
+        <div class="palabra joya">
+          <div class="gr">ἐναγκαλίζομαι</div>
+          <div class="translit">enagkalízomai</div>
+          <div class="gloss">«tomar en brazos, abrazar» — usada dos veces, ambas con niños. En todo el NT, solo Marcos muestra a Jesús abrazando.</div>
+          <div class="ref">Marcos 9:36; 10:16</div>
+        </div>
+        <div class="palabra joya">
+          <div class="gr">ἀλεκτοροφωνία</div>
+          <div class="translit">alektorofōnía</div>
+          <div class="gloss">«el canto del gallo» — nombre técnico de la tercera vigilia romana de la noche. Aparece en la parábola del portero... capítulos antes de que un gallo real destroce a Pedro.</div>
+          <div class="ref">Marcos 13:35</div>
+        </div>
+        <div class="palabra joya">
+          <div class="gr">οὐά</div>
+          <div class="translit">ouá</div>
+          <div class="gloss">«¡bah!» — la burla onomatopéyica de los que pasan frente a la cruz. Marcos conserva hasta el sonido del desprecio.</div>
+          <div class="ref">Marcos 15:29</div>
+        </div>
+      </div>
+      <div class="voz provocador">
+        <div class="quien">🎭 El Provocador</div>
+        <p>Fíjense en el patrón de estas joyas: suspiros, abrazos, gallos, burlas. Los hapax de Marcos no están en los discursos teológicos — están en el cuerpo. Donde Mateo sistematiza y Lucas embellece, Marcos conserva lo que se oye y se toca. Y por eso mismo es el evangelio que más duele.</p>
+      </div>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============ VI ============ -->
+<section id="s6">
+  <h2><span class="rn">VI</span> La voz detrás de las palabras</h2>
+
+  <div class="voz metodologo">
+    <div class="quien">📐 El Metodólogo</div>
+    <p>Cerremos con método. Si juntamos las cuatro categorías de hapax como quien junta evidencia, el perfil que emerge es notablemente coherente:</p>
+  </div>
+
+  <table class="datos">
+    <thead><tr><th>Categoría de hapax</th><th>Lo que sugiere</th></tr></thead>
+    <tbody>
+      <tr><td>Arameo transliterado y traducido</td><td>Cercanía a la fuente original; memoria de testigo</td></tr>
+      <tr><td>Latinismos militares y comerciales</td><td>Audiencia del mundo romano</td></tr>
+      <tr><td>Vocabulario náutico del mar de Galilea</td><td>El mundo laboral de un pescador</td></tr>
+      <tr><td>Diminutivos y coloquialismos</td><td>Lengua hablada, no literaria; predicación oral</td></tr>
+    </tbody>
+  </table>
+
+  <p>La conclusión del estudio de Oxford lo dice con sobriedad académica: el vocabulario de Marcos refleja «la lengua y las memorias de un pescador galileo» comunicadas «al mundo romano más amplio». La tradición antigua (Papías, siglo II) decía que Marcos escribió lo que Pedro predicaba. No podemos probarlo con estadística — pero es exactamente el evangelio que esa tradición predeciría: arameo en los momentos íntimos, latín en los detalles del imperio, redes y popas en el paisaje, y palabras inventadas donde el asombro rompe el idioma.</p>
+
+  <div class="voz ingeniera">
+    <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+    <p>Para la serie <em>La Red es la Iglesia</em>, me quedo con esto: los hapax son la firma irrepetible de un nodo. Cada testigo de la red transmite el mismo mensaje, pero deja huellas que nadie más puede dejar. Setenta y cinco palabras únicas son setenta y cinco pruebas de que el Evangelio no es una señal genérica copiada — es una voz.</p>
+  </div>
+
+  <div class="voz disenadora">
+    <div class="quien">🎨 La Diseñadora</div>
+    <p>Y una pregunta para dejar servida en la próxima taza: si Marcos susurra a Isaías con una sola palabra en 7:32... ¿cuántos otros hipervínculos de una sola palabra no hemos visto todavía?</p>
+  </div>
+</section>
+
+<!-- ============ VII ============ -->
+<section id="s7">
+  <h2><span class="rn">VII</span> Fuentes</h2>
+  <div class="fuentes">
+    <p>Fuente principal: <a href="https://ora.ox.ac.uk/objects/uuid:4a4c06a8-49da-4882-8e84-231a6829d3bc/files/rw08929964">Peter M. Head, «Mark's Vocabulary: A Survey of Approaches and Material» (Oxford Research Archive)</a> — incluye la lista completa de los 65 + 10 hapax sobre NA28, compilada de Swete, Aland y Schaff.</p>
+    <p>Contexto general sobre hapax legomena: <a href="https://en.wikipedia.org/wiki/Hapax_legomenon">Wikipedia: Hapax legomenon</a>, <a href="https://www.gotquestions.org/hapax-legomenon.html">GotQuestions: What is a hapax legomenon?</a>, <a href="https://catholicus.eu/en/hapax-legomenon-the-mystery-of-unique-words-in-the-bible-and-what-they-reveal-about-god/">Catholicus.eu: The Mystery of Unique Words in the Bible</a>.</p>
+    <p>Citas bíblicas: versión Dios Habla Hoy (DHH).</p>
+  </div>
+
+  <footer>
+    Café con Claude · La Red es la Iglesia · Respuesta a la pregunta 2 del Panel · Julio 2026
+  </footer>
+</section>
+
+</div>
+</main>
+
+<script>
+  // ---------- Barra de progreso ----------
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = pct + '%';
+  }, { passive: true });
+
+  // ---------- Persianas ----------
+  document.querySelectorAll('.persiana > button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.parentElement;
+      const abierta = p.classList.toggle('abierta');
+      btn.setAttribute('aria-expanded', abierta ? 'true' : 'false');
+    });
+  });
+
+  // ---------- Scroll-spy ----------
+  const links = document.querySelectorAll('#navList a');
+  const map = {};
+  links.forEach(l => { map[l.getAttribute('href').slice(1)] = l; });
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = map[e.target.id];
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  document.querySelectorAll('section[id]').forEach(s => spy.observe(s));
+
+  // ---------- Menú móvil ----------
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  menuBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('abierto');
+  });
+  links.forEach(l => l.addEventListener('click', () => sidebar.classList.remove('abierto')));
+</script>
+
+</body>
+</html>

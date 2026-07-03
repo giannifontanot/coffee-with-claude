@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doce palancas para una iglesia estancada · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --soft: #6a5b48;
+    --sidebar-w: 240px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--terracotta);
+    z-index: 200;
+    transition: width 0.1s linear;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    padding: 2.5rem 1.5rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+
+  nav.sidebar .brand-sub {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--soft);
+    margin-bottom: 1.8rem;
+  }
+
+  nav.sidebar a.home {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 2rem;
+  }
+  nav.sidebar a.home:hover { color: var(--ink); border-color: var(--ink); }
+
+  nav.sidebar ol { list-style: none; }
+
+  nav.sidebar ol a {
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+    padding: 0.45rem 0;
+    color: var(--soft);
+    text-decoration: none;
+    font-size: 0.88rem;
+    border-left: 2px solid transparent;
+    padding-left: 0.7rem;
+    margin-left: -0.7rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    min-width: 1.6rem;
+    color: var(--amber);
+  }
+
+  nav.sidebar ol a:hover { color: var(--ink); }
+
+  nav.sidebar ol a.active {
+    color: var(--ink);
+    border-left-color: var(--terracotta);
+    font-weight: 600;
+  }
+
+  /* ---------- Hamburguesa (móvil) ---------- */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 0.9rem; right: 0.9rem;
+    z-index: 300;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.5rem 0.7rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+  }
+
+  /* ---------- Contenido ---------- */
+  main {
+    margin-left: var(--sidebar-w);
+    padding: 3.5rem 2rem 5rem;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header.hero { margin-bottom: 3.5rem; }
+
+  .eyebrow {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 0.8rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.12;
+    margin-bottom: 0.9rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: var(--soft);
+    font-size: 1.1rem;
+    max-width: 42ch;
+  }
+
+  section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.6rem;
+    line-height: 1.25;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h2 .roman {
+    color: var(--terracotta);
+    margin-right: 0.5rem;
+  }
+
+  p { margin-bottom: 1.1rem; }
+
+  em { font-style: italic; }
+
+  a.cite-link {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--terracotta);
+  }
+  a.cite-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  .fuentes {
+    font-size: 0.85rem;
+    color: var(--soft);
+    margin-top: 0.4rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  /* ---------- Diálogo ---------- */
+  .dialogo { margin: 1.6rem 0; }
+
+  .voz {
+    margin-bottom: 1.15rem;
+    padding-left: 1.1rem;
+    border-left: 3px solid var(--line);
+  }
+
+  .voz .quien {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .voz .quien::before {
+    content: '';
+    display: inline-block;
+    width: 0.55em; height: 0.55em;
+    border-radius: 50%;
+    margin-right: 0.45em;
+  }
+
+  .voz.exegeta { border-left-color: var(--terracotta); }
+  .voz.exegeta .quien { color: var(--terracotta); }
+  .voz.exegeta .quien::before { background: var(--terracotta); }
+
+  .voz.ingeniera { border-left-color: var(--olive); }
+  .voz.ingeniera .quien { color: var(--olive); }
+  .voz.ingeniera .quien::before { background: var(--olive); }
+
+  .voz.provocador { border-left-color: var(--plum); }
+  .voz.provocador .quien { color: var(--plum); }
+  .voz.provocador .quien::before { background: var(--plum); }
+
+  .voz.disenadora { border-left-color: var(--amber); }
+  .voz.disenadora .quien { color: var(--amber); }
+  .voz.disenadora .quien::before { background: var(--amber); }
+
+  .voz.metodologo { border-left-color: var(--steel); }
+  .voz.metodologo .quien { color: var(--steel); }
+  .voz.metodologo .quien::before { background: var(--steel); }
+
+  /* ---------- Escalera de palancas ---------- */
+  .escalera {
+    margin: 2rem 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .escalera .peldano {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+  }
+  .escalera .peldano:last-child { border-bottom: none; }
+
+  .escalera .peldano .n {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    min-width: 1.8rem;
+    text-align: right;
+  }
+
+  .escalera .debil { background: rgba(201, 138, 45, 0.05); }
+  .escalera .debil .n { color: var(--amber); }
+  .escalera .media { background: rgba(107, 122, 63, 0.07); }
+  .escalera .media .n { color: var(--olive); }
+  .escalera .fuerte { background: rgba(180, 83, 42, 0.08); }
+  .escalera .fuerte .n { color: var(--terracotta); }
+  .escalera .corazon { background: rgba(110, 74, 110, 0.10); }
+  .escalera .corazon .n { color: var(--plum); }
+
+  .escalera .peldano .etiq {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--soft);
+    white-space: nowrap;
+  }
+
+  /* ---------- Persianas ---------- */
+  details.persiana {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background: rgba(255, 253, 247, 0.6);
+    overflow: hidden;
+  }
+
+  details.persiana summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1rem 1.2rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    user-select: none;
+  }
+
+  details.persiana summary::-webkit-details-marker { display: none; }
+
+  details.persiana summary .palanca-num {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--amber);
+    min-width: 2.1rem;
+  }
+
+  details.persiana.p-media summary .palanca-num { color: var(--olive); }
+  details.persiana.p-fuerte summary .palanca-num { color: var(--terracotta); }
+  details.persiana.p-corazon summary .palanca-num { color: var(--plum); }
+
+  details.persiana summary .flecha {
+    margin-left: auto;
+    color: var(--soft);
+    font-family: 'Spectral', serif;
+    font-size: 0.85rem;
+    transition: transform 0.3s ease;
+  }
+
+  details.persiana[open] summary .flecha { transform: rotate(90deg); }
+
+  details.persiana .contenido-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+
+  details.persiana[open] .contenido-wrap { grid-template-rows: 1fr; }
+
+  details.persiana .contenido {
+    overflow: hidden;
+    padding: 0 1.2rem;
+  }
+
+  details.persiana[open] .contenido { padding: 0 1.2rem 1.2rem; }
+
+  .sub-label {
+    font-family: 'Fraunces', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin: 1.1rem 0 0.35rem;
+  }
+
+  .al-reves {
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--plum);
+    background: rgba(110, 74, 110, 0.06);
+    font-size: 0.95rem;
+    margin: 0.8rem 0;
+  }
+  .al-reves strong { font-family: 'Fraunces', serif; color: var(--plum); }
+
+  .eco {
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+    font-size: 0.95rem;
+    margin: 0.8rem 0;
+  }
+  .eco strong { font-family: 'Fraunces', serif; color: var(--terracotta); }
+
+  blockquote {
+    font-style: italic;
+    color: var(--soft);
+    padding-left: 1.2rem;
+    border-left: 3px solid var(--amber);
+    margin: 1.4rem 0;
+    font-size: 1.05rem;
+  }
+  blockquote .ref {
+    display: block;
+    font-style: normal;
+    font-size: 0.82rem;
+    margin-top: 0.35rem;
+    font-family: 'Fraunces', serif;
+  }
+
+  .cierre {
+    margin-top: 2rem;
+    padding: 1.2rem 1.4rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+  }
+  .cierre strong { font-family: 'Fraunces', serif; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--soft);
+  }
+
+  /* ---------- Móvil ---------- */
+  @media (max-width: 860px) {
+    nav.sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      width: min(78vw, 300px);
+      box-shadow: 4px 0 20px rgba(43, 33, 24, 0.12);
+    }
+    nav.sidebar.open { transform: translateX(0); }
+    .hamburger { display: block; }
+    main { margin-left: 0; padding: 3.5rem 1.15rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button class="hamburger" id="hamburger" aria-label="Abrir menú">☰</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand">Doce palancas</div>
+  <div class="brand-sub">Café con Claude · Julio 2026</div>
+  <a class="home" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  <ol>
+    <li><a href="#s1"><span class="num">I</span> La mesa se sirve</a></li>
+    <li><a href="#s2"><span class="num">II</span> Las palancas débiles (12–10)</a></li>
+    <li><a href="#s3"><span class="num">III</span> El territorio medio (9–6)</a></li>
+    <li><a href="#s4"><span class="num">IV</span> Las palancas fuertes (5–3)</a></li>
+    <li><a href="#s5"><span class="num">V</span> El corazón del sistema (2–1)</a></li>
+    <li><a href="#s6"><span class="num">VI</span> El diagnóstico de la mesa</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">El Panel Pregunta · Respuesta № 5 · Serie: La Red es la Iglesia</div>
+  <h1>Doce palancas para una iglesia estancada</h1>
+  <p class="subtitle">Donella Meadows se sienta a la mesa del café y lee la congregación como lo que es: un sistema complejo que empuja sus propias palancas… al revés.</p>
+</header>
+
+<!-- ======================= I ======================= -->
+<section id="s1">
+  <h2><span class="roman">I.</span> La mesa se sirve</h2>
+
+  <div class="dialogo">
+    <div class="voz ingeniera">
+      <span class="quien">🕸️ La Ingeniera de Sistemas</span>
+      <p>Esta pregunta la hice yo, así que abro yo. En 1997, Donella Meadows —científica de sistemas, discípula de Jay Forrester en el MIT— publicó un ensayo breve que se volvió texto fundacional: <em>Leverage Points: Places to Intervene in a System</em>. Su tesis: en todo sistema complejo (una empresa, una economía, un cuerpo vivo, una ciudad… y añado yo: una congregación) existen lugares donde un pequeño cambio produce grandes efectos en todo lo demás. Meadows ordenó doce de esos lugares, del más débil al más poderoso.</p>
+    </div>
+    <div class="voz provocador">
+      <span class="quien">🎭 El Provocador</span>
+      <p>Y aquí está el chiste cruel que hace que este ensayo valga la pena. Forrester, su maestro, decía que la gente <em>sí</em> sabe intuitivamente dónde están las palancas de su sistema. El problema es otro: todo el mundo empuja la palanca correcta <em>en la dirección equivocada</em>. La junta de la iglesia estancada conoce sus palancas. Las está empujando al revés con todas sus fuerzas, con oración incluida.</p>
+    </div>
+    <div class="voz metodologo">
+      <span class="quien">📋 El Metodólogo PDCA</span>
+      <p>Una advertencia metodológica antes de subir la escalera: Meadows misma presentó su lista con humildad — dijo que era un trabajo en progreso, una invitación a pensar más ampliamente sobre el cambio de sistemas, no una receta. Nosotros haremos lo mismo: esto es un mapa de diagnóstico, no un programa de siete pasos.</p>
+    </div>
+  </div>
+
+  <p>La escalera completa, de la palanca más débil (12) a la más poderosa (1). Nota el patrón: las juntas de las iglesias estancadas viven en la parte alta de la tabla — que es la parte <em>baja</em> del poder:</p>
+
+  <div class="escalera">
+    <div class="peldano debil"><span class="n">12</span> Constantes y parámetros <span class="etiq">débil</span></div>
+    <div class="peldano debil"><span class="n">11</span> Amortiguadores (buffers) <span class="etiq">débil</span></div>
+    <div class="peldano debil"><span class="n">10</span> Estructura física <span class="etiq">débil</span></div>
+    <div class="peldano media"><span class="n">9</span> Retardos <span class="etiq">media</span></div>
+    <div class="peldano media"><span class="n">8</span> Bucles de balance <span class="etiq">media</span></div>
+    <div class="peldano media"><span class="n">7</span> Bucles de refuerzo <span class="etiq">media</span></div>
+    <div class="peldano media"><span class="n">6</span> Flujos de información <span class="etiq">media</span></div>
+    <div class="peldano fuerte"><span class="n">5</span> Reglas del sistema <span class="etiq">fuerte</span></div>
+    <div class="peldano fuerte"><span class="n">4</span> Auto-organización <span class="etiq">fuerte</span></div>
+    <div class="peldano fuerte"><span class="n">3</span> Metas del sistema <span class="etiq">fuerte</span></div>
+    <div class="peldano corazon"><span class="n">2</span> Paradigma <span class="etiq">el corazón</span></div>
+    <div class="peldano corazon"><span class="n">1</span> Trascender paradigmas <span class="etiq">el corazón</span></div>
+  </div>
+
+  <p class="fuentes"><strong>Fuentes:</strong> <a class="cite-link" href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows Institute</a>, <a class="cite-link" href="https://en.wikipedia.org/wiki/Twelve_leverage_points">Wikipedia</a>, <a class="cite-link" href="https://www.heartoftheart.org/?p=1568">Heart of the Art</a></p>
+</section>
+
+<!-- ======================= II ======================= -->
+<section id="s2">
+  <h2><span class="roman">II.</span> Las palancas débiles (12–10)</h2>
+
+  <p>Aquí vive el 90% de las reuniones de junta. No porque estas palancas sean inútiles —a veces hay que moverlas— sino porque son las más visibles, las más discutibles y las que menos amenazan a nadie. Meadows las compara con ajustar la llave del agua de una tina: cambias el flujo, pero no cambias la tina, ni la plomería, ni la razón por la que alguien abrió la llave.</p>
+
+  <details class="persiana">
+    <summary><span class="palanca-num">12</span> Constantes y parámetros <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>Los números del sistema: subsidios, impuestos, estándares. Son el punto de intervención más popular y el menos transformador. Los congresos —dice ella— pasan casi todo su tiempo discutiendo parámetros.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>El horario del culto. La duración del sermón. El presupuesto de cada ministerio. El color de la alfombra nueva. Cuántas canciones antes de la predicación. Ninguna iglesia en la historia ha revivido por mover el culto de las 10:00 a las 10:30 — y sin embargo, esa reunión de junta duró tres horas.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> creer que el estancamiento es un problema de parámetros. «Si tuviéramos mejor sonido…», «si el culto fuera más corto…». Es diezmar la menta y el comino del sistema mientras se descuida lo más importante de la ley (Mateo 23:23).</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Los fariseos eran maestros de la palanca 12: expertos en parámetros (cuántos pasos en sábado, qué porcentaje de la menta) e inmunes a las palancas profundas. Jesús nunca discutió con ellos un parámetro sin apuntar de inmediato al paradigma que había detrás.</div>
+    </div></div>
+  </details>
+
+  <details class="persiana">
+    <summary><span class="palanca-num">11</span> Amortiguadores (buffers) <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>El tamaño de las reservas estabilizadoras en relación con sus flujos. Un buffer grande estabiliza; un buffer demasiado grande vuelve al sistema rígido e insensible.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>La banca de voluntarios, el fondo de reserva, el margen en el calendario. Una iglesia donde las mismas diez personas lo hacen todo no tiene amortiguador: un solo agotamiento y el ministerio colapsa. Pero el extremo opuesto también estanca: la iglesia con un fondo patrimonial tan cómodo que puede ignorar la realidad durante décadas ha convertido su buffer en anestesia.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> responder al cansancio pidiendo <em>más</em> a los mismos diez, en lugar de construir margen. O al contrario: acumular reserva como meta en sí misma, hasta que la seguridad financiera sustituye a la misión.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> El maná (Éxodo 16) es teología de buffers: reserva de un día, ni más ni menos. Y las diez muchachas de Mateo 25 se dividen exactamente por esto: cinco tenían aceite de reserva y cinco confundieron tener lámpara con tener margen.</div>
+    </div></div>
+  </details>
+
+  <details class="persiana">
+    <summary><span class="palanca-num">10</span> Estructura física <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>La estructura de los stocks y flujos materiales: redes de transporte, estructuras de edad de una población. Cambiar la estructura física es lento y costoso; la verdadera palanca es diseñarla bien desde el principio.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>El edificio. La disposición de las bancas mirando a un escenario. Los salones que determinan qué ministerios caben. La ubicación que decidió, hace cuarenta años, qué barrio sería «el nuestro». La estructura física predica un sermón silencioso todos los domingos — y a veces predica en contra del pastor.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> el proyecto de remodelación como estrategia de avivamiento. Confundir el templo con la iglesia es empujar la palanca 10 esperando resultados de la palanca 2.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Marcos 13:1–2. Un discípulo admira los grandes edificios del Templo y Jesús responde que no quedará piedra sobre piedra. Es el análisis de sistemas más brutal de los evangelios: la estructura física que Israel creía ser su palanca central era, en el diagnóstico de Jesús, prescindible.</div>
+    </div></div>
+  </details>
+
+  <p class="fuentes"><strong>Fuentes:</strong> <a class="cite-link" href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows Institute</a>, <a class="cite-link" href="https://intenseminimalism.com/2015/12-leverage-points-to-bring-change-to-a-complex-system/">Intense Minimalism</a>, <a class="cite-link" href="https://www.regenerativeeconomics.earth/regenerative-economics-textbook/s-systems-thinking-and-models/s-8-leverage-points-for-system-change">Regenerative Economics</a></p>
+</section>
+
+<!-- ======================= III ======================= -->
+<section id="s3">
+  <h2><span class="roman">III.</span> El territorio medio (9–6)</h2>
+
+  <p>Aquí el sistema empieza a tener dinámica: tiempo, bucles, información. Estas palancas ya no se ven a simple vista desde la sala de juntas — hay que <em>observar el sistema en movimiento</em> para encontrarlas. Y aquí está, según Meadows, una de las intervenciones más baratas y poderosas de toda la lista.</p>
+
+  <details class="persiana p-media">
+    <summary><span class="palanca-num">9</span> Retardos <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>El tiempo entre una acción y su efecto. Un sistema con retardos largos y decisores impacientes oscila: sobre-corrige, se frustra, vuelve a sobre-corregir.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>El discipulado tiene retardos de años; la junta espera fruto en un trimestre. Resultado: el ciclo del programa fantasma — se lanza una iniciativa, a los seis meses «no funcionó», se lanza otra, y otra, y ninguna vive lo suficiente para atravesar su retardo natural. La iglesia no está estancada por falta de acción sino por exceso de oscilación.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> tratar la impaciencia con más velocidad. En un sistema con retardos largos, acelerar las decisiones empeora la oscilación. La palanca es la paciencia calibrada, no la fuerza.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Marcos 4:26–29, la parábola menos citada y más sistémica: el hombre siembra, duerme, se levanta, y la semilla crece <em>sin que él sepa cómo</em>. Primero hierba, luego espiga, luego grano. Jesús puso el retardo en el centro de su teología del Reino. La junta impaciente desentierra la semilla cada seis meses para ver si ya tiene raíz.</div>
+    </div></div>
+  </details>
+
+  <details class="persiana p-media">
+    <summary><span class="palanca-num">8</span> Bucles de retroalimentación de balance <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>Los termostatos del sistema: mecanismos que corrigen la desviación respecto a una meta. Deben ser proporcionales a lo que regulan — un bucle demasiado débil no corrige nada; uno demasiado fuerte paraliza.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>Dos patologías opuestas, y las dos estancan. La primera: el bucle atrofiado — nadie evalúa nada, toda actividad «estuvo muy bonita», el error nunca tiene nombre. La segunda: el bucle hipertrofiado — el comité que revisa al comité, donde toda iniciativa muere de trámite. La iglesia sana necesita termostatos honestos: evaluación con amor, rendición de cuentas real, disciplina que restaura.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> confundir la crítica con falta de fe («no seamos negativos, hermanos») — es decir, desconectar deliberadamente el termostato y llamarlo espiritualidad.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Gálatas 2:11 — Pablo confronta a Pedro cara a cara en Antioquía. Es un bucle de balance funcionando al más alto nivel de la iglesia primitiva: ni el apóstol principal estaba exento del termostato. Y Mateo 18:15–17 es, literalmente, el protocolo de retroalimentación correctiva del Reino, con escalamiento gradual incluido.</div>
+    </div></div>
+  </details>
+
+  <details class="persiana p-media">
+    <summary><span class="palanca-num">7</span> Bucles de retroalimentación de refuerzo <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>Las espirales: bucles que se amplifican a sí mismos. Su consejo contraintuitivo: casi siempre es preferible <em>frenar</em> un bucle de refuerzo dañino que intentar acelerar un bucle de balance que lo compense.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>La espiral del declive es un bucle de refuerzo de manual: menos gente → menos energía en el culto → experiencia más fría → menos gente. Cada vuelta alimenta la siguiente. Y su gemela luminosa también existe: comunión genuina → testimonio natural → nuevas personas → más comunión. Hechos 2:47 la describe sin lenguaje técnico: y el Señor añadía cada día.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> responder a la espiral del declive con campañas de atracción — empujar más gente hacia adentro de un sistema que la expulsa. Meadows diría: antes de acelerar la entrada, frena lo que alimenta la salida.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Las parábolas de crecimiento de Marcos 4 son bucles de refuerzo: la semilla de mostaza no crece por presión externa sino por dinámica interna — primero invisible, después imparable. El Reino, en la descripción de Jesús, es una espiral virtuosa que solo necesita no ser ahogada.</div>
+    </div></div>
+  </details>
+
+  <details class="persiana p-media">
+    <summary><span class="palanca-num">6</span> Flujos de información <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>Quién tiene acceso a qué información. La retroalimentación ausente es una de las causas más comunes del mal funcionamiento de un sistema, y restaurarla suele ser mucho más barato y poderoso que reconstruir infraestructura. Añade una observación incómoda: los seres humanos tienden sistemáticamente a evitar la rendición de cuentas de sus propias decisiones — por eso hay tantos bucles de información rotos.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>Nadie entrevista a la familia que se fue. El liderazgo no sabe qué vive la congregación de lunes a sábado. El barrio es invisible desde el púlpito. Las finanzas son un misterio para los miembros y las luchas de los miembros son un misterio para el pastor. La iglesia estancada no es necesariamente una iglesia sin recursos: es una iglesia donde la información no fluye hacia donde se toman las decisiones.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> responder a la falta de información con más comunicación <em>de arriba hacia abajo</em> — más anuncios, más boletines. El flujo roto es el de subida, no el de bajada.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Nehemías 1–2: antes de tocar una sola piedra, Nehemías pregunta por el estado real de Jerusalén y luego inspecciona el muro de noche, en silencio. Restaurar la información antes de restaurar el muro. Y las siete cartas de Apocalipsis 2–3 comienzan todas igual — «yo conozco tus obras» — : el Señor del sistema restaurando el flujo de información que cada iglesia había perdido sobre sí misma.</div>
+    </div></div>
+  </details>
+
+  <p class="fuentes"><strong>Fuentes:</strong> <a class="cite-link" href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows Institute</a>, <a class="cite-link" href="https://en.wikipedia.org/wiki/Twelve_leverage_points">Wikipedia</a>, <a class="cite-link" href="https://intenseminimalism.com/2015/12-leverage-points-to-bring-change-to-a-complex-system/">Intense Minimalism</a>, <a class="cite-link" href="https://www.shortform.com/blog/donella-meadows-leverage-points/">Shortform</a></p>
+</section>
+
+<!-- ======================= IV ======================= -->
+<section id="s4">
+  <h2><span class="roman">IV.</span> Las palancas fuertes (5–3)</h2>
+
+  <p>Desde aquí, las intervenciones ya no ajustan el sistema: lo <em>rediseñan</em>. Y por eso mismo son las que más resistencia despiertan. Nadie pelea por el termostato; todos pelean por las reglas, por el poder de reorganizarse y por la meta real del sistema.</p>
+
+  <details class="persiana p-fuerte">
+    <summary><span class="palanca-num">5</span> Las reglas del sistema <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>Incentivos, castigos, restricciones — el alcance y los grados de libertad del sistema. Las reglas pueden ser escritas o no escritas, y su consejo de diagnóstico es de oro: si quieres entender las disfunciones profundas de un sistema, presta atención a quién hace las reglas y quién tiene poder sobre ellas.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>Las reglas escritas: estatutos, requisitos de membresía, quién puede predicar, quién puede votar. Y las no escritas, que suelen mandar más: «ese ministerio es de Juana y no se toca», «aquí no se habla de dinero», «los jóvenes que esperen su turno», «así se ha hecho siempre». La investigación sobre congregaciones lo confirma con crudeza: los sistemas resisten el cambio porque su función misma es lograr que la gente repita comportamientos — resistirse no es una decisión que el sistema toma; es lo que un sistema <em>es</em>.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> el revitalizador que llega y reescribe estatutos y constituciones en su primer año, gastando su capital pastoral en el trellis antes de haber cuidado la vid. Cambiar reglas sin haber cambiado información, confianza y metas produce cisma, no vida.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Marcos 2:27 — el sábado se hizo por causa del hombre, no el hombre por causa del sábado. Jesús no era un anarquista de reglas: era un auditor de reglas. Preguntaba de cada norma lo que Meadows preguntaría: ¿a quién sirve esta regla, y quién tiene el poder de mantenerla?</div>
+    </div></div>
+  </details>
+
+  <details class="persiana p-fuerte">
+    <summary><span class="palanca-num">4</span> Auto-organización <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>El poder de un sistema para añadir, cambiar y hacer evolucionar su propia estructura. En biología se llama evolución; en las sociedades, revolución técnica o social. Requiere materia prima: variedad, diversidad, experimentación. Y es difícil de tolerar, porque se siente como pérdida de control.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>Aquí la pregunta de la Ingeniera toca directamente el framework de esta serie: en «La Red es la Iglesia», el Espíritu Santo <em>es</em> la fuente de auto-organización de la red. La iglesia estancada es la que ha centralizado todo lo que el Espíritu quería distribuir: ningún grupo nace sin permiso del comité, ningún experimento sin aprobación de la junta, ninguna variación sin uniformidad previa. Ha optimizado el control y, sin querer, ha desconectado la palanca 4.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> responder al estancamiento con más planificación central. El sistema que más necesita experimentar es el que más miedo le tiene al experimento.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Hechos 11:19–21. La iglesia de Antioquía —la que cambiará la historia de la misión— nace de creyentes anónimos dispersados por la persecución, sin plan estratégico de Jerusalén. Y el detalle exquisito: Jerusalén no envía a Bernabé a fundarla ni a controlarla, sino a <em>verificarla</em>. Cuando llegó y vio la gracia de Dios, se alegró. Eso es gobernar un sistema auto-organizado: discernir y bendecir lo que el Espíritu ya empezó.</div>
+    </div></div>
+  </details>
+
+  <details class="persiana p-fuerte">
+    <summary><span class="palanca-num">3</span> Las metas del sistema <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>No la meta declarada: la meta <em>operativa</em>, la que de verdad organiza el comportamiento de todos los actores. Cambiar la meta de un sistema reordena en cascada todo lo que está debajo — reglas, información, bucles, parámetros.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>Meta declarada: «hacer discípulos de todas las naciones». Meta operativa, visible en el presupuesto y el calendario: sobrevivir un año más, mantener el edificio, no incomodar a las familias fundadoras. Nadie la votó, nadie la predica — y sin embargo todo el sistema se alinea a ella con precisión de relojería. Los consultores de revitalización lo confirman desde el terreno: las iglesias estancadas saltan directo al <em>cómo</em> (ministerios, cultos, programas) sin haber respondido el <em>porqué</em>.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> lanzar una campaña de visión nueva sin tocar la meta operativa vieja. El sistema sonríe, asiente, cuelga el letrero con el versículo… y sigue optimizando la supervivencia.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Marcos 8:35 — el que quiera salvar su vida, la perderá. Jesús formuló, dos mil años antes que Meadows, el teorema de las metas: el sistema cuya meta es auto-preservarse se destruye a sí mismo; el que se entrega por algo mayor que sí mismo, vive. Una iglesia cuya meta real es sobrevivir ya está aplicando la mitad equivocada del versículo.</div>
+    </div></div>
+  </details>
+
+  <p class="fuentes"><strong>Fuentes:</strong> <a class="cite-link" href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows Institute</a>, <a class="cite-link" href="https://www.churchleadership.com/leading-ideas/why-congregations-sometimes-change/">Lewis Center</a>, <a class="cite-link" href="https://theunstuckgroup.com/church-revitalization-how-where-to-start/">The Unstuck Group</a>, <a class="cite-link" href="https://fbcjax.com/first-thoughts/four-big-mistakes-in-church-revitalization/">First Baptist Jacksonville</a></p>
+</section>
+
+<!-- ======================= V ======================= -->
+<section id="s5">
+  <h2><span class="roman">V.</span> El corazón del sistema (2–1)</h2>
+
+  <p>Las dos palancas finales ya no están <em>dentro</em> del sistema: están debajo de él. Son el suelo del que brotan las metas, las reglas y las estructuras. Y aquí la ingeniería de sistemas y el evangelio de Marcos empiezan a hablar el mismo idioma.</p>
+
+  <details class="persiana p-corazon">
+    <summary><span class="palanca-num">2</span> El paradigma <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>Las suposiciones compartidas y no dichas de las que emerge todo el sistema: sus metas, sus reglas, sus estructuras. Son lo más difícil de cambiar en una sociedad… y a la vez no cuestan nada cambiar en un individuo: puede ocurrir en un instante. ¿Su método? Señalar repetida y consistentemente las anomalías y fallas del paradigma viejo, hablar con seguridad desde el nuevo, y trabajar con las mentes abiertas en lugar de gastar energía en los reaccionarios.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>El paradigma tácito: <em>la iglesia es el edificio, más el domingo, más el pastor</em>. De esa suposición no dicha brota todo lo demás — la meta de mantener el edificio, las reglas que protegen el domingo, la estructura que gira alrededor del pastor. El paradigma alternativo de esta serie: <em>la iglesia es una red de discípulos animada por el Espíritu</em> — nodos conectados, no audiencia congregada. Cambia esa frase en el corazón de una congregación y ya no hace falta reescribir los estatutos: se reescriben solos.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> intentar cambiar el paradigma con presupuesto y programas — es decir, con palancas 12 y 11. Los paradigmas no se compran; se demuestran y se contagian.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> Marcos 2:22 — el vino nuevo revienta los odres viejos; ¡vino nuevo, en odres nuevos! No es una ilustración simpática: es teoría del cambio de paradigma. Y las parábolas mismas son la tecnología de Meadows en acción: anomalías narrativas, repetidas con paciencia, dirigidas a quien tiene oídos para oír. «El Reino de Dios está cerca» exige <em>metanoia</em> — no un ajuste de conducta sino un cambio de mente: la palanca 2 en una sola palabra griega.</div>
+    </div></div>
+  </details>
+
+  <details class="persiana p-corazon">
+    <summary><span class="palanca-num">1</span> Trascender los paradigmas <span class="flecha">▸</span></summary>
+    <div class="contenido-wrap"><div class="contenido">
+      <div class="sub-label">Meadows dice</div>
+      <p>La palanca más alta de todas: no aferrarse a <em>ningún</em> paradigma. Reconocer que todo paradigma es un modelo, una porción diminuta de un universo demasiado complejo, y mantenerse flexible — capaz de elegir entre lentes en lugar de ser poseído por uno.</p>
+      <div class="sub-label">En la iglesia estancada</div>
+      <p>Aquí Meadows, sin saberlo, escribió teología. Porque incluso el buen paradigma puede volverse ídolo: la iglesia que se aferró a «somos la iglesia del avivamiento del 78» quedó presa de un paradigma que alguna vez fue vino nuevo. Y la advertencia alcanza a esta misma serie: «La Red es la Iglesia» también es un mapa, no el territorio. El día que el framework se vuelva más importante que el Señor de la red, habrá que soltarlo también.</p>
+      <div class="al-reves"><strong>Empujar al revés:</strong> convertir el último cambio de paradigma en el nuevo dogma inamovible. Toda reforma que se congela necesita, tarde o temprano, ser reformada — <em>ecclesia reformata, semper reformanda</em>.</div>
+      <div class="eco"><strong>Eco bíblico:</strong> 1 Corintios 13:12 — ahora vemos de manera indirecta, como en un espejo. La humildad epistémica no es escepticismo: es adoración. Dios es siempre más grande que nuestro modelo de Dios. La fe madura no se aferra a un paradigma sobre Dios; se aferra a Dios, que trasciende todos los paradigmas. Meadows terminó su escalera exactamente donde empieza la teología: en el asombro de saber que no sabemos.</div>
+    </div></div>
+  </details>
+
+  <p class="fuentes"><strong>Fuentes:</strong> <a class="cite-link" href="https://en.wikipedia.org/wiki/Twelve_leverage_points">Wikipedia</a>, <a class="cite-link" href="https://www.shortform.com/blog/donella-meadows-leverage-points/">Shortform</a>, <a class="cite-link" href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows Institute</a></p>
+</section>
+
+<!-- ======================= VI ======================= -->
+<section id="s6">
+  <h2><span class="roman">VI.</span> El diagnóstico de la mesa</h2>
+
+  <div class="dialogo">
+    <div class="voz metodologo">
+      <span class="quien">📋 El Metodólogo PDCA</span>
+      <p>Cierro con el protocolo práctico, porque una escalera sin plan es solo un dibujo. Para la iglesia estancada concreta: <em>Plan</em> — nombrar por escrito la meta operativa real (palanca 3), no la declarada; duele, pero es el diagnóstico. <em>Do</em> — restaurar un solo flujo de información roto (palanca 6): entrevistar a los que se fueron, mapear el barrio. Es la intervención más barata con mayor retorno de toda la lista. <em>Check</em> — instalar un termostato honesto (palanca 8): una evaluación trimestral donde el error pueda tener nombre sin castigo. <em>Act</em> — bendecir un experimento auto-organizado (palanca 4) sin pedirle permiso al organigrama.</p>
+    </div>
+    <div class="voz provocador">
+      <span class="quien">🎭 El Provocador</span>
+      <p>Y yo dejo la espina: nota que en el plan del Metodólogo no aparece ni una sola palanca de la zona 12–10. Ni horarios, ni remodelaciones, ni presupuestos. Todo lo que la junta discute con pasión quedó fuera del plan; todo lo que el plan necesita, la junta nunca lo ha puesto en agenda. Ese silencio también es un diagnóstico.</p>
+    </div>
+    <div class="voz disenadora">
+      <span class="quien">🎨 La Diseñadora</span>
+      <p>Mi observación estética: la escalera de Meadows tiene la misma forma que el evangelio de Marcos. Empieza en lo visible y barato —edificios, multitudes, parámetros— y desciende hacia lo invisible y costoso: ¿quién dicen ustedes que soy yo? La palanca 1 y Cesarea de Filipo son el mismo lugar.</p>
+    </div>
+    <div class="voz ingeniera">
+      <span class="quien">🕸️ La Ingeniera de Sistemas</span>
+      <p>Y mi cierre, ya que la pregunta era mía. Meadows advirtió que las palancas altas son las que el sistema defiende con más fiereza — tocar el paradigma es tocar la identidad. Por eso la iglesia estancada prefiere tres horas de junta sobre el color de la alfombra: es la única palanca que no exige conversión. Pero la buena noticia del sistema es la buena noticia del evangelio: el paradigma puede cambiar en un instante, en una sola persona, y desde ahí propagarse por la red. Así empezó todo, con doce nodos y un anuncio: el Reino está cerca, cambien su manera de pensar.</p>
+    </div>
+  </div>
+
+  <div class="cierre">
+    <strong>Votos del panel:</strong> La Ingeniera reclama la palanca 6 como la más subestimada y la más barata. El Exégeta defiende que <em>metanoia</em> es la palanca 2 con nombre griego. El Provocador insiste en que la iglesia ya conoce sus palancas — solo las empuja al revés. Y el Metodólogo recuerda que Meadows llamó a su propia lista un trabajo en progreso: también los mapas necesitan humildad.
+  </div>
+
+  <p class="fuentes" style="margin-top:1.5rem;"><strong>Fuentes generales:</strong> <a class="cite-link" href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows Institute</a>, <a class="cite-link" href="https://en.wikipedia.org/wiki/Twelve_leverage_points">Wikipedia</a>, <a class="cite-link" href="https://systemsthinkingalliance.org/transforming-systems-with-leverage-points-insights-and-critiques-and-future-directions/">Systems Thinking Alliance</a>, <a class="cite-link" href="https://www.churchleadership.com/leading-ideas/why-congregations-sometimes-change/">Lewis Center</a>, <a class="cite-link" href="https://www.heartoftheart.org/?p=1568">Heart of the Art</a></p>
+</section>
+
+<footer>
+  Café con Claude · Serie «La Red es la Iglesia» · Respuesta a la pregunta № 5 del Panel · Citas bíblicas según la versión Dios Habla Hoy (DHH), parafraseadas donde se indica.
+</footer>
+
+</div>
+</main>
+
+<script>
+  // ---------- Barra de progreso ----------
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = scrolled + '%';
+  }, { passive: true });
+
+  // ---------- Hamburguesa ----------
+  const sidebar = document.getElementById('sidebar');
+  const burger = document.getElementById('hamburger');
+  burger.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    burger.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+  });
+  sidebar.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      burger.textContent = '☰';
+    });
+  });
+
+  // ---------- Scroll-spy ----------
+  const links = Array.from(sidebar.querySelectorAll('ol a'));
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = links.find(l => l.getAttribute('href') === '#' + entry.target.id);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px' });
+  sections.forEach(s => s && spy.observe(s));
+</script>
+
+</body>
+</html>

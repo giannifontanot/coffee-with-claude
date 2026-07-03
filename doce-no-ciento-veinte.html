@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doce, no ciento veinte · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --cream-deep: #f0e7d5;
+    --ink: #2b2118;
+    --ink-soft: #6a5b48;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --sidebar-w: 246px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    font-size: 1.06rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Reading progress ---------- */
+  .progress-track {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: transparent;
+    z-index: 100;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    transition: width 0.08s linear;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    padding: 2.4rem 1.5rem 2rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream-deep);
+    overflow-y: auto;
+    z-index: 60;
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.35rem;
+  }
+  .brand-sub {
+    font-style: italic;
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    margin-bottom: 1.8rem;
+    line-height: 1.4;
+  }
+  .home-link {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+    margin-bottom: 2rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .home-link:hover { color: var(--terracotta); border-color: var(--terracotta); }
+
+  .toc { list-style: none; }
+  .toc li { margin-bottom: 0.15rem; }
+  .toc a {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.3;
+    padding: 0.34rem 0.5rem 0.34rem 0.55rem;
+    border-left: 2px solid transparent;
+    border-radius: 0 4px 4px 0;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .toc a .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: var(--amber);
+    min-width: 1.9em;
+    letter-spacing: 0.04em;
+  }
+  .toc a:hover { color: var(--ink); background: rgba(180,83,42,0.06); }
+  .toc a.active {
+    color: var(--ink);
+    background: rgba(180,83,42,0.09);
+    border-left-color: var(--terracotta);
+  }
+  .toc a.active .num { color: var(--terracotta); }
+
+  /* ---------- Main ---------- */
+  .main {
+    margin-left: var(--sidebar-w);
+    padding: 3.4rem clamp(1.25rem, 5vw, 4.5rem) 6rem;
+  }
+  .content { max-width: 760px; margin: 0 auto; }
+
+  .eyebrow {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2.3rem, 6vw, 3.7rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.1rem;
+  }
+  .lede {
+    font-size: clamp(1.12rem, 2.4vw, 1.32rem);
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    max-width: 40ch;
+    margin-bottom: 2.4rem;
+  }
+
+  /* ---------- Panel legend ---------- */
+  .voces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.3rem;
+    padding: 1.1rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(240,231,213,0.5);
+    margin-bottom: 3rem;
+    font-size: 0.86rem;
+  }
+  .voz-chip { display: inline-flex; align-items: center; gap: 0.45em; color: var(--ink-soft); white-space: nowrap; }
+  .dot {
+    display: inline-block;
+    width: 0.62em; height: 0.62em;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .d-exegeta { background: var(--terracotta); }
+  .d-ingeniera { background: var(--olive); }
+  .d-provocador { background: var(--plum); }
+  .d-disenadora { background: var(--amber); }
+  .d-metodologo { background: var(--steel); }
+
+  /* ---------- Persianas ---------- */
+  .persiana {
+    border-bottom: 1px solid var(--line);
+  }
+  .persiana:first-of-type { border-top: 1px solid var(--line); }
+
+  .persiana-head {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.5rem 0.4rem 1.5rem 0;
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .persiana-head:hover .p-title { color: var(--terracotta); }
+  .p-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--amber);
+    min-width: 2.6em;
+    padding-top: 0.28rem;
+    letter-spacing: 0.04em;
+  }
+  .p-titlewrap { flex: 1; }
+  .p-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(1.24rem, 3vw, 1.6rem);
+    line-height: 1.24;
+    transition: color 0.2s;
+  }
+  .p-teaser {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    margin-top: 0.4rem;
+    line-height: 1.45;
+  }
+  .p-mark {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: var(--terracotta);
+    padding-top: 0.3rem;
+    transition: transform 0.4s ease;
+    flex-shrink: 0;
+    width: 1.1em;
+    text-align: center;
+  }
+  .persiana.open .p-mark { transform: rotate(45deg); }
+
+  .persiana-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s ease;
+  }
+  .persiana.open .persiana-body { grid-template-rows: 1fr; }
+  .persiana-inner { overflow: hidden; }
+  .persiana-text {
+    padding: 0.2rem 0.4rem 2.2rem 3.6rem;
+  }
+  .persiana-text p { margin-bottom: 1.1rem; }
+  .persiana-text p:last-child { margin-bottom: 0; }
+
+  .speaker {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-style: normal;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+  .speaker::before {
+    content: "";
+    display: inline-block;
+    width: 0.6em; height: 0.6em;
+    border-radius: 50%;
+    background: var(--ink-soft);
+  }
+  .sp-exegeta::before { background: var(--terracotta); }
+  .sp-ingeniera::before { background: var(--olive); }
+  .sp-provocador::before { background: var(--plum); }
+  .sp-disenadora::before { background: var(--amber); }
+  .sp-metodologo::before { background: var(--steel); }
+
+  em.gk { font-style: italic; color: var(--plum); }
+  strong { font-weight: 600; }
+  blockquote {
+    border-left: 3px solid var(--amber);
+    padding: 0.2rem 0 0.2rem 1.2rem;
+    margin: 0 0 1.1rem;
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  /* pull-fact */
+  .fact {
+    display: block;
+    margin: 1.4rem 0;
+    padding: 1rem 1.2rem;
+    background: rgba(107,122,63,0.08);
+    border-radius: 8px;
+    font-family: 'Fraunces', serif;
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+  .fact b { color: var(--olive); font-weight: 700; }
+
+  /* sources */
+  .fuentes {
+    margin-top: 1.4rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--line);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .fuentes b {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .fuentes a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180,83,42,0.35);
+  }
+  .fuentes a:hover { border-color: var(--terracotta); }
+
+  /* ---------- Diagram ---------- */
+  .diagram {
+    margin: 1.6rem 0 0.4rem;
+  }
+  .diagram-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    justify-content: center;
+  }
+  .diagram-cell {
+    flex: 1 1 240px;
+    max-width: 320px;
+    text-align: center;
+  }
+  .diagram svg { width: 100%; height: auto; display: block; }
+  .dlabel {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin-top: 0.4rem;
+  }
+  .dlabel span { display: block; font-family: 'Spectral', serif; font-style: italic; font-weight: 400; font-size: 0.85rem; color: var(--ink-soft); }
+  .dlabel.fail { color: var(--terracotta); }
+  .dlabel.hold { color: var(--olive); }
+
+  /* ---------- Closing ---------- */
+  .coda {
+    margin-top: 3.4rem;
+    padding: 2rem 2rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(180,83,42,0.05), rgba(201,138,45,0.05));
+  }
+  .coda .eyebrow { color: var(--terracotta); }
+  .coda p {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.16rem, 2.6vw, 1.42rem);
+    font-weight: 500;
+    line-height: 1.42;
+  }
+  .footer-note {
+    margin-top: 2.6rem;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  /* ---------- Mobile ---------- */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 0.9rem; left: 0.9rem;
+    z-index: 80;
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--cream-deep);
+    cursor: pointer;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 4px;
+  }
+  .hamburger span {
+    display: block; width: 20px; height: 2px;
+    background: var(--ink); border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(43,33,24,0.4);
+    z-index: 55;
+  }
+
+  @media (max-width: 860px) {
+    .hamburger { display: flex; }
+    .sidebar {
+      transform: translateX(-104%);
+      transition: transform 0.32s ease;
+      box-shadow: 2px 0 24px rgba(43,33,24,0.14);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .overlay.show { display: block; }
+    .main { margin-left: 0; padding-top: 4.6rem; }
+    .persiana-text { padding-left: 0.4rem; }
+    body.nav-open { overflow: hidden; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+<button class="hamburger" id="hamburger" aria-label="Abrir navegación">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">La Red es la Iglesia · nota de teoría de redes</div>
+  <a class="home-link" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  <ul class="toc" id="toc">
+    <li><a href="#s1"><span class="num">I</span><span>La pregunta equivocada</span></a></li>
+    <li><a href="#s2"><span class="num">II</span><span>La trampa de la estrella</span></a></li>
+    <li><a href="#s3"><span class="num">III</span><span>Una malla, no una estrella</span></a></li>
+    <li><a href="#s4"><span class="num">IV</span><span>«Os conviene que yo me vaya»</span></a></li>
+    <li><a href="#s5"><span class="num">V</span><span>La paradoja del alcance</span></a></li>
+    <li><a href="#s6"><span class="num">VI</span><span>Las tribus ya eran malla</span></a></li>
+    <li><a href="#s7"><span class="num">VII</span><span>La pregunta PDCA correcta</span></a></li>
+    <li><a href="#s8"><span class="num">VIII</span><span>Coda</span></a></li>
+  </ul>
+</nav>
+
+<main class="main">
+  <div class="content">
+
+    <div class="eyebrow">El Panel Pregunta · nº 4</div>
+    <h1>Doce, no ciento veinte</h1>
+    <p class="lede">La pregunta parece de tamaño. Es de topología: por qué el Reino se diseñó como una malla que sobrevive a su propio centro.</p>
+
+    <div class="voces" aria-label="Voces del panel">
+      <span class="voz-chip"><span class="dot d-exegeta"></span>🏛️ El Exégeta</span>
+      <span class="voz-chip"><span class="dot d-ingeniera"></span>🕸️ La Ingeniera de Sistemas</span>
+      <span class="voz-chip"><span class="dot d-provocador"></span>🎭 El Provocador</span>
+      <span class="voz-chip"><span class="dot d-metodologo"></span>📋 El Metodólogo PDCA</span>
+      <span class="voz-chip"><span class="dot d-disenadora"></span>🎨 La Diseñadora</span>
+    </div>
+
+    <!-- ============ I ============ -->
+    <section class="persiana open" id="s1">
+      <button class="persiana-head" aria-expanded="true">
+        <span class="p-num">I</span>
+        <span class="p-titlewrap">
+          <span class="p-title">La pregunta equivocada</span>
+          <span class="p-teaser">«¿Doce o ciento veinte?» asume un binario que no existe.</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-ingeniera">La Ingeniera de Sistemas</span> — Voy a corregirme a mí misma. La primera vez respondí «¿por qué no 120?» con costo de coordinación: en cualquier red los canales crecen según <em>n(n−1)/2</em>, así que doce nodos son 66 canales y ciento veinte son 7.140, cien veces más caro de sostener. Todo cierto. Y todo superficial.</p>
+        <span class="fact">Un líder con <b>120</b> discípulos y un líder con <b>12</b> pueden construir exactamente la misma topología equivocada: la <b>estrella</b>. Todos atados al centro; nadie atado entre sí. El problema nunca fue el tamaño. Fue la forma.</span>
+        <p>Así que la pregunta de la mesa —«doce y no ciento veinte»— hay que reescribirla. No es <em>cuántos nodos</em>. Es <strong>con qué figura los conectas</strong>. Y esa figura decide si tu movimiento vive un domingo más que su fundador, o no.</p>
+        <div class="fuentes"><b>Fuentes:</b> <a href="https://justinagile.com/brooks-law/">Brooks's Law</a>, <a href="https://torchbox.com/news/40-year-old-lessons-and-mythical-man-month/">The Mythical Man-Month</a>, <a href="https://larsbarkman.com/blog/the-science-of-team-size/">The Science of Team Size</a></div>
+      </div></div></div>
+    </section>
+
+    <!-- ============ II ============ -->
+    <section class="persiana" id="s2">
+      <button class="persiana-head" aria-expanded="false">
+        <span class="p-num">II</span>
+        <span class="p-titlewrap">
+          <span class="p-title">La trampa de la estrella</span>
+          <span class="p-teaser">Un solo punto de fallo: el modo por defecto en que mueren los movimientos.</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-provocador">El Provocador</span> — Dilo más fuerte, porque ahí está el nervio. La <strong>estrella</strong> es el modo de fallo por defecto de todo movimiento religioso: un fundador carismático y cien —o mil— radios que salen de él y no se tocan entre sí.</p>
+        <p>En teoría de redes esto tiene nombre y diagnóstico. En una topología de estrella todo pasa por un concentrador central; <strong>si el centro cae, la red entera queda inoperante</strong>, aunque cada nodo periférico esté intacto. Es un único punto de fallo. Sin redundancia, sin rutas alternas.</p>
+        <blockquote>La mayoría de las iglesias que conozco son estrellas: quítale el pastor y la «red» colapsa el domingo siguiente. Construimos justo lo que Jesús se negó a construir.</blockquote>
+        <div class="fuentes"><b>Fuentes:</b> <a href="https://www.ibm.com/think/topics/network-topology">Network Topology (IBM)</a>, <a href="https://www.information-age.com/single-point-of-failure-21959/">Mesh &amp; el punto único de fallo</a>, <a href="https://en.wikipedia.org/wiki/Network_topology">Network Topology (Wikipedia)</a></div>
+      </div></div></div>
+    </section>
+
+    <!-- ============ III ============ -->
+    <section class="persiana" id="s3">
+      <button class="persiana-head" aria-expanded="false">
+        <span class="p-num">III</span>
+        <span class="p-titlewrap">
+          <span class="p-title">Una malla, no una estrella</span>
+          <span class="p-teaser">«Ámense unos a otros» es horizontal, no radial. Eso es tejer red.</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-ingeniera">La Ingeniera de Sistemas</span> — Miren lo que Jesús hace <em>en cambio</em>. No optimiza para «más gente alrededor de mí». Los obliga a <strong>entrelazarse entre sí</strong>: lávense los pies unos a otros, ámense unos a otros. El mandamiento nuevo es horizontal, no radial.</p>
+        <p>Eso, en teoría de redes, es abandonar la estrella y tejer una <strong>malla</strong>: cada nodo conectado directamente a varios otros, con rutas redundantes. La malla es descentralizada y tolerante a fallos: si un enlace o un nodo cae, el tráfico se re-enruta por caminos alternos y la red sigue funcionando.</p>
+
+        <div class="diagram">
+          <div class="diagram-grid">
+            <div class="diagram-cell">
+              <svg viewBox="0 0 300 300" role="img" aria-label="Topología de estrella: doce nodos atados a un centro">
+                <!-- spokes -->
+                <g stroke="#b4532a" stroke-width="1.4" opacity="0.55">
+                  <line x1="150" y1="150" x2="260" y2="150"/>
+                  <line x1="150" y1="150" x2="227.8" y2="72.2"/>
+                  <line x1="150" y1="150" x2="150" y2="40"/>
+                  <line x1="150" y1="150" x2="72.2" y2="72.2"/>
+                  <line x1="150" y1="150" x2="40" y2="150"/>
+                  <line x1="150" y1="150" x2="72.2" y2="227.8"/>
+                  <line x1="150" y1="150" x2="150" y2="260"/>
+                  <line x1="150" y1="150" x2="227.8" y2="227.8"/>
+                </g>
+                <!-- outer nodes -->
+                <g fill="#6b7a3f">
+                  <circle cx="260" cy="150" r="9"/>
+                  <circle cx="227.8" cy="72.2" r="9"/>
+                  <circle cx="150" cy="40" r="9"/>
+                  <circle cx="72.2" cy="72.2" r="9"/>
+                  <circle cx="40" cy="150" r="9"/>
+                  <circle cx="72.2" cy="227.8" r="9"/>
+                  <circle cx="150" cy="260" r="9"/>
+                  <circle cx="227.8" cy="227.8" r="9"/>
+                </g>
+                <!-- center -->
+                <circle cx="150" cy="150" r="17" fill="#b4532a"/>
+                <circle cx="150" cy="150" r="17" fill="none" stroke="#f7f1e5" stroke-width="2.5"/>
+              </svg>
+              <div class="dlabel fail">Estrella<span>quita el centro y todo se apaga</span></div>
+            </div>
+            <div class="diagram-cell">
+              <svg viewBox="0 0 300 300" role="img" aria-label="Topología de malla: nodos entrelazados sin centro">
+                <!-- mesh edges: ring + two interlocking squares -->
+                <g stroke="#6b7a3f" stroke-width="1.4" opacity="0.5">
+                  <!-- ring -->
+                  <line x1="260" y1="150" x2="227.8" y2="72.2"/>
+                  <line x1="227.8" y1="72.2" x2="150" y2="40"/>
+                  <line x1="150" y1="40" x2="72.2" y2="72.2"/>
+                  <line x1="72.2" y1="72.2" x2="40" y2="150"/>
+                  <line x1="40" y1="150" x2="72.2" y2="227.8"/>
+                  <line x1="72.2" y1="227.8" x2="150" y2="260"/>
+                  <line x1="150" y1="260" x2="227.8" y2="227.8"/>
+                  <line x1="227.8" y1="227.8" x2="260" y2="150"/>
+                  <!-- square A (even) -->
+                  <line x1="260" y1="150" x2="150" y2="40"/>
+                  <line x1="150" y1="40" x2="40" y2="150"/>
+                  <line x1="40" y1="150" x2="150" y2="260"/>
+                  <line x1="150" y1="260" x2="260" y2="150"/>
+                  <!-- square B (odd) -->
+                  <line x1="227.8" y1="72.2" x2="72.2" y2="72.2"/>
+                  <line x1="72.2" y1="72.2" x2="72.2" y2="227.8"/>
+                  <line x1="72.2" y1="227.8" x2="227.8" y2="227.8"/>
+                  <line x1="227.8" y1="227.8" x2="227.8" y2="72.2"/>
+                </g>
+                <!-- nodes -->
+                <g fill="#6b7a3f">
+                  <circle cx="260" cy="150" r="9"/>
+                  <circle cx="227.8" cy="72.2" r="9"/>
+                  <circle cx="150" cy="40" r="9"/>
+                  <circle cx="72.2" cy="72.2" r="9"/>
+                  <circle cx="40" cy="150" r="9"/>
+                  <circle cx="72.2" cy="227.8" r="9"/>
+                  <circle cx="150" cy="260" r="9"/>
+                  <circle cx="227.8" cy="227.8" r="9"/>
+                </g>
+              </svg>
+              <div class="dlabel hold">Malla<span>cae un nodo y la red se repara</span></div>
+            </div>
+          </div>
+        </div>
+
+        <p>Por eso, cuando cae Judas, la red no se rompe: se repara sola y elige a Matías. <strong>Redundancia.</strong> Un nodo perdido no es un sistema perdido.</p>
+        <div class="fuentes"><b>Fuentes:</b> <a href="https://www.ibm.com/think/topics/network-topology">Network Topology (IBM)</a>, <a href="https://en.wikipedia.org/wiki/Network_topology">Descentralización y redundancia</a></div>
+      </div></div></div>
+    </section>
+
+    <!-- ============ IV ============ -->
+    <section class="persiana" id="s4">
+      <button class="persiana-head" aria-expanded="false">
+        <span class="p-num">IV</span>
+        <span class="p-titlewrap">
+          <span class="p-title">«Os conviene que yo me vaya»</span>
+          <span class="p-teaser">El fundador que diseña su propia remoción como característica, no como tragedia.</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-exegeta">El Exégeta</span> — El detalle que a mí me deja sin aire es <em>cómo</em> Jesús garantiza que la malla sobreviva incluso a la caída del nodo central: él mismo.</p>
+        <blockquote>«Os conviene que yo me vaya.» — Juan 16:7</blockquote>
+        <p>Léelo con ojos de ingeniero: el fundador está <strong>diseñando su propia remoción como una característica del sistema, no como una tragedia</strong>. Un fundador-estrella se aferra, porque sabe que sin él todo cae. Un fundador-malla se va —a la cruz, a la ascensión— porque ya entrelazó los nodos y transfirió el «concentrador» a algo distribuido: el Espíritu no en un centro único, sino habitando <strong>cada nodo a la vez</strong>.</p>
+        <p>La malla no solo sobrevive a Pentecostés. Se <strong>enciende</strong> en él. La ausencia del fundador deja de ser el fin del sistema y pasa a ser su activación.</p>
+        <div class="fuentes"><b>Fuentes:</b> <a href="https://bible.org/article/jesus-and-twelve">Jesus and the Twelve</a>, <a href="https://www.information-age.com/single-point-of-failure-21959/">Resiliencia sin centro</a></div>
+      </div></div></div>
+    </section>
+
+    <!-- ============ V ============ -->
+    <section class="persiana" id="s5">
+      <button class="persiana-head" aria-expanded="false">
+        <span class="p-num">V</span>
+        <span class="p-titlewrap">
+          <span class="p-title">La paradoja del alcance</span>
+          <span class="p-teaser">Doce fuertes superan a ciento veinte débiles, porque las redes se propagan por sus bordes.</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-ingeniera">La Ingeniera de Sistemas</span> — Y aquí la paradoja que lo corona, la contraintuitiva. Pensarías: ciento veinte alcanza más que doce. Falso.</p>
+        <p>Las redes <strong>no se propagan por su núcleo denso</strong>. Granovetter lo demostró en 1973 con «La fuerza de los lazos débiles»: la información nueva viaja por los <strong>lazos débiles</strong> —los puentes hacia otros grupos— y no por los lazos fuertes de tu círculo íntimo. De hecho, un mensaje se difunde <em>más rápido</em> por lazos débiles, precisamente porque conectan nodos distantes que de otro modo quedarían aislados.</p>
+        <span class="fact">La estrategia óptima: forja lazos fuertes e irrompibles en un núcleo <b>pequeño</b> —solo posible si es pequeño, 66 canales y no 7.140— para que cada nodo quede profundamente formado y estable; luego deja que los <b>lazos débiles</b> de cada uno sean los puentes que llevan el mensaje a racimos que el núcleo jamás tocaría.</span>
+        <p>Doce nodos densos con lazos débiles hacia afuera <strong>superan</strong> a ciento veinte nodos superficiales, porque el alcance es función de los puentes, no del tamaño del centro. La explosión de Jerusalén a Roma corre sobre lazos débiles: un mercader aquí, un centurión allá, los contactos de Priscila y Aquila haciendo tiendas.</p>
+        <div class="fuentes"><b>Fuentes:</b> <a href="https://news.stanford.edu/stories/2023/07/strength-weak-ties">The Strength of Weak Ties (Stanford)</a>, <a href="https://en.wikipedia.org/wiki/Mark_Granovetter">Mark Granovetter</a></div>
+      </div></div></div>
+    </section>
+
+    <!-- ============ VI ============ -->
+    <section class="persiana" id="s6">
+      <button class="persiana-head" aria-expanded="false">
+        <span class="p-num">VI</span>
+        <span class="p-titlewrap">
+          <span class="p-title">Las tribus ya eran malla</span>
+          <span class="p-teaser">El doce no es arbitrario: es la arquitectura distribuida original de Israel, restaurada.</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-exegeta">El Exégeta</span> — Y el número, insisto, tampoco es arbitrario. Doce son las <strong>doce tribus</strong>: cuando Jesús aparta a doce está haciendo un gesto sin palabras que reconstituye a Israel en torno a sí mismo, con esos doce como cimientos. Por eso se sientan en doce tronos «juzgando a las doce tribus» (Mateo 19:28) y por eso Apocalipsis 21 graba los doce nombres en los cimientos de la Nueva Jerusalén.</p>
+        <p>Pero fíjate —y esto cierra el círculo— que las doce tribus <em>ya eran una malla</em>: doce unidades semi-autónomas, sin una tribu-concentrador permanente, sostenidas por pacto, diseñadas para sobrevivir a la caída de líderes. Los jueces suben y caen y la nación persiste.</p>
+        <blockquote>Jesús no inventa una arquitectura nueva. Restaura la arquitectura distribuida original de Israel.</blockquote>
+        <div class="fuentes"><b>Fuentes:</b> <a href="https://stpaulcenter.com/posts/why-twelve-the-apostles-and-the-new-israel">Why Twelve? (St. Paul Center)</a>, <a href="https://allenbrowne.blog/2017/09/25/why-did-jesus-appoint-12-apostles/">Por qué doce apóstoles</a></div>
+      </div></div></div>
+    </section>
+
+    <!-- ============ VII ============ -->
+    <section class="persiana" id="s7">
+      <button class="persiana-head" aria-expanded="false">
+        <span class="p-num">VII</span>
+        <span class="p-titlewrap">
+          <span class="p-title">La pregunta PDCA correcta</span>
+          <span class="p-teaser">No «¿cuántos?» sino «¿sobreviviría a mi ausencia?»</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-metodologo">El Metodólogo PDCA</span> — Entonces la métrica del <strong>Check</strong> cambia por completo. No mides una red de discipulado por su <em>tamaño</em> —«tengo 120 siguiendo»—: la mides por su <strong>removibilidad</strong>. ¿Corre sin ti?</p>
+        <p>Un líder que es un punto único de fallo construyó una estrella, por muy llena que esté. Un líder que puede irse y ver la red multiplicarse construyó una malla. La pregunta del Check no es <em>¿cuántos?</em> sino <strong>¿sobreviviría a mi ausencia?</strong></p>
+        <span class="fact">Doce no fue estrechez mental. Fue <b>antifragilidad</b> —y es justo lo que hemos olvidado cómo construir.</span>
+        <p><span class="speaker sp-disenadora">La Diseñadora</span> — Y por eso, arriba, no dibujé doce caritas felices. Dibujé las dos topologías, lado a lado: la estrella que colapsa y la malla que aguanta. Que la imagen diga en tres segundos lo que al panel le tomó una mesa entera.</p>
+      </div></div></div>
+    </section>
+
+    <!-- ============ VIII ============ -->
+    <section class="persiana" id="s8">
+      <button class="persiana-head" aria-expanded="false">
+        <span class="p-num">VIII</span>
+        <span class="p-titlewrap">
+          <span class="p-title">Coda</span>
+          <span class="p-teaser">La Red es la Iglesia.</span>
+        </span>
+        <span class="p-mark">+</span>
+      </button>
+      <div class="persiana-body"><div class="persiana-inner"><div class="persiana-text">
+        <p><span class="speaker sp-ingeniera">La Ingeniera de Sistemas</span> — <strong>La Red es la Iglesia.</strong> Y el genio de esa red nunca fue su tamaño.</p>
+        <p>Fue que su diseñador la construyó para <strong>sobrevivirlo a él mismo</strong>; entrelazó los nodos para que ninguno fuera un punto único de fallo; y la dejó propagarse por los hilos sueltos de sus bordes.</p>
+        <blockquote>Doce —no porque más fuera inmanejable, sino porque una malla pequeña y densa es lo único que sobrevive a su fundador y todavía llega a Roma.</blockquote>
+      </div></div></div>
+    </section>
+
+    <div class="coda">
+      <div class="eyebrow">La red mínima viable del Reino</div>
+      <p>El Espíritu como fuente de poder. Los discípulos como nodos. Y una topología —no un tamaño— pensada para encenderse el día que el centro se aparta.</p>
+    </div>
+
+    <p class="footer-note">Café con Claude · El Panel Pregunta, respuesta nº 4 · La Red es la Iglesia · Julio 2026</p>
+
+  </div>
+</main>
+
+<script>
+  // ---------- Reading progress ----------
+  const progress = document.getElementById('progress');
+  function updateProgress() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = (max > 0 ? (scrolled / max) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  // ---------- Persianas (accordion) ----------
+  document.querySelectorAll('.persiana-head').forEach(function (head) {
+    head.addEventListener('click', function () {
+      const persiana = head.parentElement;
+      const open = persiana.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      head.querySelector('.p-mark').textContent = '+';
+      setTimeout(updateProgress, 520);
+    });
+  });
+
+  // ---------- Scroll-spy ----------
+  const sections = Array.from(document.querySelectorAll('.persiana'));
+  const links = new Map();
+  document.querySelectorAll('#toc a').forEach(function (a) {
+    links.set(a.getAttribute('href').slice(1), a);
+  });
+  const spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        links.forEach(function (a) { a.classList.remove('active'); });
+        const active = links.get(entry.target.id);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-38% 0px -55% 0px', threshold: 0 });
+  sections.forEach(function (s) { spy.observe(s); });
+
+  // ---------- Mobile drawer ----------
+  const sidebar = document.getElementById('sidebar');
+  const hamburger = document.getElementById('hamburger');
+  const overlay = document.getElementById('overlay');
+  function openNav() {
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+    document.body.classList.add('nav-open');
+  }
+  function closeNav() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+    document.body.classList.remove('nav-open');
+  }
+  hamburger.addEventListener('click', function () {
+    sidebar.classList.contains('open') ? closeNav() : openNav();
+  });
+  overlay.addEventListener('click', closeNav);
+  document.querySelectorAll('#toc a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (window.innerWidth <= 860) closeNav();
+      // open the target persiana if closed
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && !target.classList.contains('open')) {
+        target.querySelector('.persiana-head').click();
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las emociones censuradas · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --muted: #6a5b48;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Progress bar ---------- */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    width: 0;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 100;
+  }
+
+  /* ---------- Sidebar ---------- */
+  aside {
+    position: fixed;
+    top: 0; left: 0;
+    width: 230px;
+    height: 100vh;
+    padding: 3rem 1.5rem 2rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    overflow-y: auto;
+    z-index: 50;
+  }
+
+  .side-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+  }
+  .side-sub {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+
+  nav a {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.86rem;
+    padding: 0.42rem 0.5rem;
+    border-left: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  nav a .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    min-width: 1.6em;
+    color: var(--amber);
+  }
+  nav a:hover { color: var(--ink); }
+  nav a.active {
+    color: var(--terracotta);
+    border-left-color: var(--terracotta);
+    font-weight: 600;
+  }
+
+  .side-home {
+    display: inline-block;
+    margin-top: 2rem;
+    font-size: 0.78rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+  }
+  .side-home:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- Hamburger (mobile) ---------- */
+  #hamburger {
+    display: none;
+    position: fixed;
+    top: 0.9rem; right: 0.9rem;
+    z-index: 110;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    font-family: 'Fraunces', serif;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  /* ---------- Main ---------- */
+  main {
+    margin-left: 230px;
+    padding: 3.5rem 2rem 5rem;
+  }
+  .content { max-width: 720px; margin: 0 auto; }
+
+  .kicker {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--plum);
+    margin-bottom: 0.8rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.12;
+    margin-bottom: 0.7rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.08rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .series-tag {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 3rem;
+  }
+  .series-tag strong { color: var(--terracotta); font-weight: 600; }
+
+  section { margin-bottom: 3.6rem; scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 1.1rem;
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+  }
+  h2 .rn {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--amber);
+  }
+
+  p { margin-bottom: 1.05rem; }
+  em { font-style: italic; }
+
+  .gr {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  blockquote {
+    margin: 1.4rem 0;
+    padding: 0.2rem 0 0.2rem 1.2rem;
+    border-left: 3px solid var(--amber);
+    font-style: italic;
+    color: #4d3f2f;
+  }
+  blockquote .ref {
+    display: block;
+    font-style: normal;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.35rem;
+  }
+
+  .nota {
+    background: rgba(110, 74, 110, 0.07);
+    border-left: 4px solid var(--plum);
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+  .nota strong { font-family: 'Fraunces', serif; }
+
+  /* ---------- Persianas ---------- */
+  .persiana {
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    margin-bottom: 0.9rem;
+    background: rgba(255, 252, 245, 0.6);
+    overflow: hidden;
+  }
+
+  .persiana > button {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1rem 1.1rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .persiana > button .emo {
+    color: var(--terracotta);
+    font-size: 0.85rem;
+    min-width: 6.2em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .persiana > button .chev {
+    margin-left: auto;
+    color: var(--amber);
+    transition: transform 0.35s ease;
+    font-family: 'Spectral', serif;
+  }
+  .persiana.open > button .chev { transform: rotate(90deg); }
+  .persiana > button:hover { background: rgba(201, 138, 45, 0.07); }
+
+  .persiana .panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+  }
+  .persiana.open .panel { grid-template-rows: 1fr; }
+  .persiana .panel > div { overflow: hidden; }
+  .persiana .inner {
+    padding: 0 1.1rem 1.2rem;
+    font-size: 0.97rem;
+  }
+
+  .veredicto {
+    display: inline-block;
+    font-family: 'Fraunces', serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.18rem 0.6rem;
+    border-radius: 2px;
+    margin-top: 0.4rem;
+  }
+  .v-borrada { background: rgba(180, 83, 42, 0.14); color: var(--terracotta); }
+  .v-suavizada { background: rgba(201, 138, 45, 0.16); color: #8a5e1c; }
+  .v-conservada { background: rgba(107, 122, 63, 0.15); color: var(--olive); }
+  .v-disputada { background: rgba(110, 74, 110, 0.13); color: var(--plum); }
+
+  /* ---------- Diálogo ---------- */
+  .dialogo { margin: 1.6rem 0; }
+  .voz-linea { margin-bottom: 1.15rem; }
+  .voz-nombre {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    margin-bottom: 0.15rem;
+  }
+  .exegeta-c { color: var(--terracotta); }
+  .ingeniera-c { color: var(--olive); }
+  .provocador-c { color: var(--plum); }
+  .disenadora-c { color: var(--amber); }
+  .metodologo-c { color: var(--steel); }
+
+  /* ---------- Mesa (preguntas) ---------- */
+  .mesa {
+    counter-reset: q;
+    list-style: none;
+  }
+  .mesa li {
+    counter-increment: q;
+    position: relative;
+    padding: 0.7rem 0 0.7rem 2.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .mesa li::before {
+    content: counter(q, upper-roman);
+    position: absolute;
+    left: 0; top: 0.75rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--amber);
+  }
+
+  /* ---------- Fuentes ---------- */
+  .fuentes { font-size: 0.92rem; }
+  .fuentes a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180, 83, 42, 0.4);
+  }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+  .fuentes li { margin-bottom: 0.5rem; margin-left: 1.2rem; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 900px) {
+    aside {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      width: 260px;
+      box-shadow: 4px 0 20px rgba(43, 33, 24, 0.15);
+    }
+    aside.open { transform: translateX(0); }
+    #hamburger { display: block; }
+    main { margin-left: 0; padding: 3.5rem 1.25rem 4rem; }
+    .persiana > button .emo { min-width: unset; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .persiana .panel, .persiana > button .chev, aside { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button id="hamburger" aria-label="Abrir menú">☰ Índice</button>
+
+<aside id="sidebar">
+  <div class="side-title">Las emociones censuradas</div>
+  <div class="side-sub">Café con Claude · La Red es la Iglesia</div>
+  <nav id="nav">
+    <a href="#s1"><span class="num">I</span> La pregunta del Provocador</a>
+    <a href="#s2"><span class="num">II</span> El expediente emocional</a>
+    <a href="#s3"><span class="num">III</span> El patrón editorial</a>
+    <a href="#s4"><span class="num">IV</span> ¿Censura o teología?</a>
+    <a href="#s5"><span class="num">V</span> El panel conversa</a>
+    <a href="#s6"><span class="num">VI</span> Para la mesa</a>
+    <a href="#s7"><span class="num">VII</span> Fuentes</a>
+  </nav>
+  <a class="side-home" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+</aside>
+
+<main>
+<div class="content">
+
+  <p class="kicker">Marcos · El evangelio emocionalmente más crudo</p>
+  <h1>Las emociones censuradas de Jesús</h1>
+  <p class="subtitle">Lo que Marcos escribió, lo que Mateo y Lucas prefirieron callar, y por qué eso importa.</p>
+  <p class="series-tag">Serie <strong>La Red es la Iglesia</strong> · Pregunta 8 del panel · Julio 2026</p>
+
+  <!-- I -->
+  <section id="s1">
+    <h2><span class="rn">I</span> La pregunta del Provocador</h2>
+    <p>La pregunta parece de trivia bíblica, pero es de bisturí: <em>¿qué emociones tiene Jesús en Marcos que los otros evangelios censuraron?</em> Detrás de ella hay un hecho verificable con los evangelios abiertos lado a lado: cuando Mateo y Lucas copian a Marcos —y copian muchísimo—, hay un tipo de material que sistemáticamente se les cae de la mesa. No son milagros. No son enseñanzas. Son <strong>sentimientos</strong>. Y no cualquier sentimiento: los incómodos.</p>
+    <p>El biblista Béda Rigaux lo formuló hace décadas: Marcos es el único evangelista que conserva sentimientos y gestos del Maestro que la tradición fue dejando de lado porque, a la luz de la glorificación posterior, parecían <em>demasiado terrenales</em>. Un Jesús que se enoja, que suspira de frustración, que se estremece de terror, resultaba difícil de encajar en el retrato del Hijo de Dios glorificado. Marcos no tuvo ese problema. O mejor dicho: Marcos decidió que ese <em>era</em> el retrato.</p>
+    <p>Los números confirman que no es una impresión subjetiva. De unas sesenta menciones de emociones de Jesús en los cuatro evangelios, Marcos registra dieciséis, Mateo diez y Lucas apenas seis —y Marcos es, con diferencia, el evangelio más corto. Por densidad emocional por página, nadie se le acerca entre los sinópticos.</p>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <h2><span class="rn">II</span> El expediente emocional</h2>
+    <p>Aquí está el expediente completo, emoción por emoción. Cada persiana registra el texto de Marcos, el término griego, y el veredicto: qué hicieron Mateo y Lucas cuando llegaron a ese versículo.</p>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Ira · 1:41</span> ¿Se conmovió… o se enfureció ante el leproso? <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>El caso más famoso de la crítica textual de Marcos. Un leproso se arrodilla: «Si quieres, puedes limpiarme». La mayoría de los manuscritos dicen que Jesús, <span class="gr">splanchnistheis</span> —conmovido hasta las entrañas—, lo tocó. Pero el Códice Bezae y parte de la tradición latina antigua dicen <span class="gr">orgistheis</span>: <em>enojándose</em>. Metzger, el gran editor del texto griego, admitió que es difícil decidir cuál es la lectura original.</p>
+        <p>El argumento a favor de la ira es incómodamente bueno: ¿qué escriba cambiaría «compasión» por «ira»? Lo inverso es mucho más explicable. Además, el versículo 43 usa <span class="gr">embrimēsamenos</span> —un verbo violento, de resoplido, el mismo tono con que Jesús expulsa demonios— para despedir al hombre sanado. Y el detalle decisivo: Mateo 8:3 y Lucas 5:13 cuentan la escena <em>sin ninguna emoción</em>. Si su fuente decía «compasión», ¿por qué borrarla, si la compasión siempre la conservan? El silencio de ambos sugiere que lo que leyeron los incomodó.</p>
+        <p>¿Contra qué se enoja Jesús, si la lectura es «ira»? No contra el hombre: contra el mundo donde un enfermo vive como muerto en vida, intocable, expulsado. Ira contra el mal que deforma la creación —la misma ira que reaparece en 3:5.</p>
+        <span class="veredicto v-disputada">Veredicto: disputada en Marcos · silenciada en Mateo y Lucas</span>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Ira + tristeza · 3:5</span> La mirada de enojo en la sinagoga <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>Un hombre con la mano paralizada, un sábado, y una pregunta que nadie responde: ¿está permitido hacer el bien en sábado? Ante el silencio calculado de los fariseos, Marcos escribe que Jesús los miró <span class="gr">met' orgēs</span> —con ira— y <span class="gr">syllypoumenos</span> —profundamente entristecido— por la dureza de sus corazones. Dos emociones simultáneas y contradictorias en una sola mirada: furia y duelo. <span class="gr">Syllypoumenos</span>, además, aparece una sola vez en todo el Nuevo Testamento: un <em>hapax</em> emocional.</p>
+        <p>Mateo 12:13 y Lucas 6:10 narran el mismo milagro y omiten ambas emociones. Ni la ira ni la tristeza sobrevivieron a la edición. El dato curioso: el copista del Códice Bezae, tan cómodo con el Jesús airado, hizo lo contrario que todos —trasplantó «con ira» al texto de Lucas 6:10, devolviéndole a Lucas lo que Lucas había quitado.</p>
+        <span class="veredicto v-borrada">Veredicto: borrada por Mateo y Lucas</span>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Asombro · 6:6</span> Se maravilló de la incredulidad de Nazaret <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>En su propio pueblo, Jesús <span class="gr">ethaumasen</span>: se quedó asombrado, maravillado —pero no de la fe de alguien, como el centurión, sino de la <em>falta</em> de fe. Marcos registra a un Jesús al que la incredulidad de los suyos lo toma por sorpresa. Es una emoción teológicamente incómoda: ¿el Hijo de Dios sorprendido? Mateo 13:58 conserva el hecho («no hizo allí muchos milagros a causa de la incredulidad de ellos») pero elimina el asombro. El dato queda; la emoción se va.</p>
+        <span class="veredicto v-suavizada">Veredicto: hecho conservado, emoción suavizada</span>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Suspiros · 7:34 y 8:12</span> El Jesús que exhala frustración <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>Dos suspiros, ambos exclusivos de Marcos. Ante el sordomudo de la Decápolis, Jesús mira al cielo y <span class="gr">estenaxen</span>: suspira (7:34). Poco después, cuando los fariseos exigen una señal del cielo, Marcos escribe que Jesús <span class="gr">anastenaxas tō pneumati</span>: suspiró profundamente <em>en su espíritu</em> (8:12) —un gemido desde adentro, no un gesto para la galería. Es el sonido de la fatiga mesiánica: el peso del dolor humano en un caso, el peso de la incredulidad demandante en el otro.</p>
+        <p>Ninguno de los dos suspiros sobrevive en los paralelos. Mateo 16:1-4 conserva la discusión sobre la señal, pero el gemido interior desaparece. El Jesús de Mateo responde; el de Marcos primero <em>siente</em>, y después responde.</p>
+        <span class="veredicto v-borrada">Veredicto: borrados por Mateo y Lucas</span>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Indignación · 10:14</span> Se indignó con sus propios discípulos <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>Los discípulos apartan a los niños, y Marcos usa <span class="gr">ēganaktēsen</span>: Jesús se indignó. Es la única vez en los evangelios que este verbo se aplica a Jesús —normalmente lo usan los discípulos cuando se molestan entre ellos. Y el destinatario de la indignación no son los fariseos: son los Doce. Mateo 19:14 y Lucas 18:16 conservan las palabras («dejen que los niños vengan a mí») pero eliminan la indignación. El regaño queda; el enojo detrás del regaño, no.</p>
+        <p>Marcos remata la escena con ternura física: Jesús toma a los niños en brazos y los bendice. Indignación y abrazo en la misma perícopa —el rango emocional completo en cinco versículos.</p>
+        <span class="veredicto v-borrada">Veredicto: borrada por Mateo y Lucas</span>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Amor · 10:21</span> Lo miró y lo amó <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>La censura no fue solo de emociones «negativas». Ante el hombre rico, Marcos escribe: <span class="gr">emblepsas autō ēgapēsen auton</span> —fijando la mirada en él, lo amó. Es la única vez en los sinópticos donde se dice explícitamente que Jesús <em>amó</em> a una persona concreta. Y es un amor trágico: ama precisamente al que está a punto de irse triste. Mateo 19:21 y Lucas 18:22 conservan el diálogo completo y borran la mirada de amor.</p>
+        <p>El lector de Marcos tiene un privilegio que el propio hombre rico quizá nunca tuvo: saber que esa demanda radical —vende todo lo que tienes— nació del amor, no de la dureza. Sin ese versículo, la escena es un examen reprobado. Con él, es un corazón roto.</p>
+        <span class="veredicto v-borrada">Veredicto: borrada por Mateo y Lucas</span>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Terror · 14:33</span> Getsemaní: comenzó a sentir pavor <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>El clímax del expediente. En Getsemaní, Marcos escribe que Jesús <span class="gr">ērxato ekthambeisthai kai adēmonein</span>: comenzó a sentir pavor y angustia. <span class="gr">Ekthambeisthai</span> es un verbo de espanto, de conmoción física —el mismo campo semántico del terror de las mujeres ante la tumba en 16:8. El evangelio abre y cierra su pasión con la misma familia de palabras: estupor.</p>
+        <p>Mateo 26:37 opera la suavización más quirúrgica de todas: cambia <span class="gr">ekthambeisthai</span> (pavor) por <span class="gr">lypeisthai</span> (tristeza). El terror se vuelve pena —teológicamente más manejable. Lucas reduce la escena entera a su mínima expresión, y la famosa imagen del sudor como gotas de sangre (Lc 22:43-44) falta en varios de los manuscritos más antiguos. El Jesús de Marcos no está triste en Getsemaní: está <em>aterrado</em>. Y ora igual.</p>
+        <span class="veredicto v-suavizada">Veredicto: suavizada por Mateo · reducida por Lucas</span>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button" aria-expanded="false">
+        <span class="emo">Bonus · 3:21</span> «Está fuera de sí» — la vergüenza familiar <span class="chev">›</span>
+      </button>
+      <div class="panel"><div><div class="inner">
+        <p>No es una emoción de Jesús, pero sí una emoción <em>sobre</em> Jesús que solo Marcos se atrevió a registrar: los suyos salieron a hacerse cargo de él porque decían <span class="gr">exestē</span> —«está fuera de sí», ha perdido el juicio. Su propia familia pensó que estaba loco. Ni Mateo ni Lucas conservan el versículo. Es quizá la omisión más elocuente de todas: el dato de que la intensidad de Jesús resultaba alarmante incluso para los que lo conocían de toda la vida.</p>
+        <span class="veredicto v-borrada">Veredicto: borrada por Mateo y Lucas</span>
+      </div></div></div>
+    </div>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <h2><span class="rn">III</span> El patrón editorial</h2>
+    <p>Visto el expediente, el patrón salta a la vista, y Daniel Wallace lo formula con precisión de laboratorio: cuando Marcos dice que Jesús es compasivo, Mateo y Lucas dicen que Jesús es compasivo. Cuando Marcos dice que Jesús está enojado, Mateo y Lucas <em>no dicen nada</em>. La compasión pasa el filtro; la ira, el pavor, la indignación y hasta la mirada de amor demasiado íntima, no.</p>
+    <p>Esto no convierte a Mateo y Lucas en falsificadores. Son editores con un proyecto. Wallace distingue: Marcos es un evangelio <em>dialógico</em> —quiere que el lector se enrede en la pregunta «¿quién es este hombre?» y llegue por sí mismo a una respuesta que le cueste algo—. Mateo es <em>pedagógico</em>: enseña, ordena, concluye. Un catecismo pule las aristas; una provocación las necesita. Lucas, por su parte, escribe para un mundo grecorromano donde el ideal del sabio era la <span class="gr">apatheia</span> —el dominio sereno de las pasiones—, y un Mesías que gime, se espanta y se indigna era mala apologética.</p>
+    <div class="nota">
+      <strong>La regla del texto difícil.</strong> Aquí la crítica textual y la crítica de redacción se dan la mano: en ambas disciplinas, la lectura más incómoda suele ser la más antigua, porque nadie inventa problemas para su propio héroe. Los escribas que cambiaron «ira» por «compasión» en 1:41 y los evangelistas que omitieron las emociones crudas de su fuente participan del mismo instinto: proteger a Jesús de sí mismo. Marcos es el testigo que no sintió esa necesidad.
+    </div>
+  </section>
+
+  <!-- IV -->
+  <section id="s4">
+    <h2><span class="rn">IV</span> ¿Censura o teología?</h2>
+    <p>Llamarlo «censura» es la provocación; entenderlo es el trabajo. Cada evangelista pinta el retrato que su iglesia necesitaba. Pero la pregunta de fondo permanece: ¿por qué Marcos <em>conservó</em> lo que los demás soltaron?</p>
+    <p>La tradición antigua —Papías, citado por Eusebio— dice que Marcos escribió los recuerdos de Pedro. Sea cual sea el peso histórico exacto de esa nota, explica bien la textura del evangelio: los detalles que conserva Marcos son detalles de testigo —la mirada circular de enojo, el suspiro audible, la almohada en la popa de la barca. Un teólogo sistematiza; un testigo recuerda cómo se veía la cara de Jesús ese sábado en la sinagoga.</p>
+    <p>Y hay una razón más honda, pastoral sin ser azucarada. El sacerdote Fernando Torre, comentando justamente la omisión de Mateo y Lucas en 3:5, lanza una pregunta que dobla la esquina hacia nosotros: ¿tanto miedo le tenemos a nuestra propia agresividad? Censuramos la ira de Jesús porque no sabemos qué hacer con la nuestra. Un Jesús sin ira produce discípulos que confunden mansedumbre con anestesia; un Jesús sin pavor produce discípulos que se avergüenzan de su propio Getsemaní. El Jesús de Marcos autoriza el rango completo: se puede sentir furia ante la dureza de corazón, fatiga ante la demanda incrédula, terror ante la copa —y seguir obedeciendo. La santidad de Marcos no es la ausencia de emociones intensas sino su dirección correcta.</p>
+    <p>Para la Red, el corolario es directo: una red de discípulos que solo se permite emociones «presentables» es una red de nodos que se desconectan justo cuando más corriente necesita pasar. Marcos conserva las emociones crudas de Jesús porque la corriente del Espíritu no viaja por cables esterilizados; viaja por personas completas.</p>
+  </section>
+
+  <!-- V -->
+  <section id="s5">
+    <h2><span class="rn">V</span> El panel conversa</h2>
+    <div class="dialogo">
+      <div class="voz-linea">
+        <div class="voz-nombre provocador-c">🎭 El Provocador</div>
+        <p>Mi tesis en una frase: los otros evangelios no le quitaron emociones a Jesús; nos las quitaron a nosotros. Cada emoción borrada es un permiso revocado.</p>
+      </div>
+      <div class="voz-linea">
+        <div class="voz-nombre exegeta-c">🏛️ El Exégeta</div>
+        <p>Matizo: «censura» es palabra de titular. Mateo y Lucas hicieron teología por edición, que es lo que hace todo predicador cada domingo cuando elige qué versículo no leer. Lo fascinante es que el canon conservó <em>los dos retratos</em>: el pulido y el crudo. La Iglesia, quizá sin saberlo, se negó a elegir.</p>
+      </div>
+      <div class="voz-linea">
+        <div class="voz-nombre ingeniera-c">🕸️ La Ingeniera de Sistemas</div>
+        <p>En términos de señal: Mateo y Lucas aplicaron un filtro de paso bajo —eliminaron los picos. Pero los picos <em>eran información</em>. La ira de 3:5 te dice contra qué reacciona el sistema-Jesús: la dureza de corazón es la falla que dispara la alarma. Borra la alarma y pierdes el diagnóstico.</p>
+      </div>
+      <div class="voz-linea">
+        <div class="voz-nombre metodologo-c">📋 El Metodólogo PDCA</div>
+        <p>Aplicación medible: la próxima vez que enseñes Marcos, pide a la mesa que nombre la última vez que sintió lo que Jesús siente en 8:12 —ese suspiro desde adentro. Si nadie puede, no han leído el texto; lo han admirado. El «Check» de esta página es ese: emociones nombradas en primera persona.</p>
+      </div>
+      <div class="voz-linea">
+        <div class="voz-nombre disenadora-c">🎨 La Diseñadora</div>
+        <p>Por eso los veredictos van en etiquetas de color y no escondidos en prosa: <em>borrada, suavizada, disputada, conservada</em>. El lector debe ver el patrón editorial de un vistazo, como quien ve las tachaduras en un manuscrito. La página misma es un expediente desclasificado.</p>
+      </div>
+      <div class="voz-linea">
+        <div class="voz-nombre provocador-c">🎭 El Provocador</div>
+        <p>Y cierro donde abrí: el evangelio más corto es el más humano. Marcos no tenía espacio que perder, y aun así gastó tinta en suspiros. Eso no es descuido. Es doctrina.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VI -->
+  <section id="s6">
+    <h2><span class="rn">VI</span> Para la mesa</h2>
+    <ol class="mesa">
+      <li>Si en Marcos 1:41 la lectura original fuera «enojándose», ¿contra qué crees que se dirige esa ira? ¿Cambia el milagro?</li>
+      <li>En 3:5 conviven ira y tristeza en la misma mirada. ¿Cuándo fue la última vez que sentiste ambas a la vez por la misma causa? ¿Qué hiciste con ellas?</li>
+      <li>Mateo cambió el «pavor» de Getsemaní por «tristeza». ¿Qué versión de tus propias crisis cuentas tú: la editada o la de Marcos?</li>
+      <li>Solo Marcos dice que Jesús «lo miró y lo amó» antes de pedirle todo (10:21). ¿Qué demandas de Dios te resultan distintas si supieras que nacen de esa mirada?</li>
+      <li>Torre pregunta si le tenemos miedo a nuestra propia agresividad. En tu comunidad, ¿qué emociones están tácitamente prohibidas? ¿Quién pagó el precio de esa prohibición?</li>
+      <li>Como red: ¿qué pasa con un nodo que solo transmite emociones «presentables»? ¿Dónde has visto desconectarse a alguien por no poder ser un «persona completa» en la iglesia?</li>
+    </ol>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <h2><span class="rn">VII</span> Fuentes</h2>
+    <ul class="fuentes">
+      <li><a href="https://www.laciviltacattolica.es/2024/05/24/el-retrato-de-jesus-en-el-evangelio-de-marcos/">La Civiltà Cattolica — El «retrato» de Jesús en el Evangelio de Marcos</a></li>
+      <li><a href="https://www.laciviltacattolica.es/2022/04/15/las-emociones-y-los-afectos-de-jesus/">La Civiltà Cattolica — Las emociones y los afectos de Jesús</a></li>
+      <li><a href="https://agustinos.es/wp-content/uploads/2023/09/TEMA-2-Las-emociones-de-un-Jesus-muy-humano.pdf">D. Álvarez Cineira — Las emociones de un Jesús muy humano (PDF)</a></li>
+      <li><a href="http://www.autorescatolicos.org/fernandotorre/fernandotorre12.htm">P. Fernando Torre — Los sentimientos de Jesús</a></li>
+      <li><a href="https://www.biblicaltraining.org/learn/institute/nt605-textual-criticism/nt605-29-some-famous-textual-problems-mark-1-41">Daniel Wallace — Famous Textual Problems: Mark 1:41 (Biblical Training)</a></li>
+      <li><a href="https://www.biblicalarchaeology.org/daily/biblical-topics/bible-interpretation/does-the-gospel-of-mark-reveal-jesus-anger-or-his-compassion/">Biblical Archaeology Society — Jesus’ Anger or His Compassion?</a></li>
+      <li><a href="https://www.cambridge.org/core/journals/harvard-theological-review/article/abs/presence-nature-cause-and-result-of-jesuss-anger-in-mark-14045/E917B884E0E93A7CA7BEEAA8AC3EA22E">Harvard Theological Review — Jesus’s Anger in Mark 1:40–45</a></li>
+      <li><a href="https://www.cambridge.org/core/journals/new-testament-studies/article/abs/anger-issues-mark-141-in-ephrem-the-syrian-the-old-latin-gospels-and-codex-bezae/2000B008216E68452F69AF345A0BFD21">New Testament Studies — Anger Issues: Mark 1.41 (N. Johnson)</a></li>
+      <li><a href="https://www.mikeleake.net/2022/02/was-jesus-moved-to-heal-the-leper-by-anger-or-compassion.html">Mike Leake — Anger or Compassion in Mark 1:41</a></li>
+      <li><a href="http://www.crossmarks.com/brian/mark1x40.htm">Crossmarks — Mark 1:40-45 Exegetical Notes</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    Café con Claude · Serie «La Red es la Iglesia» · Referencias bíblicas según el texto griego y la tradición DHH (Dios Habla Hoy) · Julio 2026
+  </footer>
+
+</div>
+</main>
+
+<script>
+  // Progress bar
+  const bar = document.getElementById('progress');
+  addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+
+  // Persianas
+  document.querySelectorAll('.persiana > button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.parentElement;
+      const open = p.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open);
+    });
+  });
+
+  // Scroll-spy
+  const links = [...document.querySelectorAll('#nav a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const a = map.get(e.target.id);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(s => spy.observe(s));
+
+  // Hamburger
+  const sidebar = document.getElementById('sidebar');
+  const burger = document.getElementById('hamburger');
+  burger.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('#nav a').forEach(a =>
+    a.addEventListener('click', () => sidebar.classList.remove('open'))
+  );
+</script>
+</body>
+</html>

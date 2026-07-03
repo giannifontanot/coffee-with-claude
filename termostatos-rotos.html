@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termostatos rotos · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --muted: #6a5b48;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  #progreso {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--terracotta);
+    z-index: 60;
+    transition: width 0.1s linear;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.lateral {
+    position: fixed;
+    top: 0; left: 0;
+    width: 220px;
+    height: 100vh;
+    padding: 2.2rem 1.4rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    z-index: 50;
+    overflow-y: auto;
+  }
+
+  nav.lateral .marca {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  nav.lateral .marca span { color: var(--terracotta); }
+
+  nav.lateral a.home {
+    display: inline-block;
+    font-size: 0.78rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 1.8rem;
+  }
+  nav.lateral a.home:hover { color: var(--ink); border-color: var(--ink); }
+
+  nav.lateral ol {
+    list-style: none;
+  }
+  nav.lateral ol li { margin-bottom: 0.15rem; }
+  nav.lateral ol a {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.84rem;
+    padding: 0.35rem 0.5rem;
+    border-left: 2px solid transparent;
+    line-height: 1.35;
+  }
+  nav.lateral ol a .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    min-width: 1.6em;
+    color: var(--line);
+  }
+  nav.lateral ol a:hover { color: var(--ink); }
+  nav.lateral ol a.activo {
+    color: var(--ink);
+    border-left-color: var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+  }
+  nav.lateral ol a.activo .num { color: var(--terracotta); }
+
+  /* ---------- Hamburguesa ---------- */
+  #hamb {
+    display: none;
+    position: fixed;
+    top: 0.9rem; right: 0.9rem;
+    z-index: 70;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.45rem 0.7rem;
+    font-family: 'Fraunces', serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  /* ---------- Contenido ---------- */
+  main {
+    margin-left: 220px;
+    padding: 3.2rem 2rem 5rem;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header.portada { margin-bottom: 3.5rem; }
+
+  .kicker {
+    font-family: 'Fraunces', serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--steel);
+    margin-bottom: 0.8rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5.5vw, 3.1rem);
+    line-height: 1.1;
+    margin-bottom: 0.9rem;
+  }
+
+  .subtitulo {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.08rem;
+    max-width: 34em;
+  }
+
+  section { margin-bottom: 3.6rem; scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
+  }
+  h2 .num {
+    color: var(--terracotta);
+    font-weight: 600;
+    margin-right: 0.4rem;
+  }
+  .lema {
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    font-size: 0.98rem;
+  }
+
+  p { margin-bottom: 1.05rem; }
+  em { font-style: italic; }
+  strong { font-family: 'Fraunces', serif; font-weight: 600; }
+
+  /* ---------- Voces ---------- */
+  .voz {
+    display: flex;
+    gap: 0.75rem;
+    margin: 1.3rem 0;
+  }
+  .voz .dot {
+    flex: 0 0 auto;
+    width: 0.65rem; height: 0.65rem;
+    border-radius: 50%;
+    margin-top: 0.55rem;
+  }
+  .voz .habla { flex: 1; }
+  .voz .quien {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.15rem;
+  }
+  .voz p:last-child { margin-bottom: 0; }
+
+  .ingeniera .dot { background: var(--olive); }
+  .exegeta   .dot { background: var(--terracotta); }
+  .provocador .dot { background: var(--plum); }
+  .metodologo .dot { background: var(--steel); }
+
+  /* ---------- Cita bíblica ---------- */
+  blockquote.dhh {
+    margin: 1.6rem 0;
+    padding: 1rem 1.3rem;
+    border-left: 4px solid var(--amber);
+    background: rgba(201, 138, 45, 0.07);
+    font-style: italic;
+    font-size: 1.05rem;
+  }
+  blockquote.dhh cite {
+    display: block;
+    margin-top: 0.4rem;
+    font-style: normal;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-family: 'Fraunces', serif;
+  }
+
+  /* ---------- Bucle (firma de la página) ---------- */
+  .bucle {
+    margin: 1.8rem 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.2rem 1.3rem 1.05rem;
+    background: rgba(255, 255, 255, 0.35);
+  }
+  .bucle .titulo-bucle {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .bucle .titulo-bucle::before {
+    content: "⟳";
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .bucle .cinta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.55rem;
+    font-size: 0.9rem;
+  }
+  .bucle .paso {
+    padding: 0.28rem 0.7rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-family: 'Fraunces', serif;
+    font-size: 0.82rem;
+  }
+  .bucle .flecha { color: var(--muted); font-size: 0.9rem; }
+  .bucle .retorno {
+    margin-top: 0.8rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px dashed var(--line);
+    padding-top: 0.6rem;
+  }
+  .bucle .retorno::before { content: "↩ "; font-style: normal; }
+
+  .bucle.terracotta { color: var(--terracotta); }
+  .bucle.plum { color: var(--plum); }
+  .bucle.amber { color: var(--amber); }
+  .bucle.olive { color: var(--olive); }
+  .bucle.steel { color: var(--steel); }
+  .bucle .cinta, .bucle .retorno, .bucle .titulo-bucle { color: var(--ink); }
+  .bucle.terracotta .paso { color: var(--terracotta); }
+  .bucle.plum .paso { color: var(--plum); }
+  .bucle.amber .paso { color: var(--amber); }
+  .bucle.olive .paso { color: var(--olive); }
+  .bucle.steel .paso { color: var(--steel); }
+
+  /* ---------- Persianas ---------- */
+  .persiana {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin: 1.1rem 0;
+    background: rgba(255,255,255,0.3);
+    overflow: hidden;
+  }
+  .persiana > button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+    padding: 0.85rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .persiana > button:hover { color: var(--terracotta); }
+  .persiana > button .chev {
+    transition: transform 0.3s ease;
+    color: var(--terracotta);
+    flex: 0 0 auto;
+  }
+  .persiana.abierta > button .chev { transform: rotate(90deg); }
+  .persiana .cuerpo {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+  .persiana.abierta .cuerpo { grid-template-rows: 1fr; }
+  .persiana .cuerpo > div {
+    overflow: hidden;
+    padding: 0 1.1rem;
+  }
+  .persiana.abierta .cuerpo > div { padding: 0 1.1rem 1rem; }
+  .persiana .cuerpo p:first-child { margin-top: 0.1rem; }
+
+  /* ---------- Fuentes ---------- */
+  .fuentes {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 1.2rem;
+  }
+  .fuentes a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180,83,42,0.4);
+  }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- Tabla contraste ---------- */
+  table.contraste {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.4rem 0;
+    font-size: 0.92rem;
+  }
+  table.contraste th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.55rem 0.7rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  table.contraste td {
+    padding: 0.7rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  /* ---------- Cierre ---------- */
+  .cierre {
+    margin-top: 1.5rem;
+    padding: 1.2rem 1.4rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+  }
+  .cierre p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    nav.lateral {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      width: 250px;
+      box-shadow: 4px 0 20px rgba(43,33,24,0.12);
+    }
+    nav.lateral.abierta { transform: translateX(0); }
+    #hamb { display: block; }
+    main { margin-left: 0; padding: 3.2rem 1.2rem 4rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .persiana .cuerpo, .persiana > button .chev, #progreso, nav.lateral { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progreso"></div>
+<button id="hamb" aria-label="Abrir menú">☰ Índice</button>
+
+<nav class="lateral" id="nav">
+  <div class="marca">Café con <span>Claude</span></div>
+  <a class="home" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  <ol>
+    <li><a href="#s1"><span class="num">I</span> La precisión de la Ingeniera</a></li>
+    <li><a href="#s2"><span class="num">II</span> Éfeso: el filtro que se comió el amor</a></li>
+    <li><a href="#s3"><span class="num">III</span> Pérgamo y Tiatira: la rana no salta</a></li>
+    <li><a href="#s4"><span class="num">IV</span> Sardis: la reputación como aislante</a></li>
+    <li><a href="#s5"><span class="num">V</span> Laodicea: el sensor muerto</a></li>
+    <li><a href="#s6"><span class="num">VI</span> El auditor externo</a></li>
+    <li><a href="#s7"><span class="num">VII</span> Las dos que no recibieron reproche</a></li>
+    <li><a href="#s8"><span class="num">VIII</span> Para tu mesa</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+<header class="portada">
+  <div class="kicker">Deming lee las siete cartas · Apocalipsis 2–3</div>
+  <h1>Termostatos rotos</h1>
+  <p class="subtitulo">Los bucles de retroalimentación que mataron a las iglesias de Asia Menor — y por qué las dos que sobrevivieron sin reproche eran precisamente las que más sufrían.</p>
+</header>
+
+<!-- ============ I ============ -->
+<section id="s1">
+  <h2><span class="num">I.</span> La precisión de la Ingeniera</h2>
+  <p class="lema">Antes de la autopsia, afinemos el vocabulario.</p>
+
+  <div class="voz ingeniera">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+      <p>La pregunta dice "bucles de retroalimentación negativos" y me encanta, pero permítanme la pedantería inaugural: en teoría de sistemas, un bucle <em>negativo</em> no es un bucle malo. Es un bucle <strong>estabilizador</strong> — el termostato que enciende la calefacción cuando baja la temperatura. Lo que corrige. Lo que balancea.</p>
+      <p>Lo que mató a las iglesias de Apocalipsis 2–3 fue una combinación de dos patologías distintas: <strong>bucles de refuerzo viciosos</strong> — círculos que amplifican el deterioro en cada vuelta, como una represa que al agrietarse deja pasar agua que agranda la grieta — y <strong>bucles de balance rotos</strong>: termostatos desconectados que ya no corrigen nada. Las cartas de Cristo a las siete iglesias son, leídas con ojos de Deming, cinco autopsias de sistemas de retroalimentación y dos certificados de buena salud.</p>
+    </div>
+  </div>
+
+  <div class="voz provocador">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🎭 El Provocador</div>
+      <p>Traducción para los que no dormimos con <em>The New Economics</em> bajo la almohada: ninguna de esas iglesias murió de un golpe. Murieron de <em>ciclos</em>. De cosas pequeñas que se retroalimentaban en silencio, vuelta tras vuelta, hasta que un día alguien de afuera tuvo que escribirles una carta para decirles lo que ellas ya no podían ver.</p>
+    </div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://deming.org/systems-thinking-feedback-loops/">Deming Institute</a>, <a href="https://es.wikipedia.org/wiki/Las_siete_Iglesias_del_Apocalipsis">Wikipedia</a></p>
+</section>
+
+<!-- ============ II ============ -->
+<section id="s2">
+  <h2><span class="num">II.</span> Éfeso: el filtro que se comió el amor</h2>
+  <p class="lema">El bucle de la vigilancia que optimiza la métrica equivocada.</p>
+
+  <div class="voz exegeta">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🏛️ El Exégeta</div>
+      <p>La carta a Éfeso empieza con un elogio de manual: la iglesia examinaba a los que se decían apóstoles sin serlo, y los rechazaba. Su control de calidad doctrinal funcionaba de maravilla. Aguantaban, trabajaban, no se cansaban. Y entonces cae el reproche:</p>
+    </div>
+  </div>
+
+  <blockquote class="dhh">
+    "Pero tengo una cosa contra ti: que ya no tienes el amor que tenías al principio."
+    <cite>Apocalipsis 2:4 · DHH</cite>
+  </blockquote>
+
+  <div class="voz ingeniera">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+      <p>Aquí está el primer bucle vicioso, y es sutil porque nace de una virtud. La vigilancia doctrinal genera sospecha permanente. La sospecha reduce la apertura. La identidad comunitaria se reorganiza alrededor del filtro: "somos los que detectamos herejes". Y una identidad de filtro exige más vigilancia para sostenerse. Cada vuelta refuerza la siguiente.</p>
+      <p>Deming pasó la vida advirtiendo contra gestionar solo por las cifras visibles: lo que mides, lo optimizas; lo que no mides, se degrada en silencio. Éfeso medía ortodoxia — detectable, contable, auditable — y la ortodoxia floreció. El amor no aparecía en ningún tablero. Y el propósito real del sistema se murió mientras todos los indicadores estaban en verde.</p>
+    </div>
+  </div>
+
+  <div class="bucle terracotta">
+    <div class="titulo-bucle">El bucle de Éfeso</div>
+    <div class="cinta">
+      <span class="paso">vigilancia doctrinal</span><span class="flecha">→</span>
+      <span class="paso">sospecha permanente</span><span class="flecha">→</span>
+      <span class="paso">menos apertura</span><span class="flecha">→</span>
+      <span class="paso">identidad = filtro</span>
+    </div>
+    <div class="retorno">y la identidad de filtro exige más vigilancia — el amor queda fuera del tablero</div>
+  </div>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">La paradoja del árbol de la vida <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>La promesa a Éfeso es comer del árbol de la vida (2:7). Es una ironía deliberada: a la iglesia que se volvió experta en <em>cortar</em> — en podar, en excluir, en filtrar — se le promete un árbol que solo da. La corrección propuesta no es abandonar el discernimiento sino recordar, arrepentirse y volver a hacer "lo que hacías al principio" (2:5): reinstalar el amor como propósito del sistema, no como subproducto opcional.</p>
+    </div></div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.escuelabiblica.com/estudios-biblicos-1.php?id=381">Escuela Bíblica</a>, <a href="https://medium.com/10x-curiosity/system-of-profound-knowledge-ce8cd368ca62">10x Curiosity · Deming</a></p>
+</section>
+
+<!-- ============ III ============ -->
+<section id="s3">
+  <h2><span class="num">III.</span> Pérgamo y Tiatira: la rana no salta</h2>
+  <p class="lema">La normalización de la desviación — el bucle de balance desactivado.</p>
+
+  <div class="voz exegeta">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🏛️ El Exégeta</div>
+      <p>Pérgamo y Tiatira comparten diagnóstico con matices distintos. Pérgamo <em>toleraba</em>: tenía entre los suyos a quienes seguían enseñanzas que la carta compara con las de Balaam. Tiatira iba un paso más allá: no solo toleraba, sino que dejaba enseñar a una falsa profetisa. En ambas, el problema no era lo que la iglesia hacía — era lo que la iglesia <em>permitía que se volviera normal</em>.</p>
+    </div>
+  </div>
+
+  <div class="voz ingeniera">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+      <p>Este patrón tiene nombre en ingeniería de fiabilidad: <strong>normalización de la desviación</strong>. Cada compromiso pequeño se convierte en la nueva línea base, y el siguiente compromiso se mide contra esa línea — no contra el estándar original. Ningún paso individual dispara la alarma, porque cada paso es pequeño <em>relativo al anterior</em>. Es deriva acumulativa.</p>
+      <p>El bucle de balance que debía corregir la desviación — la disciplina comunitaria, la corrección fraterna, el "esto no somos nosotros" — estaba desactivado. No roto por accidente: desactivado por comodidad, porque corregir cuesta y tolerar es gratis a corto plazo. La rana no salta porque el agua sube un grado a la vez, y cada grado se parece mucho al anterior.</p>
+    </div>
+  </div>
+
+  <div class="bucle plum">
+    <div class="titulo-bucle">El bucle de Pérgamo y Tiatira</div>
+    <div class="cinta">
+      <span class="paso">compromiso pequeño</span><span class="flecha">→</span>
+      <span class="paso">nueva línea base</span><span class="flecha">→</span>
+      <span class="paso">el siguiente parece pequeño</span><span class="flecha">→</span>
+      <span class="paso">deriva invisible</span>
+    </div>
+    <div class="retorno">el termostato de la corrección comunitaria está apagado — nadie mide contra el estándar original</div>
+  </div>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">Tolerar no es amar <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>La ironía cruzada con Éfeso es perfecta y parece diseñada: Éfeso filtraba tan bien que perdió el amor; Tiatira amaba tan indiscriminadamente que perdió el filtro. Son los dos modos de fallo del mismo sistema. Una iglesia sana necesita <em>ambos</em> bucles funcionando: el de balance que corrige la deriva doctrinal y el propósito de amor que impide que la corrección se vuelva identidad. Curiosamente, a Tiatira se le reconoce que sus obras recientes son mayores que las primeras (2:19) — crecía en amor mientras se derretía en discernimiento. El sistema opuesto a Éfeso, con el mismo destino.</p>
+    </div></div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://www.gotquestions.org/Espanol/siete-iglesias-Apocalipsis.html">GotQuestions</a>, <a href="https://www.escuelabiblica.com/estudios-biblicos-1.php?id=381">Escuela Bíblica</a></p>
+</section>
+
+<!-- ============ IV ============ -->
+<section id="s4">
+  <h2><span class="num">IV.</span> Sardis: la reputación como aislante</h2>
+  <p class="lema">El bucle de la fama que bloquea toda señal correctiva.</p>
+
+  <blockquote class="dhh">
+    "Yo sé todo lo que haces, y sé que tienes fama de estar vivo, aunque en realidad estás muerto."
+    <cite>Apocalipsis 3:1 · DHH</cite>
+  </blockquote>
+
+  <div class="voz exegeta">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🏛️ El Exégeta</div>
+      <p>La historia de la ciudad hace la carta casi cruel. La acrópolis de Sardis, encaramada en un espolón de roca, era considerada inexpugnable — y cayó dos veces: ante Ciro el persa en el siglo VI a.C. y ante Antíoco III en el siglo III a.C. Las dos veces por la misma razón: los defensores confiaron en la reputación de la fortaleza y dejaron tramos sin vigilar. Un soldado enemigo escaló por donde nadie miraba. Cuando la carta le dice a Sardis "sé vigilante" (3:2) y le advierte que Cristo vendrá "como ladrón" (3:3), cada habitante de la ciudad sabía exactamente de qué le estaban hablando.</p>
+    </div>
+  </div>
+
+  <div class="voz ingeniera">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+      <p>El bucle de Sardis es el más silencioso de los cinco: la <strong>reputación como aislante</strong>. Fama de vitalidad → nadie cuestiona → el deterioro interno no genera ninguna señal externa → la fama persiste intacta. La reputación funciona como un capacitor: sigue entregando energía mucho después de que la fuente se apagó. Desde afuera, la luz sigue encendida.</p>
+      <p>Y aquí Deming pone el dedo en la llaga con una de sus tesis centrales: <strong>un sistema no puede entenderse a sí mismo</strong>. La experiencia previa sesga la mirada; el conocimiento profundo tiene que venir de afuera, y solo sirve si es invitado. Sardis no tenía ningún canal por donde entrara información externa veraz — su fama lo bloqueaba todo. Lo único que atravesó el aislante fue la carta misma.</p>
+    </div>
+  </div>
+
+  <div class="bucle steel">
+    <div class="titulo-bucle">El bucle de Sardis</div>
+    <div class="cinta">
+      <span class="paso">fama de vitalidad</span><span class="flecha">→</span>
+      <span class="paso">nadie cuestiona</span><span class="flecha">→</span>
+      <span class="paso">el deterioro no emite señal</span><span class="flecha">→</span>
+      <span class="paso">la fama persiste</span>
+    </div>
+    <div class="retorno">un capacitor entregando energía con la fuente apagada — solo un auditor externo puede medir el voltaje real</div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://es.wikipedia.org/wiki/Las_siete_Iglesias_del_Apocalipsis">Wikipedia</a>, <a href="https://medium.com/10x-curiosity/system-of-profound-knowledge-ce8cd368ca62">10x Curiosity · Deming</a></p>
+</section>
+
+<!-- ============ V ============ -->
+<section id="s5">
+  <h2><span class="num">V.</span> Laodicea: el sensor muerto</h2>
+  <p class="lema">El bucle de la riqueza que anestesia — el fallo más letal de todos.</p>
+
+  <div class="voz provocador">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🎭 El Provocador</div>
+      <p>Cuéntales lo del agua. Es demasiado bueno para dejarlo en nota al pie.</p>
+    </div>
+  </div>
+
+  <div class="voz exegeta">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🏛️ El Exégeta</div>
+      <p>El valle del río Lico tenía tres ciudades y tres aguas. Hierápolis: fuentes termales calientes, famosas por sus propiedades curativas. Colosas: agua fría y refrescante de montaña. Laodicea: nada. Dependía de un acueducto que traía agua de fuentes distantes, y para cuando llegaba —cargada de carbonato de calcio— ya no estaba ni caliente ni fría, sino tibia y con un sabor que provocaba náuseas. Cuando la carta dice "porque eres tibio, y no frío ni caliente, te vomitaré de mi boca" (3:16, DHH), no está usando una metáfora abstracta: está describiendo lo que los laodicenses escupían todos los días.</p>
+      <p>Y el otro dato es igual de bueno: Laodicea era tan rica —banca, textiles de lana negra, escuela de medicina— que cuando el terremoto del año 17 d.C. la destruyó, rechazó la ayuda imperial de Roma y se reconstruyó con fondos propios. "No necesitamos nada" no era una actitud: era el eslogan municipal.</p>
+    </div>
+  </div>
+
+  <blockquote class="dhh">
+    "Pues tú dices que eres rico, que te ha ido muy bien y que no te hace falta nada; y no te das cuenta de que eres desdichado, miserable, pobre, ciego y desnudo."
+    <cite>Apocalipsis 3:17 · DHH</cite>
+  </blockquote>
+
+  <div class="voz ingeniera">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+      <p>Este es el fallo más letal que puede sufrir un sistema, y quiero que se note por qué. En Éfeso el propósito se degradó; en Pérgamo el corrector se apagó; en Sardis la señal externa no entraba. Pero en Laodicea la señal <em>estaba ahí</em> — Cristo mismo a la puerta, llamando (3:20) — y el <strong>sensor estaba muerto</strong>. No es que la alarma sonara y la ignoraran: es que el detector ya no podía registrar el incendio.</p>
+      <p>El bucle: riqueza → comodidad → ninguna necesidad percibida → ninguna búsqueda → más autosuficiencia → sensor cada vez más dormido. La riqueza no mató a Laodicea. Mató su capacidad de <em>sentir que algo faltaba</em>. Un sistema sin necesidad percibida no procesa retroalimentación aunque se la griten en la puerta.</p>
+    </div>
+  </div>
+
+  <div class="bucle amber">
+    <div class="titulo-bucle">El bucle de Laodicea</div>
+    <div class="cinta">
+      <span class="paso">riqueza</span><span class="flecha">→</span>
+      <span class="paso">comodidad</span><span class="flecha">→</span>
+      <span class="paso">"no me falta nada"</span><span class="flecha">→</span>
+      <span class="paso">sensor apagado</span>
+    </div>
+    <div class="retorno">la señal existe — alguien llama a la puerta — pero no hay receptor encendido para escucharla</div>
+  </div>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">Los tres remedios y las tres industrias <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>La receta de 3:18 es un golpe quirúrgico a la economía local: a la ciudad de la banca se le ofrece <em>oro refinado en fuego</em>; a la de los textiles de lana negra, <em>ropa blanca</em>; a la del colirio de su famosa escuela de medicina, <em>ungüento para los ojos</em>. Cada remedio apunta exactamente a la industria que alimentaba el "no me hace falta nada". Es la carta diciendo: lo que te enorgullece es lo que te mantiene anestesiada.</p>
+    </div></div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://midvash.com/es/diccionario-biblico/laodicea-2">Midvash</a>, <a href="https://vidaesperanzayverdad.org/profecia/apocalipsis/las-siete-iglesias-de-apocalipsis/laodicea/">Vida, Esperanza y Verdad</a>, <a href="https://www.lugaresbiblicos.com/laodicea/">Lugares Bíblicos</a></p>
+</section>
+
+<!-- ============ VI ============ -->
+<section id="s6">
+  <h2><span class="num">VI.</span> El auditor externo</h2>
+  <p class="lema">"Yo conozco tus obras" — el Check que ninguna iglesia podía hacer por sí misma.</p>
+
+  <div class="voz metodologo">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">📋 El Metodólogo PDCA</div>
+      <p>Permítanme la síntesis, porque las siete cartas comparten una arquitectura que es puro ciclo de mejora. Casi todas abren con la misma fórmula: <strong>"Yo conozco tus obras."</strong> Es decir: el <em>Check</em> del ciclo PDCA lo ejecuta Cristo desde afuera, porque los mecanismos internos de verificación de cada iglesia estaban muertos, dormidos o anestesiados. La carta <em>es</em> la auditoría externa que Deming decía que todo sistema necesita.</p>
+      <p>Y casi todas cierran con la misma orden: <strong>"El que tiene oídos, oiga lo que el Espíritu dice a las iglesias."</strong> Que en lenguaje de sistemas se traduce sin pérdida: <em>reconecta el sensor</em>. Donella Meadows puso los flujos de información entre los puntos de apalancamiento más poderosos de un sistema — cambiar quién recibe qué información puede transformar un sistema entero sin tocar ninguna otra pieza. Las siete cartas son exactamente eso: inyección de información veraz en sistemas que habían dejado de escucharse a sí mismos.</p>
+    </div>
+  </div>
+
+  <div class="bucle olive">
+    <div class="titulo-bucle">El bucle que las cartas intentan restaurar</div>
+    <div class="cinta">
+      <span class="paso">"Yo conozco tus obras"</span><span class="flecha">→</span>
+      <span class="paso">diagnóstico veraz</span><span class="flecha">→</span>
+      <span class="paso">"acuérdate y arrepiéntete"</span><span class="flecha">→</span>
+      <span class="paso">"el que tiene oídos, oiga"</span>
+    </div>
+    <div class="retorno">este sí es un bucle negativo en el sentido técnico: el termostato que corrige — Check, Act, y de vuelta al principio</div>
+  </div>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">La estructura séptuple de cada carta <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>El patrón formal es notablemente estable: identificación del remitente con un atributo de la visión del capítulo 1, el "conozco tus obras", el elogio (ausente en Laodicea), el reproche (ausente en Esmirna y Filadelfia), el llamado a la acción, la advertencia condicional, y la promesa "al que salga vencedor". Un formato de auditoría con campos fijos — diagnóstico, hallazgos, plan correctivo, consecuencias, incentivo. Deming habría reconocido el documento al instante.</p>
+    </div></div>
+  </div>
+
+  <p class="fuentes">Fuentes: <a href="https://mercaba.org/FICHAS/BIBLIA/Ap/T/Taylor_22.htm">Mercaba</a>, <a href="https://deming.org/explore/sopk/">Deming Institute · SoPK</a></p>
+</section>
+
+<!-- ============ VII ============ -->
+<section id="s7">
+  <h2><span class="num">VII.</span> Las dos que no recibieron reproche</h2>
+  <p class="lema">Esmirna y Filadelfia — o por qué la presión externa mantiene los sensores encendidos.</p>
+
+  <div class="voz ingeniera">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+      <p>Ahora el contraste que remata el argumento. De las siete, solo dos cartas no contienen reproche: Esmirna, la iglesia perseguida y pobre — a la que se le dice "aunque eres pobre, en realidad eres rico" (2:9), el espejo exacto de Laodicea — y Filadelfia, la de "poca fuerza" que perseveró (3:8). Las dos iglesias sanas eran las dos que más sufrían.</p>
+      <p>No es romanticismo del sufrimiento; es física de sistemas. La presión externa constante obligaba a esas comunidades a preguntarse cada semana <em>por qué</em> seguían, <em>qué</em> creían, <em>quiénes</em> eran. La persecución les hacía gratis lo que a las otras cinco les resultaba carísimo: mantener los sensores encendidos. Sus bucles de retroalimentación funcionaban porque no podían darse el lujo de apagarlos.</p>
+    </div>
+  </div>
+
+  <div class="voz provocador">
+    <div class="dot"></div>
+    <div class="habla">
+      <div class="quien">🎭 El Provocador</div>
+      <p>Digámoslo sin anestesia: según estas cartas, la amenaza más grave para una iglesia no es la persecución. Es la comodidad prolongada sin auditoría externa. Ninguna de las cinco enfermas murió por presión de afuera; las cinco se pudrieron por dentro con los indicadores en verde. Y las dos que vivían bajo amenaza constante son las únicas que no necesitaron corrección. Eso debería incomodar a cualquier iglesia cómoda que lea esto. Empezando por la nuestra.</p>
+    </div>
+  </div>
+
+  <table class="contraste">
+    <thead>
+      <tr><th>Iglesia</th><th>Bucle que la mató</th><th>Fallo del sistema</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Éfeso</strong></td><td>El filtro que se comió el amor</td><td>Optimizó la métrica visible; el propósito no se medía</td></tr>
+      <tr><td><strong>Pérgamo / Tiatira</strong></td><td>La normalización de la desviación</td><td>Termostato corrector desactivado por comodidad</td></tr>
+      <tr><td><strong>Sardis</strong></td><td>La reputación como aislante</td><td>Ninguna señal externa podía entrar</td></tr>
+      <tr><td><strong>Laodicea</strong></td><td>La riqueza que anestesia</td><td>La señal entraba, pero el sensor estaba muerto</td></tr>
+      <tr><td><strong>Esmirna / Filadelfia</strong></td><td>— sin reproche —</td><td>La presión externa mantenía los sensores encendidos</td></tr>
+    </tbody>
+  </table>
+
+  <p class="fuentes">Fuentes: <a href="https://es.wikipedia.org/wiki/Las_siete_Iglesias_del_Apocalipsis">Wikipedia</a>, <a href="https://www.gotquestions.org/Espanol/siete-iglesias-Apocalipsis.html">GotQuestions</a></p>
+</section>
+
+<!-- ============ VIII ============ -->
+<section id="s8">
+  <h2><span class="num">VIII.</span> Para tu mesa</h2>
+  <p class="lema">Cuatro preguntas de diagnóstico — una por cada bucle.</p>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">1 · El test de Éfeso <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>¿Qué mide tu comunidad — asistencia, ortodoxia, actividades — y qué cosa esencial <em>no</em> aparece en ningún tablero? Si el amor de los primeros días se apagara lentamente, ¿qué indicador lo detectaría? ¿Existe ese indicador?</p>
+    </div></div>
+  </div>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">2 · El test de Pérgamo <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>¿Contra qué línea base se miden los compromisos: contra el estándar original o contra "lo que ya veníamos tolerando"? Nombra una cosa que hace cinco años habría escandalizado a tu comunidad y hoy pasa sin comentario. Ese es el grado que subió el agua.</p>
+    </div></div>
+  </div>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">3 · El test de Sardis <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>¿Quién, desde afuera, tiene permiso real para decirle a tu comunidad que está muerta aunque tenga fama de viva? Si la respuesta es "nadie", la fama ya está funcionando como aislante. ¿Qué tramo del muro nadie está vigilando porque "por ahí no se puede subir"?</p>
+    </div></div>
+  </div>
+
+  <div class="persiana">
+    <button type="button" aria-expanded="false">4 · El test de Laodicea <span class="chev">›</span></button>
+    <div class="cuerpo"><div>
+      <p>¿Cuándo fue la última vez que tu comunidad sintió que le faltaba algo — no que le sobraba trabajo, sino que le <em>faltaba</em> Dios? Un sistema sin necesidad percibida no procesa retroalimentación. ¿El sensor está encendido, o solo la luz del letrero?</p>
+    </div></div>
+  </div>
+
+  <div class="cierre">
+    <p><strong>La tesis en una frase:</strong> las iglesias de Apocalipsis 2–3 no murieron por ataques externos sino por bucles internos — métricas equivocadas, correcciones desactivadas, reputaciones que aislaban y sensores anestesiados por la comodidad. Las cartas son el acto de un auditor externo reinyectando información veraz en sistemas que dejaron de escucharse. Y la orden final de las siete es la misma, y es puro Meadows, puro Deming, puro Evangelio: <em>el que tiene oídos, oiga.</em> Reconecta el sensor.</p>
+  </div>
+</section>
+
+<footer>
+  Café con Claude · La Red es la Iglesia · Deming lee las siete cartas · Julio 2026
+</footer>
+
+</div>
+</main>
+
+<script>
+  // ---------- Barra de progreso ----------
+  const barra = document.getElementById('progreso');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const total = h.scrollHeight - h.clientHeight;
+    barra.style.width = (total > 0 ? (h.scrollTop / total) * 100 : 0) + '%';
+  }, { passive: true });
+
+  // ---------- Persianas ----------
+  document.querySelectorAll('.persiana > button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.parentElement;
+      const abierta = p.classList.toggle('abierta');
+      btn.setAttribute('aria-expanded', abierta ? 'true' : 'false');
+    });
+  });
+
+  // ---------- Scroll-spy ----------
+  const enlaces = document.querySelectorAll('nav.lateral ol a');
+  const mapa = {};
+  enlaces.forEach(a => { mapa[a.getAttribute('href').slice(1)] = a; });
+  const observador = new IntersectionObserver(entradas => {
+    entradas.forEach(e => {
+      if (e.isIntersecting) {
+        enlaces.forEach(a => a.classList.remove('activo'));
+        const enlace = mapa[e.target.id];
+        if (enlace) enlace.classList.add('activo');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(s => observador.observe(s));
+
+  // ---------- Hamburguesa ----------
+  const hamb = document.getElementById('hamb');
+  const nav = document.getElementById('nav');
+  hamb.addEventListener('click', () => {
+    const abierta = nav.classList.toggle('abierta');
+    hamb.textContent = abierta ? '✕ Cerrar' : '☰ Índice';
+  });
+  enlaces.forEach(a => a.addEventListener('click', () => {
+    nav.classList.remove('abierta');
+    hamb.textContent = '☰ Índice';
+  }));
+</script>
+
+</body>
+</html>
