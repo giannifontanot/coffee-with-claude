@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HARD Goals Infographic</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <!-- Font Awesome (using CDN for icons, strictly NO SVG allowed in body, will use <i> tags) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Palette: Vibrant & Energetic
+         Red: #FF595E (Heartfelt)
+         Yellow: #FFCA3A (Animated)
+         Green: #8AC926 (Required)
+         Blue: #1982C4 (Difficult)
+         Purple: #6A4C93 (Accent)
+         Background: #F3F4F6
+    -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F3F4F6;
+            color: #1F2937;
+        }
+
+        /* Chart Container Styling - Critical for Responsiveness */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Flow Arrow styling using CSS borders (NO SVG) */
+        .arrow-right::after {
+            content: '';
+            display: inline-block;
+            width: 0; 
+            height: 0; 
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid #6A4C93;
+            margin-left: 10px;
+        }
+
+        .arrow-down::after {
+            content: '';
+            display: block;
+            width: 0; 
+            height: 0; 
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid #6A4C93;
+            margin: 10px auto;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #FF595E, #1982C4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+    <!-- 
+        NARRATIVE PLAN:
+        1. Intro: Define HARD vs SMART.
+        2. Framework Overview (Radar Chart): Show the 4 dimensions.
+        3. Heartfelt (Bar Chart): Intrinsic Motivation data.
+        4. Animated (HTML Flow): Visualization process.
+        5. Required (Line Chart): Accountability over time.
+        6. Difficult (Scatter Plot): Growth vs Difficulty.
+        7. Comparison (Grouped Bar): HARD vs SMART summary.
+        
+        PALETTE: #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93
+        
+        CHART SELECTION JUSTIFICATION (NO SVG):
+        - Radar Chart: Ideal for comparing multivariate scores (4 HARD components).
+        - Bar Chart: Clear comparison of motivation categories.
+        - Line Chart: Shows temporal trends in effort/persistence.
+        - Scatter/Bubble: Shows correlation between two variables (Difficulty vs Growth).
+        - HTML Flow: Replaces SVG diagrams for process visualization.
+     -->
+     <!-- CONFIRMATION: Neither Mermaid JS nor SVG are used in this file. -->
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header / Hero Section -->
+    <div class="bg-white shadow-lg mb-8">
+        <div class="container mx-auto px-4 py-12 text-center">
+            <h1 class="text-5xl md:text-6xl font-black mb-4 uppercase tracking-tight text-gray-800">
+                <span class="text-[#FF595E]">H</span><span class="text-[#FFCA3A]">A</span><span class="text-[#8AC926]">R</span><span class="text-[#1982C4]">D</span> Goals
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-600 font-light mb-6">The Secret to Getting from Where You Are to Where You Want to Be</p>
+            <div class="max-w-3xl mx-auto bg-blue-50 border-l-4 border-[#1982C4] p-6 text-left rounded shadow-sm">
+                <p class="text-lg text-gray-700">
+                    <strong class="text-[#1982C4]">The Problem with SMART:</strong> Traditional goal setting (Specific, Measurable, Attainable, Relevant, Time-bound) is designed for <em>maintenance</em> and <em>safety</em>. It prioritizes being "Attainable" over being transformational. 
+                </p>
+                <p class="text-lg text-gray-700 mt-4">
+                    To achieve extraordinary results, you need <strong>HARD Goals</strong>: goals that ignite your brain and push you to the edge of your capabilities.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="container mx-auto px-4 pb-12">
+        
+        <!-- SECTION 1: The Framework Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-center">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-4 text-[#6A4C93]">The 4 Pillars of Transformation</h2>
+                <p class="mb-4 text-gray-600">
+                    A true HARD goal must score high in four specific dimensions. Unlike average goals which often lack emotional connection or sufficient challenge, a HARD goal fires on all cylinders.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-center">
+                        <span class="w-8 h-8 rounded-full bg-[#FF595E] text-white flex items-center justify-center font-bold mr-3">H</span>
+                        <span><strong>Heartfelt:</strong> Deep emotional connection.</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-8 h-8 rounded-full bg-[#FFCA3A] text-white flex items-center justify-center font-bold mr-3">A</span>
+                        <span><strong>Animated:</strong> Vividly visualized "mental movie".</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-8 h-8 rounded-full bg-[#8AC926] text-white flex items-center justify-center font-bold mr-3">R</span>
+                        <span><strong>Required:</strong> Urgent necessity and accountability.</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-8 h-8 rounded-full bg-[#1982C4] text-white flex items-center justify-center font-bold mr-3">D</span>
+                        <span><strong>Difficult:</strong> Pushes skills to the limit.</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-bold text-center mb-2 text-gray-500">Goal Potential Analysis</h3>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <p class="text-xs text-center text-gray-400 mt-2">Comparison of a standard "Resolution" vs. a fully formed "HARD Goal"</p>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Heartfelt (H) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="md:col-span-1 bg-gradient-to-br from-[#FF595E] to-[#FF8C91] rounded-lg shadow-md p-8 text-white">
+                <h2 class="text-4xl font-black mb-2">H</h2>
+                <h3 class="text-2xl font-bold mb-4">Heartfelt</h3>
+                <p class="mb-4 text-white/90">
+                    "Why do I truly care about this?"
+                </p>
+                <p class="text-sm text-white/90">
+                    Heartfelt goals tap into intrinsic motivation. They aren't just about what you "should" do, but who you want to be. The data shows that intrinsic attachment drastically increases resilience.
+                </p>
+            </div>
+            <div class="md:col-span-2 bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold mb-4 text-[#FF595E]">The Persistence Probability</h3>
+                <p class="mb-4 text-sm text-gray-600">Comparing the likelihood of sticking with a goal when things get tough, based on the source of motivation.</p>
+                <div class="chart-container">
+                    <canvas id="heartfeltBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Animated (A) -->
+        <div class="mb-12 bg-white rounded-lg shadow-md p-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6">
+                <div class="md:col-span-1">
+                    <h2 class="text-4xl font-black text-[#FFCA3A]">A</h2>
+                    <h3 class="text-2xl font-bold text-gray-800">Animated</h3>
+                    <p class="text-gray-600 mt-2">Don't just write it down. <br><strong>See it. Hear it. Feel it.</strong></p>
+                </div>
+                <div class="md:col-span-3">
+                    <p class="text-gray-700">
+                        Animated goals are Vivid. Vague goals like "get healthy" fail because the brain can't visualize the outcome. Animated goals create a sensory-rich "future memory."
+                    </p>
+                </div>
+            </div>
+
+            <!-- CSS Flow Chart for Visualization Process -->
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h4 class="text-center font-bold text-gray-500 mb-6 uppercase tracking-wider">The Visualization Engine</h4>
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    
+                    <!-- Step 1 -->
+                    <div class="w-full md:w-1/4 bg-white p-4 rounded shadow border-l-4 border-[#FFCA3A] text-center">
+                        <div class="text-2xl mb-2">🎥</div>
+                        <h5 class="font-bold text-gray-800">Mental Movie</h5>
+                        <p class="text-xs text-gray-500">Create a vivid, sensory-rich scene of success.</p>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden md:block arrow-right"></div>
+                    <div class="block md:hidden arrow-down"></div>
+
+                    <!-- Step 2 -->
+                    <div class="w-full md:w-1/4 bg-white p-4 rounded shadow border-l-4 border-[#FFCA3A] text-center">
+                        <div class="text-2xl mb-2">🧠</div>
+                        <h5 class="font-bold text-gray-800">Neural Priming</h5>
+                        <p class="text-xs text-gray-500">Brain recognizes the scenario as "familiar."</p>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden md:block arrow-right"></div>
+                    <div class="block md:hidden arrow-down"></div>
+
+                    <!-- Step 3 -->
+                    <div class="w-full md:w-1/4 bg-white p-4 rounded shadow border-l-4 border-[#FFCA3A] text-center">
+                        <div class="text-2xl mb-2">🚀</div>
+                        <h5 class="font-bold text-gray-800">Action & Confidence</h5>
+                        <p class="text-xs text-gray-500">Anxiety drops, execution speed increases.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: Required (R) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white rounded-lg shadow-md p-6 order-2 md:order-1">
+                <h3 class="text-xl font-bold mb-4 text-[#8AC926]">Sustaining Effort Over Time</h3>
+                <p class="mb-4 text-sm text-gray-600">
+                    Without accountability ("Required"), motivation naturally decays (The "Blue Line"). When a goal is Required—tied to duty, public promise, or necessity—effort is sustained (The "Green Line").
+                </p>
+                <div class="chart-container">
+                    <canvas id="requiredLineChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-[#8AC926] to-[#A3E635] rounded-lg shadow-md p-8 text-white order-1 md:order-2">
+                <h2 class="text-4xl font-black mb-2">R</h2>
+                <h3 class="text-2xl font-bold mb-4">Required</h3>
+                <p class="mb-4 font-medium">"Who needs me to achieve this?"</p>
+                <p class="text-sm opacity-90 mb-6">
+                    Required goals leverage external pressure. It's not about willpower; it's about changing the stakes. If the cost of failure is high enough, you find a way.
+                </p>
+                <div class="bg-white/20 p-4 rounded backdrop-blur-sm">
+                    <h4 class="font-bold border-b border-white/30 pb-2 mb-2">Accountability Boosters:</h4>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>Public declarations</li>
+                        <li>Professional necessity</li>
+                        <li>Commitment to family/team</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5: Difficult (D) -->
+        <div class="mb-12">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="md:col-span-1">
+                        <h2 class="text-4xl font-black text-[#1982C4] mb-2">D</h2>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Difficult</h3>
+                        <p class="text-gray-600 mb-4">
+                            SMART goals say "Attainable." HARD goals say "Difficult." Why? Because growth only happens outside your comfort zone.
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            The graph illustrates the relationship between Goal Difficulty and Skill Acquisition. Low difficulty leads to stagnation. High (but not impossible) difficulty maximizes growth.
+                        </p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="chart-container">
+                            <canvas id="difficultScatterChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 6: SMART vs HARD Summary -->
+        <div class="bg-[#2D3748] rounded-lg shadow-lg p-8 text-white mb-12">
+            <h2 class="text-3xl font-bold text-center mb-8">The Final Verdict: SMART vs. HARD</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-[#FFCA3A] mb-4">Traditional SMART Goals</h3>
+                    <ul class="space-y-3 text-gray-300 text-sm">
+                        <li class="flex items-start"><span class="mr-2 text-red-400">✖</span> Focus on safety and attainability.</li>
+                        <li class="flex items-start"><span class="mr-2 text-red-400">✖</span> Often boring and emotionally flat.</li>
+                        <li class="flex items-start"><span class="mr-2 text-red-400">✖</span> Good for checklists, bad for dreams.</li>
+                        <li class="flex items-start"><span class="mr-2 text-red-400">✖</span> Example: "Send 5 emails by Friday."</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-[#FF595E] mb-4">HARD Goals</h3>
+                    <ul class="space-y-3 text-white text-sm">
+                        <li class="flex items-start"><span class="mr-2 text-green-400">✔</span> Focus on growth and challenge.</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-400">✔</span> Deeply emotional and vivid.</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-400">✔</span> Designed for transformation.</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-400">✔</span> Example: "Revolutionize our industry service model this year."</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-600">
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-gray-500 text-sm py-6">
+            <p>Based on the concepts from <strong>"HARD Goals"</strong> by Mark Murphy.</p>
+            <p class="mt-2">Infographic generated for educational purposes.</p>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- Helper: Label Splitting Logic (Max 16 chars) ---
+        function splitLabel(str) {
+            const maxLen = 16;
+            if (str.length <= maxLen) return str;
+            
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length > maxLen) {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                } else {
+                    currentLine += " " + words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- Helper: Tooltip Callback Configuration (Mandatory) ---
+        const commonTooltipOptions = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- Chart 1: Radar Chart (The Framework) ---
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Heartfelt (Emotion)', 'Animated (Visuals)', 'Required (Necessity)', 'Difficult (Challenge)'].map(splitLabel),
+                datasets: [{
+                    label: 'Typical Resolution',
+                    data: [3, 2, 4, 3],
+                    fill: true,
+                    backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                    borderColor: 'rgb(156, 163, 175)',
+                    pointBackgroundColor: 'rgb(156, 163, 175)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(156, 163, 175)'
+                }, {
+                    label: 'HARD Goal',
+                    data: [9, 9, 8, 9],
+                    fill: true,
+                    backgroundColor: 'rgba(106, 76, 147, 0.2)',
+                    borderColor: '#6A4C93',
+                    pointBackgroundColor: '#6A4C93',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#6A4C93'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // --- Chart 2: Bar Chart (Heartfelt/Motivation) ---
+        const ctxBar = document.getElementById('heartfeltBarChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Persistence in Setbacks', 'Creative Problem Solving', 'Long-term Engagement'].map(splitLabel),
+                datasets: [{
+                    label: 'Extrinsic Motivation (External Rewards)',
+                    data: [30, 45, 25],
+                    backgroundColor: '#E5E7EB',
+                    borderColor: '#9CA3AF',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Intrinsic Motivation (Heartfelt)',
+                    data: [85, 90, 95],
+                    backgroundColor: '#FF595E',
+                    borderColor: '#D9343B',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Effectiveness Score (%)' }
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // --- Chart 3: Line Chart (Required/Accountability) ---
+        const ctxLine = document.getElementById('requiredLineChart').getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['Start', 'Week 2', 'Week 4', 'Week 6', 'Week 8', 'Week 10'].map(splitLabel),
+                datasets: [{
+                    label: 'Goal with No Accountability',
+                    data: [100, 80, 40, 20, 10, 5],
+                    borderColor: '#1982C4',
+                    backgroundColor: 'rgba(25, 130, 196, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'REQUIRED Goal (Accountability)',
+                    data: [100, 95, 92, 90, 94, 98],
+                    borderColor: '#8AC926',
+                    backgroundColor: 'rgba(138, 201, 38, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Effort Level (%)' }
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // --- Chart 4: Scatter/Bubble Chart (Difficult/Growth) ---
+        const ctxScatter = document.getElementById('difficultScatterChart').getContext('2d');
+        new Chart(ctxScatter, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Growth Zone',
+                    data: [
+                        {x: 10, y: 5}, {x: 20, y: 10}, {x: 30, y: 15}, // Comfort Zone
+                        {x: 50, y: 40}, {x: 60, y: 55}, {x: 70, y: 75}, // Learning Zone
+                        {x: 85, y: 95}, {x: 90, y: 90}, {x: 80, y: 85}  // Growth Zone
+                    ],
+                    backgroundColor: '#1982C4'
+                },
+                {
+                    label: 'Panic Zone (Too Hard)',
+                    data: [
+                        {x: 98, y: 20}, {x: 100, y: 10}
+                    ],
+                    backgroundColor: '#EF4444'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: { display: true, text: 'Goal Difficulty (Stretch)' },
+                        min: 0,
+                        max: 100
+                    },
+                    y: {
+                        title: { display: true, text: 'Skill Acquisition / Growth' },
+                        min: 0,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // --- Chart 5: Comparison Chart (SMART vs HARD Attributes) ---
+        const ctxComp = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(ctxComp, {
+            type: 'bar',
+            data: {
+                labels: ['Emotional Engagement', 'Difficulty Level', 'Innovation Requirement', 'Visualization Detail'].map(splitLabel),
+                datasets: [{
+                    label: 'SMART Goal',
+                    data: [20, 40, 30, 10],
+                    backgroundColor: '#9CA3AF',
+                }, {
+                    label: 'HARD Goal',
+                    data: [95, 90, 85, 90],
+                    backgroundColor: ['#FF595E', '#1982C4', '#8AC926', '#FFCA3A'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // Horizontal Bar
+                scales: {
+                    x: { beginAtZero: true, max: 100 }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: { display: true, position: 'bottom' }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
