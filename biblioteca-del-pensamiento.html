@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca del Pensamiento</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Spectral:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#f7f1e5;
+    --ink:#2b2118;
+    --terracotta:#b4532a;
+    --gold:#c98a2d;
+    --olive:#6b7a3f;
+    --card:#ffffff;
+}
+
+body{
+    margin:0;
+    font-family:'Spectral',serif;
+    background:var(--bg);
+    color:var(--ink);
+    scroll-behavior:smooth;
+}
+
+header{
+    position:sticky;
+    top:0;
+    background:rgba(247,241,229,.95);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid #e3d6c2;
+    padding:12px 20px;
+    z-index:10;
+}
+
+nav{
+    display:flex;
+    gap:18px;
+    justify-content:center;
+    flex-wrap:wrap;
+    font-size:.95rem;
+}
+
+nav a{
+    text-decoration:none;
+    color:var(--ink);
+    padding:6px 10px;
+    border-radius:6px;
+    transition:.2s;
+}
+
+nav a:hover{
+    background:var(--terracotta);
+    color:white;
+}
+
+.section{
+    max-width:900px;
+    margin:60px auto;
+    padding:0 20px;
+    transition:background .4s;
+}
+
+.section.active{
+    background:rgba(180,83,42,.06);
+    border-radius:10px;
+}
+
+h2{
+    font-family:'Fraunces',serif;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#6a5b48;
+    margin-bottom:25px;
+}
+
+.question{
+    background:var(--card);
+    border-left:4px solid var(--gold);
+    padding:14px 16px;
+    margin:14px 0;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.question:hover{
+    transform:translateX(3px);
+}
+
+.hint{
+    font-size:.9rem;
+    color:#6a5b48;
+    margin-top:6px;
+}
+
+.explore{
+    margin-top:8px;
+    font-size:.85rem;
+    color:var(--terracotta);
+    cursor:pointer;
+}
+
+.explore:hover{
+    text-decoration:underline;
+}
+
+#moment{
+    max-width:900px;
+    margin:80px auto;
+    padding:30px 20px;
+    border-left:6px solid var(--olive);
+    background:rgba(107,122,63,.08);
+}
+
+#moment h3{
+    font-family:'Fraunces',serif;
+    margin-bottom:10px;
+}
+
+#moment-question{
+    font-style:italic;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<nav>
+<a href="#descubrir">Descubrir</a>
+<a href="#modelar">Modelar</a>
+<a href="#conectar">Conectar</a>
+<a href="#refutar">Refutar</a>
+<a href="#aplicar">Aplicar</a>
+</nav>
+</header>
+
+<div id="descubrir" class="section">
+<h2>📕 Descubrir</h2>
+<p class="subtitle">Detectar lo que aún no ves en la idea.</p>
+
+<div class="question">
+¿What no estoy viendo?
+<div class="hint">Cuando una idea se siente completa, aquí suele empezar el punto ciego.</div>
+<div class="explore">Explorar</div>
+</div>
+
+<div class="question">
+¿Qué supuestos estoy dando por hechos?
+<div class="hint">Lo invisible suele ser lo que nunca cuestionas.</div>
+<div class="explore">Explorar</div>
+</div>
+
+</div>
+
+<div id="modelar" class="section">
+<h2>📗 Modelar</h2>
+<p class="subtitle">Entender cómo funciona como sistema.</p>
+
+<div class="question">
+¿Cómo funciona esto como sistema?
+<div class="hint">Busca relaciones, no solo elementos.</div>
+<div class="explore">Explorar</div>
+</div>
+
+<div class="question">
+¿Qué variables importan realmente?
+<div class="hint">No todo lo que cambia es importante.</div>
+<div class="explore">Explorar</div>
+</div>
+
+</div>
+
+<div id="conectar" class="section">
+<h2>📘 Conectar</h2>
+<p class="subtitle">Cruzar disciplinas y patrones.</p>
+
+<div class="question">
+¿Qué tiene esto en común con otros campos?
+<div class="hint">Las ideas viajan mejor que las disciplinas.</div>
+<div class="explore">Explorar</div>
+</div>
+
+</div>
+
+<div id="refutar" class="section">
+<h2>📙 Refutar</h2>
+<p class="subtitle">Poner a prueba la estructura de la idea.</p>
+
+<div class="question">
+¿Qué evidencia lo rompería?
+<div class="hint">Si no puede fallar, no es conocimiento.</div>
+<div class="explore">Explorar</div>
+</div>
+
+</div>
+
+<div id="aplicar" class="section">
+<h2>📔 Aplicar</h2>
+<p class="subtitle">Convertir pensamiento en acción.</p>
+
+<div class="question">
+¿Cómo cambia esto lo que hago mañana?
+<div class="hint">El pensamiento sin acción es solo contemplación.</div>
+<div class="explore">Explorar</div>
+</div>
+
+</div>
+
+<div id="moment">
+<h3>📖 Pregunta del momento</h3>
+<div id="moment-question">
+Si esta idea fuera falsa, ¿qué observaría mañana?
+</div>
+</div>
+
+<script>
+
+const sections = document.querySelectorAll('.section');
+
+window.addEventListener('scroll', () => {
+
+    let current = '';
+
+    sections.forEach(sec => {
+        const top = sec.getBoundingClientRect().top;
+        if(top < window.innerHeight * 0.4){
+            current = sec.id;
+        }
+    });
+
+    sections.forEach(sec => {
+        sec.classList.remove('active');
+        if(sec.id === current){
+            sec.classList.add('active');
+        }
+    });
+
+});
+
+// simple “vivo” effect
+document.querySelectorAll('.explore').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.question');
+        card.style.background = '#fff7e6';
+        setTimeout(() => {
+            card.style.background = 'white';
+        }, 600);
+    });
+});
+
+</script>
+
+</body>
+</html>
