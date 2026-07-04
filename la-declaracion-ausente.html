@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La declaración ausente · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    padding: 3rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px;
+    margin-bottom: 2.4rem;
+    cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* Hero */
+  .kicker {
+    font-family: 'Fraunces', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2.2rem, 6.5vw, 3.4rem);
+    line-height: 1.06;
+    margin-bottom: 0.7rem;
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.12rem;
+    max-width: 32em;
+    margin-bottom: 1.3rem;
+  }
+  .sourceline {
+    font-size: 0.88rem;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 0.9rem 0;
+    margin-bottom: 2rem;
+  }
+  .sourceline a { color: var(--terracotta); text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .sourceline a:hover { color: var(--ink); border-color: var(--ink); }
+
+  .thesis {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--amber);
+    border-radius: 6px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 3rem;
+  }
+  .thesis .lead {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--terracotta);
+  }
+
+  /* Sections */
+  section { margin-bottom: 2.8rem; }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+  .eyebrow .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--cream);
+    background: var(--terracotta);
+    width: 1.7rem; height: 1.7rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    flex: none;
+  }
+  .eyebrow .tag {
+    font-family: 'Fraunces', serif;
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 4.2vw, 2.05rem);
+    line-height: 1.16;
+    margin: 0 0 0.9rem;
+  }
+  p { margin-bottom: 1.15rem; }
+  p.drop::first-letter {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    float: left;
+    font-size: 3.2rem;
+    line-height: 0.8;
+    padding: 0.3rem 0.6rem 0 0;
+    color: var(--terracotta);
+  }
+  em { color: var(--ink); font-style: italic; }
+  a { color: var(--terracotta); }
+
+  .pull {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.35rem;
+    line-height: 1.3;
+    color: var(--ink);
+    border-left: 4px solid var(--terracotta);
+    padding: 0.2rem 0 0.2rem 1.2rem;
+    margin: 1.8rem 0;
+    max-width: none;
+  }
+
+  /* Timeline of reinterpretations */
+  .reusos {
+    border: 1px solid var(--line);
+    background: var(--card);
+    border-radius: 6px;
+    padding: 1.2rem 1.4rem 0.4rem;
+    margin: 1.8rem 0;
+  }
+  .reusos h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.9rem;
+  }
+  .reuso {
+    display: grid;
+    grid-template-columns: 4.2rem 1fr;
+    gap: 0.9rem;
+    padding-bottom: 0.9rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .reusos .reuso:last-child { border-bottom: none; }
+  .reuso .yr {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--plum);
+    font-size: 0.95rem;
+  }
+  .reuso .qt { font-size: 0.96rem; }
+  .reuso .qt b { font-family: 'Fraunces', serif; }
+
+  /* Sources */
+  .fuentes {
+    margin-top: 3rem;
+    padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+    font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--muted);
+    text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    opacity: 0.85;
+    text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 2.2rem 1rem 4rem; }
+    .reuso { grid-template-columns: 3.4rem 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <div class="kicker">Café con Claude · América a los 250</div>
+    <h1>La declaración ausente</h1>
+    <p class="subtitle">En su cumpleaños número 250, Estados Unidos hace más ruido que nunca y olvida el texto que lo fundó. Por qué la Declaración de Independencia sigue viva justo cuando parece invisible.</p>
+    <p class="sourceline">A partir del ensayo de Ted Widmer en <em>The Guardian</em>, «“All men are created equal”: America has lost its values. It’s time to go back to the founding text» (4 de julio de 2026). Esta página no reproduce el texto: lo traduce, lo ordena y lo comenta. <a href="https://www.theguardian.com/us-news" target="_blank" rel="noopener">Leer el original en The Guardian →</a></p>
+
+    <div class="thesis">
+      <p><span class="lead">La tesis, en una línea:</span> el 4 de julio de 2026 el país celebra con desfiles, cazas y camiones de la libertad, mientras el documento que le dio origen brilla por su ausencia. Y sin embargo —dice Widmer— esa vieja hoja de pergamino sigue siendo el instrumento de cambio más poderoso que Estados Unidos haya escrito jamás.</p>
+    </div>
+  </header>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">I</span><span class="tag">El invitado que falta</span></div>
+    <h2>El estruendo y la hoja olvidada</h2>
+    <p class="drop">Es el cumpleaños de Estados Unidos y va a sonar fuerte. Fuegos artificiales que parten los oídos, la Gran Feria Estatal Americana con «espectaculares pasadas» de cazas y bombarderos furtivos, seis «Camiones de la Libertad» de dieciocho ruedas repartiendo historia-ligera por los estados rojos, y una carrera de autos dejando marcas de neumático alrededor del National Mall. Va a ser un verano ruidoso.</p>
+    <p>Pero hay un invitado que, curiosamente, no fue convocado a su propia fiesta: la Declaración de Independencia, la razón misma de la reunión, ha estado extrañamente ausente de todos los preparativos. Es raro, para un documento que —sin exagerar— reescribió la historia del mundo. Ese es el punto de partida de Widmer: cuanto más alto suena la celebración, más delgado se vuelve el texto que debería sostenerla.</p>
+    <p class="pull">Un país que grita su fundación en cada altavoz, y sin embargo no abre el papel donde la escribió.</p>
+  </section>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">II</span><span class="tag">Unas semanas de verano</span></div>
+    <h2>Cómo se escribió, a las apuradas y a los codazos</h2>
+    <p>Las palabras aparecieron casi por milagro, en pocas semanas, mientras una armada británica cruzaba el Atlántico para acallar toda charla de independencia. El 11 de junio de 1776 el Congreso Continental nombró un comité de cinco; el 4 de julio aprobó el resultado. Thomas Jefferson fue el autor principal, pero recibió correcciones de sus colegas y del propio Congreso. Como buen escritor, se ofendió: sintió que le habían «destrozado» el borrador. En realidad —como casi siempre— lo mejoraron.</p>
+    <p>No era fácil poner de acuerdo a 56 delegados que distaban de estar tan unidos como sugería la palabra «unidos» (quizá por eso «united» quedó escrita en letras diminutas en el encabezado). La esclavitud los dividía incluso mientras intentaban forjar una causa común. Y había contradicciones más pequeñas y humanas: George Read votó <em>en contra</em> de la independencia… y firmó la declaración de todos modos. Ese patrón no ha cambiado nunca: el documento ha significado cosas distintas para gente distinta, en los dos extremos del espectro.</p>
+    <p>Jefferson lo redactó sobre un escritorio plegable de su propio diseño —hoy en el Smithsonian— que se abría de varias maneras y escondía cámaras internas que no se veían a primera vista. El mueble es una buena metáfora del texto que produjo.</p>
+  </section>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">III</span><span class="tag">Un mueble con cámaras secretas</span></div>
+    <h2>Varias cosas a la vez</h2>
+    <p>La Declaración es, al mismo tiempo, tres documentos: un himno encendido a los derechos humanos, una tesis filosófica sobre la capacidad de un pueblo para gobernarse, y una lista de quejas contra un rey inepto. Escrita en un lenguaje deliberadamente sereno, escondía un argumento revolucionario.</p>
+    <p>Ninguna nación se había fundado sobre una declaración tan aspiracional —ni sobre declaración alguna—. En los demás países el poder fluía siempre de arriba hacia abajo; aquí, por primera vez, se afirmaba que fluía <em>del pueblo hacia sus gobernantes</em>. John Adams tenía razón al llamarlo «revolución»: no se refería solo a la guerra, sino a un vuelco intelectual, un cambio de mar de fondo en la manera de imaginar la autoridad.</p>
+    <p>Durante los trece años siguientes, mientras montaban su gobierno, los estadounidenses dejaron la Declaración en segundo plano. Pero volvieron a ella una y otra vez, cada vez que necesitaron medir sus ideales más altos contra la realidad de una nación imperfecta.</p>
+  </section>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">IV</span><span class="tag">La frase indomable</span></div>
+    <h2>«Todos los hombres son creados iguales»</h2>
+    <p>De todas las frases, esa fue la más potente —y la más difícil de domesticar—. Con la tinta todavía fresca, en 1776, un joven veterano mestizo llamado Lemuel Haynes escribió un ensayo sobre lo que la Declaración significaba para él; no se descubriría hasta 1983. James Forten, afroamericano, tenía nueve años cuando oyó la primera lectura pública del texto en Filadelfia, y dedicó su vida al abolicionismo. La Constitución, en cambio, inspiró mucho menos respeto entre los lectores negros: definía a las personas esclavizadas con un valor profundamente desigual, tres quintos de un ser humano.</p>
+    <p>Lo asombroso es que las mismas palabras servían para proyectos opuestos. En 1848, la convención de Seneca Falls reescribió la fórmula: «todos los hombres <em>y las mujeres</em> son creados iguales». En 1836, los texanos redactaron su propia versión para justificar la esclavitud; once años después, un grupo de afroamericanos que fundaba Liberia en la costa occidental de África escribió otra declaración que condenaba la esclavitud sin ambages. El mismo molde, dos destinos contrarios.</p>
+
+    <div class="reusos">
+      <h3>El pergamino reclamado</h3>
+      <div class="reuso"><span class="yr">1848</span><span class="qt"><b>Seneca Falls</b> — «todos los hombres y las mujeres son creados iguales».</span></div>
+      <div class="reuso"><span class="yr">1863</span><span class="qt"><b>Lincoln</b> — Gettysburg: las «proposiciones» inconclusas por fin se vuelven reales, para <em>todos</em>.</span></div>
+      <div class="reuso"><span class="yr">1963</span><span class="qt"><b>King</b> — un «pagaré» devuelto por el banco: «fondos insuficientes».</span></div>
+      <div class="reuso"><span class="yr">2010</span><span class="qt"><b>Tea Party</b> — contra «la tiranía del gobierno y los aristócratas autoproclamados».</span></div>
+      <div class="reuso"><span class="yr">2015</span><span class="qt"><b>Obama</b> — la cita en el Rose Garden, el día de <em>Obergefell</em>.</span></div>
+    </div>
+  </section>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">V</span><span class="tag">La manzana de oro</span></div>
+    <h2>Lincoln lee más hondo</h2>
+    <p>Al acercarse la guerra civil, ambos bandos codiciaban el aura patriótica de la Declaración y reclamaban distintos pasajes. Podía usarse para defender el derecho a la secesión, como hizo Jefferson Davis, o la igualdad humana, como hizo Abraham Lincoln. En todo sentido, la lectura de Lincoln era más profunda: llevaba años estudiando el texto. Lo llamó un «cordón eléctrico» que ataba a los estadounidenses, un «faro», una «fuente» de la que beber.</p>
+    <p>En una nota que se escribió a sí mismo, poco antes de asumir, tomó prestada una imagen bíblica: la Declaración era una «manzana de oro» enmarcada por un «cuadro de plata» —la Constitución—. Ambas valiosas; pero para Lincoln la manzana de oro, la idea central de la igualdad, era lo que definía a Estados Unidos. En Gettysburg volvió a esos temas y sugirió que las «proposiciones» inconclusas por fin se hacían reales para <em>todos</em>. «Todos» era, para él, una palabra esencial: no admitía evasivas de abogado.</p>
+    <p class="pull">La Declaración, una manzana de oro; la Constitución, el cuadro de plata que la enmarca.</p>
+    <p>La guerra fortaleció ese argumento, y las enmiendas 13, 14 y 15 le dieron un fundamento legal casi inexpugnable —incluida la ciudadanía por nacimiento, protegida por la enmienda 14 pese a las protestas de Trump—. Nacer en Estados Unidos era gozar de ciudadanía plena, como la Declaración había insinuado sin llegar a confirmarlo. No por casualidad, esa enmienda empieza con la palabra «todos».</p>
+  </section>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">VI</span><span class="tag">Un cheque sin fondos</span></div>
+    <h2>El pergamino sigue hablándoles a todos</h2>
+    <p>Tras la guerra, el texto siguió interpelando a los pueblos en pugna del país. La izquierda lo leyó a su manera: líderes obreros e inmigrantes que querían que la «búsqueda de la felicidad» incluyera cosas concretas —empleo, vivienda, salud—. Eugene Debs, eterno candidato socialista, lo dijo sin rodeos: «Me gusta el 4 de julio. Respira un espíritu de revolución». Durante la Segunda Guerra Mundial, Franklin D. Roosevelt lo tradujo de nuevo y convirtió la Declaración en una espada retórica contra Hitler: sus derechos —que él resumió en «cuatro libertades»— pertenecían a toda la humanidad.</p>
+    <p>Pero cuando la guerra terminaba y los soldados negros volvían a un país todavía segregado, la Declaración cobró una relevancia nueva. A lo largo del movimiento de derechos civiles —de <em>Brown v. Board</em> a la Ley de Derecho al Voto—, sus palabras estaban disponibles para cualquiera que quisiera señalar el credo fundacional y demostrar que la igualdad seguía sin cumplirse. Ese fue el corazón del discurso incandescente de King en 1963: la Declaración era un «pagaré» que había vuelto marcado como «fondos insuficientes». En su última intervención, en 1968, le dijo al país una frase que resume todo: «Sé fiel a lo que dijiste en el papel».</p>
+    <p class="pull">Un pagaré devuelto por el banco, con el sello: fondos insuficientes.</p>
+    <p>King no tenía el monopolio del texto: los Panteras Negras reimprimieron su propia versión, y medio siglo después Barack Obama lo citó en el Rose Garden el día en que <em>Obergefell v. Hodges</em> consagró el matrimonio igualitario en 2015. La misma hoja, otra vez, para otra causa.</p>
+  </section>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">VII</span><span class="tag">La derecha también reclama</span></div>
+    <h2>El mismo texto, del otro lado</h2>
+    <p>Los conservadores nunca soltaron el documento, y sostuvieron que también ellos eran herederos de Lincoln. De Theodore Roosevelt a Calvin Coolidge, los presidentes tradujeron sus palabras en himnos a la patria, la libre empresa y el libre ejercicio de la religión. Más tarde, el movimiento antiaborto gravitó naturalmente hacia «la vida, la libertad y la búsqueda de la felicidad»; y cada vez que un grupo de extrema derecha quiso atacar al gobierno federal como a un régimen despótico, encontró en la Declaración munición de sobra. Algo de eso late en la versión que redactó el Tea Party en 2010, contra «la tiranía del gobierno y los aristócratas autoproclamados y elitistas». El 6 de enero de 2021, muchos «patriotas» insistieron en que era «1776» otra vez.</p>
+    <p>No todos los intérpretes han sido predecibles. Ronald Reagan, conservador por donde se lo mire, estiró el texto en 1986 de maneras interesantes. En el fin de semana del 4 de julio dio dos discursos en la bahía de Nueva York. El primero, por el centenario de la Estatua de la Libertad, celebró una América inclusiva «donde las viejas rivalidades podían dejarse atrás y gente de toda nación podía vivir junta como una sola» —no muy lejos de su compatriota irlandés-americano John F. Kennedy, otro defensor de los inmigrantes—. Al día siguiente, ante los marineros del USS John F. Kennedy, advirtió algo que hoy resuena distinto.</p>
+    <p class="pull">«El único peligro permanente para la esperanza que es América viene de adentro.» — Reagan, 4 de julio de 1986</p>
+  </section>
+
+  <section class="revela">
+    <div class="eyebrow"><span class="num">VIII</span><span class="tag">Roma dilapidada</span></div>
+    <h2>Celebrar la historia sin mirarla</h2>
+    <p>El 250 es, sin duda, un momento de autocelebración. Pero los 4 de julio más honestos del pasado incluyeron también una pausa para el autoexamen sin parpadear. Eso será difícil entre tanto ruido rival: el ciclo de noticias, las aventuras en el exterior, el estruendo de peleas de jaula y carreras de autos. A la lista de distracciones doradas se suman un arco de 76 metros que llega a Washington en honor a los años transcurridos, y un fondo discrecional fijado en exactamente 1.776 millones de dólares, como si la cifra lo volviera patriótico.</p>
+    <p>Son conmemoraciones de «historia» que en realidad son anti-históricas. Traen a la memoria otro gran logro de 1776: la <em>Historia de la decadencia y caída del Imperio romano</em> de Edward Gibbon, que describía la decadencia mucho después del apogeo de la república. No fue un momento noble: los romanos profanaban la memoria de sus ancestros derribando sus mejores edificios y reutilizando las piedras para villas privadas y monumentos a la vanidad. Roma quedó, literalmente, «dilapidada» —una palabra que significa dispersar las piedras—.</p>
+    <p>Los fundadores, con sabiduría, previeron que quizá haríamos lo posible por olvidar su obra. John Adams anticipó que un gobierno futuro podría hallar incómodo el estudio de la historia estadounidense si no le gustaban sus verdades inconvenientes: «el poder arbitrario, dondequiera que haya residido, nunca ha dejado de destruir todos los registros, memoriales e historias que no le gustaban». Pero Lincoln entendió que el viejo pergamino tiene una fuerza propia, que no se borra con facilidad. Sigue vivo; es una fuente a la que volver cuando se tiene sed. Lejos de ser una reliquia, se desenrolla un poco más con cada generación, como un «reproche y una piedra de tropiezo» permanente para la tiranía.</p>
+    <p class="pull">No es una reliquia: es un pergamino que se desenrolla un poco más con cada generación.</p>
+    <p>Por tentador que sea disfrutar de los fuegos artificiales, sería una oportunidad perdida ignorar el sentido profundo de la Declaración. La consigna, otra vez, es la de King: <strong>sé fiel a lo que dijiste en el papel</strong>.</p>
+  </section>
+
+  <div class="fuentes revela">
+    <strong>Fuentes:</strong> Ted Widmer, «“All men are created equal”: America has lost its values. It’s time to go back to the founding text», <a href="https://www.theguardian.com/us-news" target="_blank" rel="noopener">The Guardian</a> (4 jul 2026) · Página hermana en esta sala: <a href="el-mito-vaciado.html">El mito vaciado</a> · Textos citados: la Declaración de Independencia (1776), el discurso de Gettysburg (1863) y el discurso de King en la Marcha sobre Washington (1963).
+  </div>
+
+  <footer>Café con Claude · América a los 250 · Lectura del ensayo de Ted Widmer · 4 de julio de 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>

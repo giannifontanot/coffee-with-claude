@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--
+  Café con Claude — article template.
+  Replace every {{PLACEHOLDER}}. Delete the parts you don't need (sources box,
+  progress bar, etc.) — they are all optional except the back button and the
+  model note near the bottom. Keep the two non-negotiables:
+    1. The top back control runs history.back() (it is a <button>, not an <a href>).
+    2. The <p class="model-note"> at the bottom states the model + effort used.
+-->
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.65;
+    padding: 3rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional — delete this rule and its <div>/JS to remove) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  .wrap { max-width: 820px; margin: 0 auto; }
+
+  /* Back control — styled like the classic .home-link but it is a <button>. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px;
+    margin-bottom: 2.2rem;
+    cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem);
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 34em;
+  }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; }
+  section h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    line-height: 1.15;
+    margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; max-width: 38em; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem;
+    padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+    font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* Small colophon stating which model + effort produced the page. */
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    opacity: 0.85;
+    text-align: center;
+    max-width: none;
+  }
+
+  /* Reveal-on-scroll (optional) */
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 2.2rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← {{BACK_LABEL}}
+  </button>
+
+  <header>
+    <span class="eyebrow">{{EYEBROW}}</span>
+    <h1>{{H1}}</h1>
+    <p class="subtitle">{{SUBTITLE}}</p>
+  </header>
+
+  <main>
+    {{BODY}}
+  </main>
+
+  <div class="fuentes revela">
+    <strong>Fuentes:</strong> {{SOURCES}}
+  </div>
+
+  <footer>{{FOOTER_LINE}}
+    <p class="model-note">{{MODEL_NOTE}}</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
