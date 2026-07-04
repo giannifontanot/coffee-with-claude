@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El retiro que cabe en un día · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --paper: #fdfaf3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.72;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 4px; width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 60;
+    transition: width 0.08s linear;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: 230px;
+    padding: 2.6rem 1.4rem 2rem 1.8rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    overflow-y: auto;
+    z-index: 50;
+  }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand a { color: var(--ink); text-decoration: none; }
+  nav.sidebar .brand a:hover { color: var(--terracotta); }
+  nav.sidebar .serie {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--terracotta);
+    margin-bottom: 2rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar li { margin-bottom: 0.85rem; }
+  nav.sidebar a.navlink {
+    display: flex; gap: 0.55rem; align-items: baseline;
+    color: #6a5b48; text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar a.navlink .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    min-width: 1.6em;
+    color: var(--amber);
+  }
+  nav.sidebar a.navlink:hover { color: var(--ink); }
+  nav.sidebar a.navlink.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar a.navlink.active .num { color: var(--terracotta); }
+
+  /* ---------- Hamburguesa móvil ---------- */
+  #menu-btn {
+    display: none;
+    position: fixed; top: 0.9rem; right: 0.9rem; z-index: 70;
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 8px; padding: 0.5rem 0.7rem;
+    font-family: 'Fraunces', serif; font-size: 0.9rem;
+    cursor: pointer; color: var(--ink);
+    box-shadow: 0 2px 8px rgba(43,33,24,0.08);
+  }
+
+  /* ---------- Contenido ---------- */
+  main {
+    margin-left: 230px;
+    padding: 3.4rem 1.6rem 5rem;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .home-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin-bottom: 2.2rem;
+  }
+  .home-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header.hero { margin-bottom: 3.4rem; }
+  .kicker {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--amber);
+    margin-bottom: 0.7rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5.4vw, 3rem);
+    line-height: 1.12;
+    margin-bottom: 0.9rem;
+  }
+  .subtitle {
+    font-style: italic;
+    color: #6a5b48;
+    font-size: 1.12rem;
+    max-width: 36rem;
+  }
+
+  section { margin-bottom: 3.6rem; scroll-margin-top: 1.8rem; }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 1.2rem;
+    display: flex; gap: 0.6rem; align-items: baseline;
+  }
+  h2 .num {
+    color: var(--amber);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.12rem;
+    margin: 1.8rem 0 0.7rem;
+  }
+  p { margin-bottom: 1.05rem; }
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+
+  a.cite { color: var(--steel); text-decoration: none; border-bottom: 1px dotted var(--steel); }
+  a.cite:hover { color: var(--terracotta); border-color: var(--terracotta); }
+  .fuentes {
+    font-size: 0.86rem;
+    color: #6a5b48;
+    margin-top: 0.4rem;
+    padding-top: 0.5rem;
+    border-top: 1px dotted var(--line);
+  }
+  .fuentes span.lbl {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 0.5rem;
+    color: var(--amber);
+  }
+
+  /* ---------- Diálogo del panel ---------- */
+  .dialogo { margin: 1.4rem 0 1.6rem; }
+  .voz {
+    margin-bottom: 1.25rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--line);
+  }
+  .voz .quien {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.86rem;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+  .voz p { margin-bottom: 0.5rem; }
+  .voz p:last-child { margin-bottom: 0; }
+  .voz.exegeta { border-color: var(--terracotta); }
+  .voz.exegeta .quien { color: var(--terracotta); }
+  .voz.ingeniera { border-color: var(--olive); }
+  .voz.ingeniera .quien { color: var(--olive); }
+  .voz.provocador { border-color: var(--plum); }
+  .voz.provocador .quien { color: var(--plum); }
+  .voz.disenadora { border-color: var(--amber); }
+  .voz.disenadora .quien { color: var(--amber); }
+  .voz.metodologo { border-color: var(--steel); }
+  .voz.metodologo .quien { color: var(--steel); }
+
+  /* ---------- Cita bíblica ---------- */
+  blockquote.biblia {
+    margin: 1.6rem 0;
+    padding: 1.2rem 1.4rem;
+    background: var(--paper);
+    border-left: 4px solid var(--terracotta);
+    font-style: italic;
+    font-size: 1.06rem;
+  }
+  blockquote.biblia .ref {
+    display: block;
+    margin-top: 0.6rem;
+    font-style: normal;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+  }
+
+  /* ---------- Persianas ---------- */
+  details.persiana {
+    margin: 1.4rem 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  details.persiana summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.95rem 1.2rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  details.persiana summary::-webkit-details-marker { display: none; }
+  details.persiana summary:hover { background: rgba(201,138,45,0.08); }
+  details.persiana summary .chev {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.34,1.4,0.64,1);
+    color: var(--terracotta);
+    font-size: 0.8rem;
+  }
+  details.persiana[open] summary .chev { transform: rotate(90deg); }
+  details.persiana .contenido {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  details.persiana[open] .contenido { grid-template-rows: 1fr; }
+  details.persiana .contenido > div {
+    overflow: hidden;
+    padding: 0 1.2rem;
+  }
+  details.persiana[open] .contenido > div { padding: 0.2rem 1.2rem 1.2rem; }
+
+  /* ---------- Ciclo CML ---------- */
+  .ciclo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin: 1.6rem 0;
+  }
+  .ciclo .paso {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--olive);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+  }
+  .ciclo .paso:nth-child(2) { border-top-color: var(--amber); }
+  .ciclo .paso:nth-child(3) { border-top-color: var(--plum); }
+  .ciclo .paso b {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /* ---------- Recorrido del día (firma de la página) ---------- */
+  .recorrido { margin: 2rem 0; position: relative; }
+  .recorrido::before {
+    content: '';
+    position: absolute; left: 0.62rem; top: 0.6rem; bottom: 0.6rem;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom, var(--amber) 0 6px, transparent 6px 12px);
+  }
+  .tramo {
+    position: relative;
+    padding: 0 0 1.7rem 2.3rem;
+  }
+  .tramo:last-child { padding-bottom: 0; }
+  .tramo::before {
+    content: '';
+    position: absolute; left: 0; top: 0.35rem;
+    width: 1.3rem; height: 1.3rem;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 3px solid var(--olive);
+  }
+  .tramo.m1::before { border-color: var(--olive); }
+  .tramo.m2::before { border-color: var(--terracotta); }
+  .tramo.m3::before { border-color: var(--plum); }
+  .tramo.pausa::before { border-color: var(--amber); border-style: dashed; }
+  .tramo .hora {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--amber);
+    text-transform: uppercase;
+  }
+  .tramo h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.08rem;
+    margin: 0.15rem 0 0.4rem;
+  }
+  .tramo p { font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .tramo .verso { font-style: italic; color: #6a5b48; font-size: 0.88rem; }
+
+  /* ---------- Tabla de métricas ---------- */
+  table.metricas { width: 100%; border-collapse: collapse; margin: 1.4rem 0; font-size: 0.93rem; }
+  table.metricas th {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em;
+    text-align: left; padding: 0.6rem 0.8rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  table.metricas td {
+    padding: 0.75rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.metricas tr:hover td { background: rgba(201,138,45,0.06); }
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    padding: 0.1rem 0.5rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tag.vanidad { background: rgba(110,74,110,0.14); color: var(--plum); }
+  .tag.accionable { background: rgba(107,122,63,0.16); color: var(--olive); }
+
+  /* ---------- Persiana semilla ---------- */
+  details.semilla {
+    margin: 2.4rem 0 0;
+    border: 2px solid var(--olive);
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--paper), rgba(107,122,63,0.06));
+    overflow: hidden;
+  }
+  details.semilla summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1.1rem 1.3rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--olive);
+    display: flex; align-items: center; gap: 0.7rem;
+    user-select: none;
+  }
+  details.semilla summary::-webkit-details-marker { display: none; }
+  details.semilla summary .brote {
+    display: inline-block;
+    transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  details.semilla[open] summary .brote { transform: rotate(360deg) scale(1.15); }
+  details.semilla .contenido {
+    display: grid; grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  details.semilla[open] .contenido { grid-template-rows: 1fr; }
+  details.semilla .contenido > div { overflow: hidden; padding: 0 1.3rem; }
+  details.semilla[open] .contenido > div { padding: 0.2rem 1.3rem 1.4rem; }
+  .dias { list-style: none; margin: 0.8rem 0 0.4rem; }
+  .dias li {
+    display: flex; gap: 0.8rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px dotted var(--line);
+    font-size: 0.95rem;
+    align-items: baseline;
+  }
+  .dias li:last-child { border-bottom: none; }
+  .dias .d {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--olive);
+    min-width: 3.4rem;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  footer {
+    margin-left: 230px;
+    padding: 0 1.6rem 3rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6a5b48;
+    font-style: italic;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+
+  @media (max-width: 900px) {
+    nav.sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      width: 260px;
+      box-shadow: 4px 0 20px rgba(43,33,24,0.15);
+    }
+    nav.sidebar.open { transform: translateX(0); }
+    #menu-btn { display: block; }
+    main, footer { margin-left: 0; }
+    .ciclo { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="menu-btn" aria-label="Abrir menú">☰ Índice</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand"><a href="https://giannifontanot.github.io/thread-learning-notes/">Café con Claude</a></div>
+  <div class="serie">La Red es la Iglesia</div>
+  <ol>
+    <li><a class="navlink" href="#s1"><span class="num">I</span> La mesa se sirve</a></li>
+    <li><a class="navlink" href="#s2"><span class="num">II</span> El texto: la bisagra de Marcos</a></li>
+    <li><a class="navlink" href="#s3"><span class="num">III</span> MVP: la herramienta honesta</a></li>
+    <li><a class="navlink" href="#s4"><span class="num">IV</span> Las hipótesis del retiro</a></li>
+    <li><a class="navlink" href="#s5"><span class="num">V</span> El diseño del día</a></li>
+    <li><a class="navlink" href="#s6"><span class="num">VI</span> Medir sin profanar</a></li>
+    <li><a class="navlink" href="#s7"><span class="num">VII</span> Pivotar o perseverar</a></li>
+    <li><a class="navlink" href="#semilla"><span class="num">🌱</span> La semilla de siete días</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+  <a class="home-link" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+
+  <header class="hero">
+    <div class="kicker">El Panel Pregunta · Respuesta del Metodólogo</div>
+    <h1>El retiro que cabe en un día</h1>
+    <p class="subtitle">Marcos 8:27–38 diseñado con MVP thinking: dos preguntas de Jesús, una caminata, una decisión — y la humildad de medir la tierra, no el viento.</p>
+  </header>
+
+  <!-- ============ I ============ -->
+  <section id="s1">
+    <h2><span class="num">I</span> La mesa se sirve</h2>
+    <div class="dialogo">
+      <div class="voz metodologo">
+        <span class="quien">📋 El Metodólogo PDCA</span>
+        <p>Yo hice la pregunta, así que abro yo. La trampa clásica de los retiros es construir la catedral antes de validar la capilla: cuarenta personas, tres predicadores invitados, sonido, camisetas, playlist... y al final nadie sabe si algo cambió en alguien. Propongo lo contrario. Un retiro-MVP: ocho a doce personas, un facilitador, un local prestado, cero diapositivas. La versión más pequeña que todavía puede producir el encuentro que buscamos — y que nos deja <em>aprender</em>.</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="quien">🏛️ El Exégeta</span>
+        <p>Y el texto coopera de una manera casi sospechosa. Marcos 8:27–38 ya viene estructurado en tres movimientos: <em>¿quién dice la gente que soy yo?</em>, <em>¿y ustedes, quién dicen que soy?</em>, y <em>cargue con su cruz y sígame</em>. Ahí está el horario del día. No hay que inventar nada — solo caminar el pasaje.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="quien">🎭 El Provocador</span>
+        <p>Objeción antes de que se abracen: no se puede hacer A/B testing del Espíritu Santo. Si la métrica del día es "almas transformadas por hora", ya profanaron el retiro antes de servir el café.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="quien">📋 El Metodólogo PDCA</span>
+        <p>De acuerdo. Por eso la regla de oro de toda esta página: <strong>medimos el diseño, no el alma. La tierra, no el viento.</strong> La semilla crece sola de noche — eso ya lo estudiamos en Marcos 4 — pero el sembrador sí decide dónde siembra, a qué hora, y con quién. Eso sí se puede iterar sin blasfemar.</p>
+      </div>
+      <div class="voz disenadora">
+        <span class="quien">🎨 La Diseñadora</span>
+        <p>Y yo solo pido una cosa: que el horario no parezca agenda corporativa. Un retiro basado en un pasaje que ocurre <em>en el camino</em> merece verse como un recorrido, no como un calendario de Outlook.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ II ============ -->
+  <section id="s2">
+    <h2><span class="num">II</span> El texto: la bisagra de Marcos</h2>
+    <p>Marcos 8:27–38 no es un pasaje cualquiera: es el punto de giro estructural de todo el evangelio. Hasta aquí, la pregunta implícita ha sido <em>¿quién es este hombre?</em>; a partir de aquí, la pregunta es <em>¿qué clase de Mesías es, y qué cuesta seguirlo?</em> La escena ocurre camino a Cesarea de Filipo, una ciudad romana al norte del lago de Galilea, construida en honor al César — y ese detalle no es decorativo: la confesión de que Jesús es el Cristo se pronuncia precisamente a la sombra del poder imperial, donde declarar otro señorío tenía peso real para los primeros lectores romanos de Marcos.</p>
+
+    <blockquote class="biblia">
+      «Y ustedes, ¿quién dicen que soy?» Pedro le respondió: «Tú eres el Mesías.»
+      <span class="ref">Marcos 8:29 · Dios Habla Hoy</span>
+    </blockquote>
+
+    <p>El pasaje se despliega en tres movimientos que el retiro va a heredar tal cual. Primero (vv. 27–30), Jesús pregunta por las opiniones ajenas — Juan el Bautista, Elías, uno de los profetas — y luego gira la pregunta hacia los suyos. Segundo (vv. 31–33), inmediatamente después de la confesión, Jesús anuncia por primera vez su sufrimiento y muerte; Pedro lo reprende, y descubrimos que su visión, aunque real, estaba distorsionada por su concepto previo de lo que un Mesías debía ser. Tercero (vv. 34–38), Jesús amplía la audiencia a la multitud y pone el precio sobre la mesa: negarse a sí mismo, cargar la cruz, perder la vida para ganarla.</p>
+
+    <details class="persiana">
+      <summary><span class="chev">▶</span> El ciego de Betsaida: la sanidad en dos etapas que precede al pasaje</summary>
+      <div class="contenido"><div>
+        <p>Justo antes de esta escena, Marcos coloca la única sanidad en dos etapas de todo el evangelio (8:22–26): un ciego que primero ve a la gente "como árboles que caminan" y solo después ve con claridad. Los comentaristas llevan siglos notando la jugada: Pedro es ese ciego a medio sanar. Ve que Jesús es el Mesías — primera etapa — pero lo ve borroso, como árbol que camina, porque todavía imagina un Mesías sin cruz. La segunda etapa de su vista tardará hasta después de la resurrección.</p>
+        <p>Para el diseño del retiro esto importa: <strong>no esperamos que un día produzca visión completa.</strong> Esperamos la primera etapa — que alguien pase de repetir opiniones ajenas a decir algo propio, aunque salga borroso. El MVP no promete el milagro entero; abre el ciclo.</p>
+      </div></div>
+    </details>
+
+    <p class="fuentes"><span class="lbl">Fuentes</span>
+      <a class="cite" href="https://www.workingpreacher.org/commentaries/revised-common-lectionary/ordinary-24-2/comentario-del-san-marcos-827-38">Working Preacher · Mc 8:27–38</a> ·
+      <a class="cite" href="https://www.workingpreacher.org/commentaries/revised-common-lectionary/second-sunday-in-lent-2/comentario-del-san-marcos-831-38-2">Working Preacher · Mc 8:31–38</a> ·
+      <a class="cite" href="https://sermonwriter.com/espanol-exegesis/marcos-827-38/">Sermon Writer</a> ·
+      <a class="cite" href="https://www.escuelabiblica.com/estudios-biblicos-1.php?id=53">Escuela Bíblica</a>
+    </p>
+  </section>
+
+  <!-- ============ III ============ -->
+  <section id="s3">
+    <h2><span class="num">III</span> MVP: la herramienta honesta</h2>
+    <div class="dialogo">
+      <div class="voz metodologo">
+        <span class="quien">📋 El Metodólogo PDCA</span>
+        <p>Aclaremos el término, porque se abusa de él. Para Eric Ries, el MVP <em>no</em> es el producto más pequeño imaginable: es la forma más rápida de atravesar el ciclo Construir–Medir–Aprender con el mínimo esfuerzo. El corazón del método no es la pequeñez — es el <strong>aprendizaje validado</strong>: en vez de perfeccionar durante meses algo que nadie pidió, formulas tus supuestos como hipótesis, construyes lo mínimo que las pone a prueba, y dejas que la realidad conteste.</p>
+      </div>
+    </div>
+
+    <div class="ciclo">
+      <div class="paso"><b>Construir</b>La versión mínima que puede poner a prueba la hipótesis. En nuestro caso: un solo día, un solo pasaje, un grupo pequeño.</div>
+      <div class="paso"><b>Medir</b>Métricas accionables, no de vanidad. Observar conducta antes que pedir opiniones: la gente no siempre hace lo que dice.</div>
+      <div class="paso"><b>Aprender</b>¿La hipótesis se validó o no? Con esa respuesta se decide: pivotar (cambiar el diseño) o perseverar (repetirlo y afinarlo).</div>
+    </div>
+
+    <p>Dos ideas más del método nos van a servir. Primera: los <em>lotes pequeños</em> — cuanto más chico el experimento, más rápido el aprendizaje y menor el costo del error. Segunda: la distinción entre métricas de vanidad (números que lucen bien pero no informan ninguna decisión) y métricas accionables (las que demuestran causa y efecto y te dicen qué hacer después). Un retiro con 200 asistentes felices es una métrica de vanidad si no sabemos qué pasó el lunes siguiente.</p>
+
+    <p class="fuentes"><span class="lbl">Fuentes</span>
+      <a class="cite" href="https://theleanstartup.com/principles">The Lean Startup · Principios</a> ·
+      <a class="cite" href="https://www.strategyzer.com/library/dont-build-when-you-build-measure-learn">Strategyzer</a> ·
+      <a class="cite" href="https://www.verticode.co.uk/blog/build-measure-learn-feedback-loop">Verticode</a> ·
+      <a class="cite" href="https://userpilot.com/blog/build-measure-learn/">Userpilot</a>
+    </p>
+  </section>
+
+  <!-- ============ IV ============ -->
+  <section id="s4">
+    <h2><span class="num">IV</span> Las hipótesis del retiro</h2>
+    <p>Todo MVP empieza confesando sus supuestos de fe — Ries los llama, con ironía involuntariamente teológica, <em>leap-of-faith assumptions</em>. Los nuestros, puestos por escrito antes de construir nada:</p>
+
+    <div class="dialogo">
+      <div class="voz ingeniera">
+        <span class="quien">🕸️ La Ingeniera de Sistemas</span>
+        <p><strong>Hipótesis de valor:</strong> un día estructurado alrededor de las dos preguntas de Jesús — ¿quién dice la gente? / ¿y tú, quién dices? — produce en cada participante <em>una decisión concreta y costosa</em>, no solo un sentimiento cálido. Las dos preguntas ya son el instrumento: la primera recoge las señales del sistema externo (familia, trabajo, algoritmo); la segunda obliga al nodo a emitir señal propia.</p>
+      </div>
+      <div class="voz ingeniera">
+        <span class="quien">🕸️ La Ingeniera de Sistemas</span>
+        <p><strong>Hipótesis de crecimiento:</strong> si el día realmente vale, los participantes traerán a alguien más a la siguiente iteración sin que se lo pidamos. Invitación orgánica, no marketing. En términos de red: el retiro se propaga por los bordes de confianza que ya existen, igual que el evangelio de Marcos se propagó.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="quien">🎭 El Provocador</span>
+        <p>Insisto en mi objeción, ahora con más filo: ¿no es esto instrumentalizar la gracia? ¿Convertir el encuentro con Dios en un embudo de conversión con KPIs?</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="quien">🏛️ El Exégeta</span>
+        <p>Sería, si midiéramos a Dios. Pero mira lo que hace el propio Jesús en el pasaje: <em>pregunta y escucha la respuesta</em>. Primero recoge datos — ¿qué dice la gente? — y después lanza la pregunta que valida o invalida todo lo anterior. Hasta ordena el silencio mesiánico en el v. 30, que es su manera de decir: esta versión del mensaje todavía no está lista para escalar. Si eso no es disciplina de despliegue, no sé qué es.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="quien">📋 El Metodólogo PDCA</span>
+        <p>Y la salvaguarda queda escrita en piedra: <strong>las hipótesis hablan del diseño del día — horarios, preguntas, silencios, tamaño del grupo — jamás del valor espiritual de una persona.</strong> Si una decisión no sobrevive la semana, el que falló fue el diseño o el acompañamiento, no el alma del participante. Esa asimetría es innegociable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ V ============ -->
+  <section id="s5">
+    <h2><span class="num">V</span> El diseño del día</h2>
+    <p>Un solo pasaje, tres movimientos, y las prácticas más viejas del cristianismo — silencio, lectio divina, caminata, examen, diario — que curiosamente coinciden con lo que cualquier guía contemporánea de retiro de un día recomienda: pocos tiempos fuertes, una libreta para lo esencial, una pregunta-guía, y un cierre con decisión concreta y realista. Nuestro grupo: 8 a 12 personas. Nuestro equipamiento: Biblias, libretas, café, una canasta para los teléfonos.</p>
+
+    <div class="recorrido">
+      <div class="tramo pausa">
+        <div class="hora">8:00 · Llegada</div>
+        <h4>Café y canasta</h4>
+        <p>Bienvenida breve, café servido, teléfonos a la canasta. Se explica la única regla: silencio entre bloques, palabra solo donde el diseño la invita. Desde aquí, el día pertenece al pasaje.</p>
+      </div>
+      <div class="tramo m1">
+        <div class="hora">8:30 · Movimiento 1</div>
+        <h4>«¿Quién dice la gente que soy yo?»</h4>
+        <p>Lectio divina sobre Marcos 8:27–30, leída dos veces en voz alta. Luego, en la libreta y en silencio: <em>haz la lista de las voces que hoy definen quién eres tú</em> — jefe, familia, redes, algoritmo, la iglesia misma. Sin juzgar la lista todavía. Solo el censo.</p>
+        <p class="verso">La primera pregunta de Jesús es una encuesta. La honramos haciendo la nuestra.</p>
+      </div>
+      <div class="tramo pausa">
+        <div class="hora">10:00 · El camino</div>
+        <h4>Caminata en silencio</h4>
+        <p>Cuarenta y cinco minutos, solos, sin audífonos. El pasaje ocurre literalmente <em>en el camino</em> (v. 27): en Marcos la teología se hace caminando. Consigna única: rumiar la lista del censo mientras el cuerpo se mueve.</p>
+      </div>
+      <div class="tramo m2">
+        <div class="hora">11:00 · Movimiento 2</div>
+        <h4>«Y tú, ¿quién dices que soy?»</h4>
+        <p>Segunda lectio, mismo texto, pero ahora el peso cae sobre el v. 29. Ejercicio de escritura: <em>responde la pregunta en una sola frase, con palabras tuyas — prohibido el lenguaje prestado del catecismo o del coro.</em> Si sale borroso, como árboles que caminan, está bien: es la primera etapa.</p>
+      </div>
+      <div class="tramo pausa">
+        <div class="hora">12:30 · Mesa</div>
+        <h4>Almuerzo sencillo</h4>
+        <p>Se rompe el silencio: la mesa es el primer lugar donde la confesión se vuelve comunidad. Conversación libre, sin agenda. Pan compartido como en 8:1–9, que Marcos coloca páginas antes a propósito.</p>
+      </div>
+      <div class="tramo m3">
+        <div class="hora">14:00 · Movimiento 3</div>
+        <h4>«Cargue con su cruz y sígame»</h4>
+        <p>Lectura de 8:31–38. Ejercicio del costo: <em>nombra una decisión concreta que tu respuesta del mediodía te exige — qué vas a soltar, qué vas a cargar, y a partir de cuándo.</em> Una sola decisión. Costosa pero realista: un hábito, una reconciliación, un límite sano.</p>
+        <p class="verso">Pedro confesó bien y decidió mal. El retiro existe para que las dos cosas queden alineadas.</p>
+      </div>
+      <div class="tramo m3">
+        <div class="hora">15:30 · Círculo</div>
+        <h4>La confesión en voz alta</h4>
+        <p>Cada participante comparte exactamente dos frases: su respuesta a la pregunta y su decisión. Nadie comenta, nadie corrige, nadie aconseja. Solo se escucha y se recibe. El facilitador anota — con permiso — para el seguimiento del día 7.</p>
+      </div>
+      <div class="tramo pausa">
+        <div class="hora">16:30 · Cierre</div>
+        <h4>Bendición y semilla</h4>
+        <p>Oración de envío, entrega de la práctica de siete días (la semilla, al final de esta página), y devolución de teléfonos. El retiro no termina aquí: termina el lunes que viene, cuando sabremos qué decisiones siguen vivas.</p>
+      </div>
+    </div>
+
+    <details class="persiana">
+      <summary><span class="chev">▶</span> Por qué esto es un MVP y no un retiro recortado</summary>
+      <div class="contenido"><div>
+        <p><strong>Lote pequeño a propósito.</strong> Ocho a doce personas no es una limitación de presupuesto: es la escala donde el facilitador puede observar de verdad, acompañar el círculo sin micrófono, y dar seguimiento personal el día 7. Ries recomienda MVPs deliberadamente no escalables — procesos manuales, artesanales — porque estar cerca del "usuario" revela lo que ninguna encuesta revela.</p>
+        <p><strong>Cero producción.</strong> Sin diapositivas, sin banda, sin invitado famoso. Cada elemento que no contribuye directamente al aprendizaje que buscamos es desperdicio — y además contamina el experimento: si la gente sale conmovida, queremos saber si fue el pasaje o fue el show.</p>
+        <p><strong>Una sola hipótesis por iteración.</strong> Este diseño pone a prueba las dos preguntas como eje del día. No probamos a la vez el lugar, la música, la duración y el formato del círculo. Una variable fuerte, las demás quietas.</p>
+      </div></div>
+    </details>
+
+    <p class="fuentes"><span class="lbl">Fuentes</span>
+      <a class="cite" href="https://catholizare.com/retiro-silencio-inicio-de-ano/">Catholizare · Retiro de un día</a> ·
+      <a class="cite" href="https://es.aleteia.org/2016/08/10/5-pasos-para-hacer-un-retiro-tu-mismo/">Aleteia · Retiro casero</a> ·
+      <a class="cite" href="https://www.crcna.org/pastors-spiritual-vitality-toolkit/making-room-god?language=es">CRC · Creando espacio para Dios</a> ·
+      <a class="cite" href="https://www.strategyzer.com/library/dont-build-when-you-build-measure-learn">Strategyzer</a>
+    </p>
+  </section>
+
+  <!-- ============ VI ============ -->
+  <section id="s6">
+    <h2><span class="num">VI</span> Medir sin profanar</h2>
+    <p>Aquí es donde el Provocador tenía razón a medias, y donde la mayoría de los ministerios se rinde: o no miden nada ("eso es obra del Espíritu") o miden lo que no importa ("¡vinieron 200!"). El camino angosto es medir <em>conducta observable relacionada con el diseño</em>, con la regla lean de que las observaciones valen más que las opiniones — hay que aprender lo que la gente realmente hace, no lo que dice que hará.</p>
+
+    <table class="metricas">
+      <thead>
+        <tr><th>Métrica</th><th>Tipo</th><th>Qué decisión informa</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"Me encantó el retiro" en la encuesta de salida</td>
+          <td><span class="tag vanidad">Vanidad</span></td>
+          <td>Ninguna. Es el aplausómetro: sube el ánimo del equipo y no cambia nada del diseño.</td>
+        </tr>
+        <tr>
+          <td>Cuántos participantes escribieron una decisión concreta (no una intención vaga) al cierre</td>
+          <td><span class="tag accionable">Accionable</span></td>
+          <td>Si menos del 80% llega a decisión, el Movimiento 3 necesita rediseño: más tiempo, mejor consigna, o ejemplos.</td>
+        </tr>
+        <tr>
+          <td><strong>Decisiones vivas el día 7</strong>: cuántas siguen en pie cuando el lunes ya las atacó</td>
+          <td><span class="tag accionable">Accionable</span></td>
+          <td>La métrica estrella. Si las decisiones mueren en masa, el problema es el cierre o el acompañamiento — no el alma de nadie.</td>
+        </tr>
+        <tr>
+          <td>Respuesta a la pregunta del v. 29 escrita al registrarse vs. la del mediodía</td>
+          <td><span class="tag accionable">Accionable</span></td>
+          <td>Línea base y contraste: ¿el día movió a la gente del lenguaje prestado al lenguaje propio? Se compara texto, no espiritualidad.</td>
+        </tr>
+        <tr>
+          <td>Cuántos participantes traen a alguien a la siguiente iteración sin pedírselo</td>
+          <td><span class="tag accionable">Accionable</span></td>
+          <td>Valida la hipótesis de crecimiento: propagación orgánica por los bordes de confianza de la red.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <details class="persiana">
+      <summary><span class="chev">▶</span> El protocolo del día 7 y del día 30</summary>
+      <div class="contenido"><div>
+        <p><strong>Día 7 — mensaje personal</strong> (no encuesta masiva): «¿Sigue en pie tu decisión? ¿Qué pasó cuando la intentaste?» Dos preguntas, respuesta libre. Lo que se registra: viva / herida / muerta, y una nota de por qué.</p>
+        <p><strong>Día 30 — café de a dos.</strong> El facilitador toma un café con cada participante que quiera. Sin formulario. La conversación misma es la medición — y también es discipulado, que era el punto desde el principio. El "Check" del PDCA aplicado a formación no puede ser más frío que la formación misma.</p>
+        <p><strong>Lo que jamás se mide:</strong> lágrimas, intensidad emocional del círculo, elocuencia de las confesiones, "nivel espiritual" de nadie. La tierra, no el viento.</p>
+      </div></div>
+    </details>
+
+    <p class="fuentes"><span class="lbl">Fuentes</span>
+      <a class="cite" href="https://www.verticode.co.uk/blog/build-measure-learn-feedback-loop">Verticode · Medir conducta</a> ·
+      <a class="cite" href="https://www.summrize.com/books/the-lean-startup-summary">The Lean Startup · Métricas de vanidad</a> ·
+      <a class="cite" href="https://userpilot.com/blog/build-measure-learn/">Userpilot · Aprendizaje validado</a>
+    </p>
+  </section>
+
+  <!-- ============ VII ============ -->
+  <section id="s7">
+    <h2><span class="num">VII</span> Pivotar o perseverar</h2>
+    <p>El ciclo se cierra la semana siguiente al retiro, cuando ya llegaron los datos del día 7. El equipo — facilitador más dos participantes voluntarios — se sienta una hora con tres columnas: <em>mantener, cambiar, soltar</em>. Y con los "cinco porqués" para cualquier caída notable: si seis de diez decisiones murieron, se pregunta por qué cinco veces seguidas hasta llegar a la causa de diseño, no a la culpa de las personas.</p>
+
+    <div class="dialogo">
+      <div class="voz metodologo">
+        <span class="quien">📋 El Metodólogo PDCA</span>
+        <p>Pivotes plausibles que ya anticipo, para que la primera retro no empiece de cero: quizá la caminata necesita ser más larga que la lectio (el cuerpo tarda más que la mente en callarse); quizá el círculo de las 15:30 llega demasiado pronto y la gente confiesa por presión social, no por convicción; quizá doce personas ya son demasiadas para un solo facilitador en el día 7. Cada una es una hipótesis para la iteración dos.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="quien">🎭 El Provocador</span>
+        <p>Y anoto el criterio de perseverar, que nadie lo dice nunca: si las decisiones sobreviven y la gente vuelve trayendo a otros, <strong>resistir la tentación de escalar.</strong> El impulso de convertir el retiro de doce en el congreso de mil doscientos es exactamente el instinto que mató la señal. Marcos 8:30 otra vez: hay versiones del mensaje que todavía no deben escalar.</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="quien">🏛️ El Exégeta</span>
+        <p>Cierro con la ironía que el texto nos regala: el primer "pivote" del pasaje lo intenta Pedro — quiere cambiar la estrategia de Jesús, quitarle la cruz al Mesías — y recibe la reprensión más dura del evangelio. La lección para nuestro tablero de retro: <strong>se pivota el diseño del retiro; no se pivota el evangelio.</strong> Las dos preguntas y la cruz son el invariante. Todo lo demás — horarios, caminatas, tamaño del grupo — está en la mesa.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Semilla ============ -->
+  <details class="semilla" id="semilla">
+    <summary><span class="brote">🌱</span> La semilla de siete días · para quien salió del retiro (o para ti, que solo leíste la página)</summary>
+    <div class="contenido"><div>
+      <p>La misma pregunta, cada mañana, durante una semana. La misma decisión, revisada cada noche. Dos minutos al despertar, dos al acostarte. Es el MVP del MVP.</p>
+      <ul class="dias">
+        <li><span class="d">Día 1</span><span><strong>Mañana:</strong> escribe en una frase quién dices tú que es Jesús — hoy, sin copiar la de ayer. <strong>Noche:</strong> ¿tu decisión sigue viva? Marca: viva / herida / muerta.</span></li>
+        <li><span class="d">Día 2</span><span><strong>Mañana:</strong> la frase de nuevo. <strong>Noche:</strong> nombra la voz externa que más fuerte habló hoy sobre quién eres tú.</span></li>
+        <li><span class="d">Día 3</span><span><strong>Mañana:</strong> la frase. <strong>Noche:</strong> ¿qué te costó hoy la decisión? Si no costó nada, sospecha de ella.</span></li>
+        <li><span class="d">Día 4</span><span><strong>Mañana:</strong> la frase — compárala con la del día 1: ¿se está aclarando o siguen siendo árboles que caminan? <strong>Noche:</strong> descansa. Solo agradece.</span></li>
+        <li><span class="d">Día 5</span><span><strong>Mañana:</strong> la frase. <strong>Noche:</strong> cuéntale tu decisión a una persona de confianza. La confesión privada tiende a morir en privado.</span></li>
+        <li><span class="d">Día 6</span><span><strong>Mañana:</strong> la frase. <strong>Noche:</strong> si la decisión murió esta semana, no te condenes: escribe qué la mató. Eso es dato, no fracaso.</span></li>
+        <li><span class="d">Día 7</span><span><strong>Mañana:</strong> la frase, por última vez — léelas las siete juntas. <strong>Noche:</strong> responde el mensaje del facilitador con la verdad. Tu honestidad es lo que hace posible la iteración dos.</span></li>
+      </ul>
+    </div></div>
+  </details>
+
+</div>
+</main>
+
+<footer>Café con Claude · La Red es la Iglesia · Julio 2026 — «Y tú, ¿quién dices que soy?»</footer>
+
+<script>
+  // Barra de progreso
+  const progress = document.getElementById('progress');
+  function updateProgress() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    progress.style.width = (scrolled * 100) + '%';
+  }
+  document.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // Scroll-spy
+  const links = document.querySelectorAll('nav.sidebar a.navlink');
+  const targets = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = '#' + entry.target.id;
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  targets.forEach(t => t && spy.observe(t));
+
+  // Menú móvil
+  const btn = document.getElementById('menu-btn');
+  const sidebar = document.getElementById('sidebar');
+  btn.addEventListener('click', () => sidebar.classList.toggle('open'));
+  links.forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+  document.addEventListener('click', e => {
+    if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== btn) {
+      sidebar.classList.remove('open');
+    }
+  });
+</script>
+</body>
+</html>

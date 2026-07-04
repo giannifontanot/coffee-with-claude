@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La mano en la bisagra · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --muted: #6a5b48;
+    /* La curva firma de la casa: llega rápido, se asienta suave */
+    --ease-cajon: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.72;
+    font-size: 1.02rem;
+  }
+
+  /* ── Barra de progreso ───────────────────────── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 60;
+  }
+
+  /* ── Sidebar ─────────────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: 230px; padding: 2.6rem 1.4rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    z-index: 50;
+    overflow-y: auto;
+  }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 1rem; margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand a { color: var(--ink); text-decoration: none; }
+  nav.sidebar .serie {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); margin-bottom: 2.2rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar li { margin-bottom: 0.9rem; }
+  nav.sidebar a.navlink {
+    display: flex; gap: 0.6rem; align-items: baseline;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.88rem; line-height: 1.35;
+    transition: color 0.25s var(--ease-cajon);
+  }
+  nav.sidebar a.navlink .num {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.8rem; min-width: 1.6em; color: var(--line);
+    transition: color 0.25s var(--ease-cajon);
+  }
+  nav.sidebar a.navlink:hover { color: var(--ink); }
+  nav.sidebar a.navlink.active { color: var(--terracotta); }
+  nav.sidebar a.navlink.active .num { color: var(--terracotta); }
+
+  /* ── Hamburguesa móvil ───────────────────────── */
+  #menu-btn {
+    display: none;
+    position: fixed; top: 0.9rem; left: 0.9rem; z-index: 70;
+    background: var(--cream); border: 1px solid var(--line);
+    border-radius: 6px; padding: 0.45rem 0.65rem;
+    font-family: 'Fraunces', serif; font-size: 1rem; color: var(--ink);
+    cursor: pointer;
+  }
+
+  /* ── Contenido ───────────────────────────────── */
+  main {
+    margin-left: 230px;
+    padding: 3.2rem 1.5rem 5rem;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .home-link {
+    display: inline-block; font-size: 0.85rem;
+    color: var(--terracotta); text-decoration: none;
+    border-bottom: 1px solid var(--terracotta); margin-bottom: 2.2rem;
+  }
+  .home-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  .eyebrow {
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--amber); font-weight: 600; margin-bottom: 0.7rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 5.4vw, 3rem); line-height: 1.12;
+    margin-bottom: 0.7rem;
+  }
+  .subtitle {
+    font-style: italic; color: var(--muted);
+    font-size: 1.08rem; margin-bottom: 3rem;
+  }
+
+  section { margin-bottom: 3.6rem; scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.5rem; margin-bottom: 1.1rem;
+    display: flex; align-items: baseline; gap: 0.7rem;
+  }
+  h2 .roman {
+    font-size: 0.95rem; color: var(--amber); font-weight: 600;
+  }
+
+  p { margin-bottom: 1.1rem; }
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+
+  .voz {
+    margin: 1.4rem 0;
+    padding-left: 1.1rem;
+    border-left: 3px solid var(--line);
+  }
+  .voz .quien {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+  .voz.disenadora { border-color: var(--amber); }
+  .voz.ingeniera { border-color: var(--olive); }
+  .voz.provocador { border-color: var(--plum); }
+  .voz.exegeta { border-color: var(--terracotta); }
+  .voz.metodologo { border-color: var(--steel); }
+
+  /* ── Persianas: la base ──────────────────────── */
+  .persiana {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--line);
+    border-radius: 8px;
+    margin: 1.3rem 0;
+    background: rgba(255, 252, 245, 0.55);
+    transition: border-left-color 0.5s var(--ease-cajon),
+                background-color 0.35s var(--ease-cajon);
+  }
+  /* Gesto 4: la tinta que se enciende */
+  .persiana.open { border-left-color: var(--terracotta); }
+
+  .persiana-toggle {
+    width: 100%; text-align: left;
+    background: none; border: none; cursor: pointer;
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.02rem; color: var(--ink);
+    padding: 1rem 1.15rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    transition: background-color 0.35s var(--ease-cajon);
+  }
+  /* Gesto 6: hover con textura de la casa, no sombra */
+  .persiana-toggle:hover { background: rgba(201, 138, 45, 0.07); }
+  .persiana-toggle:focus-visible {
+    outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 8px;
+  }
+
+  /* Gesto 2: el chevron que anticipa */
+  .chevron {
+    display: inline-block; flex-shrink: 0;
+    width: 0.55em; height: 0.55em;
+    border-right: 2px solid var(--terracotta);
+    border-bottom: 2px solid var(--terracotta);
+    transform: rotate(-45deg);
+    transition: transform 0.4s var(--ease-cajon);
+  }
+  .persiana-toggle:hover .chevron { transform: rotate(-20deg); }
+  .persiana.open .chevron { transform: rotate(45deg); }
+
+  .gesto-num {
+    font-size: 0.72rem; color: var(--amber); font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-left: auto; padding-left: 1rem; flex-shrink: 0;
+    font-family: 'Spectral', serif;
+  }
+
+  /* Gesto 1 + 3: grid-rows con curva firma y duración variable */
+  .persiana-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--dur, 0.38s) var(--ease-cajon);
+  }
+  .persiana.open .persiana-body { grid-template-rows: 1fr; }
+
+  .persiana-inner { overflow: hidden; }
+
+  /* Gesto 5: el contenido que respira */
+  .persiana-content {
+    padding: 0 1.15rem 1.2rem;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s var(--ease-cajon),
+                transform 0.3s var(--ease-cajon);
+  }
+  .persiana.open .persiana-content {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.08s;
+  }
+  .persiana-content p:last-child { margin-bottom: 0; }
+
+  code {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.86em;
+    background: rgba(43, 33, 24, 0.06);
+    padding: 0.1em 0.35em; border-radius: 4px;
+  }
+  pre {
+    background: rgba(43, 33, 24, 0.05);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    margin: 0.9rem 0 1.1rem;
+    line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; font-size: 0.82rem; }
+
+  .prueba {
+    margin: 1rem 0; padding: 0.9rem 1.1rem;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: rgba(110, 74, 110, 0.05);
+  }
+  .prueba .titulo {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    color: var(--plum); margin-bottom: 0.25rem;
+  }
+
+  .fuentes {
+    font-size: 0.9rem; color: var(--muted);
+    border-top: 1px dashed var(--line);
+    padding-top: 0.8rem; margin-top: 1.4rem;
+  }
+  .fuentes a { color: var(--steel); text-decoration: none; border-bottom: 1px solid rgba(74,107,122,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ── Persiana-semilla ────────────────────────── */
+  .semilla {
+    border: 1px solid var(--olive);
+    border-left: 4px solid var(--olive);
+    border-radius: 8px;
+    background: rgba(107, 122, 63, 0.06);
+    margin-top: 2rem;
+  }
+  .semilla .persiana-toggle { color: var(--olive); }
+  .semilla .chevron { border-color: var(--olive); }
+  .semilla.open { border-left-color: var(--olive); }
+  .semilla ol { margin: 0.6rem 0 1rem 1.3rem; }
+  .semilla li { margin-bottom: 0.55rem; }
+
+  footer {
+    margin-top: 4rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; color: var(--muted); font-style: italic;
+  }
+
+  /* Gesto 7: la humildad del artesano */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .persiana, .persiana-body, .persiana-content,
+    .chevron, .persiana-toggle, nav.sidebar a.navlink { transition: none !important; }
+  }
+
+  @media (max-width: 900px) {
+    nav.sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.35s var(--ease-cajon);
+      box-shadow: 4px 0 20px rgba(43,33,24,0.12);
+    }
+    nav.sidebar.open { transform: translateX(0); }
+    #menu-btn { display: block; }
+    main { margin-left: 0; padding-top: 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button id="menu-btn" aria-label="Abrir menú">☰</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand"><a href="https://giannifontanot.github.io/thread-learning-notes/">Café con Claude</a></div>
+  <div class="serie">La Red es la Iglesia</div>
+  <ol>
+    <li><a class="navlink" href="#s1"><span class="num">I</span> La pregunta servida</a></li>
+    <li><a class="navlink" href="#s2"><span class="num">II</span> Anatomía de una persiana</a></li>
+    <li><a class="navlink" href="#s3"><span class="num">III</span> Siete gestos artesanales</a></li>
+    <li><a class="navlink" href="#s4"><span class="num">IV</span> Las tres pruebas del Provocador</a></li>
+    <li><a class="navlink" href="#s5"><span class="num">V</span> El margen iluminado</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+  <a class="home-link" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+
+  <div class="eyebrow">El Panel Pregunta · La Diseñadora</div>
+  <h1>La mano en la bisagra</h1>
+  <p class="subtitle">Micro-interacciones artesanales para las persianas de Café con Claude — una página que se demuestra a sí misma: cada gesto que se describe abajo está implementado en la persiana que lo explica.</p>
+
+  <!-- ══════════ I ══════════ -->
+  <section id="s1">
+    <h2><span class="roman">I</span> La pregunta servida</h2>
+
+    <p><em>¿Qué micro-interacciones podrían hacer que las persianas se sientan más artesanales sin volverse decorativas?</em></p>
+
+    <p>Primero hay que definir el pleito, porque las dos palabras suenan parecidas y son enemigas. <strong>Artesanal</strong> es el detalle que comunica algo verdadero: un estado, un peso, una invitación. <strong>Decorativo</strong> es el detalle que solo dice «mírame». La bisagra de bronce en una puerta de madera es artesanal porque hace su trabajo con dignidad; la bisagra de plástico pintada de dorado es decorativa porque finge una dignidad que no tiene.</p>
+
+    <div class="voz disenadora">
+      <div class="quien">🎨 La Diseñadora</div>
+      <p>Dan Saffer llama a estos momentos <em>micro-interacciones</em>: piezas mínimas de funcionalidad que hacen una sola cosa — silenciar el teléfono, dar «me gusta», abrir una persiana. Y advierte que cuando una funciona sorprendentemente bien, se convierte en un <em>Momento Firma</em>: deja de ser un detalle y pasa a ser parte de la marca. Las persianas ya son el momento firma de esta serie. La pregunta no es cómo adornarlas, sino cómo darles alma.</p>
+    </div>
+
+    <div class="fuentes">
+      Fuentes: <a href="https://smartdesignworldwide.com/ideas/microinteractions-details-matter/">Smart Design — Microinteractions Details Matter</a>, <a href="https://www.oreilly.com/library/view/microinteractions/9781449342760/">O'Reilly — Microinteractions (Dan Saffer)</a>
+    </div>
+  </section>
+
+  <!-- ══════════ II ══════════ -->
+  <section id="s2">
+    <h2><span class="roman">II</span> Anatomía de una persiana</h2>
+
+    <div class="voz ingeniera">
+      <div class="quien">🕸️ La Ingeniera de Sistemas</div>
+      <p>Saffer da la anatomía completa: toda micro-interacción tiene cuatro partes — <strong>disparador</strong> (lo que la inicia), <strong>reglas</strong> (lo que puede pasar), <strong>retroalimentación</strong> (cómo sabes que pasó) y <strong>bucles y modos</strong> (cuánto dura, cuándo cambia). Una persiana es un sistema mínimo perfecto:</p>
+      <p>El <em>hover</em> es la señal de affordance («esto se puede abrir»). El <em>clic</em> es el disparador. La <em>apertura animada</em> es la retroalimentación. Y la <em>relectura</em> — abrir y cerrar cientos de veces a lo largo de la serie de Marcos — es el bucle. Este es el filtro de todo lo que sigue: si un detalle no vive en una de esas cuatro casillas, es decoración y se corta.</p>
+    </div>
+
+    <div class="fuentes">
+      Fuentes: <a href="https://www.drpgroup.com/en/news-blog/what-are-microinteractions-and-how-can-we-use-them-to-improve-ux">DRPG — What are microinteractions</a>, <a href="https://blog.prototypr.io/the-4-components-of-a-microinteraction-836732173c7c">ZURB — The 4 Components of a Microinteraction</a>
+    </div>
+  </section>
+
+  <!-- ══════════ III ══════════ -->
+  <section id="s3">
+    <h2><span class="roman">III</span> Siete gestos artesanales</h2>
+
+    <p>Cada persiana de esta sección <strong>implementa el gesto que describe</strong>. Ábrelas despacio. Vuélvelas a abrir. La segunda vez es la prueba.</p>
+
+    <!-- Gesto 1 -->
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        El easing con firma
+        <span class="gesto-num">Gesto 1</span>
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>El <code>ease</code> genérico del navegador es la letra Arial del movimiento: correcta, anónima. Una curva propia le da a toda la casa el mismo acento. Esta página usa una sola curva en cada transición:</p>
+            <pre><code>--ease-cajon: cubic-bezier(0.22, 1, 0.36, 1);</code></pre>
+            <p>Llega rápido y se asienta suave, como un cajón de madera con cierre amortiguado. Josh Collinsworth lo dice mejor que nadie: <em>la transición es el verbo; la curva de easing es el adverbio</em>. El movimiento cuenta una historia, y el adverbio decide si la persiana «se desploma», «se abre de golpe» o «se acomoda». No es decorativo porque el easing comunica material: madera, no plástico.</p>
+            <div class="fuentes">Fuentes: <a href="https://joshcollinsworth.com/blog/easing-curves">Josh Collinsworth — Understanding easing curves</a>, <a href="https://www.cssportal.com/css-cubic-bezier-generator/">CSS Portal — Cubic Bezier Generator</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesto 2 -->
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        El chevron que anticipa
+        <span class="gesto-num">Gesto 2</span>
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>Pasa el cursor sobre el título de esta persiana sin hacer clic: el chevron gira apenas unos grados, como si se inclinara a escuchar. Es el principio de <em>anticipación</em> de los animadores clásicos de Disney, aplicado no como espectáculo sino como affordance: el gesto susurra «esto se abre» antes de que decidas abrirlo.</p>
+            <pre><code>.persiana-toggle:hover .chevron {
+  transform: rotate(-20deg); /* se inclina, no gira */
+}</code></pre>
+            <p>La diferencia entre artesanal y decorativo aquí es de grados — literalmente. Veinticinco grados invitan; una vuelta completa presume.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesto 3 -->
+    <div class="persiana" data-peso="variable">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        La duración proporcional al peso
+        <span class="gesto-num">Gesto 3</span>
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>En el mundo físico, los cajones pesados abren más lento. Material Design lo recomienda explícitamente: en vez de una sola duración para todas las animaciones, ajustar cada una según la distancia recorrida y el cambio de superficie. Aplicado a las persianas: un script mide la altura del contenido y calcula la duración.</p>
+            <pre><code>const alto = inner.scrollHeight;
+const dur = Math.min(Math.max(alto * 0.5, 300), 560);
+persiana.style.setProperty('--dur', dur + 'ms');</code></pre>
+            <p>Una persiana ligera abre en ~300ms; una cargada de exégesis, en ~550ms. El lector nunca lo nota conscientemente — y eso es exactamente lo que lo hace artesanal. Es honestidad material: la interfaz no finge que todo pesa igual.</p>
+            <p>Esta misma página lo hace: compara la velocidad de esta persiana (larga) con la del Gesto 2 (corta). La diferencia es sutil, como debe ser. Lo que se nota a primera vista es decoración; lo que se siente sin notarse es oficio. Y ese es quizás el resumen de toda esta sección: la artesanía digital, igual que la de la madera, vive en tolerancias de milímetros.</p>
+            <div class="fuentes">Fuentes: <a href="https://m1.material.io/motion/duration-easing.html">Material Design — Duration &amp; easing</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesto 4 -->
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        La tinta que se enciende
+        <span class="gesto-num">Gesto 4</span>
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>Mira el borde izquierdo de esta persiana: al abrirla pasó de línea neutra a terracota, como tinta que se calienta. Al cerrarla, se enfría de vuelta. No es adorno — es <strong>memoria de estado visible desde lejos</strong>. Cuando el lector hace scroll por una página con diez persianas, los bordes encendidos le dicen de un vistazo cuáles ya visitó.</p>
+            <pre><code>.persiana { border-left: 3px solid var(--line); }
+.persiana.open { border-left-color: var(--terracotta); }</code></pre>
+            <p>Es la casilla «retroalimentación» de Saffer, resuelta con un solo color de la paleta que ya existe. Artesanía es hacer más con lo que ya hay en la mesa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesto 5 -->
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        El contenido que respira
+        <span class="gesto-num">Gesto 5</span>
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>Cuando esta persiana abrió, el texto no apareció de golpe: llegó 80 milisegundos después del marco, subiendo 4 píxeles con un desvanecimiento. El marco abre primero; el contenido entra después, como quien descorre una cortina y deja que la luz revele el cuarto.</p>
+            <pre><code>.persiana.open .persiana-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.08s;
+}</code></pre>
+            <p>Ochenta milisegundos. No trescientos — eso ya sería teatro. La regla artesanal del desfase: debe sentirse como consecuencia física de la apertura, no como un segundo acto.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesto 6 -->
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        Hover con textura, no con sombra
+        <span class="gesto-num">Gesto 6</span>
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>El hover de estos títulos no usa sombras ni elevación — usa el mismo lavado ámbar que ya usan las filas de tabla en todo Café con Claude:</p>
+            <pre><code>background: rgba(201, 138, 45, 0.07);</code></pre>
+            <p>Esto parece un detalle menor y es quizás el más importante de los siete: <strong>coherencia de material</strong>. Un taller artesanal se reconoce porque todo está hecho de las mismas maderas. Cuando el hover de una persiana, el hover de una tabla y el hover de un enlace comparten la misma tinta, la página se siente tallada de una sola pieza. Cuando cada componente trae su propio efecto, se siente ensamblada de un catálogo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesto 7 -->
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        La humildad del artesano
+        <span class="gesto-num">Gesto 7</span>
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>El último gesto es invisible para casi todos, y por eso es el más artesanal: si el lector tiene activada la preferencia de <em>movimiento reducido</em> en su sistema — por mareo, por migraña, por gusto — todas estas persianas abren al instante, sin animación alguna.</p>
+            <pre><code>@media (prefers-reduced-motion: reduce) {
+  .persiana-body, .persiana-content,
+  .chevron { transition: none !important; }
+}</code></pre>
+            <p>El buen carpintero lija también la parte de atrás del mueble, la que nadie ve. Respetar la preferencia del lector no es un requisito técnico: es la ética del oficio. Una micro-interacción que ignora al usuario que le pidió silencio ya no es artesanía — es vanidad.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════ IV ══════════ -->
+  <section id="s4">
+    <h2><span class="roman">IV</span> Las tres pruebas del Provocador</h2>
+
+    <div class="voz provocador">
+      <div class="quien">🎭 El Provocador</div>
+      <p>Déjenme ser el aguafiestas de la mesa. La «artesanía» mal entendida es kitsch: madera falsa pegada sobre plástico, serifas dibujadas sobre una interfaz que no las siente. Antes de aprobar cualquier gesto nuevo para el sistema, que pase por tres aduanas:</p>
+    </div>
+
+    <div class="prueba">
+      <div class="titulo">Prueba 1 — ¿Comunica o adorna?</div>
+      <p>¿Este detalle transmite estado, peso o invitación? Si quitas el gesto y el lector pierde información, es artesanal. Si quitas el gesto y solo pierde «bonito», es decoración. Fuera.</p>
+    </div>
+
+    <div class="prueba">
+      <div class="titulo">Prueba 2 — ¿Quién gana: el mensaje o el efecto?</div>
+      <p>Si el lector recuerda la animación pero no el versículo, la animación perdió aunque haya ganado. En una página de estudio bíblico, cada gesto compite contra Marcos — y Marcos debe ganar siempre.</p>
+    </div>
+
+    <div class="prueba">
+      <div class="titulo">Prueba 3 — La décima vez</div>
+      <p>Una persiana se abre cientos de veces a lo largo de la serie. Lo que encanta la primera vez y estorba la décima no es artesanal: es un truco de feria. Saffer lo advierte con los bucles — la micro-interacción vive en la repetición, y ahí es donde se juzga.</p>
+    </div>
+
+    <div class="voz metodologo">
+      <div class="quien">📋 El Metodólogo PDCA</div>
+      <p>Y esto se puede medir, que para eso estoy aquí. El «Check» del ciclo: prueba con lectores reales y hazles una sola pregunta — <em>¿notaste que algo pasó al abrir la sección?</em> Si sonríen y siguen leyendo, acertaste. Si describen el efecto con entusiasmo, te pasaste: el adverbio se comió al verbo. El objetivo no es que digan «qué bonita animación», sino que digan «qué fácil se lee esto» sin saber por qué.</p>
+    </div>
+
+    <div class="fuentes">
+      Fuentes: <a href="https://medium.com/@productandrew/microinteractions-dan-saffer-2013-ed12086b1ac9">Andrew Clark — Microinteractions review</a>, <a href="https://medium.com/@blessingokpala/the-power-of-microinteractions-08183e18e351">Blessing Okpala — The Power of Microinteractions</a>
+    </div>
+  </section>
+
+  <!-- ══════════ V ══════════ -->
+  <section id="s5">
+    <h2><span class="roman">V</span> El margen iluminado</h2>
+
+    <div class="voz exegeta">
+      <div class="quien">🏛️ El Exégeta</div>
+      <p>Un apunte antes de levantar la mesa. Los escribas medievales iluminaban los márgenes de los manuscritos con oro y lapislázuli — pero las mejores iluminaciones nunca fueron decoración: eran <em>navegación</em>. Una letra capital encendida te decía «aquí empieza algo nuevo». Un dedo dibujado en el margen — el <em>manicula</em> — te decía «no pases de largo por este párrafo». El escriba ponía la mano en la página para guiar la mano del lector.</p>
+      <p>Tus persianas están en esa tradición, Gianni. El chevron que se inclina es un manicula. El borde que se enciende es una capital iluminada. La pregunta de la Diseñadora tiene, al final, una respuesta de scriptorium: <strong>que cada detalle ayude a leer, no a mirar</strong>. Eso hacían los monjes con el Evangelio de Marcos hace mil años, y eso hace una buena micro-interacción con el mismo Evangelio hoy.</p>
+    </div>
+
+    <!-- Persiana-semilla -->
+    <div class="persiana semilla">
+      <button class="persiana-toggle" aria-expanded="false">
+        <span class="chevron" aria-hidden="true"></span>
+        🌱 Persiana-semilla · Siete días de detalle
+      </button>
+      <div class="persiana-body">
+        <div class="persiana-inner">
+          <div class="persiana-content">
+            <p>Una práctica de siete días para entrenar el ojo artesanal — en el diseño y fuera de él:</p>
+            <ol>
+              <li><strong>Día 1 — Cazar un gesto.</strong> Encuentra hoy una micro-interacción en cualquier app que te haga sonreír. Anota qué comunica (no cómo se ve).</li>
+              <li><strong>Día 2 — Cazar un adorno.</strong> Encuentra una que estorbe. Pregúntate qué prueba de las tres reprobó.</li>
+              <li><strong>Día 3 — El mundo físico.</strong> Abre un cajón, una puerta, un libro. Nota el easing real de las cosas: nada en el mundo se mueve linealmente.</li>
+              <li><strong>Día 4 — Tu propia obra.</strong> Abre una página vieja de Café con Claude y aplica la prueba de la décima vez a una persiana. Sé honesto.</li>
+              <li><strong>Día 5 — Un solo grado.</strong> Ajusta un solo valor (una duración, un color, un delay) en un proyecto tuyo. Solo uno. Nota cuánto cambia el carácter.</li>
+              <li><strong>Día 6 — La parte de atrás del mueble.</strong> Verifica <code>prefers-reduced-motion</code> y el foco de teclado en algo que hayas construido. Lija lo que nadie ve.</li>
+              <li><strong>Día 7 — El margen iluminado.</strong> Lee un capítulo de Marcos y pregúntate: ¿qué detalles puso el escriba —repeticiones, la palabra «inmediatamente», los sándwiches narrativos— para guiar mi mano de lector?</li>
+            </ol>
+            <p><em>La artesanía no es una técnica: es una manera de mirar. Siete días bastan para empezar a mirar así.</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Café con Claude · La Red es la Iglesia · Julio 2026<br>
+    Esta página practica lo que predica: siete gestos, una curva, cero decoración.
+  </footer>
+
+</div>
+</main>
+
+<script>
+(function () {
+  // ── Persianas ──────────────────────────────────
+  const persianas = document.querySelectorAll('.persiana');
+
+  persianas.forEach(function (p) {
+    const btn = p.querySelector('.persiana-toggle');
+    const inner = p.querySelector('.persiana-inner');
+
+    btn.addEventListener('click', function () {
+      // Gesto 3: duración proporcional al peso del contenido
+      const alto = inner.scrollHeight;
+      const dur = Math.min(Math.max(alto * 0.5, 300), 560);
+      p.style.setProperty('--dur', dur + 'ms');
+
+      const abierto = p.classList.toggle('open');
+      btn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    });
+  });
+
+  // ── Barra de progreso ──────────────────────────
+  const progress = document.getElementById('progress');
+  function actualizarProgreso() {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  }
+  document.addEventListener('scroll', actualizarProgreso, { passive: true });
+  actualizarProgreso();
+
+  // ── Scroll-spy ─────────────────────────────────
+  const links = document.querySelectorAll('nav.sidebar a.navlink');
+  const secciones = Array.from(links).map(function (l) {
+    return document.querySelector(l.getAttribute('href'));
+  });
+
+  const spy = new IntersectionObserver(function (entradas) {
+    entradas.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id);
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  secciones.forEach(function (s) { if (s) spy.observe(s); });
+
+  // ── Menú móvil ─────────────────────────────────
+  const menuBtn = document.getElementById('menu-btn');
+  const sidebar = document.getElementById('sidebar');
+  menuBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('open');
+  });
+  links.forEach(function (l) {
+    l.addEventListener('click', function () { sidebar.classList.remove('open'); });
+  });
+})();
+</script>
+
+</body>
+</html>

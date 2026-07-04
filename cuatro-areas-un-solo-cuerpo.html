@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuatro áreas, un solo cuerpo · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --paper: #fdfaf3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Progress bar ---------- */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--terracotta);
+    z-index: 100;
+  }
+
+  /* ---------- Rail ---------- */
+  nav.rail {
+    position: fixed;
+    top: 0; left: 0;
+    width: 230px;
+    height: 100vh;
+    padding: 2.2rem 1.4rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    overflow-y: auto;
+    z-index: 50;
+  }
+
+  .rail .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+  .rail .brand small {
+    display: block;
+    font-family: 'Spectral', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: #6a5b48;
+  }
+
+  .rail a.home {
+    display: inline-block;
+    font-size: 0.78rem;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+    margin: 0.8rem 0 1.6rem;
+  }
+  .rail a.home:hover { color: var(--ink); border-color: var(--ink); }
+
+  .rail ol { list-style: none; }
+  .rail ol a {
+    display: block;
+    padding: 0.32rem 0.5rem;
+    font-size: 0.85rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .rail ol a .rn {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    display: inline-block;
+    width: 2.1em;
+    color: #8a7a63;
+  }
+  .rail ol a:hover { color: var(--terracotta); }
+  .rail ol a.activo {
+    border-left-color: var(--terracotta);
+    color: var(--terracotta);
+    background: rgba(180, 83, 42, 0.05);
+  }
+
+  /* ---------- Hamburger (mobile) ---------- */
+  #hamb {
+    display: none;
+    position: fixed;
+    top: 0.9rem; left: 0.9rem;
+    z-index: 60;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.45rem 0.65rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  #overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(43, 33, 24, 0.35);
+    z-index: 45;
+  }
+
+  /* ---------- Main ---------- */
+  main {
+    margin-left: 230px;
+    max-width: 760px;
+    padding: 3.2rem 2.4rem 5rem;
+  }
+
+  header.encabezado { margin-bottom: 2.8rem; }
+
+  .etiqueta {
+    font-family: 'Fraunces', serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--steel);
+    margin-bottom: 0.6rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 2.9rem);
+    line-height: 1.12;
+    margin-bottom: 0.7rem;
+  }
+
+  .subtitulo {
+    font-style: italic;
+    color: #6a5b48;
+    font-size: 1.08rem;
+  }
+
+  .pregunta-marco {
+    margin: 1.6rem 0 0;
+    padding: 1rem 1.3rem;
+    border-left: 4px solid var(--steel);
+    background: rgba(74, 107, 122, 0.07);
+    font-style: italic;
+    font-size: 1.02rem;
+  }
+  .pregunta-marco strong { font-family: 'Fraunces', serif; font-style: normal; }
+
+  section { margin-bottom: 3.2rem; scroll-margin-top: 1.5rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  h2 .rn {
+    color: var(--terracotta);
+    margin-right: 0.5rem;
+  }
+
+  p { margin-bottom: 1rem; }
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+
+  a.enlace {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180, 83, 42, 0.4);
+  }
+  a.enlace:hover { border-color: var(--terracotta); }
+
+  /* ---------- Voces ---------- */
+  .voz {
+    margin: 1.4rem 0;
+    padding: 1rem 1.2rem 0.4rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    position: relative;
+  }
+  .voz .nombre {
+    display: inline-block;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 0.5rem;
+  }
+  .voz.exegeta { border-left: 4px solid var(--terracotta); }
+  .voz.exegeta .nombre { color: var(--terracotta); }
+  .voz.ingeniera { border-left: 4px solid var(--olive); }
+  .voz.ingeniera .nombre { color: var(--olive); }
+  .voz.provocador { border-left: 4px solid var(--plum); }
+  .voz.provocador .nombre { color: var(--plum); }
+  .voz.disenadora { border-left: 4px solid var(--amber); }
+  .voz.disenadora .nombre { color: var(--amber); }
+  .voz.metodologo { border-left: 4px solid var(--steel); }
+  .voz.metodologo .nombre { color: var(--steel); }
+
+  blockquote {
+    margin: 1.3rem 0;
+    padding: 0.8rem 1.2rem;
+    border-left: 4px solid var(--amber);
+    background: rgba(201, 138, 45, 0.07);
+    font-style: italic;
+  }
+  blockquote .ref {
+    display: block;
+    margin-top: 0.4rem;
+    font-style: normal;
+    font-size: 0.85rem;
+    color: #6a5b48;
+    font-family: 'Fraunces', serif;
+  }
+
+  /* ---------- Persianas ---------- */
+  .persiana {
+    margin: 1.3rem 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .persiana > button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--ink);
+    text-align: left;
+  }
+  .persiana > button:hover { color: var(--terracotta); }
+  .persiana .flecha {
+    transition: transform 0.3s;
+    color: var(--terracotta);
+    flex-shrink: 0;
+  }
+  .persiana.abierta .flecha { transform: rotate(90deg); }
+  .persiana .contenido {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+  .persiana.abierta .contenido { grid-template-rows: 1fr; }
+  .persiana .contenido > div { overflow: hidden; }
+  .persiana .inner {
+    padding: 0.2rem 1.2rem 1rem;
+    border-top: 1px dashed var(--line);
+  }
+  .persiana .inner p:first-child { margin-top: 0.8rem; }
+
+  /* ---------- Semilla ---------- */
+  .persiana.semilla {
+    border: 2px solid var(--olive);
+    background: rgba(107, 122, 63, 0.06);
+  }
+  .persiana.semilla > button { color: var(--olive); }
+  .persiana.semilla .flecha { color: var(--olive); }
+  .persiana.semilla > button:hover { color: var(--ink); }
+
+  /* ---------- Diagrama de flechas ---------- */
+  .tablero {
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  .area-card {
+    padding: 0.9rem 1.1rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .area-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+  .area-card .proposito {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: #6a5b48;
+    margin-bottom: 0.5rem;
+  }
+  .area-card ul { list-style: none; font-size: 0.88rem; }
+  .area-card ul li { padding: 0.15rem 0; }
+  .area-card ul li::before { content: "→ "; color: var(--terracotta); font-weight: 600; }
+  .area-card.career { border-top: 4px solid var(--steel); }
+  .area-card.family { border-top: 4px solid var(--plum); }
+  .area-card.health { border-top: 4px solid var(--olive); }
+  .area-card.fun { border-top: 4px solid var(--amber); }
+
+  /* ---------- Fuentes ---------- */
+  .fuentes {
+    margin-top: 1.4rem;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    color: #6a5b48;
+    background: rgba(217, 205, 184, 0.25);
+    border-radius: 6px;
+  }
+  .fuentes a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180, 83, 42, 0.35);
+  }
+  .fuentes a:hover { border-color: var(--terracotta); }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.88rem;
+    color: #6a5b48;
+    font-style: italic;
+  }
+  footer a { color: var(--terracotta); text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.35); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    nav.rail {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      width: 250px;
+      box-shadow: 4px 0 18px rgba(43,33,24,0.12);
+    }
+    nav.rail.abierta { transform: translateX(0); }
+    #hamb { display: block; }
+    main { margin-left: 0; padding: 4.2rem 1.3rem 4rem; }
+    .tablero { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .persiana .contenido, .persiana .flecha, nav.rail { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button id="hamb" aria-label="Abrir índice">☰</button>
+<div id="overlay"></div>
+
+<nav class="rail" id="rail">
+  <div class="brand">Café con Claude<small>La Red es la Iglesia · y la vida también</small></div>
+  <a class="home" href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  <ol>
+    <li><a href="#s1"><span class="rn">I.</span>La pregunta sobre la mesa</a></li>
+    <li><a href="#s2"><span class="rn">II.</span>El modelo del pastel</a></li>
+    <li><a href="#s3"><span class="rn">III.</span>Las flechas ya medidas</a></li>
+    <li><a href="#s4"><span class="rn">IV.</span>Meadows en tu tablero</a></li>
+    <li><a href="#s5"><span class="rn">V.</span>Un panteón o un cuerpo</a></li>
+    <li><a href="#s6"><span class="rn">VI.</span>El rediseño de Go Epic</a></li>
+    <li><a href="#s7"><span class="rn">VII.</span>Veredicto y semilla</a></li>
+  </ol>
+</nav>
+
+<main>
+  <header class="encabezado">
+    <div class="etiqueta">El Panel Pregunta · Pregunta 13 · El Metodólogo PDCA</div>
+    <h1>Cuatro áreas, un solo cuerpo</h1>
+    <p class="subtitulo">Cómo estructurar Go Epic para que Career, Family, Health y Fun dejen de competir y empiecen a alimentarse</p>
+    <div class="pregunta-marco">
+      <strong>La pregunta:</strong> ¿Cómo estructuro Go Epic para que mis 4 áreas no compitan entre sí sino que se alimenten? — <em>Career, Family, Health, Fun como sistema, no como silos.</em>
+    </div>
+  </header>
+
+  <!-- ============ I ============ -->
+  <section id="s1">
+    <h2><span class="rn">I.</span>La pregunta sobre la mesa</h2>
+
+    <div class="voz metodologo">
+      <span class="nombre">📋 El Metodólogo PDCA</span>
+      <p>Empiezo yo porque la pregunta es mía, aunque sospecho que la respuesta pertenece a la Ingeniera. El diagnóstico inicial es este: Go Epic hoy tiene cuatro áreas — Career, Family, Health, Fun — organizadas como cuatro <em>stocks</em> separados, y un solo recurso escaso que las llena a todas: las horas de Gianni. Mientras el único vínculo entre las áreas sea que compiten por el mismo presupuesto de tiempo, el sistema <strong>está diseñado para el conflicto</strong>. No es un defecto de disciplina. Es la arquitectura.</p>
+    </div>
+
+    <div class="voz ingeniera">
+      <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+      <p>Y aquí aplica la primera regla de la casa: si un problema reaparece semana tras semana sin importar cuánta fuerza de voluntad le pongas, no estás frente a un problema de conducta — estás frente a una estructura. Los silos no se resuelven repartiendo mejor el pastel. Se resuelven dibujando las flechas que ya existen entre las porciones y que el tablero todavía no muestra.</p>
+    </div>
+
+    <div class="voz provocador">
+      <span class="nombre">🎭 El Provocador</span>
+      <p>Traducción sin anestesia: la culpa que sientes cuando trabajas mucho ("le robo a mi familia") y la culpa que sientes cuando descansas ("le robo a mi carrera") vienen del mismo modelo mental. Y ese modelo, spoiler, es falsable. Hoy lo vamos a falsar con datos.</p>
+    </div>
+  </section>
+
+  <!-- ============ II ============ -->
+  <section id="s2">
+    <h2><span class="rn">II.</span>El modelo del pastel (y su rival con evidencia)</h2>
+
+    <div class="voz ingeniera">
+      <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+      <p>El modelo del pastel tiene nombre académico: la <strong>hipótesis de escasez de roles</strong>. Cada rol que asumes — profesional, esposo, hermano de iglesia, cuerpo que necesita dormir — drena un presupuesto fijo de tiempo y energía, así que más de uno significa menos de otro. Durante décadas, la mayoría de la investigación sobre trabajo y familia se construyó sobre esa premisa y se dedicó a medir su producto natural: el <em>conflicto</em> entre dominios, el spillover negativo de las demandas de un rol sobre el otro.</p>
+      <p>Pero en 2006, Greenhaus y Powell publicaron la teoría rival: el <strong>enriquecimiento trabajo-familia</strong>, definido como el grado en que las experiencias en un rol mejoran la calidad de vida en el otro rol. La teoría propone que los recursos generados en un dominio — habilidades, capital psicológico, afecto positivo, flexibilidad — pueden transferirse al otro y elevar su desempeño. Y el enriquecimiento es bidireccional: el trabajo puede enriquecer a la familia y la familia puede enriquecer al trabajo.</p>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>El detalle técnico que cambia todo el tablero</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>El hallazgo más útil para Go Epic no es que el enriquecimiento exista, sino que <strong>el enriquecimiento y el conflicto son variables distintas e independientes</strong>: una persona puede experimentar niveles altos de ambos al mismo tiempo. El enriquecimiento no es la ausencia de conflicto, igual que la salud no es la ausencia de enfermedad. Esto significa que Go Epic hoy solo está midiendo la mitad del fenómeno — cuánto compiten las áreas — y le falta un medidor completo: cuánto se alimentan.</p>
+        <p>La teoría también identifica <em>por dónde</em> pasa el alimento. Hay dos rutas: la <strong>ruta instrumental</strong> (transferencia directa de recursos — habilidades, materiales, redes) y la <strong>ruta afectiva</strong> (transferencia de emociones positivas — llegas de buen humor de un dominio y ese humor rinde en el otro). En vocabulario de Go Epic: Career le exporta a Family no solo el salario — le exporta autoeficacia. Health le exporta a Career función ejecutiva. Las flechas existen. Lo que falta es dónde dibujarlas.</p>
+      </div></div></div>
+    </div>
+
+    <div class="fuentes">
+      Fuentes: <a href="https://journals.aom.org/doi/10.5465/amr.2006.19379625">Greenhaus &amp; Powell · AMR</a>, <a href="https://www.qic-wd.org/umbrella-summary/work-family-enrichment">QIC-WD</a>, <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7551276/">Modelo Greenhaus-Allen · PMC</a>
+    </div>
+  </section>
+
+  <!-- ============ III ============ -->
+  <section id="s3">
+    <h2><span class="rn">III.</span>Las flechas que la ciencia ya midió</h2>
+
+    <div class="voz ingeniera">
+      <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+      <p>Las flechas entre tus cuatro áreas no son poesía motivacional. Varias ya fueron medidas con diseños serios. Recorramos el tablero.</p>
+    </div>
+
+    <div class="persiana abierta">
+      <button type="button"><span>Health → Career: el músculo que piensa</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>El ejercicio mejora la función cognitiva — memoria, atención, toma de decisiones — al aumentar el flujo sanguíneo al cerebro y fortalecer el hipocampo, el centro de memoria ligado al foco. Un estudio de Harvard Business Review con 200 empleados de China y Reino Unido que registraron su actividad física durante 10 días encontró que el ejercicio mejoraba los resultados laborales y la <em>autoeficacia profesional</em> — la creencia de la persona en su propia capacidad. Y con un detalle delicioso para tu tablero: el efecto aparecía al día <strong>siguiente</strong>. Tu caminata del lunes se cobra el martes. La flecha tiene <em>delay</em>, y Meadows nos enseñó que los delays son determinantes críticos del comportamiento de un sistema: si no los conoces, concluyes que la flecha no existe.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>Fun → Career: el descanso que rinde</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>La investigación de recuperación de Sabine Sonnentag identificó cuatro experiencias que reparan lo que el trabajo gasta: desapego psicológico (desconectar mentalmente), relajación, control (decidir tu propio tiempo libre) y maestría (aprender algo desafiante fuera del trabajo). Un meta-análisis con más de 99,000 participantes encontró que la relajación y la maestría predicen positivamente engagement, desempeño, creatividad y satisfacción laboral, mientras que el desapego reduce el agotamiento y el conflicto trabajo-familia. Nota fina para Go Epic: tu área Fun ya contiene las cuatro experiencias — el Open Block es control, el estudio del Thread es maestría, y prepararlo con café es relajación. Fun no es el premio después del trabajo. Es la infraestructura del trabajo.</p>
+        <p>Y Stuart Brown, fundador del National Institute for Play, agrega la capa del juego: sus estudios con miles de historias de juego — de asesinos seriales a premios Nobel — muestran que los adultos que juegan experimentan menos estrés y más optimismo, y que las personas altamente creativas y exitosas tienen una vida de juego rica. El juego, dice Brown, está en el núcleo de la creatividad y la innovación: estamos <em>hechos para jugar y hechos por el juego</em>.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>Family → Career: la proveedora silenciosa</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>Un estudio de diario con 124 trabajadores canadienses durante 10 días consecutivos midió las dos direcciones de la ruta afectiva y encontró una asimetría hermosa: el afecto positivo diario <em>en la familia</em> mejoraba el desempeño diario <em>en el trabajo</em> — pero el efecto inverso (afecto positivo en el trabajo → desempeño en la familia) no resultó significativo. Léelo dos veces, porque desarma el guion habitual: en el guion, Career es el proveedor y Family es el gasto. En los datos, Family es la que amanece proveyendo. Orar con Carlet no compite con tu sprint. Lo financia.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>Career → Family: los recursos que cruzan la puerta</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>La flecha de vuelta también existe, pero no viaja por donde crees. Un estudio con 351 parejas de doble carrera probó qué recursos del trabajo terminan enriqueciendo el matrimonio: las experiencias de desarrollo, el apoyo del supervisor, el control del horario y la autoeficacia mostraron efectos indirectos sobre la satisfacción marital y el funcionamiento familiar — pero <strong>el salario no</strong>. Y el efecto incluso cruzaba a la esposa del trabajador. Lo que Career le exporta a Family no es principalmente dinero: es una versión tuya más capaz, más apoyada y con más control de su agenda. Si tu carrera te está dando eso, alimenta a tu casa. Si solo te da salario, la está drenando aunque el número crezca.</p>
+      </div></div></div>
+    </div>
+
+    <div class="fuentes">
+      Fuentes: <a href="https://www.ciphr.com/blog/how-does-exercise-improve-work-productivity">Ciphr · estudio HBR</a>, <a href="https://incentfit.com/wellness-word/exercise-for-workplace-productivity/">IncentFit</a>, <a href="https://link.springer.com/article/10.1007/s10869-022-09821-3">Meta-análisis de recuperación · JBP</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7007884/">Sonnentag &amp; Fritz · PMC</a>, <a href="https://nifplay.org/about-us/about-nifp/">National Institute for Play</a>, <a href="https://www.sciencedirect.com/science/article/abs/pii/S1162908822000706">Estudio de diario · ScienceDirect</a>, <a href="https://www.researchgate.net/publication/331630536_Spillover_and_crossover_of_work_resources_A_test_of_the_positive_flow_of_resources_through_work-family_enrichment">Spillover y crossover · ResearchGate</a>
+    </div>
+  </section>
+
+  <!-- ============ IV ============ -->
+  <section id="s4">
+    <h2><span class="rn">IV.</span>Meadows en tu tablero: de silos a bucles</h2>
+
+    <div class="voz ingeniera">
+      <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+      <p>Ahora la pregunta de diseño: ¿dónde intervenir? Meadows ranqueó los puntos de apalancamiento de un sistema de superficiales a profundos, y su advertencia sigue vigente: sin pensamiento sistémico, los esfuerzos de cambio se concentran en los puntos de menor apalancamiento — <em>acomodar las sillas de cubierta del Titanic</em>. Apliquemos la escalera a Go Epic, de abajo hacia arriba.</p>
+    </div>
+
+    <div class="persiana abierta">
+      <button type="button"><span>Nivel bajo — Parámetros: no redistribuyas los minutos</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>Cambiar cuántos minutos recibe cada área es el punto de apalancamiento más débil de la lista. Es la intervención que todos intentamos primero — "esta semana le doy más a Health" — y la que menos cambia el comportamiento del sistema, porque no toca la estructura que produce la competencia. Si las áreas siguen siendo silos, redistribuir el pastel solo cambia quién se queja.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>Nivel medio — Flujos de información: haz visibles las flechas</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>Meadows identificó los flujos de información — quién ve qué dato y cuándo — como uno de los puntos de apalancamiento más subutilizados: hacer visible la información correcta a quien decide cambia el comportamiento a escala sin necesidad de cambiar reglas. Para Go Epic esto es una feature concreta: una vista donde cada área declare qué <strong>exporta</strong> y qué <strong>importa</strong>. Hoy tu tablero te muestra cuánto le diste a cada área. No te muestra cuánto se dieron entre sí. Ese dato invisible es exactamente el que sostiene el modelo del pastel en tu cabeza.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>Nivel alto — Bucles y meta: del cese al fuego al volante</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>Más arriba en la escalera están los bucles de retroalimentación y, casi en la cima, la <strong>meta del sistema</strong>. Un bucle de refuerzo positivo es auto-amplificador: cuanto más trabaja, más poder gana para seguir trabajando — es la fuente del crecimiento en los sistemas. La jugada profunda para Go Epic es cambiar la meta: de <em>balance</em> a <em>volante</em>. "Balance" es una meta defensiva — un cese al fuego entre áreas rivales, mantener a los cuatro dioses igualmente poco ofendidos. "Volante" (flywheel) es una meta generativa: diseñar bucles donde Health alimenta a Career, Career financia y dignifica a Family, Family recarga el afecto que rinde en todo lo demás, y Fun repara la maquinaria completa. Cambiar la meta, dice Meadows, hace que todo lo de abajo — reglas, información, parámetros — se reorganice en cascada.</p>
+      </div></div></div>
+    </div>
+
+    <div class="fuentes">
+      Fuentes: <a href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows · Leverage Points</a>, <a href="https://dissidentchoir.com/systems-thinking-donella-meadows-12-leverage-points/">Subverse · guía práctica</a>, <a href="https://i2insights.org/2023/10/03/meadows-systems-thinking-lessons/">i2Insights · lecciones de Meadows</a>
+    </div>
+  </section>
+
+  <!-- ============ V ============ -->
+  <section id="s5">
+    <h2><span class="rn">V.</span>Un panteón o un cuerpo</h2>
+
+    <div class="voz provocador">
+      <span class="nombre">🎭 El Provocador</span>
+      <p>Ahora la parte que la ciencia no puede decir y yo sí. Si tus cuatro áreas compiten, no construiste un sistema — construiste un <strong>panteón</strong>: cuatro dioses pequeños peleándose por tus sacrificios de tiempo, y tú saliendo culpable de cada templo porque le quedaste mal a los otros tres. El politeísmo siempre termina así: nunca hay ofrenda suficiente para todos.</p>
+      <p>Pablo tenía la imagen contraria, y no era decorativa: un cuerpo, muchos miembros, y ningún miembro puede decirle al otro <em>"no te necesito"</em>. El ojo no compite con la mano — la alimenta. Y aquí está el punto fino, Gianni: tu propio mapa de Go Epic ya sabía esto antes de que lo supieras. Career→<strong>Creación</strong>, Family→<strong>Conexión</strong>, Health→<strong>Restauración</strong>, Fun→<strong>Gozo</strong>. Esos no son cuatro proyectos rivales. Son cuatro movimientos de una sola vida delante de un solo Dios.</p>
+    </div>
+
+    <blockquote>
+      «Vengan ustedes solos a un lugar apartado, para descansar un poco.»
+      <span class="ref">Marcos 6:31 · DHH</span>
+    </blockquote>
+
+    <div class="voz exegeta">
+      <span class="nombre">🏛️ El Exégeta</span>
+      <p>Y noten el contexto de esa frase, porque es un diagrama de flujo. Marcos 6:31 no está en un capítulo de vacaciones: viene inmediatamente <em>después</em> de que los apóstoles regresan de la misión y <em>antes</em> de la multiplicación de los panes. Creación → Restauración → más creación. Jesús no trata el descanso como el rival de la misión; lo instala como una etapa del bucle. El ritmo ya estaba en Génesis: seis movimientos de creación y un séptimo de shalom — y el séptimo no le roba a los seis. Los consagra. El sábado es la prueba de que las áreas de la vida no fueron diseñadas para competir: fueron diseñadas para respirar juntas.</p>
+    </div>
+
+    <div class="voz provocador">
+      <span class="nombre">🎭 El Provocador</span>
+      <p>Así que la culpa cruzada — trabajar robándole a la familia, descansar robándole al trabajo — no es una señal de que amas mucho todas tus áreas. Es la liturgia del panteón. Y la salida no es esforzarte más en los cuatro templos. Es demoler los templos y volver a ser un cuerpo.</p>
+    </div>
+  </section>
+
+  <!-- ============ VI ============ -->
+  <section id="s6">
+    <h2><span class="rn">VI.</span>El rediseño práctico de Go Epic</h2>
+
+    <div class="voz metodologo">
+      <span class="nombre">📋 El Metodólogo PDCA</span>
+      <p>Bajemos todo a features. El rediseño tiene cuatro piezas, ordenadas de la más barata a la más profunda.</p>
+    </div>
+
+    <div class="persiana abierta">
+      <button type="button"><span>1 · Tareas puente: la flecha hecha carne</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>Una <strong>tarea puente</strong> es una tarea que cuenta en dos áreas a la vez, porque <em>es</em> la flecha entre ellas. Caminar con Carlet no es Health <em>o</em> Family — es Health→Family ejecutándose. Preparar la lección del Thread con un buen café es Fun ejerciendo maestría (Sonnentag) mientras alimenta el llamado. En el modelo de datos: una tarea deja de tener un campo <code>area</code> único y gana la posibilidad de un <code>area_secundaria</code> — y el tablero las pinta con los dos colores. El objetivo no es que todas las tareas sean puente (eso diluye), sino que cada semana haya algunas, visibles, nombradas como lo que son.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>2 · Exporta/Importa: cada área declara sus flechas</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>La intervención de flujos de información: cada área de Go Epic gana dos listas cortas — <em>qué exporto</em> y <em>qué importo</em>. Health exporta energía y función ejecutiva; importa tiempo protegido. Career exporta autoeficacia, control de agenda y provisión; importa energía y afecto. Family exporta afecto positivo (la proveedora silenciosa del estudio de diario); importa presencia. Fun exporta recuperación, creatividad y gozo; importa permiso. No es un dashboard complejo: son ocho frases. Pero convierten el modelo mental del pastel en un mapa de flechas — y Meadows enseñó que hacer visible el dato correcto cambia el comportamiento sin necesidad de nuevas reglas.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>3 · Secuencia sobre cantidad: respeta los delays</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>Si el ejercicio del lunes rinde el martes, entonces el <em>orden</em> de los bloques importa tanto como su duración. El planificador semanal de Go Epic puede dejar de preguntar solo "¿cuánto le doy a cada área?" y empezar a preguntar "¿en qué orden las encadeno?" — movimiento antes del trabajo profundo, desapego real antes de la noche familiar, Open Block después de la semana cargada. Los delays de las flechas son parte del diseño: un sistema que ignora sus retrasos concluye, equivocadamente, que sus intervenciones no funcionan.</p>
+      </div></div></div>
+    </div>
+
+    <div class="persiana">
+      <button type="button"><span>4 · El Check semanal: medir flujos, no solo stocks</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p>Aquí cierro mi propio ciclo. El Check semanal de Go Epic hoy pregunta cuánto recibió cada área (stocks). El rediseño agrega una sola pregunta de flujo: <strong>"¿Qué área alimentó a cuál esta semana — y tengo un ejemplo concreto?"</strong> Si tres semanas seguidas una flecha aparece vacía, eso es un hallazgo (Check) que ajusta el plan siguiente (Act). Y recuerden la lección de la pregunta 12: el enriquecimiento entre áreas, como la transformación, es de indicador tardío. Se mide en estaciones, no en días. Pero las señales tempranas — energía, humor, presencia — sí se dejan ver en una semana.</p>
+      </div></div></div>
+    </div>
+
+    <div class="voz disenadora">
+      <span class="nombre">🎨 La Diseñadora</span>
+      <p>Y una nota visual para cuando construyas esto: las flechas merecen ser ciudadanas de primera clase en la interfaz, no un tooltip. Cuatro tarjetas — una por área, cada una con su color de la casa — y entre ellas, las exportaciones visibles. Algo así:</p>
+    </div>
+
+    <div class="tablero">
+      <div class="area-card career">
+        <h3>Career · Creación</h3>
+        <div class="proposito">Crear valor con las manos y la mente</div>
+        <ul>
+          <li>Exporta autoeficacia a Family</li>
+          <li>Exporta provisión y control de agenda</li>
+          <li>Importa energía de Health</li>
+        </ul>
+      </div>
+      <div class="area-card family">
+        <h3>Family · Conexión</h3>
+        <div class="proposito">La proveedora silenciosa</div>
+        <ul>
+          <li>Exporta afecto que rinde al día siguiente</li>
+          <li>Exporta sentido a todas las áreas</li>
+          <li>Importa presencia, no minutos sobrantes</li>
+        </ul>
+      </div>
+      <div class="area-card health">
+        <h3>Health · Restauración</h3>
+        <div class="proposito">El músculo que piensa</div>
+        <ul>
+          <li>Exporta función ejecutiva a Career</li>
+          <li>Exporta ánimo estable a Family</li>
+          <li>Importa tiempo protegido y secuencia</li>
+        </ul>
+      </div>
+      <div class="area-card fun">
+        <h3>Fun · Gozo</h3>
+        <div class="proposito">La infraestructura del trabajo</div>
+        <ul>
+          <li>Exporta recuperación y creatividad</li>
+          <li>Exporta maestría (el Thread cuenta)</li>
+          <li>Importa permiso sin culpa</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VII ============ -->
+  <section id="s7">
+    <h2><span class="rn">VII.</span>Veredicto de la mesa</h2>
+
+    <div class="voz ingeniera">
+      <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+      <p>Mi resumen en una frase de sistemas: los silos son un artefacto del tablero, no de la vida. Las flechas ya existían — la ciencia las midió, con delays y todo. Go Epic no tiene que inventar el enriquecimiento entre áreas; solo tiene que dejar de esconderlo.</p>
+    </div>
+
+    <div class="voz metodologo">
+      <span class="nombre">📋 El Metodólogo PDCA</span>
+      <p>Y mi resumen en una frase de método: deja de optimizar la repartición del pastel (parámetros) y empieza a medir las flechas (información) hasta que la meta misma del sistema cambie de balance a volante. Plan: declarar las exportaciones. Do: tareas puente cada semana. Check: ¿qué área alimentó a cuál? Act: reordenar la secuencia. El ciclo completo, sin comprar herramientas nuevas.</p>
+    </div>
+
+    <div class="voz provocador">
+      <span class="nombre">🎭 El Provocador</span>
+      <p>Y mi resumen en una frase de púlpito: cuatro templos te hacen deudor perpetuo; un solo cuerpo te hace mayordomo. La diferencia no está en tus horas. Está en tu teología del tablero.</p>
+    </div>
+
+    <div class="voz disenadora">
+      <span class="nombre">🎨 La Diseñadora</span>
+      <p>Cierro con la semilla, como manda el sistema. Una sola práctica. Siete días. Lo suficientemente pequeña para no tener excusa; lo suficientemente concreta para poder preguntarte el día ocho: ¿la hiciste?</p>
+    </div>
+
+    <div class="persiana semilla">
+      <button type="button"><span>🌱 La semilla · siete días</span><span class="flecha">▸</span></button>
+      <div class="contenido"><div><div class="inner">
+        <p><strong>La práctica:</strong> cada día de esta semana, marca <em>una</em> tarea puente en tu tablero — una sola tarea que alimente dos áreas a la vez — y escríbele su flecha al lado (por ejemplo: <em>caminar con Carlet · Health→Family</em>). No agregues tareas nuevas; solo nombra el puente que ya está ahí.</p>
+        <p><strong>El día siete,</strong> responde una única pregunta: <em>¿cuál flecha resultó más fuerte de lo que creías?</em> Esa respuesta es el primer dato real del nuevo Go Epic — el primer flujo medido de un sistema que deja de ser un panteón y empieza a ser un cuerpo.</p>
+      </div></div></div>
+    </div>
+  </section>
+
+  <footer>
+    Café con Claude · Julio 2026 · Pregunta 13 del <a href="https://giannifontanot.github.io/thread-learning-notes/">Panel</a> · Escritura citada en versión DHH
+  </footer>
+</main>
+
+<script>
+  // Progress bar
+  const prog = document.getElementById('progress');
+  document.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    prog.style.width = pct + '%';
+  }, { passive: true });
+
+  // Persianas
+  document.querySelectorAll('.persiana > button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.parentElement.classList.toggle('abierta');
+    });
+  });
+
+  // Scroll-spy
+  const enlaces = document.querySelectorAll('nav.rail ol a');
+  const secciones = document.querySelectorAll('main section');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        enlaces.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  secciones.forEach(s => obs.observe(s));
+
+  // Hamburger
+  const rail = document.getElementById('rail');
+  const hamb = document.getElementById('hamb');
+  const overlay = document.getElementById('overlay');
+  function cerrarRail() {
+    rail.classList.remove('abierta');
+    overlay.style.display = 'none';
+  }
+  hamb.addEventListener('click', () => {
+    const abierta = rail.classList.toggle('abierta');
+    overlay.style.display = abierta ? 'block' : 'none';
+  });
+  overlay.addEventListener('click', cerrarRail);
+  enlaces.forEach(a => a.addEventListener('click', cerrarRail));
+</script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El espejo y la báscula · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --paper: #fffdf7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.72;
+    font-size: 1.02rem;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 100;
+    transition: width 0.1s linear;
+  }
+
+  /* ---------- Sidebar ---------- */
+  nav.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 230px;
+    height: 100vh;
+    padding: 3.2rem 1.4rem 2rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    overflow-y: auto;
+    z-index: 50;
+  }
+  .sidebar .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--terracotta);
+    margin-bottom: 0.3rem;
+  }
+  .sidebar .brand a { color: inherit; text-decoration: none; }
+  .sidebar .serie {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8a7a63;
+    margin-bottom: 2rem;
+  }
+  .sidebar ol { list-style: none; }
+  .sidebar li { margin-bottom: 0.85rem; }
+  .sidebar a.navlink {
+    display: flex;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: #6a5b48;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    border-left: 2px solid transparent;
+    padding-left: 0.7rem;
+    margin-left: -0.7rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .sidebar a.navlink .rn {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    min-width: 1.6em;
+    color: var(--amber);
+  }
+  .sidebar a.navlink:hover { color: var(--ink); }
+  .sidebar a.navlink.active {
+    color: var(--terracotta);
+    border-left-color: var(--terracotta);
+    font-weight: 600;
+  }
+
+  /* ---------- Hamburguesa móvil ---------- */
+  #hamburger {
+    display: none;
+    position: fixed;
+    top: 0.9rem; right: 0.9rem;
+    z-index: 90;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--terracotta);
+    box-shadow: 0 2px 8px rgba(43,33,24,0.12);
+  }
+
+  /* ---------- Contenido ---------- */
+  main {
+    margin-left: 230px;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  .kicker {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--amber);
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.12;
+    margin-bottom: 0.9rem;
+  }
+  .subtitle {
+    font-style: italic;
+    color: #6a5b48;
+    font-size: 1.12rem;
+    margin-bottom: 0.6rem;
+  }
+  .pregunta-origen {
+    margin: 2rem 0 0;
+    padding: 1.1rem 1.4rem;
+    border-left: 4px solid var(--steel);
+    background: rgba(74, 107, 122, 0.07);
+    font-size: 0.97rem;
+  }
+  .pregunta-origen .quien {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--steel);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  section { margin-top: 4.2rem; }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+    line-height: 1.2;
+    margin-bottom: 1.4rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+  }
+  h2 .rn {
+    color: var(--amber);
+    font-size: 0.75em;
+    font-weight: 600;
+  }
+  p { margin-bottom: 1.15rem; }
+  em { font-style: italic; }
+
+  /* ---------- Diálogo del panel ---------- */
+  .dialogo { margin: 1.6rem 0; }
+  .voz {
+    margin-bottom: 1.4rem;
+    padding-left: 1.1rem;
+    border-left: 3px solid var(--line);
+  }
+  .voz .nombre {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .voz .acotacion { font-style: italic; color: #8a7a63; font-weight: 400; font-size: 0.85rem; }
+  .voz p { margin-bottom: 0.7rem; }
+  .voz p:last-child { margin-bottom: 0; }
+
+  .voz.metodologo { border-left-color: var(--steel); }
+  .voz.metodologo .nombre { color: var(--steel); }
+  .voz.ingeniera { border-left-color: var(--olive); }
+  .voz.ingeniera .nombre { color: var(--olive); }
+  .voz.provocador { border-left-color: var(--plum); }
+  .voz.provocador .nombre { color: var(--plum); }
+  .voz.exegeta { border-left-color: var(--terracotta); }
+  .voz.exegeta .nombre { color: var(--terracotta); }
+  .voz.disenadora { border-left-color: var(--amber); }
+  .voz.disenadora .nombre { color: var(--amber); }
+  .voz.invitado { border-left-color: #8a7a63; }
+  .voz.invitado .nombre { color: #8a7a63; }
+
+  /* ---------- Cita bíblica ---------- */
+  blockquote.biblia {
+    margin: 1.8rem 0;
+    padding: 1.3rem 1.6rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-style: italic;
+    font-size: 1.05rem;
+    position: relative;
+  }
+  blockquote.biblia .ref {
+    display: block;
+    margin-top: 0.7rem;
+    font-style: normal;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+  }
+
+  /* ---------- Tabla de niveles ---------- */
+  table.niveles {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.6rem 0;
+    font-size: 0.93rem;
+  }
+  table.niveles th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  table.niveles td {
+    padding: 0.85rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.niveles td.nivel {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--terracotta);
+  }
+  table.niveles tr:hover { background: rgba(201, 138, 45, 0.06); }
+
+  /* ---------- Persianas ---------- */
+  details.persiana {
+    margin: 1.6rem 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  details.persiana summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.4rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--terracotta);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    user-select: none;
+    transition: background 0.25s;
+  }
+  details.persiana summary::-webkit-details-marker { display: none; }
+  details.persiana summary::before {
+    content: '›';
+    font-size: 1.3em;
+    line-height: 1;
+    transition: transform 0.3s ease;
+    color: var(--amber);
+  }
+  details.persiana[open] summary::before { transform: rotate(90deg); }
+  details.persiana summary:hover { background: rgba(201, 138, 45, 0.07); }
+  details.persiana .contenido {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+  }
+  details.persiana[open] .contenido { grid-template-rows: 1fr; }
+  details.persiana .contenido > div {
+    overflow: hidden;
+    padding: 0 1.4rem;
+  }
+  details.persiana[open] .contenido > div { padding: 0.2rem 1.4rem 1.3rem; }
+
+  /* ---------- Fuentes ---------- */
+  .fuentes {
+    margin-top: 1.4rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--line);
+    font-size: 0.86rem;
+    color: #6a5b48;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(180, 83, 42, 0.4);
+  }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- Persiana semilla ---------- */
+  details.semilla {
+    margin: 3rem 0 0;
+    border: 2px solid var(--olive);
+    border-radius: 10px;
+    background: rgba(107, 122, 63, 0.06);
+    overflow: hidden;
+  }
+  details.semilla summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1.2rem 1.5rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--olive);
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    user-select: none;
+  }
+  details.semilla summary::-webkit-details-marker { display: none; }
+  details.semilla summary::before {
+    content: '🌱';
+    transition: transform 0.35s ease;
+  }
+  details.semilla[open] summary::before { transform: rotate(20deg) scale(1.15); }
+  details.semilla .contenido {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s ease;
+  }
+  details.semilla[open] .contenido { grid-template-rows: 1fr; }
+  details.semilla .contenido > div { overflow: hidden; padding: 0 1.5rem; }
+  details.semilla[open] .contenido > div { padding: 0.2rem 1.5rem 1.5rem; }
+  .dia {
+    display: flex;
+    gap: 0.9rem;
+    margin-bottom: 0.95rem;
+    align-items: baseline;
+  }
+  .dia .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--olive);
+    min-width: 3.4em;
+    font-size: 0.9rem;
+  }
+  .dia p { margin: 0; font-size: 0.95rem; }
+
+  /* ---------- Cierre ---------- */
+  .cierre {
+    margin-top: 3.5rem;
+    padding: 1.3rem 1.5rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06);
+    font-size: 0.98rem;
+  }
+  .cierre strong { font-family: 'Fraunces', serif; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+    color: #8a7a63;
+    font-style: italic;
+  }
+  footer a { color: var(--terracotta); text-decoration: none; }
+
+  /* ---------- Responsivo ---------- */
+  @media (max-width: 900px) {
+    nav.sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      box-shadow: 4px 0 20px rgba(43,33,24,0.15);
+    }
+    nav.sidebar.open { transform: translateX(0); }
+    #hamburger { display: block; }
+    main { margin-left: 0; padding-top: 3.8rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button id="hamburger" aria-label="Abrir menú">☰</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand"><a href="https://giannifontanot.github.io/thread-learning-notes/">Café con Claude</a></div>
+  <div class="serie">El panel pregunta · I</div>
+  <ol>
+    <li><a class="navlink" href="#s1"><span class="rn">I</span>El espejo y la báscula</a></li>
+    <li><a class="navlink" href="#s2"><span class="rn">II</span>Deming interrumpe: «Yo no dije Check»</a></li>
+    <li><a class="navlink" href="#s3"><span class="rn">III</span>Los cuatro pisos de Kirkpatrick</a></li>
+    <li><a class="navlink" href="#s4"><span class="rn">IV</span>REVEAL: la iglesia que se pesó a sí misma</a></li>
+    <li><a class="navlink" href="#s5"><span class="rn">V</span>Mezirow y el dilema desorientador</a></li>
+    <li><a class="navlink" href="#s6"><span class="rn">VI</span>Willard: qué mirar cuando miras</a></li>
+    <li><a class="navlink" href="#s7"><span class="rn">VII</span>El tablero de la mesa</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+  <div class="kicker">Café con Claude · Serie: El panel pregunta</div>
+  <h1>El espejo y la báscula</h1>
+  <p class="subtitle">Cómo saber si una página de estudio transformó a alguien — y no solo lo informó</p>
+
+  <div class="pregunta-origen">
+    <span class="quien">📋 El Metodólogo PDCA preguntó:</span>
+    «¿Cómo mido si una página de estudio realmente transformó a alguien, y no solo lo informó?» — el "Check" del PDCA aplicado a discipulado.
+  </div>
+
+  <!-- ============ I ============ -->
+  <section id="s1">
+    <h2><span class="rn">I</span>El espejo y la báscula</h2>
+
+    <div class="dialogo">
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo PDCA <span class="acotacion">(sirviéndose café, incómodo porque hoy la pregunta es suya)</span></span>
+        <p>Tengo que confesar algo delante de toda la mesa. Cada página de Café con Claude tiene un Plan impecable y un Do hermoso. Y ahí me detengo. Nunca cierro el ciclo. Publicamos, celebramos la tipografía, y no tenemos la menor idea de si alguien cambió. ¿Cómo se hace <em>Check</em> con un alma?</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>Antes de que traigan sus modelos y sus siglas, quiero recordar que esta pregunta tiene dos mil años, y que Santiago la respondió con el instrumento de medición más antiguo del discipulado: un espejo.</p>
+      </div>
+    </div>
+
+    <blockquote class="biblia">
+      «No basta con oír el mensaje; hay que ponerlo en práctica, pues de lo contrario se estarían engañando ustedes mismos. El que solamente oye el mensaje, y no lo practica, es como el hombre que se mira la cara en un espejo: se ve a sí mismo, pero en cuanto da la vuelta se olvida de cómo es.»
+      <span class="ref">Santiago 1:22–24 · DHH</span>
+    </blockquote>
+
+    <div class="dialogo">
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>La página es el espejo. Y la métrica de Santiago no es cuánto tiempo miraste el espejo, ni qué tan hermoso era el marco. La métrica es <em>qué hiciste al alejarte de él</em>. Informar es mostrar el reflejo; transformar es que la persona no olvide su cara.</p>
+        <p>Y Marcos —nuestro evangelio de cabecera en esta mesa— abre su sección de parábolas exactamente con este problema. En el sembrador de Marcos 4, la misma semilla cae en cuatro terrenos. La semilla no varía; la página no varía. Lo que varía es el terreno, y la única métrica que Jesús ofrece es el fruto: treinta, sesenta, cien por uno. Un fruto que solo se ve <em>con el tiempo</em>.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo</span>
+        <p>Entonces Jesús ya distinguía entre <em>alcance</em> (cuatro terrenos recibieron semilla: cien por ciento de entrega) y <em>transformación</em> (uno solo dio fruto). Si yo hubiera medido esa parábola con mis métricas de siempre, habría reportado un éxito rotundo de distribución.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador</span>
+        <p>Y habrías puesto «75% de pérdida de semilla» en una diapositiva roja. El punto de la parábola es que el sembrador <em>sabe</em> que la mayoría de la semilla no fructifica, y siembra igual. La medición no es para dejar de sembrar; es para no confundir el ruido del pájaro comiendo con el sonido de la cosecha.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ II ============ -->
+  <section id="s2">
+    <h2><span class="rn">II</span>Deming interrumpe: «Yo no dije Check»</h2>
+
+    <div class="dialogo">
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+        <p>Metodólogo, tengo una noticia que va a doler un poco: tu propia sigla está mal. El mismo Deming rechazó públicamente el «PDCA» y en los años ochenta reemplazó <em>Check</em> por <em>Study</em>: Plan–Do–<strong>Study</strong>–Act. Su razón fue quirúrgica: en inglés, «Check» está atado a inspección, auditoría y vigilancia — actividades de juez, no de aprendiz. «Check» pregunta <em>¿funcionó, sí o no?</em>; «Study» pregunta <em>¿qué aprendimos, incluso de lo inesperado?</em></p>
+        <p>Y hay un detalle operativo que cambia todo tu proyecto: el ciclo PDSA exige que el Plan incluya una <strong>predicción explícita</strong>. No mides contra la nada; mides contra lo que predijiste. Deming quería comparar resultados reales con resultados esperados para poder <em>revisar la teoría</em>.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo <span class="acotacion">(tachando una C en su libreta con dignidad)</span></span>
+        <p>Entonces mi primer error no era de instrumentos sino de postura. Yo quería auditar lectores; Deming me pide estudiar terrenos. Traducido a la mesa: antes de publicar una página, escribo una frase — <em>«Predigo que quien lea esto hará X esta semana»</em>. Una semana después no pregunto «¿te gustó?» sino «¿qué pasó, y por qué?».</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>Nota al margen: «no juzguen para no ser juzgados… pero por sus frutos los conocerán» es exactamente esa distinción. Jesús prohíbe el <em>Check</em> —el tribunal— y ordena el <em>Study</em> —la observación paciente del fruto. Deming llegó a Mateo 7 con cuarenta siglos de retraso, pero llegó.</p>
+      </div>
+    </div>
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a href="https://deming.org/explore/pdsa/">The Deming Institute</a>, <a href="https://www.geneo.co.uk/pdca-vs-pdsa-deming-toyota-culture/">GENEO</a>, <a href="https://www.si-labs.com/en/articles/pdca-cycle/">SI Labs</a>, <a href="https://www.process.st/deming-cycle/">Process Street</a></p>
+  </section>
+
+  <!-- ============ III ============ -->
+  <section id="s3">
+    <h2><span class="rn">III</span>Los cuatro pisos de Kirkpatrick</h2>
+
+    <div class="dialogo">
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+        <p>Ahora los instrumentos. Desde 1959, el modelo estándar para evaluar si un aprendizaje sirvió de algo es el de Donald Kirkpatrick: cuatro niveles — Reacción, Aprendizaje, Conducta y Resultados — donde cada nivel es más difícil <em>y más valioso</em> de medir que el anterior. Traducido al idioma de esta mesa:</p>
+      </div>
+    </div>
+
+    <table class="niveles">
+      <thead>
+        <tr><th>Nivel</th><th>Kirkpatrick pregunta</th><th>En Café con Claude suena así</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nivel">1 · Reacción</td>
+          <td>¿Les gustó?</td>
+          <td>«Qué hermosa página, me encantaron las persianas.»</td>
+        </tr>
+        <tr>
+          <td class="nivel">2 · Aprendizaje</td>
+          <td>¿Aprendieron algo?</td>
+          <td>«Ahora sé qué significa <em>splanchnizomai</em>.»</td>
+        </tr>
+        <tr>
+          <td class="nivel">3 · Conducta</td>
+          <td>¿Hacen algo distinto?</td>
+          <td>«Esta semana me detuve con la persona que siempre esquivo.»</td>
+        </tr>
+        <tr>
+          <td class="nivel">4 · Fruto</td>
+          <td>¿Cambió el sistema?</td>
+          <td>«Nuestra pequeña red se parece un poco más al Reino.»</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="dialogo">
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador</span>
+        <p>Y ahora los datos incómodos. Primero: la mayoría de las organizaciones se queda midiendo los niveles 1 y 2, porque el 3 y el 4 cuestan trabajo — es decir, <em>los datos que más importan son los que menos se recolectan</em>. Segundo: la cadena causal del modelo es débil; que a alguien le encante tu página no predice casi nada sobre si va a cambiar su conducta. El aplauso es el nivel más ruidoso y el menos informativo.</p>
+      </div>
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera</span>
+        <p>Y tercero, el que más le duele a un creador de contenido: la conducta se evalúa <strong>tres a seis meses después</strong>, porque medir antes produce datos poco confiables. La transformación tiene <em>lag</em>, como todo sistema con inercia. El sembrador no desentierra la semilla el martes para ver cómo va.</p>
+      </div>
+      <div class="voz disenadora">
+        <span class="nombre">🎨 La Diseñadora</span>
+        <p>Lo cual significa que el «me encantó» que recibes el mismo día es, con perdón de todos, mi métrica. Nivel 1 es mi departamento: mide si el espejo estaba limpio y bien iluminado. Necesario — nadie se mira en un espejo sucio — pero nadie se transforma por la calidad del marco.</p>
+      </div>
+    </div>
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a href="https://www.devlinpeck.com/content/kirkpatrick-model-evaluation">Devlin Peck</a>, <a href="https://www.ardentlearning.com/blog/what-is-the-kirkpatrick-model">Ardent Learning</a>, <a href="https://www.valamis.com/hub/kirkpatrick-model">Valamis</a></p>
+  </section>
+
+  <!-- ============ IV ============ -->
+  <section id="s4">
+    <h2><span class="rn">IV</span>REVEAL: la iglesia que se pesó a sí misma</h2>
+
+    <div class="dialogo">
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador <span class="acotacion">(desenvolviendo su regalo favorito: una historia que no se cuenta en sermones)</span></span>
+        <p>Willow Creek, la megaiglesia de Chicago que fue modelo para miles de congregaciones, hizo en 2007 lo que ninguna se atrevía: se midió a sí misma. El estudio se llamó REVEAL, encuestó a decenas de miles de personas en cientos de iglesias, y definió crecimiento espiritual como «un amor creciente por Dios y por las personas». El hallazgo que sacudió todo: <strong>la participación en actividades de la iglesia no predice el crecimiento espiritual a largo plazo</strong>. A su pastor, Bill Hybels, le resultó «casi insoportable» descubrir que cerca de un cuarto de su congregación estaba espiritualmente estancada o insatisfecha — con toda la asistencia del mundo.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo</span>
+        <p>Es decir: midieron asistencia durante treinta años creyendo que medían discipulado. Optimizaron la métrica equivocada con excelencia de clase mundial.</p>
+      </div>
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera</span>
+        <p>Goodhart en versión eclesial: cuando una medida se convierte en meta, deja de ser buena medida. Y la traducción directa para esta mesa es brutal: <em>páginas visitadas</em> es tu métrica de asistencia. Puede subir indefinidamente mientras nadie cambia. Lo que sí encontró REVEAL como catalizador fue otra cosa: la reflexión personal en la Escritura y las prácticas espirituales propias — lo que la persona hace <em>cuando la página ya se cerró</em>.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador</span>
+        <p>Y para que esta mesa no caiga en el pecado que denuncia: hasta la medición hay que medirla. El sociólogo Bradley Wright criticó el diseño del estudio como metodológicamente débil y sus datos como sobre-interpretados. REVEAL nos regala la sospecha correcta — actividad ≠ transformación — pero no un veredicto científico. Humildad epistémica hasta con nuestras historias favoritas.</p>
+      </div>
+    </div>
+
+    <details class="persiana">
+      <summary>El continuo espiritual de REVEAL — y por qué importa a quién le preguntas</summary>
+      <div class="contenido"><div>
+        <p>REVEAL organizó a las personas en un continuo de cuatro estaciones: explorando la fe, creciendo en Cristo, cerca de Cristo, y centrado en Cristo. Su hallazgo estructural: la iglesia influye más en las primeras estaciones — los servicios y programas son críticos para quien empieza — y pierde tracción en las últimas, donde el crecimiento depende de prácticas personales. Para una página de estudio esto significa que la misma página no puede medirse igual para todos los lectores: para uno, «leer completo» ya es fruto; para otro, solo el cambio de conducta cuenta. El terreno importa tanto como la semilla — Marcos 4 otra vez.</p>
+      </div></div>
+    </details>
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a href="https://effectivechurch.com/reveal-study/">The Effective Church Group</a>, <a href="https://www.christiancentury.org/article/2008-01/willow-creek-finds-limits-its-model">The Christian Century</a>, <a href="https://www.christianitytoday.com/2008/02/what-reveal-reveals/">Christianity Today</a>, <a href="https://www.modernreformation.org/resources/articles/reveal-where-are-you-and-follow-me-whats-next-for-you-by-greg-hawkins-and-cally-parkinson">Modern Reformation</a></p>
+  </section>
+
+  <!-- ============ V ============ -->
+  <section id="s5">
+    <h2><span class="rn">V</span>Mezirow y el dilema desorientador</h2>
+
+    <div class="dialogo">
+      <div class="voz invitado">
+        <span class="nombre">🎓 Jack Mezirow, voz invitada <span class="acotacion">(el panel le hizo un espacio en la mesa)</span></span>
+        <p>Estudié durante décadas cómo cambian de verdad los adultos, y mi conclusión incomoda a todo creador de contenido hermoso: la transformación de perspectiva ocurre <em>con poca frecuencia</em>. Y cuando ocurre, casi nunca empieza con información nueva — empieza con un <strong>dilema desorientador</strong>: una experiencia que no encaja en lo que la persona ya creía. Después vienen la reflexión crítica sobre los propios supuestos, la conversación con otros que atraviesan lo mismo, y solo al final la integración de una perspectiva nueva.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo</span>
+        <p>Entonces hay una métrica escondida aquí que nunca se me habría ocurrido: no medir cuántos lectores <em>asienten</em>, sino cuántos salen <em>desorientados en la dirección correcta</em>. Una página que solo confirma lo que el lector ya creía, informó. Una que le movió el piso un momento, abrió la puerta.</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>Que es exactamente la pedagogía de Jesús en Marcos. Las parábolas no informan: desorientan. «¿Y esta historia qué quiso decir?» — los discípulos salen confundidos y <em>preguntando</em>, y Jesús explica en privado a los que volvieron con la pregunta. La pregunta de regreso era su métrica. Marcos 4:10–12 es un embudo de conversión con dos mil años de antigüedad: muchos oyen, pocos regresan a preguntar, a esos se les da más.</p>
+      </div>
+      <div class="voz disenadora">
+        <span class="nombre">🎨 La Diseñadora</span>
+        <p>Y eso sí puedo instrumentarlo sin traicionar la estética: cada página puede terminar con una pregunta que no se responde a sí misma — y un lugar tan simple como «escríbele esto a alguien hoy». No un botón de compartir: una instrucción de conversación. Mezirow dice que el discurso con otros es una fase de la transformación; entonces la página debe <em>empujar hacia una conversación</em>, no hacia otro clic.</p>
+      </div>
+    </div>
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a href="https://www.wgu.edu/blog/what-transformative-learning-theory2007.html">WGU</a>, <a href="https://learning-theories.com/transformative-learning-theory-mezirow.html">Learning Theories</a>, <a href="https://en.wikipedia.org/wiki/Transformative_learning">Wikipedia</a></p>
+  </section>
+
+  <!-- ============ VI ============ -->
+  <section id="s6">
+    <h2><span class="rn">VI</span>Willard: qué mirar cuando miras</h2>
+
+    <div class="dialogo">
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>Falta el teólogo que pensó esto con más precisión: Dallas Willard. En <em>Renovation of the Heart</em> propuso que toda transformación —espiritual o no— sigue el patrón <strong>VIM</strong>: <em>Vision</em> (ver que el cambio es posible y deseable), <em>Intention</em> (decidir de verdad hacerlo), <em>Means</em> (los medios y prácticas para lograrlo). Willard insistía en que los medios sin visión ni intención no funcionan; por eso el mundo está lleno de gente con planes de ejercicio y sin ejercicio.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo</span>
+        <p>Y aquí está la frontera exacta de mi problema, por fin dibujada: una página puede entregar <strong>Visión</strong> —mostrar que otra manera de vivir es posible— y puede entregar <strong>Medios</strong> —una práctica, un texto, un hábito de siete días. Pero la <strong>Intención</strong> no vive en el HTML. Vive en el lector. Por eso ninguna analítica de página medirá jamás la transformación directamente: lo máximo que puede detectar es <em>evidencia de intención</em> — alguien que volvió, que preguntó, que hizo la práctica, que le escribió a otro.</p>
+      </div>
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera</span>
+        <p>Lo cual, en lenguaje de sistemas, resuelve elegantemente el problema de medición: no midas el estado interno inobservable; mide las <em>señales que solo ese estado produce</em>. Nadie hace una práctica de siete días por cortesía. Nadie manda un mensaje incómodo a un hermano por buena tipografía. Esas conductas son costosas de fingir — y por eso son buena señal.</p>
+      </div>
+    </div>
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a href="https://renovare.org/articles/interview-dallas-willard-renovation-of-the-heart">Renovaré</a>, <a href="https://kingdomformation.org/formational-theology/v-i-m/">Kingdom Formation</a>, <a href="https://www.preachingtoday.com/skills/2010/march/preachvimnotvigor.html">Preaching Today</a></p>
+  </section>
+
+  <!-- ============ VII ============ -->
+  <section id="s7">
+    <h2><span class="rn">VII</span>El tablero de la mesa</h2>
+
+    <div class="dialogo">
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo <span class="acotacion">(pasando en limpio, con la letra que reserva para las conclusiones)</span></span>
+        <p>Cierro mi libreta con cinco reglas, una por invitado:</p>
+        <p><strong>1 · Deming:</strong> antes de publicar, escribir una predicción de una frase — <em>«quien lea esto hará X esta semana»</em>. Sin predicción no hay Study, solo opinión retroactiva.</p>
+        <p><strong>2 · Kirkpatrick:</strong> nunca celebrar el nivel 1. El «me encantó» del mismo día mide el espejo, no el rostro. La pregunta de conducta se hace semanas después.</p>
+        <p><strong>3 · REVEAL:</strong> desconfiar de toda métrica de actividad. Visitas, lecturas y tiempo en página son asistencia; la asistencia no predice transformación.</p>
+        <p><strong>4 · Mezirow:</strong> buscar evidencia de dilema, no de acuerdo. La mejor señal temprana es una pregunta de regreso — como los discípulos en Marcos 4.</p>
+        <p><strong>5 · Willard:</strong> medir solo señales costosas de fingir: la práctica hecha, la conversación iniciada, el regreso a la semana. La página da Visión y Medios; la Intención se mide en la vida.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador</span>
+        <p>Y una advertencia final, gratis: el día que estas cinco reglas se conviertan en un dashboard con colores, Goodhart vendrá por ellas también. La medición del discipulado es artesanal o no es. Se hace preguntando a personas con nombre, no agregando filas.</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>El sembrador salió a sembrar sabiendo que no controlaba el terreno. Midió lo único que se puede medir: siguió sembrando, y volvió a mirar el campo con paciencia. Treinta, sesenta, cien — a su tiempo.</p>
+      </div>
+    </div>
+
+    <div class="cierre">
+      <strong>La frase que se lleva la mesa:</strong> una página informa cuando el lector recuerda la página; transforma cuando, al alejarse del espejo, no olvida su propia cara.
+    </div>
+
+    <details class="semilla">
+      <summary>Persiana-semilla · El espejo de Santiago — práctica de siete días</summary>
+      <div class="contenido"><div>
+        <p style="margin-bottom:1.1rem;">Esta vez la práctica no es para el lector de tus páginas: es para ti, el que las escribe. Siete días para cerrar el ciclo por primera vez.</p>
+        <div class="dia"><span class="num">Día 1</span><p>Elige una página ya publicada. Escribe en una línea qué transformación <em>predices</em> que produjo. Guárdala sin compartirla.</p></div>
+        <div class="dia"><span class="num">Día 2</span><p>Envíale la página a una persona con nombre. No la promociones: entrégasela, como quien entrega semilla.</p></div>
+        <div class="dia"><span class="num">Día 3</span><p>No hagas nada. La semilla germina bajo tierra. Resiste el impulso de preguntar «¿ya la leíste?».</p></div>
+        <div class="dia"><span class="num">Día 4</span><p>Ora por esa persona, no por la página. La página ya hizo su parte; el terreno no es tuyo.</p></div>
+        <div class="dia"><span class="num">Día 5</span><p>Escribe qué pregunta incómoda te dejó a ti esa página cuando la escribiste. Si no te dejó ninguna, anota eso también — es un dato.</p></div>
+        <div class="dia"><span class="num">Día 6</span><p>Pregúntale a la persona una sola cosa: «¿Hiciste algo distinto esta semana?». Escucha sin defender la página.</p></div>
+        <div class="dia"><span class="num">Día 7</span><p>Compara la respuesta con tu predicción del día 1. Eso —esa distancia entre lo esperado y lo real— es tu primer <em>Study</em>. Ajusta la próxima página con lo aprendido. El ciclo, por fin, dio la vuelta.</p></div>
+      </div></div>
+    </details>
+  </section>
+
+  <footer>
+    Café con Claude · La Red es la Iglesia · Serie «El panel pregunta» · Julio 2026 ·
+    <a href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a>
+  </footer>
+
+</div>
+</main>
+
+<script>
+  // Barra de progreso
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = pct + '%';
+  }, { passive: true });
+
+  // Hamburguesa
+  const sidebar = document.getElementById('sidebar');
+  const burger = document.getElementById('hamburger');
+  burger.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    burger.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+  });
+  sidebar.querySelectorAll('a.navlink').forEach(a => {
+    a.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      burger.textContent = '☰';
+    });
+  });
+
+  // Scroll-spy
+  const links = [...document.querySelectorAll('.sidebar a.navlink')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = '#' + e.target.id;
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-35% 0px -55% 0px' });
+  sections.forEach(s => s && spy.observe(s));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuatro hornillas, una sola llama · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f1e5;
+    --ink: #2b2118;
+    --terracotta: #b4532a;
+    --amber: #c98a2d;
+    --olive: #6b7a3f;
+    --plum: #6e4a6e;
+    --steel: #4a6b7a;
+    --line: #d9cdb8;
+    --paper: #fdfaf3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.75;
+    font-size: 1.05rem;
+  }
+
+  /* ── Barra de progreso ─────────────────────────── */
+  #progreso {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--terracotta), var(--amber));
+    z-index: 100;
+    transition: width 0.1s linear;
+  }
+
+  /* ── Sidebar ───────────────────────────────────── */
+  nav.lateral {
+    position: fixed;
+    top: 0; left: 0;
+    width: 230px;
+    height: 100vh;
+    padding: 3.5rem 1.5rem 2rem;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    overflow-y: auto;
+    z-index: 90;
+  }
+
+  nav.lateral .marca {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--terracotta);
+    margin-bottom: 0.3rem;
+  }
+  nav.lateral .marca a { color: inherit; text-decoration: none; }
+  nav.lateral .serie {
+    font-style: italic;
+    font-size: 0.78rem;
+    color: #6a5b48;
+    margin-bottom: 2rem;
+  }
+
+  nav.lateral ol { list-style: none; }
+  nav.lateral li { margin-bottom: 0.85rem; }
+  nav.lateral a.sec {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    text-decoration: none;
+    color: #6a5b48;
+    font-size: 0.86rem;
+    line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.lateral a.sec .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    min-width: 1.9em;
+    color: var(--amber);
+    transition: color 0.2s;
+  }
+  nav.lateral a.sec:hover { color: var(--ink); }
+  nav.lateral a.sec.activo { color: var(--terracotta); font-weight: 600; }
+  nav.lateral a.sec.activo .num { color: var(--terracotta); }
+
+  /* ── Hamburguesa (móvil) ───────────────────────── */
+  #hamburguesa {
+    display: none;
+    position: fixed;
+    top: 0.9rem; right: 0.9rem;
+    z-index: 110;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    width: 44px; height: 44px;
+    font-size: 1.25rem;
+    color: var(--terracotta);
+    cursor: pointer;
+    font-family: 'Fraunces', serif;
+  }
+
+  /* ── Contenido ─────────────────────────────────── */
+  main {
+    margin-left: 230px;
+    padding: 3.5rem 2rem 5rem;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .miga {
+    font-size: 0.85rem;
+    margin-bottom: 2.2rem;
+  }
+  .miga a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terracotta);
+  }
+  .miga a:hover { color: var(--ink); border-color: var(--ink); }
+
+  header.portada { margin-bottom: 3.5rem; }
+  .kicker {
+    font-family: 'Fraunces', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.8rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5.5vw, 3.1rem);
+    line-height: 1.12;
+    margin-bottom: 1rem;
+  }
+  .bajada {
+    font-style: italic;
+    font-size: 1.12rem;
+    color: #6a5b48;
+    max-width: 34em;
+  }
+
+  section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 1.3rem;
+    padding-top: 0.5rem;
+  }
+  h2 .rnum {
+    color: var(--amber);
+    margin-right: 0.5rem;
+  }
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 1.8rem 0 0.7rem;
+  }
+
+  p { margin-bottom: 1.15rem; }
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+
+  a.fuente {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--terracotta);
+  }
+  a.fuente:hover { color: var(--ink); border-color: var(--ink); }
+
+  .fuentes {
+    font-size: 0.88rem;
+    color: #6a5b48;
+    border-top: 1px dashed var(--line);
+    padding-top: 0.6rem;
+    margin-top: 1.6rem;
+  }
+  .fuentes .lbl {
+    font-family: 'Fraunces', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-right: 0.5rem;
+  }
+
+  /* ── Diálogo del panel ─────────────────────────── */
+  .dialogo {
+    margin: 1.6rem 0;
+    padding-left: 1.1rem;
+    border-left: 3px solid var(--line);
+  }
+  .voz { margin-bottom: 1.15rem; }
+  .voz .nombre {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.95rem;
+  }
+  .voz.exegeta .nombre { color: var(--terracotta); }
+  .voz.ingeniera .nombre { color: var(--olive); }
+  .voz.provocador .nombre { color: var(--plum); }
+  .voz.disenadora .nombre { color: var(--amber); }
+  .voz.metodologo .nombre { color: var(--steel); }
+  .voz p { margin-bottom: 0.4rem; }
+
+  /* ── Citas destacadas ──────────────────────────── */
+  blockquote {
+    margin: 1.8rem 0;
+    padding: 1.1rem 1.4rem;
+    background: rgba(201, 138, 45, 0.08);
+    border-left: 4px solid var(--amber);
+    font-style: italic;
+    font-size: 1.08rem;
+  }
+  blockquote .ref {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-size: 0.85rem;
+    color: #6a5b48;
+    font-family: 'Fraunces', serif;
+  }
+
+  /* ── Persianas ─────────────────────────────────── */
+  .persiana {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    margin: 1.6rem 0;
+    overflow: hidden;
+  }
+  .persiana-toggle {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .persiana-toggle .flecha {
+    display: inline-block;
+    transition: transform 0.35s ease;
+    color: var(--terracotta);
+  }
+  .persiana.abierta .persiana-toggle .flecha { transform: rotate(90deg); }
+  .persiana-cuerpo {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s ease;
+  }
+  .persiana.abierta .persiana-cuerpo { grid-template-rows: 1fr; }
+  .persiana-inner {
+    overflow: hidden;
+    padding: 0 1.25rem;
+  }
+  .persiana.abierta .persiana-inner { padding-bottom: 1.2rem; }
+  .persiana-inner > :first-child { margin-top: 0.2rem; }
+
+  /* ── Tabla ─────────────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; margin: 1.4rem 0; font-size: 0.95rem; }
+  thead th {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.6rem 0.7rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  tbody td {
+    padding: 0.75rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: rgba(201, 138, 45, 0.07); }
+
+  /* ── Diagrama ──────────────────────────────────── */
+  figure.diagrama {
+    margin: 2rem 0;
+    padding: 1.4rem 1rem 1rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    text-align: center;
+  }
+  figure.diagrama svg { max-width: 100%; height: auto; }
+  figcaption {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #6a5b48;
+    margin-top: 0.8rem;
+  }
+
+  /* ── Persiana-semilla ──────────────────────────── */
+  .semilla {
+    border: 2px solid var(--olive);
+    background: rgba(107, 122, 63, 0.07);
+  }
+  .semilla .persiana-toggle { color: var(--olive); }
+  .semilla .persiana-toggle .flecha { color: var(--olive); }
+  .dia {
+    display: flex;
+    gap: 0.9rem;
+    margin-bottom: 0.9rem;
+    align-items: baseline;
+  }
+  .dia .d {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--olive);
+    min-width: 3.4em;
+    font-size: 0.9rem;
+  }
+  .dia p { margin-bottom: 0; font-size: 0.98rem; }
+
+  .cierre {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line);
+    font-style: italic;
+    color: #6a5b48;
+    font-size: 0.95rem;
+  }
+
+  /* ── Responsive ────────────────────────────────── */
+  @media (max-width: 900px) {
+    nav.lateral {
+      transform: translateX(-100%);
+      transition: transform 0.35s ease;
+      box-shadow: 4px 0 20px rgba(43, 33, 24, 0.15);
+    }
+    nav.lateral.abierto { transform: translateX(0); }
+    #hamburguesa { display: block; }
+    main { margin-left: 0; padding: 3rem 1.25rem 4rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .persiana-cuerpo, .persiana-toggle .flecha, nav.lateral, #progreso { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progreso"></div>
+<button id="hamburguesa" aria-label="Abrir navegación">☰</button>
+
+<nav class="lateral" id="lateral">
+  <div class="marca"><a href="https://giannifontanot.github.io/thread-learning-notes/">Café con Claude</a></div>
+  <div class="serie">El Panel Pregunta · Nº 14</div>
+  <ol>
+    <li><a class="sec" href="#s1"><span class="num">I</span> La pregunta servida</a></li>
+    <li><a class="sec" href="#s2"><span class="num">II</span> La estufa de Sedaris</a></li>
+    <li><a class="sec" href="#s3"><span class="num">III</span> Cuando los roles se enriquecen</a></li>
+    <li><a class="sec" href="#s4"><span class="num">IV</span> El mapa de flujos</a></li>
+    <li><a class="sec" href="#s5"><span class="num">V</span> Con todo: la teología</a></li>
+    <li><a class="sec" href="#s6"><span class="num">VI</span> Arquitectura para Go Epic</a></li>
+    <li><a class="sec" href="#s7"><span class="num">VII</span> La semilla</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="wrap">
+
+  <div class="miga"><a href="https://giannifontanot.github.io/thread-learning-notes/">← Thread Learning Notes</a></div>
+
+  <header class="portada">
+    <div class="kicker">El Panel Pregunta · Nº 14 · El Metodólogo PDCA</div>
+    <h1>Cuatro hornillas, una sola llama</h1>
+    <p class="bajada">Cómo estructurar Go Epic para que Career, Family, Health y Fun dejen de competir por el mismo gas y empiecen a alimentarse entre sí — un rediseño de estufa con ayuda de Greenhaus, Duhigg, Ackoff y Marcos 12:30.</p>
+  </header>
+
+  <!-- ═══════════ I ═══════════ -->
+  <section id="s1">
+    <h2><span class="rnum">I.</span>La pregunta servida</h2>
+
+    <p>La pregunta catorce del panel era del Metodólogo, y era personal: <em>«¿Cómo estructuro Go Epic para que mis cuatro áreas no compitan entre sí sino que se alimenten?»</em> Career, Family, Health, Fun. Cuatro carpetas en una app. Cuatro listas de épicas. Y una sospecha creciente: que las cuatro se estaban peleando por el mismo presupuesto de horas, y que la app —tal como estaba diseñada— era el árbitro de esa pelea, no su solución.</p>
+
+    <div class="dialogo">
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo PDCA</span>
+        <p>Confieso el pecado de origen: diseñé Go Epic como cuatro silos con métricas propias. Horas de gym en Health. Épicas cerradas en Career. Salidas en Family. Y cada domingo, al revisar, sentía que darle a una era quitarle a otra.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador</span>
+        <p>Eso no es un pecado tuyo. Es el dogma oficial de toda la cultura de productividad. Y hoy vamos a hacerle exégesis crítica al dogma.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ II ═══════════ -->
+  <section id="s2">
+    <h2><span class="rnum">II.</span>La estufa de Sedaris: el modelo de silos</h2>
+
+    <p>El modelo mental dominante tiene nombre y apellido. En 2009, David Sedaris publicó en <em>The New Yorker</em> una historia que le contó una empresaria australiana: la vida es una estufa de cuatro hornillas —familia, amigos, salud y trabajo— y para ser exitoso hay que apagar una; para ser <em>muy</em> exitoso, hay que apagar dos. James Clear popularizó la idea como la <em>Four Burners Theory</em>, y la formuló sin anestesia: la vida está llena de <em>trade-offs</em>; si quieres sobresalir en el trabajo y el matrimonio, tus amigos y tu salud probablemente van a sufrir.</p>
+
+    <p>Fíjate en las premisas escondidas del modelo, porque ahí está todo el problema:</p>
+
+    <table>
+      <thead>
+        <tr><th>Premisa de la estufa</th><th>Lo que implica</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Hay <strong>un solo tanque de gas</strong> (tu tiempo y energía)</td><td>Todo es suma cero: lo que una hornilla gana, otra lo pierde</td></tr>
+        <tr><td>Las hornillas <strong>no se tocan</strong> entre sí</td><td>Las áreas son silos independientes sin transferencia posible</td></tr>
+        <tr><td>Cada hornilla solo <strong>consume</strong></td><td>Ninguna área produce recursos; todas gastan</td></tr>
+        <tr><td>El éxito exige <strong>apagar</strong> hornillas</td><td>La integración es imposible; solo queda el sacrificio</td></tr>
+      </tbody>
+    </table>
+
+    <p>Clear mismo ofrece paliativos —tercerizar, poner límites, vivir por temporadas donde subes una hornilla y bajas otra— pero nunca cuestiona la física de la estufa. Y esa física es exactamente la que Go Epic heredó sin darse cuenta: cuatro áreas que solo consumen, conectadas únicamente por el recurso escaso que se disputan.</p>
+
+    <div class="dialogo">
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+        <p>Como metáfora de <em>límites</em>, la estufa funciona: el día sí tiene 24 horas. Pero como modelo de <em>sistema</em>, es paupérrima. No tiene flujos entre nodos, no tiene bucles de retroalimentación, no tiene nodos productores. Es un diagrama de cuatro gastos, no un sistema.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador</span>
+        <p>Y noten la ironía deliciosa: hasta los defensores de la teoría terminan admitiendo la fuga. Un empresario que escribió sobre sus propias hornillas reconoce que no es un juego de suma cero: mejorar la hornilla de salud aumenta la intensidad de todas las demás. El modelo se contradice a sí mismo en cuanto alguien lo vive de verdad.</p>
+      </div>
+    </div>
+
+    <div class="fuentes"><span class="lbl">Fuentes</span> <a class="fuente" href="https://jamesclear.com/four-burners-theory">James Clear – The Four Burners Theory</a> · <a class="fuente" href="https://nextbigideaclub.com/magazine/conversation-four-burner-theory-manage-ambitions/15027/">Next Big Idea Club – Conversación Clear &amp; Eyal</a> · <a class="fuente" href="https://mywifequitherjob.com/high-achievers-4-burners-theory/">My Wife Quit Her Job – 4 Burners</a></div>
+  </section>
+
+  <!-- ═══════════ III ═══════════ -->
+  <section id="s3">
+    <h2><span class="rnum">III.</span>Cuando los roles se enriquecen: lo que dice la investigación</h2>
+
+    <p>En 2006, Jeffrey Greenhaus y Gary Powell publicaron en la <em>Academy of Management Review</em> un artículo con un título que ya es una tesis: <em>«When Work and Family Are Allies»</em> — cuando el trabajo y la familia son <strong>aliados</strong>. Definieron el <em>enriquecimiento trabajo-familia</em> como el grado en que las experiencias en un rol mejoran la calidad de vida en el otro rol. Es el concepto espejo del conflicto entre dominios: donde la estufa solo ve fuga, ellos midieron transferencia.</p>
+
+    <blockquote>
+      Work–family enrichment: «the extent to which experiences in one role improve the quality of life in the other role».
+      <span class="ref">— Greenhaus &amp; Powell, Academy of Management Review, 2006</span>
+    </blockquote>
+
+    <p>Lo más útil para nuestro rediseño es <em>cómo</em> ocurre esa transferencia. La investigación identifica <strong>cinco tipos de recursos</strong> que una persona gana en un rol y puede exportar a otro: flexibilidad, recursos materiales, nuevas habilidades y perspectivas, capital social (conexiones) y recursos psicológicos o físicos como la autoeficacia. Y describe <strong>dos rutas</strong> de exportación: la <em>instrumental</em> (una habilidad ganada en un dominio se aplica directamente en otro y mejora el desempeño ahí) y la <em>afectiva</em> (el afecto positivo generado en un rol eleva tu estado, y ese estado eleva tu desempeño en el segundo rol).</p>
+
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false"><span class="flecha">▸</span> Los cinco recursos transferibles, traducidos a Go Epic</button>
+      <div class="persiana-cuerpo"><div class="persiana-inner">
+        <table>
+          <thead><tr><th>Recurso (Greenhaus &amp; Powell)</th><th>Ejemplo entre tus cuatro áreas</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Habilidades y perspectivas</strong></td><td>La paciencia que entrena Family mejora tus <em>code reviews</em> en Career; el pensamiento sistémico de Career mejora cómo organizas la casa</td></tr>
+            <tr><td><strong>Recursos psicológicos y físicos</strong></td><td>La energía y autoeficacia que produce Health financia la concentración de Career y el humor disponible para Family</td></tr>
+            <tr><td><strong>Capital social</strong></td><td>Las amistades de Fun se convierten en red de apoyo para Family y en oportunidades para Career</td></tr>
+            <tr><td><strong>Recursos materiales</strong></td><td>El ingreso de Career financia la bicicleta de Health y el viaje de Fun</td></tr>
+            <tr><td><strong>Flexibilidad</strong></td><td>La autonomía ganada en Career (trabajo remoto, horarios) crea las ventanas donde viven Health y Family</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <p>Nota importante de honestidad intelectual: el enriquecimiento no <em>elimina</em> el conflicto. La literatura los trata como constructos independientes — reducir el conflicto no produce enriquecimiento automáticamente, y puede haber ambos a la vez. El día sigue teniendo 24 horas. La pregunta de diseño no es «¿cómo elimino los trade-offs?» sino «¿cómo maximizo los flujos de enriquecimiento <em>dado que</em> hay trade-offs?». La estufa describe la restricción; el enriquecimiento describe la oportunidad. Go Epic hoy solo modela la restricción.</p>
+
+    <div class="fuentes"><span class="lbl">Fuentes</span> <a class="fuente" href="https://journals.aom.org/doi/10.5465/amr.2006.19379625">Greenhaus &amp; Powell – When Work and Family Are Allies (AMR)</a> · <a class="fuente" href="https://www.qic-wd.org/umbrella-summary/work-family-enrichment">QIC-WD – Work-Family Enrichment (resumen)</a></div>
+  </section>
+
+  <!-- ═══════════ IV ═══════════ -->
+  <section id="s4">
+    <h2><span class="rnum">IV.</span>El mapa de flujos: la Ingeniera redibuja la estufa</h2>
+
+    <div class="dialogo">
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+        <p>Ahora sí, mi turno. Borren la estufa. Dibujen una <strong>red de cuatro nodos</strong>. Cada nodo tiene <em>stocks</em> (lo que acumula: salud, ingresos, vínculos, gozo) y <em>flujos</em> (lo que exporta e importa). Y como diría Ackoff: un sistema no es la suma de sus partes, es el <strong>producto de sus interacciones</strong>. Si Go Epic solo mide las partes, no está midiendo el sistema.</p>
+      </div>
+    </div>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 560 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de las cuatro áreas como red de flujos, con Health como nodo fuente">
+        <defs>
+          <marker id="fl" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 z" fill="#b4532a"/>
+          </marker>
+          <marker id="flo" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 z" fill="#6b7a3f"/>
+          </marker>
+        </defs>
+
+        <!-- Flujos desde Health (fuente) -->
+        <path d="M280,318 C180,290 130,190 168,112" fill="none" stroke="#6b7a3f" stroke-width="3.5" marker-end="url(#flo)"/>
+        <path d="M280,318 C380,290 430,190 392,112" fill="none" stroke="#6b7a3f" stroke-width="3.5" marker-end="url(#flo)"/>
+        <path d="M280,312 C280,270 280,240 280,208" fill="none" stroke="#6b7a3f" stroke-width="3.5" marker-end="url(#flo)"/>
+
+        <!-- Flujos laterales -->
+        <path d="M205,86 C240,60 320,60 355,86" fill="none" stroke="#b4532a" stroke-width="2" marker-end="url(#fl)"/>
+        <path d="M355,110 C320,136 240,136 205,110" fill="none" stroke="#b4532a" stroke-width="2" marker-end="url(#fl)"/>
+        <path d="M232,166 C210,150 195,135 182,118" fill="none" stroke="#b4532a" stroke-width="2" marker-end="url(#fl)"/>
+        <path d="M328,166 C350,150 365,135 378,118" fill="none" stroke="#b4532a" stroke-width="2" marker-end="url(#fl)"/>
+
+        <!-- Etiquetas de flujo -->
+        <text x="280" y="52" text-anchor="middle" font-family="Spectral, serif" font-style="italic" font-size="12" fill="#6a5b48">dinero · flexibilidad</text>
+        <text x="280" y="150" text-anchor="middle" font-family="Spectral, serif" font-style="italic" font-size="12" fill="#6a5b48">paciencia · sentido</text>
+        <text x="150" y="228" text-anchor="middle" font-family="Spectral, serif" font-style="italic" font-size="12" fill="#556237">energía</text>
+        <text x="412" y="228" text-anchor="middle" font-family="Spectral, serif" font-style="italic" font-size="12" fill="#556237">energía</text>
+        <text x="303" y="262" text-anchor="start" font-family="Spectral, serif" font-style="italic" font-size="12" fill="#556237">energía</text>
+
+        <!-- Nodo Career -->
+        <circle cx="168" cy="90" r="44" fill="#f7f1e5" stroke="#4a6b7a" stroke-width="3"/>
+        <text x="168" y="96" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#2b2118">Career</text>
+
+        <!-- Nodo Fun -->
+        <circle cx="392" cy="90" r="44" fill="#f7f1e5" stroke="#6e4a6e" stroke-width="3"/>
+        <text x="392" y="96" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#2b2118">Fun</text>
+
+        <!-- Nodo Family -->
+        <circle cx="280" cy="180" r="44" fill="#f7f1e5" stroke="#c98a2d" stroke-width="3"/>
+        <text x="280" y="186" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#2b2118">Family</text>
+
+        <!-- Nodo Health (fuente) -->
+        <circle cx="280" cy="330" r="52" fill="rgba(107,122,63,0.12)" stroke="#6b7a3f" stroke-width="4"/>
+        <text x="280" y="328" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="16" fill="#2b2118">Health</text>
+        <text x="280" y="348" text-anchor="middle" font-family="Spectral, serif" font-style="italic" font-size="11" fill="#556237">nodo fuente</text>
+      </svg>
+      <figcaption>La estufa, redibujada: cuatro nodos con flujos de recursos. Health no es una hornilla más — es la fuente de energía de toda la red.</figcaption>
+    </figure>
+
+    <h3>Health es el nodo fuente</h3>
+
+    <p>Charles Duhigg documentó en <em>The Power of Habit</em> que el ejercicio es el <em>keystone habit</em> por excelencia: cuando las personas empiezan a ejercitarse con regularidad —incluso una vez por semana— empiezan, sin proponérselo, a comer mejor, dormir mejor, procrastinar menos y ser más pacientes y productivas en el trabajo. Un hábito clave dispara reacciones en cadena que ayudan a que otros buenos hábitos se afiancen. En lenguaje de redes: Health tiene el <em>fan-out</em> más alto del sistema. Es el nodo cuya salida alimenta a todos los demás.</p>
+
+    <div class="dialogo">
+      <div class="voz ingeniera">
+        <span class="nombre">🕸️ La Ingeniera de Sistemas</span>
+        <p>Gianni, esto te va a sonar familiar. En «La Red es la Iglesia» dijimos: el Espíritu es la fuente de poder, los discípulos son nodos, y la red vive de los flujos. Go Epic tiene la misma topología en miniatura: <strong>Health es tu fuente de poder biológica</strong>. No compite con las otras áreas — las energiza. Tratarla como un silo más es como tratar la planta eléctrica como un electrodoméstico más.</p>
+      </div>
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo PDCA</span>
+        <p>Y Fun cumple la otra función sistémica: es el <strong>bucle de balance</strong>. Deming insistía en que un sistema sin recuperación se degrada. Fun no es el premio que te das si sobra tiempo; es el mecanismo de enfriamiento que evita que el bucle de refuerzo del trabajo se convierta en espiral de agotamiento.</p>
+      </div>
+    </div>
+
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false"><span class="flecha">▸</span> Meadows en tu semana: ¿dónde están las palancas?</button>
+      <div class="persiana-cuerpo"><div class="persiana-inner">
+        <p>Donella Meadows ordenó los puntos de apalancamiento de un sistema de menor a mayor poder: los parámetros (números) mueven poco; las estructuras de flujo y los bucles mueven más; los <em>objetivos</em> del sistema y el <em>paradigma</em> lo mueven todo. Aplicado a Go Epic:</p>
+        <table>
+          <thead><tr><th>Nivel de palanca</th><th>En Go Epic</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Parámetros</strong> (palanca débil)</td><td>Ajustar horas por área, mover porcentajes. Es lo que hacías cada domingo — y por eso se sentía inútil.</td></tr>
+            <tr><td><strong>Estructura de flujos</strong></td><td>Crear canales explícitos entre áreas: épicas puente, exportaciones declaradas.</td></tr>
+            <tr><td><strong>Bucles de refuerzo</strong></td><td>Proteger el hábito clave (Health) que amplifica todo lo demás.</td></tr>
+            <tr><td><strong>Objetivo del sistema</strong> (palanca fuerte)</td><td>Cambiar la meta de «cumplir con las cuatro áreas» a «maximizar los flujos entre ellas».</td></tr>
+            <tr><td><strong>Paradigma</strong> (la más fuerte)</td><td>De estufa a red. De cuatro amores repartidos a una sola llama. Esta página entera es un cambio de paradigma.</td></tr>
+          </tbody>
+        </table>
+        <div class="fuentes"><span class="lbl">Fuente</span> <a class="fuente" href="https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/">Donella Meadows – Leverage Points</a></div>
+      </div></div>
+    </div>
+
+    <div class="fuentes"><span class="lbl">Fuentes</span> <a class="fuente" href="https://jamesclear.com/keystone-habits">James Clear – Keystone Habits</a> · <a class="fuente" href="https://medium.com/the-inspiration-hub/the-power-of-habit-chapter-4-keystone-habits-11419558fbfc">The Power of Habit, cap. 4 (resumen)</a></div>
+  </section>
+
+  <!-- ═══════════ V ═══════════ -->
+  <section id="s5">
+    <h2><span class="rnum">V.</span>Con todo: la teología de la integración</h2>
+
+    <div class="dialogo">
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>Antes de que el Metodólogo escriba una sola épica nueva, necesitamos el fundamento. Porque la idea de que la vida se integra en lugar de repartirse no la inventó la Academy of Management en 2006. Está en Marcos 12.</p>
+      </div>
+    </div>
+
+    <blockquote>
+      «Ama al Señor tu Dios con todo tu corazón, con toda tu alma, con toda tu mente y con todas tus fuerzas.»
+      <span class="ref">— Marcos 12:30 (DHH)</span>
+    </blockquote>
+
+    <p>Mira la gramática del mandamiento. Jesús nombra cuatro dimensiones —corazón, alma, mente, fuerzas— y no dice «reparte tu amor entre ellas» ni «prioriza dos y apaga dos». Dice <em>con todo</em>, cuatro veces. Las cuatro dimensiones no son departamentos que compiten por el amor disponible; son cuatro cauces del <strong>mismo amor</strong>. El <em>Shemá</em> que Jesús está citando (Deuteronomio 6:4) empieza justamente con la unidad: «el Señor nuestro Dios es el único Señor». Un solo Dios, un solo amor, una sola vida — que fluye por cuatro cauces sin dividirse.</p>
+
+    <p>Y Pablo lleva la misma lógica al cuerpo: en 1 Corintios 12, el ojo no puede decirle a la mano «no te necesito». Los miembros no compiten por la sangre; el cuerpo entero vive porque la sangre circula entre todos. Un miembro que acapara el flujo no es un miembro exitoso — es un tumor. La metáfora bíblica de la vida plena nunca fue una estufa de hornillas independientes. Siempre fue un <strong>cuerpo</strong>: un sistema de miembros que se alimentan mutuamente.</p>
+
+    <div class="dialogo">
+      <div class="voz provocador">
+        <span class="nombre">🎭 El Provocador</span>
+        <p>O sea que la cultura de productividad tardó dos mil años en descubrir, con p-values, lo que el Shemá decía en una sola frase. Me encanta cuando pasa eso.</p>
+      </div>
+      <div class="voz exegeta">
+        <span class="nombre">🏛️ El Exégeta</span>
+        <p>Con un matiz que no es menor: en Marcos 12, la integración tiene un centro. Las cuatro dimensiones se unifican porque apuntan al mismo Dios. Sin centro, la «integración» es solo optimización. Career, Family, Health y Fun no se alimentan entre sí por arte de ingeniería — se alimentan entre sí cuando las cuatro son cauces del mismo llamado. Esa es la diferencia entre una vida eficiente y una vida <em>entera</em>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ VI ═══════════ -->
+  <section id="s6">
+    <h2><span class="rnum">VI.</span>Arquitectura para Go Epic: cinco decisiones de diseño</h2>
+
+    <div class="dialogo">
+      <div class="voz metodologo">
+        <span class="nombre">📋 El Metodólogo PDCA</span>
+        <p>Ahora sí. Paradigma nuevo, fundamento puesto. Traduzcamos todo esto a decisiones concretas de producto. Cinco cambios, del modelo de datos al ritual semanal.</p>
+      </div>
+    </div>
+
+    <h3>1. Cada épica declara sus exportaciones</h3>
+    <p>Agrega al modelo de la épica un campo: <em>«¿qué produce esto para las otras áreas?»</em> — energía, dinero, tiempo liberado, una habilidad, capital social, una historia compartida. Es el mecanismo de Greenhaus y Powell vuelto formulario: la ruta instrumental (habilidades, recursos) y la afectiva (estado de ánimo, historias) hechas explícitas. Una épica de Career que no exporta nada a nadie es una alerta amarilla: quizá vale la pena, pero que lo diga de frente.</p>
+
+    <h3>2. Épicas puente: el tipo de épica más valioso</h3>
+    <p>Crea la categoría de <strong>épica puente</strong>: una sola actividad etiquetada con dos áreas a la vez. Salir en bici con tus hijos (Health + Family). Practicar Echo English caminando (Career + Health). Un proyecto de código para la iglesia (Career + Fun). Las épicas puente no reparten el gas — lo <em>multiplican</em>, porque una hora produce en dos cuentas. Métrica trimestral sugerida: número de puentes activos. Si un trimestre no tiene ninguno, las áreas volvieron a ser silos.</p>
+
+    <h3>3. Health se marca como nodo fuente, no como área par</h3>
+    <p>En la interfaz y en la lógica: las épicas de Health no compiten en la misma cola de prioridades que las demás — son <em>infraestructura</em>. Como el hábito clave de Duhigg: se protegen primero porque financian todo lo demás. Regla práctica: en una semana sobrecargada, Health es lo último que se recorta, no lo primero, porque recortarlo baja el rendimiento de las otras tres cuentas a la vez.</p>
+
+    <h3>4. El Check semanal revisa flujos, no solo stocks</h3>
+    <p>Tu revisión de domingo hoy pregunta «¿cuánto avancé en cada área?». Agrégale la pregunta sistémica: <strong>«¿qué le exportó cada área a las demás esta semana?»</strong> ¿Qué recibió Family de Health? ¿Qué recibió Career de Fun? Tres semanas seguidas con un flujo en cero es el verdadero indicador de silo — mucho antes de que las horas lo muestren. Es el <em>Check</em> del PDCA aplicado a las interacciones, que es donde Ackoff dice que vive el sistema.</p>
+
+    <h3>5. Honestidad con los trade-offs: temporadas declaradas</h3>
+    <p>Lo único que la estufa de Sedaris sí entendió: hay temporadas. Clear propone rotar las hornillas por estaciones de la vida en lugar de buscar equilibrio perfecto permanente. Incorpóralo sin culpa: Go Epic puede tener un modo «temporada» donde declaras explícitamente qué área lleva la delantera este trimestre — con la condición sistémica de que ningún flujo se apague del todo. La diferencia entre temporada e silo es que la temporada tiene fecha de revisión.</p>
+
+    <div class="persiana">
+      <button class="persiana-toggle" aria-expanded="false"><span class="flecha">▸</span> El anti-patrón: KPIs por silo (una advertencia de Deming)</button>
+      <div class="persiana-cuerpo"><div class="persiana-inner">
+        <p>Deming pasó décadas advirtiendo a las empresas que ponerle metas numéricas independientes a cada departamento garantiza que los departamentos compitan entre sí y el sistema total sufra: cada gerente optimiza su número aunque destruya el de al lado. Go Epic con cuatro metas independientes es exactamente esa empresa en miniatura — y tú eres los cuatro gerentes peleándose. La corrección de Deming: optimizar el sistema completo, y juzgar cada parte por su contribución al todo. De ahí la pregunta del Check semanal: no «¿cumplió Health su meta?» sino «¿qué aportó Health al conjunto?».</p>
+      </div></div>
+    </div>
+
+    <div class="dialogo">
+      <div class="voz disenadora">
+        <span class="nombre">🎨 La Diseñadora</span>
+        <p>Y una nota de interfaz: si el paradigma es red, el <em>dashboard</em> no puede ser cuatro barras de progreso paralelas — eso es la estufa otra vez, dibujada en pantalla. La vista principal debería ser el diagrama de flujos: cuatro nodos, y las flechas engordando o adelgazando según la semana. Que la primera pantalla te haga la pregunta correcta: no «¿cuánto llevas?» sino «¿qué está fluyendo?».</p>
+      </div>
+    </div>
+
+    <div class="fuentes"><span class="lbl">Fuentes</span> <a class="fuente" href="https://journals.aom.org/doi/10.5465/amr.2006.19379625">Greenhaus &amp; Powell (AMR, 2006)</a> · <a class="fuente" href="https://www.qic-wd.org/umbrella-summary/work-family-enrichment">QIC-WD – Work-Family Enrichment</a> · <a class="fuente" href="https://jamesclear.com/four-burners-theory">James Clear – Four Burners</a> · <a class="fuente" href="https://jamesclear.com/keystone-habits">James Clear – Keystone Habits</a></div>
+  </section>
+
+  <!-- ═══════════ VII ═══════════ -->
+  <section id="s7">
+    <h2><span class="rnum">VII.</span>La semilla</h2>
+
+    <p>Como siempre en esta mesa: la página no termina en información sino en práctica. Siete días para pasar de estufa a red — sin tocar todavía una línea de código de Go Epic. Primero el paradigma en el cuerpo; después, el modelo de datos.</p>
+
+    <div class="persiana semilla abierta">
+      <button class="persiana-toggle" aria-expanded="true"><span class="flecha">▸</span> 🌱 Práctica de siete días: la semana de los flujos</button>
+      <div class="persiana-cuerpo"><div class="persiana-inner">
+        <div class="dia"><span class="d">Día 1</span><p><strong>Dibuja tu estufa actual.</strong> En papel: las cuatro áreas y cuánto gas sientes que consume cada una. Sin juicio. Es tu línea base — el <em>Plan</em> empieza midiendo.</p></div>
+        <div class="dia"><span class="d">Día 2</span><p><strong>Caza un flujo instrumental.</strong> Detecta una habilidad que un área ya le está regalando a otra (la paciencia de Family en tu trabajo, el pensamiento de sistemas en tu casa). Anótala. Ya existe enriquecimiento; solo era invisible.</p></div>
+        <div class="dia"><span class="d">Día 3</span><p><strong>Caza un flujo afectivo.</strong> Nota un momento donde el buen ánimo generado en un área te sostuvo en otra. Ese es el segundo cauce de Greenhaus y Powell, en vivo.</p></div>
+        <div class="dia"><span class="d">Día 4</span><p><strong>Ejecuta una épica puente.</strong> Una actividad, dos áreas, hoy: camina mientras oras, cocina con tus hijos, practica Echo English en la bici. Una hora, dos cuentas.</p></div>
+        <div class="dia"><span class="d">Día 5</span><p><strong>Protege la fuente.</strong> Hoy Health va primero en el calendario, no en los huecos. Al final del día, nota qué pasó con tu rendimiento en las otras tres áreas.</p></div>
+        <div class="dia"><span class="d">Día 6</span><p><strong>Ora Marcos 12:30 con las cuatro áreas en la mano.</strong> Corazón, alma, mente, fuerzas — Career, Family, Health, Fun. Pregunta al Señor: ¿cuál de estos cauces está desconectado del centro?</p></div>
+        <div class="dia"><span class="d">Día 7</span><p><strong>El primer Check de flujos.</strong> Revisa la semana con la pregunta nueva: ¿qué exportó cada área a las demás? Dibuja la red con flechas. Compárala con la estufa del día 1. Eso que ves — esa diferencia — es tu backlog para Go Epic.</p></div>
+      </div></div>
+    </div>
+
+    <p class="cierre">La empresaria australiana tenía razón en una cosa: nadie puede tener las cuatro hornillas al máximo. Pero se equivocó de electrodoméstico. La vida que Jesús describe en Marcos 12 no es una estufa — es un fuego: una sola llama que calienta todo lo que se le acerca. Career, Family, Health y Fun no son cuatro fuegos peleando por el gas. Son cuatro maneras de acercarse al mismo fuego. ☕</p>
+  </section>
+
+</div>
+</main>
+
+<script>
+  // ── Barra de progreso ──
+  const progreso = document.getElementById('progreso');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    progreso.style.width = pct + '%';
+  }, { passive: true });
+
+  // ── Persianas ──
+  document.querySelectorAll('.persiana-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.closest('.persiana');
+      const abierta = p.classList.toggle('abierta');
+      btn.setAttribute('aria-expanded', abierta ? 'true' : 'false');
+    });
+  });
+
+  // ── Scroll-spy ──
+  const enlaces = document.querySelectorAll('nav.lateral a.sec');
+  const secciones = document.querySelectorAll('main section[id]');
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        enlaces.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  secciones.forEach(s => spy.observe(s));
+
+  // ── Hamburguesa ──
+  const burger = document.getElementById('hamburguesa');
+  const lateral = document.getElementById('lateral');
+  burger.addEventListener('click', () => lateral.classList.toggle('abierto'));
+  enlaces.forEach(a => a.addEventListener('click', () => lateral.classList.remove('abierto')));
+</script>
+
+</body>
+</html>
