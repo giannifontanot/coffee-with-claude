@@ -3,9 +3,16 @@
   Café con Claude — article template.
   Replace every {{PLACEHOLDER}}. Delete the parts you don't need (sources box,
   progress bar, etc.) — they are all optional except the back button and the
-  model note near the bottom. Keep the two non-negotiables:
-    1. The top back control runs history.back() (it is a <button>, not an <a href>).
-    2. The <p class="model-note"> at the bottom states the model + effort used.
+  model note near the bottom. Keep the three non-negotiables:
+    1. The top-left hamburger (#nav-toggle) opens the nav drawer (the site's
+       standard navigation affordance).
+    2. The back control runs history.back() (it is a <button>, not an <a href>).
+    3. The <p class="model-note"> at the bottom states the model + effort used.
+
+  The drawer's table of contents ({{TOC}}) must point at the section ids in
+  {{BODY}}. Give each <section> an id (id="s1", id="s2", …) and a matching
+  <li><a href="#s1">…</a></li> in the TOC so the hamburger menu and the
+  scroll-spy highlight work.
 -->
 <html lang="{{LANG}}">
 <head>
@@ -35,11 +42,12 @@
     background: var(--cream);
     color: var(--ink);
     font-family: 'Spectral', serif;
-    line-height: 1.65;
-    padding: 3rem 1.25rem 5rem;
+    line-height: 1.68;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
   }
 
-  /* Reading progress bar (optional — delete this rule and its <div>/JS to remove) */
+  /* Reading progress bar (optional) */
   .progress-bar {
     position: fixed; top: 0; left: 0;
     height: 3px; width: 0%;
@@ -47,109 +55,149 @@
     z-index: 100;
   }
 
-  .wrap { max-width: 820px; margin: 0 auto; }
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;                 /* above the drawer so ✕ stays visible */
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
 
-  /* Back control — styled like the classic .home-link but it is a <button>. */
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
   .back-link {
     display: inline-block;
-    font-family: 'Spectral', serif;
-    font-size: 0.85rem;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
     color: var(--terracotta);
-    background: none;
-    border: none;
+    background: none; border: none;
     border-bottom: 1px solid var(--terracotta);
-    padding: 0 0 1px;
-    margin-bottom: 2.2rem;
-    cursor: pointer;
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
   }
   .back-link:hover { color: var(--ink); border-color: var(--ink); }
 
   header .eyebrow {
-    font-family: 'Fraunces', serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.5rem;
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
   }
   header h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: clamp(2rem, 6vw, 3.1rem);
-    line-height: 1.1;
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
     margin-bottom: 0.6rem;
   }
-  .subtitle {
-    font-style: italic;
-    color: var(--muted);
-    font-size: 1.05rem;
-    max-width: 34em;
-  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
 
   main { margin-top: 2.6rem; }
-  section { margin-bottom: 2.4rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
   section h2 {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    line-height: 1.15;
-    margin: 0 0 0.6rem;
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
   }
-  p { margin-bottom: 1.1rem; max-width: 38em; }
+  p { margin-bottom: 1.1rem; }
   a { color: var(--terracotta); }
   em { color: var(--ink); }
 
   /* Sources box (optional) */
   .fuentes {
-    margin-top: 3rem;
-    padding: 1.1rem 1.3rem;
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
     border-left: 4px solid var(--terracotta);
-    background: rgba(180, 83, 42, 0.06);
-    font-size: 0.9rem;
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
   }
   .fuentes strong { font-family: 'Fraunces', serif; }
   .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
   .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
 
   footer {
-    margin-top: 3.5rem;
-    padding-top: 1.5rem;
+    margin-top: 3.5rem; padding-top: 1.5rem;
     border-top: 1px solid var(--line);
-    font-size: 0.85rem;
-    font-style: italic;
-    color: var(--muted);
-    text-align: center;
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
   }
-
-  /* Small colophon stating which model + effort produced the page. */
   .model-note {
     margin-top: 0.8rem;
-    font-family: 'Fraunces', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    color: var(--muted);
-    opacity: 0.85;
-    text-align: center;
-    max-width: none;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
   }
 
-  /* Reveal-on-scroll (optional) */
   .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .revela.visible { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
   }
 
   @media (max-width: 640px) {
-    body { padding: 2.2rem 1rem 4rem; }
+    body { padding: 4.2rem 1rem 4rem; }
   }
 </style>
 </head>
 <body>
 <div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">{{BRAND}}</div>
+  <div class="brand-sub">{{SERIES}}</div>
+  <ol class="toc">
+    {{TOC}}
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+</nav>
 
 <div class="wrap">
 
@@ -193,6 +241,38 @@
     window.addEventListener('resize', onScroll);
     onScroll();
   }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
 
   // Reveal sections on scroll (respects prefers-reduced-motion)
   var revelables = document.querySelectorAll('.revela');

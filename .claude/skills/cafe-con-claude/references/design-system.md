@@ -64,6 +64,16 @@ e.g. `rgba(180,83,42,0.06)` (terracotta wash) for source boxes and hover states.
 
 ### Recurring components
 
+- **Hamburger + nav drawer** — a fixed `☰` button in the **top-left** corner
+  (`#nav-toggle`, dark `--ink` on `--cream`) toggles an off-canvas `nav.sidebar`
+  that slides in from the left over a dim scrim. The drawer holds the brand mark
+  (`☕ Café con Claude`), a series sub-line, and an `<ol>` table of contents whose
+  links (`#s1`, `#s2`, …) point at the page's section ids; a scroll-spy adds
+  `.active` to the current one. This is the site's standard navigation for any
+  multi-section piece — see `porque-tenian-miedo.html`, `dichas-una-sola-vez.html`.
+  (Some older pages keep the drawer permanently docked on desktop and only show
+  the hamburger on mobile; the skill uses one always-available top-left hamburger
+  with an overlay drawer, which reads the same and works at every width.)
 - **Reading progress bar** — fixed, full-width, 3px, gradient of the accents,
   `z-index:100`. Width driven by scroll in JS. Common but optional.
 - **Back control (top)** — a link-styled control at the very top. See SKILL.md:
@@ -72,8 +82,8 @@ e.g. `rgba(180,83,42,0.06)` (terracotta wash) for source boxes and hover states.
   terracotta bottom-border, `← ` glyph prefix, `margin-bottom: 2.2rem`.
 - **Header** — optional `eyebrow`/`kicker` (uppercase, accent, letter-spaced) +
   `h1` (Fraunces, clamp) + `subtitle` (italic, `--muted`, `max-width: 34em`).
-- **Sections** — `h2` in Fraunces; body paragraphs in Spectral. Long "panel"
-  pieces sometimes add a sticky sidebar table of contents; short pieces don't.
+- **Sections** — `h2` in Fraunces; body paragraphs in Spectral. Give each
+  `<section>` an `id` so the nav drawer's TOC can link to it.
 - **Sources box (`.fuentes`)** — `border-left: 4px solid var(--terracotta)`,
   `background: rgba(180,83,42,0.06)`, links in terracotta with a faint underline.
 - **Footer** — italic, `--muted`, small, usually centered, ending with the brand
