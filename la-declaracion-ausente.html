@@ -28,7 +28,7 @@
     color: var(--ink);
     font-family: 'Spectral', serif;
     line-height: 1.68;
-    padding: 3rem 1.25rem 5rem;
+    padding: 4.5rem 1.25rem 5rem;
   }
 
   .progress-bar {
@@ -37,6 +37,42 @@
     background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
     z-index: 100;
   }
+
+  /* Top-left hamburger + off-canvas drawer */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem; z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream); border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem; }
+  nav.sidebar .brand-sub { font-size: 0.78rem; font-style: italic; color: var(--muted); margin-bottom: 1.8rem; }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a { display: flex; align-items: baseline; gap: 0.6rem; color: var(--muted); text-decoration: none; font-size: 0.86rem; line-height: 1.35; transition: color 0.2s; }
+  nav.sidebar ol a .num { font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem; min-width: 1.5rem; color: var(--line); transition: color 0.2s; }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  #nav-scrim { position: fixed; inset: 0; background: rgba(43,33,24,0.38); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65; }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
 
   .wrap { max-width: 720px; margin: 0 auto; }
 
@@ -105,7 +141,7 @@
   }
 
   /* Sections */
-  section { margin-bottom: 2.8rem; }
+  section { margin-bottom: 2.8rem; scroll-margin-top: 1.5rem; }
   .eyebrow {
     display: flex;
     align-items: center;
@@ -233,16 +269,35 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
   }
 
   @media (max-width: 640px) {
-    body { padding: 2.2rem 1rem 4rem; }
+    body { padding: 4.2rem 1rem 4rem; }
     .reuso { grid-template-columns: 3.4rem 1fr; }
   }
 </style>
 </head>
 <body>
 <div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">☕ Café con Claude</div>
+  <div class="brand-sub">América a los 250</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>El estruendo y la hoja olvidada</a></li>
+    <li><a href="#s2"><span class="num">II</span>Cómo se escribió</a></li>
+    <li><a href="#s3"><span class="num">III</span>Varias cosas a la vez</a></li>
+    <li><a href="#s4"><span class="num">IV</span>«Todos son creados iguales»</a></li>
+    <li><a href="#s5"><span class="num">V</span>La manzana de oro</a></li>
+    <li><a href="#s6"><span class="num">VI</span>Un cheque sin fondos</a></li>
+    <li><a href="#s7"><span class="num">VII</span>El mismo texto, del otro lado</a></li>
+    <li><a href="#s8"><span class="num">VIII</span>Celebrar sin mirar</a></li>
+  </ol>
+</nav>
 
 <div class="wrap">
 
@@ -262,7 +317,7 @@
     </div>
   </header>
 
-  <section class="revela">
+  <section id="s1" class="revela">
     <div class="eyebrow"><span class="num">I</span><span class="tag">El invitado que falta</span></div>
     <h2>El estruendo y la hoja olvidada</h2>
     <p class="drop">Es el cumpleaños de Estados Unidos y va a sonar fuerte. Fuegos artificiales que parten los oídos, la Gran Feria Estatal Americana con «espectaculares pasadas» de cazas y bombarderos furtivos, seis «Camiones de la Libertad» de dieciocho ruedas repartiendo historia-ligera por los estados rojos, y una carrera de autos dejando marcas de neumático alrededor del National Mall. Va a ser un verano ruidoso.</p>
@@ -270,7 +325,7 @@
     <p class="pull">Un país que grita su fundación en cada altavoz, y sin embargo no abre el papel donde la escribió.</p>
   </section>
 
-  <section class="revela">
+  <section id="s2" class="revela">
     <div class="eyebrow"><span class="num">II</span><span class="tag">Unas semanas de verano</span></div>
     <h2>Cómo se escribió, a las apuradas y a los codazos</h2>
     <p>Las palabras aparecieron casi por milagro, en pocas semanas, mientras una armada británica cruzaba el Atlántico para acallar toda charla de independencia. El 11 de junio de 1776 el Congreso Continental nombró un comité de cinco; el 4 de julio aprobó el resultado. Thomas Jefferson fue el autor principal, pero recibió correcciones de sus colegas y del propio Congreso. Como buen escritor, se ofendió: sintió que le habían «destrozado» el borrador. En realidad —como casi siempre— lo mejoraron.</p>
@@ -278,7 +333,7 @@
     <p>Jefferson lo redactó sobre un escritorio plegable de su propio diseño —hoy en el Smithsonian— que se abría de varias maneras y escondía cámaras internas que no se veían a primera vista. El mueble es una buena metáfora del texto que produjo.</p>
   </section>
 
-  <section class="revela">
+  <section id="s3" class="revela">
     <div class="eyebrow"><span class="num">III</span><span class="tag">Un mueble con cámaras secretas</span></div>
     <h2>Varias cosas a la vez</h2>
     <p>La Declaración es, al mismo tiempo, tres documentos: un himno encendido a los derechos humanos, una tesis filosófica sobre la capacidad de un pueblo para gobernarse, y una lista de quejas contra un rey inepto. Escrita en un lenguaje deliberadamente sereno, escondía un argumento revolucionario.</p>
@@ -286,7 +341,7 @@
     <p>Durante los trece años siguientes, mientras montaban su gobierno, los estadounidenses dejaron la Declaración en segundo plano. Pero volvieron a ella una y otra vez, cada vez que necesitaron medir sus ideales más altos contra la realidad de una nación imperfecta.</p>
   </section>
 
-  <section class="revela">
+  <section id="s4" class="revela">
     <div class="eyebrow"><span class="num">IV</span><span class="tag">La frase indomable</span></div>
     <h2>«Todos los hombres son creados iguales»</h2>
     <p>De todas las frases, esa fue la más potente —y la más difícil de domesticar—. Con la tinta todavía fresca, en 1776, un joven veterano mestizo llamado Lemuel Haynes escribió un ensayo sobre lo que la Declaración significaba para él; no se descubriría hasta 1983. James Forten, afroamericano, tenía nueve años cuando oyó la primera lectura pública del texto en Filadelfia, y dedicó su vida al abolicionismo. La Constitución, en cambio, inspiró mucho menos respeto entre los lectores negros: definía a las personas esclavizadas con un valor profundamente desigual, tres quintos de un ser humano.</p>
@@ -302,7 +357,7 @@
     </div>
   </section>
 
-  <section class="revela">
+  <section id="s5" class="revela">
     <div class="eyebrow"><span class="num">V</span><span class="tag">La manzana de oro</span></div>
     <h2>Lincoln lee más hondo</h2>
     <p>Al acercarse la guerra civil, ambos bandos codiciaban el aura patriótica de la Declaración y reclamaban distintos pasajes. Podía usarse para defender el derecho a la secesión, como hizo Jefferson Davis, o la igualdad humana, como hizo Abraham Lincoln. En todo sentido, la lectura de Lincoln era más profunda: llevaba años estudiando el texto. Lo llamó un «cordón eléctrico» que ataba a los estadounidenses, un «faro», una «fuente» de la que beber.</p>
@@ -311,7 +366,7 @@
     <p>La guerra fortaleció ese argumento, y las enmiendas 13, 14 y 15 le dieron un fundamento legal casi inexpugnable —incluida la ciudadanía por nacimiento, protegida por la enmienda 14 pese a las protestas de Trump—. Nacer en Estados Unidos era gozar de ciudadanía plena, como la Declaración había insinuado sin llegar a confirmarlo. No por casualidad, esa enmienda empieza con la palabra «todos».</p>
   </section>
 
-  <section class="revela">
+  <section id="s6" class="revela">
     <div class="eyebrow"><span class="num">VI</span><span class="tag">Un cheque sin fondos</span></div>
     <h2>El pergamino sigue hablándoles a todos</h2>
     <p>Tras la guerra, el texto siguió interpelando a los pueblos en pugna del país. La izquierda lo leyó a su manera: líderes obreros e inmigrantes que querían que la «búsqueda de la felicidad» incluyera cosas concretas —empleo, vivienda, salud—. Eugene Debs, eterno candidato socialista, lo dijo sin rodeos: «Me gusta el 4 de julio. Respira un espíritu de revolución». Durante la Segunda Guerra Mundial, Franklin D. Roosevelt lo tradujo de nuevo y convirtió la Declaración en una espada retórica contra Hitler: sus derechos —que él resumió en «cuatro libertades»— pertenecían a toda la humanidad.</p>
@@ -320,7 +375,7 @@
     <p>King no tenía el monopolio del texto: los Panteras Negras reimprimieron su propia versión, y medio siglo después Barack Obama lo citó en el Rose Garden el día en que <em>Obergefell v. Hodges</em> consagró el matrimonio igualitario en 2015. La misma hoja, otra vez, para otra causa.</p>
   </section>
 
-  <section class="revela">
+  <section id="s7" class="revela">
     <div class="eyebrow"><span class="num">VII</span><span class="tag">La derecha también reclama</span></div>
     <h2>El mismo texto, del otro lado</h2>
     <p>Los conservadores nunca soltaron el documento, y sostuvieron que también ellos eran herederos de Lincoln. De Theodore Roosevelt a Calvin Coolidge, los presidentes tradujeron sus palabras en himnos a la patria, la libre empresa y el libre ejercicio de la religión. Más tarde, el movimiento antiaborto gravitó naturalmente hacia «la vida, la libertad y la búsqueda de la felicidad»; y cada vez que un grupo de extrema derecha quiso atacar al gobierno federal como a un régimen despótico, encontró en la Declaración munición de sobra. Algo de eso late en la versión que redactó el Tea Party en 2010, contra «la tiranía del gobierno y los aristócratas autoproclamados y elitistas». El 6 de enero de 2021, muchos «patriotas» insistieron en que era «1776» otra vez.</p>
@@ -328,7 +383,7 @@
     <p class="pull">«El único peligro permanente para la esperanza que es América viene de adentro.» — Reagan, 4 de julio de 1986</p>
   </section>
 
-  <section class="revela">
+  <section id="s8" class="revela">
     <div class="eyebrow"><span class="num">VIII</span><span class="tag">Roma dilapidada</span></div>
     <h2>Celebrar la historia sin mirarla</h2>
     <p>El 250 es, sin duda, un momento de autocelebración. Pero los 4 de julio más honestos del pasado incluyeron también una pausa para el autoexamen sin parpadear. Eso será difícil entre tanto ruido rival: el ciclo de noticias, las aventuras en el exterior, el estruendo de peleas de jaula y carreras de autos. A la lista de distracciones doradas se suman un arco de 76 metros que llega a Washington en honor a los años transcurridos, y un fondo discrecional fijado en exactamente 1.776 millones de dólares, como si la cifra lo volviera patriótico.</p>
@@ -360,6 +415,38 @@
     window.addEventListener('resize', onScroll);
     onScroll();
   }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section, close the drawer on link click
+  var navLinks = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  navLinks.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        navLinks.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(function (s) { spy.observe(s); });
 
   var revelables = document.querySelectorAll('.revela');
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

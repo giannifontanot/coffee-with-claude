@@ -23,20 +23,30 @@ real palette, fonts, and component conventions instead of inventing new ones. Th
 whole point of the site is visual consistency — a page that looks "close but not
 quite" is worse than one that reuses the exact tokens.
 
-## The two things that must always be true
+## The things that must always be true
 
 These are the reasons this skill exists, so don't let them slip:
 
-1. **The back control at the top runs browser history, not a hard link.** The
-   reader arrives at a page from many places — the index, another article, a
-   search result, a shared link. A fixed `<a href="index.html">` would yank them
-   somewhere they didn't come from. So the control is a `<button>` calling
-   `history.back()`, which returns them to wherever they actually were. The
-   template already does this, with a graceful fallback to `index.html` *only*
-   when `history.length <= 1` (a cold-opened tab with nothing to go back to).
-   Keep it a `<button>`; don't "simplify" it back into a plain link.
+1. **A top-left hamburger opens the nav drawer.** The site's pages carry a fixed
+   hamburger (`#nav-toggle`, `☰`) in the top-left corner that slides out an
+   off-canvas drawer holding the brand and a table of contents of the page's
+   sections (see `porque-tenian-miedo.html`, `dichas-una-sola-vez.html`). It is
+   the standard way readers jump around a long piece, so include it. The template
+   already wires the toggle, the scrim, and a scroll-spy that highlights the
+   current section — your job is to fill the TOC (`{{TOC}}`) with one `<li>` per
+   `<section>`, and to give each `<section>` a matching `id`. For a genuinely
+   short page (one or two sections) a TOC adds nothing; it's fine to drop the
+   drawer then, but that's the exception, not the default.
 
-2. **A small colophon at the bottom names the model and effort.** These pages are
+2. **The back control runs browser history, not a hard link.** The reader arrives
+   at a page from many places — the index, another article, a search result, a
+   shared link. A fixed `<a href="index.html">` would yank them somewhere they
+   didn't come from. So the control is a `<button>` calling `history.back()`,
+   which returns them to wherever they actually were, with a graceful fallback to
+   `index.html` *only* when `history.length <= 1` (a cold-opened tab with nothing
+   to go back to). Keep it a `<button>`; don't "simplify" it into a plain link.
+
+3. **A small colophon at the bottom names the model and effort.** These pages are
    made by a model, and the author wants that on the record. Right under the
    footer brand line, emit a `<p class="model-note">` stating the model powering
    *this* session and the reasoning effort in use — see "The model note" below.
@@ -62,17 +72,23 @@ These are the reasons this skill exists, so don't let them slip:
    |------------------|-----------|
    | `{{LANG}}`       | `es` or `en` |
    | `{{TITLE}}`      | Page title (the ` · Café con Claude` suffix is already in `<title>`) |
+   | `{{BRAND}}`      | Drawer brand mark, usually `☕ Café con Claude` |
+   | `{{SERIES}}`     | Drawer sub-line: the series/section, e.g. `América a los 250` |
+   | `{{TOC}}`        | One `<li>` per section, e.g. `<li><a href="#s1"><span class="num">I</span>Section title</a></li>` — the `href` must match each `<section>`'s `id` |
    | `{{BACK_LABEL}}` | Back-control text, e.g. `Volver al índice`, `Sala de lectura`, `Back to the index` |
    | `{{EYEBROW}}`    | Kicker/series label, or delete the `<span class="eyebrow">` line |
    | `{{H1}}`         | Headline |
    | `{{SUBTITLE}}`   | One-line italic subtitle |
-   | `{{BODY}}`       | The article: `<section>` blocks with `<h2>` + `<p>`. Add `class="revela"` to sections you want to fade in on scroll |
+   | `{{BODY}}`       | The article: `<section id="s1">` blocks with `<h2>` + `<p>`. Give each section an `id` that a TOC entry points to. Add `class="revela"` to sections you want to fade in on scroll |
    | `{{SOURCES}}`    | Source links, or delete the whole `.fuentes` block if none |
    | `{{FOOTER_LINE}}`| Brand colophon, e.g. `Café con Claude · Serie «La Red es la Iglesia» · Julio 2026` |
    | `{{MODEL_NOTE}}` | See below |
 
-   Delete any optional block you don't use (progress bar, sources box,
-   reveal-on-scroll) — but never delete the back button or the model note.
+   Keep the TOC and the section ids in sync — the hamburger menu and the
+   scroll-spy read the `#id` in each TOC link. Delete any optional block you
+   don't use (progress bar, sources box, reveal-on-scroll) — but never delete the
+   hamburger drawer (except on a one/two-section page), the back button, or the
+   model note.
 
 4. **Build the body in-style.** Match the surrounding pages: `<h2>` in Fraunces,
    prose in Spectral, accents via the CSS variables. For richer pieces you can add
@@ -108,15 +124,18 @@ to one short line; it's a footnote, not a banner.
 Before you call it done, open the file and confirm:
 
 - [ ] No `{{PLACEHOLDER}}` tokens remain.
-- [ ] The top control is `<button class="back-link" ... onclick="...history.back()...">`
+- [ ] The top-left `#nav-toggle` hamburger exists and the drawer's `{{TOC}}` has
+      one entry per section, each `href="#id"` matching a real `<section id>`.
+- [ ] The back control is `<button class="back-link" ... onclick="...history.back()...">`
       — a button, not an `<a href>`.
 - [ ] A `<p class="model-note">` exists near the bottom with a real model name.
 - [ ] Fonts are Fraunces + Spectral; the `:root` palette matches the reference.
 - [ ] `<html lang>` matches the content language.
 - [ ] It's a valid, self-contained page (no unclosed tags; opens standalone).
 
-If you have a browser tool available, load the page and click the back control to
-confirm it navigates through history rather than jumping to a fixed URL.
+If you have a browser tool available, load the page and: click the hamburger to
+confirm the drawer opens and a TOC link scrolls to its section, and click the
+back control to confirm it navigates through history rather than to a fixed URL.
 
 ## Files
 
