@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Llamó, formó, envió · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* Top-left hamburger + off-canvas drawer */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem; z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream); border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem; }
+  nav.sidebar .brand-sub { font-size: 0.78rem; font-style: italic; color: var(--muted); margin-bottom: 1.8rem; }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a { display: flex; align-items: baseline; gap: 0.6rem; color: var(--muted); text-decoration: none; font-size: 0.86rem; line-height: 1.35; transition: color 0.2s; }
+  nav.sidebar ol a .num { font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem; min-width: 2.1rem; color: var(--line); transition: color 0.2s; }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  #nav-scrim { position: fixed; inset: 0; background: rgba(43,33,24,0.38); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65; }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.4rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* Hero */
+  .kicker {
+    font-family: 'Fraunces', serif; font-size: 0.8rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600; margin-bottom: 0.8rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2.2rem, 6.5vw, 3.4rem); line-height: 1.06; margin-bottom: 0.3rem;
+  }
+  .title-sub {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 600;
+    font-size: clamp(1.3rem, 4vw, 1.9rem); line-height: 1.15;
+    color: var(--terracotta); margin-bottom: 1.1rem;
+  }
+  .subtitle {
+    font-style: italic; color: var(--muted); font-size: 1.1rem;
+    max-width: 33em; margin-bottom: 1.6rem;
+  }
+  .chips-label {
+    font-family: 'Fraunces', serif; font-size: 0.72rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.6rem;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.8rem; }
+  .chips span {
+    font-size: 0.8rem; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: 0.3rem 0.85rem;
+  }
+  .thesis {
+    background: var(--card); border: 1px solid var(--line);
+    border-left: 4px solid var(--amber); border-radius: 6px;
+    padding: 1.2rem 1.4rem; margin-bottom: 3rem;
+  }
+  .thesis .lead { font-family: 'Fraunces', serif; font-weight: 600; color: var(--terracotta); }
+
+  /* Sections */
+  section { margin-bottom: 2.9rem; scroll-margin-top: 1.5rem; }
+  .eyebrow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.5rem; }
+  .eyebrow .num {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 0.9rem;
+    color: var(--cream); background: var(--terracotta);
+    width: 1.7rem; height: 1.7rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%; flex: none;
+  }
+  .eyebrow.plain .num { background: var(--plum); font-size: 0.66rem; width: auto; height: 1.7rem; border-radius: 999px; padding: 0 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .eyebrow .tag {
+    font-family: 'Fraunces', serif; font-size: 0.76rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); font-weight: 600;
+  }
+  h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4.2vw, 2.05rem); line-height: 1.16; margin: 0 0 0.9rem;
+  }
+  p { margin-bottom: 1.15rem; }
+  p.drop::first-letter {
+    font-family: 'Fraunces', serif; font-weight: 700; float: left;
+    font-size: 3.2rem; line-height: 0.8; padding: 0.3rem 0.6rem 0 0; color: var(--terracotta);
+  }
+  em { color: var(--ink); font-style: italic; }
+  a { color: var(--terracotta); }
+
+  .pull {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.35rem; line-height: 1.3; color: var(--ink);
+    border-left: 4px solid var(--terracotta); padding: 0.2rem 0 0.2rem 1.2rem; margin: 1.8rem 0;
+  }
+
+  .idea-clave {
+    background: rgba(201, 138, 45, 0.10);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.2rem; margin: 1.6rem 0 1.2rem;
+  }
+  .idea-clave .ic-label {
+    display: block; font-family: 'Fraunces', serif; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--terracotta);
+    font-weight: 600; margin-bottom: 0.25rem;
+  }
+  .idea-clave p { margin: 0; }
+
+  .fuentes-seccion { font-size: 0.85rem; color: var(--muted); font-style: italic; margin-top: 0.4rem; }
+  .fuentes-seccion a { border-bottom: 1px solid rgba(180,83,42,0.35); text-decoration: none; }
+
+  .rule { border: none; border-top: 2px solid var(--ink); margin: 3.2rem 0 2.6rem; opacity: 0.85; }
+
+  /* Sources */
+  .fuentes {
+    margin-top: 3rem; padding: 1.2rem 1.4rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes ol { margin: 0.6rem 0 0 1.1rem; }
+  .fuentes li { margin-bottom: 0.6rem; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem; font-family: 'Fraunces', serif; font-size: 0.72rem;
+    letter-spacing: 0.04em; color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+  @media (max-width: 640px) { body { padding: 4.2rem 1rem 4rem; } }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">☕ Café con Claude</div>
+  <div class="brand-sub">Discipulado · Los doce</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>La selección</a></li>
+    <li><a href="#s2"><span class="num">II</span>Estar con Él</a></li>
+    <li><a href="#s3"><span class="num">III</span>La formación por el fracaso</a></li>
+    <li><a href="#s4"><span class="num">IV</span>El envío</a></li>
+    <li><a href="#s5"><span class="num">V</span>La reproducción</a></li>
+    <li><a href="#s6"><span class="num">Sínt.</span>Estar antes de ir</a></li>
+    <li><a href="#s7"><span class="num">Cier.</span>Para tu mesa</a></li>
+    <li><a href="#fuentes"><span class="num">Ap.</span>Fuentes</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <div class="kicker">Estudio bíblico · Discipulado · El método de Jesús</div>
+    <h1>Llamó, formó, envió</h1>
+    <p class="title-sub">Cómo Jesús seleccionó, formó y usó a los doce</p>
+    <p class="subtitle">Jesús tuvo tres años y ninguna estructura: ni escuela, ni edificio, ni programa. Su estrategia para alcanzar al mundo cabía en una decisión aparentemente ineficiente — invertir su vida entera en doce hombres comunes.</p>
+
+    <p class="chips-label">Fuentes de un vistazo</p>
+    <div class="chips">
+      <span>Lucas 6:12–16</span>
+      <span>Marcos 3:13–19</span>
+      <span>Marcos 6:7–13</span>
+      <span>Mateo 28:18–20</span>
+      <span>Coleman, 1963</span>
+    </div>
+
+    <div class="thesis">
+      <p><span class="lead">En una línea:</span> Jesús no construyó un movimiento hablándole a las multitudes, sino formando a doce en la vida compartida —«estar con Él» antes que «ir»— apostando por la multiplicación en vez de la suma.</p>
+    </div>
+  </header>
+
+  <section id="s1" class="revela">
+    <div class="eyebrow"><span class="num">I</span><span class="tag">La selección</span></div>
+    <h2>Eligió pocos, y a los improbables</h2>
+    <p class="drop">Antes de elegir, Jesús oró toda la noche (Lucas 6:12–13). La decisión no fue improvisada: de entre un grupo mayor de discípulos, apartó a doce y les dio un nombre —apóstoles, «enviados»—. Y los que eligió eran, por cualquier criterio de reclutamiento, improbables: pescadores sin escuela, un cobrador de impuestos (Mateo), un zelote (Simón) que en política estaba en las antípodas del cobrador. Más tarde, el Sanedrín los describiría como «hombres sin letras y del vulgo» (Hechos 4:13).</p>
+    <p>Dos rasgos marcan la selección. Primero, el número: Jesús mantuvo el grupo deliberadamente pequeño, lo bastante para moldearlo. Segundo, la dirección de la elección: «No me eligieron ustedes a mí; yo los elegí a ustedes» (Juan 15:16). Robert Coleman, que en 1963 leyó los evangelios preguntándose cuál era la estrategia de Jesús, puso esto como su primer principio: <em>selección</em> —pocos, enseñables, dispuestos a reconocer su necesidad—.</p>
+    <p class="pull">No eligió a los más capaces, sino a los más moldeables.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>La estrategia empezó con una resta: renunciar a las multitudes para poder formar de verdad a unos pocos.</p></div>
+    <p class="fuentes-seccion">Fuentes: Lucas 6:12–16 · Marcos 3:13–19 · Juan 15:16 · Hechos 4:13 · <a href="https://founders.org/reviews/the-master-plan-of-evangelism-by-robert-coleman/" target="_blank" rel="noopener">Coleman (1963)</a></p>
+  </section>
+
+  <section id="s2" class="revela">
+    <div class="eyebrow"><span class="num">II</span><span class="tag">Estar con Él</span></div>
+    <h2>El aula era el camino</h2>
+    <p>El versículo que resume el método es Marcos 3:14: los nombró «para que estuvieran con él, y para enviarlos a predicar». El orden no es casual —primero <em>estar</em>, después <em>ir</em>—. Antes de ser un plan de estudios, la formación fue una convivencia: tres años compartiendo camino, comida, cansancio y preguntas. Enseñaba a las multitudes en parábolas, pero «a sus discípulos se lo explicaba todo en privado» (Marcos 4:34).</p>
+    <p>Coleman lo llamó <em>asociación</em>: Jesús se dio a sí mismo antes que dar un contenido. El aula era la vida; el temario, su propia persona. Lo que los doce tenían para aprender no era un método desencarnado, sino un maestro que hacía delante de ellos lo que esperaba que ellos hicieran.</p>
+    <p class="pull">El aula era el camino; el temario, Él mismo.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>La formación no fue transferencia de información sino de vida: se aprende de Jesús estando con Jesús.</p></div>
+    <p class="fuentes-seccion">Fuentes: Marcos 3:13–14 · Marcos 4:33–34 · <a href="https://www.9marks.org/review/master-plan-evangelism-robert-coleman/" target="_blank" rel="noopener">Coleman — reseña 9Marks</a></p>
+  </section>
+
+  <section id="s3" class="revela">
+    <div class="eyebrow"><span class="num">III</span><span class="tag">La formación</span></div>
+    <h2>Formó corrigiendo, no descartando</h2>
+    <p>Lo notable es que los doce no eran alumnos brillantes. Discutían por quién era el mayor (Marcos 9:33–37); Santiago y Juan pedían los mejores asientos del reino (Marcos 10:35–45); entendían al revés una y otra vez. Jesús no los descartó por eso: los corrigió. A la ambición respondió con una toalla —les lavó los pies (Juan 13)— y con una definición nueva de grandeza: «el que quiera ser grande, que sea el servidor de todos».</p>
+    <p>Y está Pedro, que prometió morir y negó tres veces. El evangelio no esconde ese fracaso; lo convierte en la bisagra de una restauración: junto al lago, tres preguntas —«¿me amas?»— deshacen las tres negaciones (Juan 21). La supervisión de Jesús no consistió en evitarles el error, sino en no dejar que el error fuera la última palabra.</p>
+    <p class="pull">El fracaso fue la penúltima palabra de su formación, nunca la última.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>Jesús formó corrigiendo, no descartando: el error supervisado, no el talento, fue la materia prima del discipulado.</p></div>
+    <p class="fuentes-seccion">Fuentes: Marcos 9:33–37 · Marcos 10:35–45 · Juan 13:1–17 · Juan 21:15–19</p>
+  </section>
+
+  <section id="s4" class="revela">
+    <div class="eyebrow"><span class="num">IV</span><span class="tag">El envío</span></div>
+    <h2>Aprender haciendo, con alguien mirando</h2>
+    <p>La formación tenía una meta práctica: usarlos. Jesús «los fue enviando de dos en dos» y les dio autoridad (Marcos 6:7–13), con instrucciones concretas para la misión (Mateo 10). No fue un examen final, sino una práctica supervisada: los mandó, regresaron, y hubo un informe —cuando los setenta y dos volvieron gozosos, Jesús los reorientó: «no se alegren de que los espíritus se les sometan, sino de que sus nombres están escritos en el cielo» (Lucas 10:17–20).</p>
+    <p>Es el ciclo que Coleman llamó <em>delegación</em> y <em>supervisión</em>: primero lo hicieron con Él (demostración), después lo hicieron ellos y lo revisaron juntos. Aprender haciendo, con alguien mirando.</p>
+    <p class="pull">Primero lo hizo delante de ellos; después ellos lo hicieron, y lo revisaron juntos.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>El envío fue parte de la formación, no su graduación: Jesús delegó tareas reales y luego revisó los resultados con ellos.</p></div>
+    <p class="fuentes-seccion">Fuentes: Marcos 6:7–13 · Mateo 10:1–42 · Lucas 10:1–20</p>
+  </section>
+
+  <section id="s5" class="revela">
+    <div class="eyebrow"><span class="num">V</span><span class="tag">La reproducción</span></div>
+    <h2>Formó reproductores, no espectadores</h2>
+    <p>Todo apuntaba a un encargo final. Tras la resurrección, Jesús no les dio un templo ni un cargo, sino una comisión: «vayan y hagan discípulos de todas las naciones… enseñándoles a obedecer todo lo que les he mandado» (Mateo 28:18–20). El plan siempre fue que los formados formaran a otros. «Serán mis testigos» (Hechos 1:8), y en Hechos los vemos convertirse en el fundamento de una iglesia que se multiplica.</p>
+    <p>Este es el octavo principio de Coleman —<em>reproducción</em>— y la razón por la que invertir en doce no era estrecho sino expansivo: doce que reproducen alcanzan más que un solo predicador ante miles. La suma llega hasta donde llega tu voz; la multiplicación no tiene ese techo.</p>
+    <p class="pull">La suma llega hasta donde llega tu voz; la multiplicación no tiene techo.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>El objetivo nunca fueron los doce: fueron los discípulos de los discípulos. Jesús formó reproductores, no espectadores.</p></div>
+    <p class="fuentes-seccion">Fuentes: Mateo 28:18–20 · Hechos 1:8 · <a href="https://www.thegospelcoalition.org/blogs/justin-taylor/a-20th-century-classic-the-masters-plan-of-evangelism/" target="_blank" rel="noopener">Coleman — reseña TGC</a></p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="s6" class="revela">
+    <div class="eyebrow plain"><span class="num">Síntesis</span><span class="tag">La lógica del método</span></div>
+    <h2>Estar antes de ir</h2>
+    <p>Las tres etapas responden, en orden, a la pregunta del título —seleccionar, formar, usar—, pero comparten una misma lógica contraintuitiva: Jesús trató lo pequeño como la vía hacia lo grande. Eligió pocos para poder formar a fondo; formó conviviendo antes que enseñando; y usó a los formados no como público final sino como semilla. La secuencia de Marcos 3:14 —«estar con él, y… enviarlos»— es todo el programa en seis palabras: la misión brota de la comunión, no al revés.</p>
+    <p>Conviene nombrar la tensión que un lector moderno siente aquí: la estrategia parece <em>ineficiente</em>. Ignorar a la multitud presente para atender a doce lentos y peleadores no es lo que aconsejaría ningún manual de crecimiento. Y sin embargo, esa «ineficiencia» resultó ser el plan: apostar por la profundidad en pocos, confiando en que la profundidad se reproduce.</p>
+  </section>
+
+  <section id="s7" class="revela">
+    <div class="eyebrow plain"><span class="num">Cierre</span><span class="tag">Para llevar</span></div>
+    <h2>Para tu mesa</h2>
+    <p>Si el método de Jesús fue formar a pocos en la vida compartida, la pregunta para hoy no es «¿a cuántos les hablo?», sino «¿con quiénes estoy?». Elegir a unos pocos, compartir camino con ellos, hacer delante de ellos lo que esperas que hagan, mandarlos a intentarlo y revisar juntos cómo salió, y esperar que ellos hagan lo mismo con otros: ese es el patrón, y sigue disponible.</p>
+    <p>Pregunta para llevar: si tuvieras que nombrar hoy a tus «doce» —tres bastarían para empezar—, ¿quiénes serían, y qué significaría de verdad «estar con ellos» antes de enviarlos?</p>
+  </section>
+
+  <div class="fuentes revela" id="fuentes">
+    <strong>Fuentes consultadas:</strong>
+    <ol>
+      <li><strong>Los Evangelios y Hechos</strong> (citas según <em>Dios Habla Hoy</em>): Lucas 6:12–16 · Marcos 3:13–19 · Marcos 4:33–34 · Marcos 6:7–13 · Marcos 9:33–37 · Marcos 10:35–45 · Mateo 10 · Mateo 28:18–20 · Lucas 10:1–20 · Juan 13 · Juan 15:16 · Juan 21:15–19 · Hechos 1:8 · Hechos 4:13 — fuentes primarias del método de Jesús con los doce.</li>
+      <li><a href="https://founders.org/reviews/the-master-plan-of-evangelism-by-robert-coleman/" target="_blank" rel="noopener">Robert E. Coleman, <em>The Master Plan of Evangelism</em> (1963) — reseña, Founders Ministries</a> — los ocho principios (selección, asociación, consagración, impartición, demostración, delegación, supervisión, reproducción).</li>
+      <li><a href="https://www.9marks.org/review/master-plan-evangelism-robert-coleman/" target="_blank" rel="noopener">Reseña en 9Marks</a> — el peso de la «asociación» y el «estar con Él» de Marcos 3:14.</li>
+      <li><a href="https://www.thegospelcoalition.org/blogs/justin-taylor/a-20th-century-classic-the-masters-plan-of-evangelism/" target="_blank" rel="noopener">«A 20th Century Classic», The Gospel Coalition</a> — contexto e influencia de la obra de Coleman.</li>
+    </ol>
+  </div>
+
+  <footer>Café con Claude · Discipulado · «Llamó, formó, envió» · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  var navLinks = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  navLinks.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        navLinks.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id], div[id="fuentes"]').forEach(function (s) { spy.observe(s); });
+
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
