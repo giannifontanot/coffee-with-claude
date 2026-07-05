@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es"> 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee with Claude</title>
+<style>
+  :root {
+    --ink: #2C2C2A;
+    --paper: #FAFAF7;
+    --accent: #BA7517;
+    --muted: #9A9A93;
+    --rule: #E7E4DC;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  header {
+    background: #1A1A18;
+    color: #FAFAF7;
+    padding: 32px 24px;
+    margin-bottom: 48px;
+  }
+  .header-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+  h1 {
+    font-size: 2.1rem;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+    color: #FAFAF7;
+  }
+  .date {
+    color: #9A9A93;
+    margin: 0 0 4px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .sub {
+    color: #C9A36B;
+    margin: 0;
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+  section { margin-bottom: 40px; }
+  .label {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { margin-bottom: 11px; }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.08rem;
+  }
+  a:hover { text-decoration: underline; }
+  .tag {
+    color: var(--muted);
+    margin-left: 10px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.02em;
+  }
+  footer {
+    margin-top: 56px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Coffee with Claude</h1>
+    <p class="date">Actualizado · 5 de julio, 2026</p>
+    <p class="sub">Reflections on interesting topics, one coffee at a time.</p>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <p class="label">Serie de Marcos</p>
+  <ul>
+    <li><a href="marcos2-hijo-antes-que-nada.html">Hijo, antes que nada</a><span class="tag">Marcos 2</span></li>
+    <li><a href="marcos-2-perdon-antes-de-sanar.html">El perdón, la sanidad y el pecado</a><span class="tag">Marcos 2</span></li>
+    <li><a href="ver-antes-de-arreglar.html">Ver antes de arreglar</a><span class="tag">Marcos 2</span></li>
+    <li><a href="vestirse-para-ser-amado.html">Vestirse para ser amado</a><span class="tag">Marcos 2</span></li>
+    <li><a href="primero-invisible-despues-imparable.html">Primero invisible, después imparable</a><span class="tag">Marcos 4</span></li>
+    <li><a href="Episode%2058%20-%20The%20Battles%20of%20Spiritual%20Transformation.html">Crecer es pelear</a><span class="tag">Marcos 4–6</span></li>
+    <li><a href="dos-llamados-dos-respuestas.html">Dos llamados, dos respuestas</a><span class="tag">Marcos 5</span></li>
+    <li><a href="la-decapolis-y-dallas.html">La Decápolis y Dallas</a><span class="tag">Marcos 5</span></li>
+    <li><a href="retiro-mvp-marcos-8.html">Retiro MVP · ¿Quién dicen que soy?</a><span class="tag">Marcos 8</span></li>
+    <li><a href="piedra-sobre-piedra.html">Piedra sobre piedra</a><span class="tag">Marcos 11–13</span></li>
+    <li><a href="porque-tenian-miedo.html">Porque tenían miedo</a><span class="tag">Marcos 16</span></li>
+    <li><a href="dichas-una-sola-vez.html">Dichas una sola vez</a><span class="tag">Hapax legomena</span></li>
+    <li><a href="las-emociones-censuradas.html">Las emociones censuradas</a></li>
+    <li><a href="el-camino-de-marcos.html">El camino de Marcos</a><span class="tag">Índice geográfico</span></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Teología y lenguaje</p>
+  <ul>
+    <li><a href="palabras-sin-aduana.html">Palabras sin aduana</a></li>
+    <li><a href="fe-de-erratas.html">Fe de erratas</a></li>
+    <li><a href="el-mono-y-el-ave-v3.html">El mono que se viste, el ave que se muestra</a><span class="tag">Ensayo</span></li>
+    <li><a href="historia-de-la-iglesia-ruta-de-lectura.html">Historia de la Iglesia · ruta de lectura</a></li>
+    <li><a href="una_pregunta_a_Dios.html">Una pregunta a Dios</a></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Iglesia y sistemas</p>
+  <ul>
+    <li><a href="termostatos-rotos.html">Termostatos rotos</a><span class="tag">Meadows</span></li>
+    <li><a href="doce-palancas.html">Doce palancas</a><span class="tag">Apocalipsis 2–3</span></li>
+    <li><a href="doce-no-ciento-veinte.html">Doce, no ciento veinte</a></li>
+    <li><a href="el-espejo-y-la-bascula.html">El espejo y la báscula</a></li>
+    <li><a href="el_sistema_y_sus_interacciones.html">El sistema y sus interacciones</a></li>
+    <li><a href="la_mesa_de_los_metodos.html">La mesa de los métodos</a></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Discipulado y carácter</p>
+  <ul>
+    <li><a href="el_caracter_de_jesus.html">El carácter de Jesús</a></li>
+    <li><a href="el-camino-del-discipulo.html">El camino del discípulo</a></li>
+    <li><a href="llamo-formo-envio.html">Llamó, formó, envió</a><span class="tag">Los doce</span></li>
+    <li><a href="lo-mejor-no-lo-que-sobra.html">Lo mejor, no lo que sobra</a></li>
+    <li><a href="el_consejo_que_te_falta_aprender.html">El consejo que te falta aprender</a></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Preguntas a Fable</p>
+  <ul>
+    <li><a href="primer-panel-pregunta-a-fable.html">Primer panel de preguntas a Fable</a></li>
+    <li><a href="panel-preguntas-a-fable-segunda-ronda.html">Segunda ronda de preguntas a Fable</a></li>
+    <li><a href="fable-al-banquillo.html">Fable al banquillo</a></li>
+    <li><a href="preguntas-a-chat.html">Preguntas a Chat</a></li>
+    <li><a href="biblioteca-del-pensamiento.html">Biblioteca del pensamiento</a></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Go Epic</p>
+  <ul>
+    <li><a href="go-epic-cuatro-hornillas.html">Cuatro hornillas, una sola llama</a></li>
+    <li><a href="cuatro-areas-un-solo-cuerpo.html">Cuatro áreas, un solo cuerpo</a></li>
+    <li><a href="hard_goals_infographic.html">H.A.R.D. Goals</a><span class="tag">Infografía</span></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Método e iteración</p>
+  <ul>
+    <li><a href="part1_speed_iteration_discipleship.html">Speed is the secret sauce</a></li>
+    <li><a href="part2_feedback_elixir.html">Feedback is the elixir</a></li>
+    <li><a href="conversation_analysis%20include%20feedback%20lesson.html">Conversation analysis · speed, iteration &amp; discipleship</a></li>
+    <li><a href="grok-musk-speed.html">Grok's Musk Speed</a></li>
+    <li><a href="persianas-artesanales.html">Persianas artesanales</a><span class="tag">Detrás de cámaras</span></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Sobre la risa</p>
+  <ul>
+    <li><a href="la_risa_panel_de_expertos.html">La risa · panel de expertos</a></li>
+    <li><a href="como_provocar_la_risa_taller.html">Cómo provocar la risa · taller</a></li>
+    <li><a href="anatomia_de_la_risa.html">Anatomía de la risa</a></li>
+    <li><a href="la_arquitectura_de_la_risa.html">La arquitectura de la risa</a></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">América a los 250</p>
+  <ul>
+    <li><a href="la-declaracion-ausente.html">La declaración ausente</a></li>
+    <li><a href="el-mito-vaciado.html">El mito vaciado</a></li>
+    <li><a href="mito-americano-lectura-guiada.html">Mito americano · lectura guiada</a></li>
+    <li><a href="american_myth_article.html">American myth article</a></li>
+    <li><a href="american-history-infographic.html">American History</a><span class="tag">Infografía</span></li>
+  </ul>
+</section>
+
+<section>
+  <p class="label">Infografías</p>
+  <ul>
+    <li><a href="GITHUB-estudiar-mejor-las-escrituras.html">Estudiar mejor las Escrituras</a></li>
+    <li><a href="infografia_marcos2_perdon_y_sanidad.html">Por qué Jesús perdona primero</a><span class="tag">Marcos 2</span></li>
+    <li><a href="marcos_2_pecado_paralisis_infografia_actualizada.html">Perdón, pecado y parálisis</a><span class="tag">Marcos 2</span></li>
+    <li><a href="rocket_engine_comparison.html">Rocket Engine Comparison</a></li>
+  </ul>
+</section>
+
+<footer>Café con Claude · índice curado a mano, ordenado con Fable</footer>
+
+</main>
+
+</body>
+</html>
