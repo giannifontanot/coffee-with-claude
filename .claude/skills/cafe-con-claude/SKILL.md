@@ -97,10 +97,19 @@ These are the reasons this skill exists, so don't let them slip:
 
 5. **Verify before finishing** (see checklist).
 
-6. **Offer to register it in the index.** Ask whether to add the page to
-   `index.html`. If yes, append one `<li><a href="new-file.html">Title</a></li>`
-   to the most fitting `<section>` — see the index register notes in the
-   reference. Don't restyle the index.
+6. **Register it in the index (always do this).** Linking the new page from
+   `index.html` is a standard part of the job, not an optional extra — the index
+   is the site's front door, and a page that isn't listed there is effectively
+   lost. So don't ask whether to do it; do it. Read the current `index.html`,
+   pick the section whose theme best fits the new page (match by topic — a Marcos
+   study goes under the Marcos section, a discipleship piece under «Discipulado y
+   carácter», an infographic under «Infografías», etc.), and append one
+   `<li><a href="new-file.html">Title</a></li>` — optionally with a
+   `<span class="tag">…</span>` label — to the end of that section's list. If no
+   section genuinely fits, add a new one in the index's existing style. Don't
+   restyle the index or reorder the entries that are already there. Note the
+   index's sections may be plain `<section>`s or collapsible `<details>`
+   accordions; insert into whichever container holds that section's list.
 
 ## The model note
 
