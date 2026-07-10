@@ -67,7 +67,7 @@ e.g. `rgba(180,83,42,0.06)` (terracotta wash) for source boxes and hover states.
 - **Hamburger + nav drawer** — a fixed `☰` button in the **top-left** corner
   (`#nav-toggle`, dark `--ink` on `--cream`) toggles an off-canvas `nav.sidebar`
   that slides in from the left over a dim scrim. The drawer holds the brand mark
-  (`☕ Café con Claude`), a series sub-line, and an `<ol>` table of contents whose
+  (`Café con Claude`, plain — no emoji), a series sub-line, and an `<ol>` table of contents whose
   links (`#s1`, `#s2`, …) point at the page's section ids; a scroll-spy adds
   `.active` to the current one. This is the site's standard navigation for any
   multi-section piece — see `porque-tenian-miedo.html`, `dichas-una-sola-vez.html`.
