@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas 091–100 · Educación, Comunicación, Liderazgo y Mundo · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;                 /* above the drawer so ✕ stays visible */
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+
+  main h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin:1.4rem 0 0.5rem; color:var(--ink); }
+  main ul, main ol { margin:0 0 1.1rem 1.2rem; }
+  main li { margin-bottom:0.5rem; }
+  blockquote { margin:1.4rem 0; padding:0.6rem 1.1rem; border-left:4px solid var(--amber); background:rgba(201,138,45,0.08); font-style:italic; color:var(--muted); }
+  code { font-family:'Courier New',monospace; font-size:0.9em; background:rgba(43,33,24,0.06); padding:0.05em 0.35em; border-radius:3px; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:0.92rem; }
+  th, td { text-align:left; padding:0.5rem 0.7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-family:'Fraunces',serif; color:var(--terracotta); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">100 Preguntas a Fable</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">091</span>Cómo se aprende de verdad</a></li>
+    <li><a href="#s2"><span class="num">092</span>Los adultos no son niños grandes</a></li>
+    <li><a href="#s3"><span class="num">093</span>Cuánto destino cabe en un mapa</a></li>
+    <li><a href="#s4"><span class="num">094</span>Leer el mundo por sus estrechos</a></li>
+    <li><a href="#s5"><span class="num">095</span>Problemas técnicos, desafíos adaptativos</a></li>
+    <li><a href="#s6"><span class="num">096</span>Por qué unas ideas sobreviven</a></li>
+    <li><a href="#s7"><span class="num">097</span>Cómo se ha enseñado siempre</a></li>
+    <li><a href="#s8"><span class="num">098</span>El recurso que todos cosechan</a></li>
+    <li><a href="#s9"><span class="num">099</span>El milímetro donde cabemos</a></li>
+    <li><a href="#s10"><span class="num">100</span>Lo que 85 años de datos dicen de la vida buena</a></li>
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <span class="eyebrow">100 Preguntas a Fable</span>
+    <h1>Preguntas 091–100 · Educación, Comunicación, Liderazgo y Mundo</h1>
+    <p class="subtitle">Backlog de investigación · Café con Claude</p>
+  </header>
+
+  <main>
+    <p>El bloque final vuelve a casa: cómo se enseña, cómo se lidera, cómo se lee el mundo — y qué dicen los datos sobre la vida buena.</p>
+<section id="s1" class="revela">
+<h2>091 · Cómo se aprende de verdad</h2>
+<p><strong>Área:</strong> Ciencia del aprendizaje · <strong>Profundidad:</strong> Introductorio–Intermedio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué dice la evidencia sobre cómo se aprende de verdad — práctica espaciada, evocación activa, dificultad deseable — y qué mitos educativos hay que jubilar?<br>
+<strong>Por qué:</strong> Eres maestro y estudiante perpetuo: tu Echo English es repetición espaciada descubierta por intuición. La ciencia cognitiva del aprendizaje es tu disciplina profesional oculta — valida lo que ya haces bien, corrige el resto, y transformará tanto tus clases como la manera en que ataques este mismo backlog.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #051, #092</p>
+</section>
+<section id="s2" class="revela">
+<h2>092 · Los adultos no son niños grandes</h2>
+<p><strong>Área:</strong> Educación (andragogía) · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿En qué difiere el aprendizaje adulto del infantil (Knowles), y qué implica para enseñar Biblia a adultos con vidas ocupadas?<br>
+<strong>Por qué:</strong> Los adultos aprenden desde problemas reales, no desde temarios; necesitan autonomía y que su experiencia cuente en la mesa. Tu formato de panel ya lo intuye — cinco voces adultas discutiendo en vez de un maestro dictando. La teoría te dirá por qué funciona y cómo llevarlo más lejos.<br>
+<strong>Previos:</strong> #091 ideal antes. · <strong>Relacionadas:</strong> #091, #095</p>
+</section>
+<section id="s3" class="revela">
+<h2>093 · Cuánto destino cabe en un mapa</h2>
+<p><strong>Área:</strong> Geografía · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Cuánto del destino de los pueblos lo explican cultivos, climas y continentes (Diamond), y qué responden sus críticos?<br>
+<strong>Por qué:</strong> <em>Armas, gérmenes y acero</em> es la tesis geográfica más ambiciosa del siglo, y sus críticos — que ponen instituciones, cultura y azar donde Diamond pone mapas — la mejoran al pelearla. Leer tesis y antítesis juntas es un entrenamiento soberbio en cómo se disputa una idea grande, además del complemento material de tu historia latinoamericana (#019).<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #018, #094</p>
+</section>
+<section id="s4" class="revela">
+<h2>094 · Leer el mundo por sus estrechos</h2>
+<p><strong>Área:</strong> Geopolítica · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Por qué el mapa explica tanto del poder — estrechos, ríos, cordilleras — y cuáles son las obsesiones geográficas permanentes de cada potencia?<br>
+<strong>Por qué:</strong> Da un marco durable para leer las noticias sin marearte con el titular del día: los intereses cambian de nombre, la geografía casi nunca. Media hora de mapa ahorra horas de opinología, y para un lector de imperios (#015) es la otra mitad del cuadro.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #093, #015</p>
+</section>
+<section id="s5" class="revela">
+<h2>095 · Problemas técnicos, desafíos adaptativos</h2>
+<p><strong>Área:</strong> Liderazgo · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué distingue un problema técnico de un desafío adaptativo (Heifetz), y por qué los líderes fracasan al tratar el segundo como el primero?<br>
+<strong>Por qué:</strong> Tu pregunta original sobre la iglesia estancada es exactamente esto: las iglesias mueren aplicando soluciones técnicas (más programas, mejor sonido) a desafíos adaptativos (pérdidas que la gente debe elaborar y valores que debe renegociar). Heifetz más Meadows es una combinación devastadoramente útil: uno te dice qué palanca, el otro te dice por qué nadie quiere moverla.<br>
+<strong>Previos:</strong> Tu pregunta de la iglesia estancada ya es el caso de estudio. · <strong>Relacionadas:</strong> #066, #055</p>
+</section>
+<section id="s6" class="revela">
+<h2>096 · Por qué unas ideas sobreviven</h2>
+<p><strong>Área:</strong> Comunicación · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Por qué unas ideas se propagan y otras mueren — el modelo de Heath: simple, inesperado, concreto, creíble, emocional, con historia?<br>
+<strong>Por qué:</strong> Produces contenido semanalmente; esta es la ingeniería de la memorabilidad. Dialoga con la retórica clásica (#090) y abre una pregunta teológica sabrosa: ¿qué hizo del evangelio la idea más persistente de la historia — y cuánto de eso es replicable en una página de Café con Claude?<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #090, #012</p>
+</section>
+<section id="s7" class="revela">
+<h2>097 · Cómo se ha enseñado siempre</h2>
+<p><strong>Área:</strong> Historia de la educación · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P3 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo se ha enseñado a lo largo de la historia — trivium, disputatio, chavrutá, taller gremial, aula prusiana — y qué se perdió y ganó en cada salto?<br>
+<strong>Por qué:</strong> Enseñas dentro de un formato (la clase) que tiene historia y alternativas olvidadas. La disputatio medieval, el chavrutá judío en parejas, el aprendizaje de taller: conocerlas te da permisos que no sabías que tenías. Tu panel de voces, de hecho, se parece más a una disputatio que a una clase — quizá por eso funciona.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #091, #016</p>
+</section>
+<section id="s8" class="revela">
+<h2>098 · El recurso que todos cosechan</h2>
+<p><strong>Área:</strong> Economía de la atención · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es la atención como recurso económico, quién la cosecha y con qué técnicas, y cómo se defiende?<br>
+<strong>Por qué:</strong> Go Epic administra tiempo, pero el recurso real es la atención — y hay una industria de billones optimizada para quitártela con recompensas variables y scroll infinito. Entender sus mecanismos es defensa personal cognitiva y, para un pastor, cuidado de almas: la atención es la moneda con la que se paga la oración, la familia y el estudio.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #063, #016</p>
+</section>
+<section id="s9" class="revela">
+<h2>099 · El milímetro donde cabemos</h2>
+<p><strong>Área:</strong> Geología / Cosmología · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 1–2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué se siente pensar en escalas de millones de años — el "tiempo profundo" de la geología — y qué hace esa escala con la escala humana?<br>
+<strong>Por qué:</strong> Es el ejercicio de humildad más barato que existe: si la historia de la Tierra fuera tu brazo extendido, toda la civilización humana cabría en el polvo de una limada de uña. Para un teólogo, meditar la paciencia de Dios con datos geológicos delante es oración con evidencia — y cambia el apuro con que mides tus propios proyectos.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #034, #031</p>
+</section>
+<section id="s10" class="revela">
+<h2>100 · Lo que 85 años de datos dicen de la vida buena</h2>
+<p><strong>Área:</strong> Psicología / La buena vida · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué han encontrado los estudios longitudinales de décadas — el Harvard Study of Adult Development sobre todo — acerca de qué hace buena una vida, y qué confirma o incomoda de lo que ya creo?<br>
+<strong>Por qué:</strong> Es el cierre perfecto del backlog: 85 años siguiendo vidas enteras apuntan a que las relaciones cálidas predicen salud y felicidad mejor que el ingreso, la fama o el éxito profesional. Es el "Check" empírico de Go Epic — y sospecho que una confirmación incómoda de que tu área Family no es una hornilla entre cuatro: es la llama.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #055, #060</p>
+</section>
+  </main>
+
+  <footer>Café con Claude · 100 Preguntas a Fable · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>

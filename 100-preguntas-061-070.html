@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas 061–070 · Economía, Decisiones y Causalidad · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;                 /* above the drawer so ✕ stays visible */
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+
+  main h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin:1.4rem 0 0.5rem; color:var(--ink); }
+  main ul, main ol { margin:0 0 1.1rem 1.2rem; }
+  main li { margin-bottom:0.5rem; }
+  blockquote { margin:1.4rem 0; padding:0.6rem 1.1rem; border-left:4px solid var(--amber); background:rgba(201,138,45,0.08); font-style:italic; color:var(--muted); }
+  code { font-family:'Courier New',monospace; font-size:0.9em; background:rgba(43,33,24,0.06); padding:0.05em 0.35em; border-radius:3px; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:0.92rem; }
+  th, td { text-align:left; padding:0.5rem 0.7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-family:'Fraunces',serif; color:var(--terracotta); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">100 Preguntas a Fable</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">061</span>Muéstrame el incentivo</a></li>
+    <li><a href="#s2"><span class="num">062</span>La matemática de la cooperación</a></li>
+    <li><a href="#s3"><span class="num">063</span>La arquitectura de las decisiones</a></li>
+    <li><a href="#s4"><span class="num">064</span>Riesgo no es incertidumbre</a></li>
+    <li><a href="#s5"><span class="num">065</span>El interés compuesto en dinero, hábitos y fe</a></li>
+    <li><a href="#s6"><span class="num">066</span>Gobernar los comunes</a></li>
+    <li><a href="#s7"><span class="num">067</span>El álgebra de decidir</a></li>
+    <li><a href="#s8"><span class="num">068</span>La escalera de la causalidad</a></li>
+    <li><a href="#s9"><span class="num">069</span>La deuda antes que la moneda</a></li>
+    <li><a href="#s10"><span class="num">070</span>Los motores de la desigualdad</a></li>
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <span class="eyebrow">100 Preguntas a Fable</span>
+    <h1>Preguntas 061–070 · Economía, Decisiones y Causalidad</h1>
+    <p class="subtitle">Backlog de investigación · Café con Claude</p>
+  </header>
+
+  <main>
+    <p>Este bloque estudia cómo deciden las personas reales y cómo se gobiernan los recursos compartidos — la mitad empírica que le falta a tu eclesiología de redes.</p>
+<section id="s1" class="revela">
+<h2>061 · Muéstrame el incentivo</h2>
+<p><strong>Área:</strong> Economía · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Por qué los economistas miran lo que la gente hace y no lo que dice, y qué revela esa mirada aplicada a iglesias, empresas y familias?<br>
+<strong>Por qué:</strong> "Muéstrame el incentivo y te mostraré el resultado" es la navaja analítica más barata y filosa que existe. Aplicada a estructuras eclesiales — ¿qué premia <em>de verdad</em> tu congregación: la asistencia o la transformación? — es dinamita pastoral. Es también el antídoto contra media retórica organizacional.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #063, #056</p>
+</section>
+<section id="s2" class="revela">
+<h2>062 · La matemática de la cooperación</h2>
+<p><strong>Área:</strong> Teoría de juegos · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 3–4 semanas<br>
+<strong>Pregunta:</strong> ¿Cuándo conviene cooperar con quien puede traicionarte, y qué descubrió Axelrod con sus torneos del dilema del prisionero?<br>
+<strong>Por qué:</strong> La estrategia ganadora de Axelrod — empieza cooperando, responde a lo que recibas, perdona rápido, sé predecible — es matemática que suena sospechosamente al Sermón del Monte. Es el puente formal entre tu ética y tus sistemas: la cooperación puede <em>evolucionar</em> entre egoístas, y saber bajo qué condiciones cambia cómo diseñas comunidades.<br>
+<strong>Previos:</strong> Ninguno; la matemática necesaria es mínima. · <strong>Relacionadas:</strong> #066, #072</p>
+</section>
+<section id="s3" class="revela">
+<h2>063 · La arquitectura de las decisiones</h2>
+<p><strong>Área:</strong> Economía conductual · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo cambian las decisiones según cómo se presentan las opciones — marcos, anclas, opciones por defecto — y qué es diseñar una "arquitectura de decisiones"?<br>
+<strong>Por qué:</strong> Go Epic <em>es</em> arquitectura de decisiones aplicada a ti mismo, construida por intuición. Thaler te da el manual: por qué el default casi siempre gana, cómo diseñar fricción buena y atajos honestos. Es de las pocas preguntas del backlog aplicables el mismo día que las estudias.<br>
+<strong>Previos:</strong> #051 ayuda mucho. · <strong>Relacionadas:</strong> #051, #098</p>
+</section>
+<section id="s4" class="revela">
+<h2>064 · Riesgo no es incertidumbre</h2>
+<p><strong>Área:</strong> Teoría de decisiones · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué diferencia hay entre riesgo calculable e incertidumbre genuina (Knight), y por qué Taleb insiste en que confundirlos arruina vidas y portafolios?<br>
+<strong>Por qué:</strong> Casi todas las decisiones grandes de tu vida — carrera, ministerio, familia — son incertidumbre disfrazada de riesgo: no hay tabla de probabilidades para "¿debo empezar este proyecto?". Distinguirlas cambia el estilo de planificación: menos pronóstico, más opcionalidad y margen. Es el fundamento conceptual de la antifragilidad (#080).<br>
+<strong>Previos:</strong> #037 recomendado. · <strong>Relacionadas:</strong> #037, #080</p>
+</section>
+<section id="s5" class="revela">
+<h2>065 · El interés compuesto en dinero, hábitos y fe</h2>
+<p><strong>Área:</strong> Finanzas / Sistemas personales · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo funciona realmente el interés compuesto — en dinero, hábitos y conocimiento — y por qué la intuición humana lo subestima sistemáticamente?<br>
+<strong>Por qué:</strong> Es la matemática silenciosa detrás de tu Echo English y de las cuatro hornillas de Go Epic: sistemas donde lo pequeño sostenido derrota a lo grande esporádico. Merece números de verdad, no solo metáfora — porque la curva exponencial engaña al ojo justo en los años donde más gente abandona.<br>
+<strong>Previos:</strong> Aritmética. · <strong>Relacionadas:</strong> #067, #100</p>
+</section>
+<section id="s6" class="revela">
+<h2>066 · Gobernar los comunes</h2>
+<p><strong>Área:</strong> Economía política · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 3–4 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo gobiernan comunidades reales sus bienes comunes sin mercado ni Estado, y cuáles son los ocho principios que Elinor Ostrom encontró en todas las que funcionan?<br>
+<strong>Por qué:</strong> Ostrom ganó el Nobel demostrando que la "tragedia de los comunes" no es destino: acequias españolas, pesquerías y bosques comunales se autogobiernan desde hace siglos con reglas reconocibles. Una iglesia es un común — atención, confianza, voluntariado compartidos — y sus ocho principios son el manual de gobernanza que tu "Network is the Church" todavía no tiene.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #055, #062</p>
+</section>
+<section id="s7" class="revela">
+<h2>067 · El álgebra de decidir</h2>
+<p><strong>Área:</strong> Teoría de decisiones · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es el valor esperado, cuándo es mala guía (utilidad, riesgo de ruina), y cómo se decide racionalmente bajo probabilidades?<br>
+<strong>Por qué:</strong> Es el complemento operativo de Bayes: #037 te dice qué creer; esto te dice qué hacer al respecto. Go Epic reparte tu recurso más escaso entre cuatro áreas — esta es la teoría formal de ese reparto, incluyendo por qué a veces lo "óptimo en promedio" es exactamente lo que no debes hacer.<br>
+<strong>Previos:</strong> #037. · <strong>Relacionadas:</strong> #037, #064</p>
+</section>
+<section id="s8" class="revela">
+<h2>068 · La escalera de la causalidad</h2>
+<p><strong>Área:</strong> Estadística / Causalidad · <strong>Profundidad:</strong> Avanzado · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 1 mes<br>
+<strong>Pregunta:</strong> ¿Por qué correlación no es causa, y cómo ordena la "escalera de la causalidad" de Judea Pearl (ver, intervenir, imaginar) lo que los datos pueden y no pueden decir?<br>
+<strong>Por qué:</strong> Es el nivel avanzado de #040 y la pregunta central de toda ciencia aplicada. Después de Pearl no vuelves a leer "un estudio encontró que..." con los mismos ojos: sabrás preguntar si vieron, intervinieron o solo contaron. Para alguien que quiere medir transformación espiritual (tu pregunta del Metodólogo), es directamente relevante.<br>
+<strong>Previos:</strong> #040 necesario, #037 recomendado. · <strong>Relacionadas:</strong> #040, #037</p>
+</section>
+<section id="s9" class="revela">
+<h2>069 · La deuda antes que la moneda</h2>
+<p><strong>Área:</strong> Historia económica · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué fue primero, el trueque o la deuda, y qué revela la historia del dinero (Graeber y sus críticos) sobre el lenguaje bíblico de perdón y jubileo?<br>
+<strong>Por qué:</strong> Graeber sostiene que la deuda precede a la moneda por milenios y que el vocabulario religioso — redención, perdón de deudas, rescate — es económico de origen. Sus críticos matizan la tesis, y esa pelea es parte del valor. Después de esto, el Padrenuestro ("perdona nuestras deudas") suena distinto.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #056, #061</p>
+</section>
+<section id="s10" class="revela">
+<h2>070 · Los motores de la desigualdad</h2>
+<p><strong>Área:</strong> Economía · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué fuerzas concentran la riqueza y cuáles la moderan, según la evidencia histórica y económica disponible?<br>
+<strong>Por qué:</strong> Es el trasfondo de Amós (#008) y de media predicación profética. Estudiar los mecanismos reales — retornos del capital, shocks, instituciones, movilidad — te saca del comentario moral genérico y te mete en el terreno donde existen palancas de verdad. Un profeta que entiende los mecanismos denuncia mejor.<br>
+<strong>Previos:</strong> #040 ayuda. · <strong>Relacionadas:</strong> #008, #061</p>
+</section>
+  </main>
+
+  <footer>Café con Claude · 100 Preguntas a Fable · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
