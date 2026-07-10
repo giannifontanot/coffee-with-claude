@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El camello y la aguja · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:      #f7f1e5;
+    --cream-deep: #f0e7d5;
+    --ink:        #2b2118;
+    --terracotta: #b4532a;
+    --amber:      #c98a2d;
+    --olive:      #6b7a3f;
+    --plum:       #6e4a6e;
+    --steel:      #4a6b7a;
+    --line:       #d9cdb8;
+    --muted:      #6a5b48;
+    --card:       #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.7;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--steel));
+    z-index: 100;
+  }
+
+  /* Hamburger + drawer */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem; z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 290px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream); border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem; }
+  nav.sidebar .brand-sub { font-size: 0.78rem; font-style: italic; color: var(--muted); margin-bottom: 1.8rem; }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a { display: flex; align-items: baseline; gap: 0.6rem; color: var(--muted); text-decoration: none; font-size: 0.86rem; line-height: 1.35; transition: color 0.2s; }
+  nav.sidebar ol a .num { font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem; min-width: 2rem; color: var(--line); transition: color 0.2s; }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  #nav-scrim { position: fixed; inset: 0; background: rgba(43,33,24,0.38); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65; }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.4rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* Hero */
+  .kicker {
+    font-family: 'Fraunces', serif; font-size: 0.8rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600; margin-bottom: 0.8rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2.1rem, 6vw, 3.2rem); line-height: 1.08; margin-bottom: 0.7rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.1rem; max-width: 34em; margin-bottom: 1.5rem; }
+  .pregunta {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 1.15rem;
+    color: var(--plum); border-left: 3px solid var(--plum);
+    padding: 0.2rem 0 0.2rem 1.1rem; margin-bottom: 1.6rem;
+  }
+  .pregunta .quien { display: block; font-family: 'Spectral', serif; font-style: normal; font-size: 0.8rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 0.5rem; }
+
+  .chips-label { font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.8rem; }
+  .chips span { font-size: 0.8rem; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 0.3rem 0.85rem; }
+
+  .thesis {
+    background: var(--card); border: 1px solid var(--line);
+    border-left: 4px solid var(--amber); border-radius: 6px;
+    padding: 1.2rem 1.4rem; margin-bottom: 3rem;
+  }
+  .thesis .lead { font-family: 'Fraunces', serif; font-weight: 600; color: var(--terracotta); }
+
+  /* Sections */
+  section { margin-bottom: 3rem; scroll-margin-top: 1.5rem; }
+  .eyebrow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.5rem; }
+  .eyebrow .num {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 0.9rem;
+    color: var(--cream); background: var(--terracotta);
+    width: 1.7rem; height: 1.7rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%; flex: none;
+  }
+  .eyebrow.plain .num { background: var(--olive); font-size: 0.62rem; width: auto; height: 1.7rem; border-radius: 999px; padding: 0 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .eyebrow .tag { font-family: 'Fraunces', serif; font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(1.5rem, 4.2vw, 2rem); line-height: 1.16; margin: 0 0 1rem; }
+  h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.15rem; margin: 1.8rem 0 0.6rem; color: var(--ink); }
+  p { margin-bottom: 1.1rem; }
+  em { color: var(--ink); font-style: italic; }
+  a { color: var(--terracotta); }
+
+  /* Panel voices */
+  .voz { margin: 1.5rem 0; padding-left: 1.1rem; border-left: 3px solid var(--line); }
+  .voz .quien { font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem; }
+  .voz .quien::before { content: ""; width: 0.6em; height: 0.6em; border-radius: 50%; display: inline-block; flex: none; }
+  .voz p:last-child { margin-bottom: 0; }
+  .voz.exegeta   { border-color: var(--terracotta); } .voz.exegeta .quien   { color: var(--terracotta); } .voz.exegeta .quien::before   { background: var(--terracotta); }
+  .voz.ingeniera { border-color: var(--olive); }      .voz.ingeniera .quien { color: var(--olive); }      .voz.ingeniera .quien::before { background: var(--olive); }
+  .voz.provocador{ border-color: var(--plum); }        .voz.provocador .quien{ color: var(--plum); }        .voz.provocador .quien::before{ background: var(--plum); }
+  .voz.disenadora{ border-color: var(--amber); }       .voz.disenadora .quien{ color: var(--amber); }       .voz.disenadora .quien::before{ background: var(--amber); }
+  .voz.metodologo{ border-color: var(--steel); }       .voz.metodologo .quien{ color: var(--steel); }       .voz.metodologo .quien::before{ background: var(--steel); }
+
+  /* Scripture (DHH) */
+  blockquote.biblia {
+    margin: 1.4rem 0; padding: 1.2rem 1.4rem;
+    background: var(--cream-deep); border-left: 4px solid var(--amber);
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 1.08rem; line-height: 1.6;
+  }
+  blockquote.biblia .ref { display: block; margin-top: 0.6rem; font-family: 'Spectral', serif; font-style: normal; font-size: 0.8rem; letter-spacing: 0.03em; color: var(--muted); }
+
+  .destacado {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.4rem; line-height: 1.3;
+    color: var(--ink); border-left: 4px solid var(--terracotta);
+    padding: 0.2rem 0 0.2rem 1.2rem; margin: 1.8rem 0;
+  }
+
+  .demolicion {
+    background: rgba(180,83,42,0.06); border: 1px dashed var(--terracotta);
+    border-radius: 6px; padding: 1rem 1.3rem; margin: 1.4rem 0; font-size: 0.98rem;
+  }
+  .demolicion .marca { display: block; font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--terracotta); font-weight: 600; margin-bottom: 0.35rem; }
+
+  ul.capas { list-style: none; margin: 0.6rem 0 1.1rem; }
+  ul.capas li { position: relative; padding-left: 1.2rem; margin-bottom: 0.7rem; }
+  ul.capas li::before { content: "—"; position: absolute; left: 0; color: var(--amber); }
+
+  /* Persianas */
+  details.persiana { border: 1px solid var(--line); border-radius: 6px; background: var(--card); margin: 1.4rem 0; overflow: hidden; }
+  details.persiana > summary {
+    list-style: none; cursor: pointer; padding: 0.9rem 1.2rem;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.95rem; color: var(--ink);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  details.persiana > summary::-webkit-details-marker { display: none; }
+  details.persiana > summary .chev { color: var(--terracotta); transition: transform 0.2s; }
+  details.persiana[open] > summary .chev { transform: rotate(90deg); }
+  details.persiana .persiana-body { padding: 0 1.3rem 1.1rem; }
+  details.persiana.semilla { border-color: var(--olive); }
+  details.persiana.semilla > summary { color: var(--olive); }
+  details.persiana.semilla > summary .chev { color: var(--olive); }
+
+  /* Confidence table */
+  .tabla-wrap { overflow-x: auto; margin: 1.2rem 0; }
+  table.confianza { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  table.confianza th, table.confianza td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.confianza th { font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .badge { font-family: 'Fraunces', serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; padding: 0.15rem 0.55rem; border-radius: 999px; white-space: nowrap; }
+  .badge.alta { background: rgba(107,122,63,0.16); color: var(--olive); }
+  .badge.media { background: rgba(201,138,45,0.18); color: #9a6a12; }
+  .badge.mediaalta { background: rgba(74,107,122,0.16); color: var(--steel); }
+
+  /* PDCA */
+  .pdca { display: grid; gap: 0.8rem; margin: 1.2rem 0; }
+  .pdca .paso { border-left: 3px solid var(--steel); padding: 0.2rem 0 0.2rem 1rem; }
+  .pdca .paso b { font-family: 'Fraunces', serif; color: var(--steel); }
+
+  .semana { list-style: none; margin: 0.4rem 0 0; }
+  .semana li { padding: 0.35rem 0; border-bottom: 1px dotted var(--line); font-size: 0.96rem; }
+  .semana li b { font-family: 'Fraunces', serif; color: var(--terracotta); }
+  .cierre { font-size: 1.02rem; margin-top: 1.2rem; }
+
+  .fuentes-seccion { font-size: 0.85rem; color: var(--muted); font-style: italic; margin-top: 1rem; }
+  .fuentes-seccion a { border-bottom: 1px solid rgba(180,83,42,0.35); text-decoration: none; }
+
+  hr.rule { border: none; border-top: 2px solid var(--ink); margin: 3.2rem 0 2.6rem; opacity: 0.85; }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note { margin-top: 0.8rem; font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--muted); opacity: 0.85; text-align: center; }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle, details.persiana > summary .chev { transition: none; }
+  }
+  @media (max-width: 640px) { body { padding: 4.2rem 1rem 4rem; } }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">El Panel Pregunta · Nº 15</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>La pregunta sobre la mesa</a></li>
+    <li><a href="#s2"><span class="num">II</span>El catálogo del Exégeta</a></li>
+    <li><a href="#s3"><span class="num">III</span>Palanca de paradigma</a></li>
+    <li><a href="#s4"><span class="num">IV</span>¿Quién mató el chiste?</a></li>
+    <li><a href="#s5"><span class="num">V</span>El timing es diseño</a></li>
+    <li><a href="#s6"><span class="num">VI</span>Probar el chiste (PDCA)</a></li>
+    <li><a href="#s7"><span class="num">VII</span>Con cuánta confianza</a></li>
+    <li><a href="#semilla"><span class="num">✦</span>Semilla · siete días</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <div class="kicker">El Panel Pregunta · Nº 15</div>
+    <h1>El camello y la aguja</h1>
+    <p class="subtitle">Los chistes que dejamos de escuchar. El camello por el ojo de la aguja, la viga en el ojo: ¿hipérbole cómica que ya no oímos porque la solemnizamos?</p>
+    <p class="pregunta">Si el humor es incongruencia resuelta, ¿dónde están los chistes de Jesús?
+      <span class="quien">La pregunta la pone El Provocador, anfitrión de esta sesión.</span></p>
+
+    <p class="chips-label">Fuentes de un vistazo</p>
+    <div class="chips">
+      <span>Marcos 10:25</span>
+      <span>Mateo 7:3–5</span>
+      <span>Mateo 23:24</span>
+      <span>Trueblood, 1964</span>
+      <span>Incongruencia resuelta</span>
+    </div>
+
+    <div class="thesis">
+      <p><span class="lead">En una línea:</span> los chistes de Jesús no desaparecieron; los enterramos bajo tres capas —traducción, familiaridad y solemnidad—. Esta sesión excava.</p>
+    </div>
+  </header>
+
+  <section id="s1" class="revela">
+    <div class="eyebrow"><span class="num">I</span><span class="tag">La pregunta sobre la mesa</span></div>
+    <h2>La anatomía de un chiste</h2>
+    <div class="voz provocador">
+      <div class="quien">El Provocador · anfitrión</div>
+      <p>La teoría dominante del humor —la de la <em>incongruencia resuelta</em>— dice que reímos cuando algo viola nuestros patrones mentales y luego el cerebro <em>resuelve</em> la violación descubriendo una lógica alternativa. Kant la describió como «la transformación súbita de una expectativa tensa en nada»; Schopenhauer, como el choque repentino entre un concepto y el objeto real que representa. La versión moderna (Raskin y Attardo) lo formaliza: un chiste es un texto compatible con dos guiones semánticos opuestos, y la gracia está en el salto de uno al otro. Tres tiempos: <strong>planteamiento → violación → resolución</strong>.</p>
+    </div>
+    <p>Y entonces la pregunta muerde: si esa es la anatomía de un chiste… los dichos de Jesús están <em>llenos</em> de esa anatomía. Un camello intentando pasar por el ojo de una aguja. Un hombre con una viga de construcción saliéndole del ojo, ofreciéndose amablemente a sacarte una astilla. Fariseos colando el vino para no tragarse un mosquito y engullendo un camello entero —joroba incluida, y encima impuro—. Planteamiento, violación y resolución de manual. ¿Por qué nadie se ríe en la iglesia cuando se leen?</p>
+    <p class="destacado">Los chistes de Jesús no desaparecieron: los enterramos bajo traducción, familiaridad y solemnidad.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://plato.stanford.edu/entries/humor/" target="_blank" rel="noopener">Stanford Encyclopedia of Philosophy — Philosophy of Humor</a> · <a href="https://iep.utm.edu/humor/" target="_blank" rel="noopener">Internet Encyclopedia of Philosophy — Humor</a> · <a href="https://en.wikipedia.org/wiki/Theories_of_humor" target="_blank" rel="noopener">Theories of humor — Wikipedia</a></p>
+  </section>
+
+  <section id="s2" class="revela">
+    <div class="eyebrow"><span class="num">II</span><span class="tag">El catálogo</span></div>
+    <h2>El Exégeta abre los textos</h2>
+    <div class="voz exegeta">
+      <div class="quien">El Exégeta</div>
+      <p>Traigo los textos y los pongo bajo la lupa, uno por uno, leyéndolos primero <em>como si nunca los hubiéramos oído</em>.</p>
+    </div>
+
+    <h3>1 · El camello y la aguja</h3>
+    <blockquote class="biblia">«Es más fácil que un camello pase por el ojo de una aguja, que un rico entre en el reino de Dios.»<span class="ref">Marcos 10:25 · DHH</span></blockquote>
+    <p>El animal más grande de Palestina contra la abertura más pequeña de la casa. Elton Trueblood, en <em>The Humor of Christ</em> (1964), clasifica el dicho bajo «lo absurdo deliberado»: declaraciones desproporcionadas a propósito para clavar el punto. Y hay una pista <em>dentro del texto</em> de que los oyentes captaron la violencia de la imagen: su reacción inmediata es «¿entonces quién puede salvarse?» (Mc 10:26) —la pregunta de quien entendió que la imagen es imposible, no difícil—.</p>
+    <div class="demolicion">
+      <span class="marca">Nota de demolición</span>
+      <p>La leyenda de que «el ojo de la aguja» era una puertecita en la muralla de Jerusalén por donde el camello pasaba de rodillas <strong>no tiene ninguna evidencia arqueológica ni textual</strong>. Es un intento medieval de des-hacer el chiste —convertir lo imposible-y-cómico en difícil-pero-manejable—. La leyenda es, irónicamente, la prueba viviente de la solemnización: alguien encontró la hipérbole tan incómoda que le inventó una puerta.</p>
+    </div>
+
+    <h3>2 · La viga y la astilla</h3>
+    <blockquote class="biblia">«¿Por qué te pones a mirar la astilla que tiene tu hermano en el ojo, y no te fijas en el tronco que tú tienes en el tuyo?»<span class="ref">Mateo 7:3–5 · DHH</span></blockquote>
+    <p>Caricatura pura: un hombre con un tronco de construcción atravesándole la cara, inclinándose con delicadeza quirúrgica sobre el ojo del vecino. Se cuenta que Trueblood decidió escribir su libro cuando leyó este pasaje en voz alta y su hijo de cuatro años <strong>se rió a carcajadas</strong> —el niño escuchó el chiste que los adultos habíamos dejado de oír—. Ese es el dato más elocuente de la sesión: el humor sigue <em>ahí</em>; lo que cambió fue el oyente.</p>
+
+    <h3>3 · Colar el mosquito, tragarse el camello</h3>
+    <blockquote class="biblia">«¡Ustedes, guías ciegos, cuelan el mosquito, pero se tragan el camello!»<span class="ref">Mateo 23:24 · DHH</span></blockquote>
+    <p>Aquí hay <strong>tres capas de comedia apiladas</strong>:</p>
+    <ul class="capas">
+      <li><strong>Visual:</strong> la desproporción máxima —el bicho más pequeño contra el animal más grande, y la imagen grotesca de engullir un camello entero—.</li>
+      <li><strong>Legal:</strong> <em>ambos</em> animales son impuros (Lv 11). El fariseo que cuela su vino para no tragar un mosquito impuro… se traga alegremente el animal impuro más grande disponible. La incongruencia es teológica, no solo física.</li>
+      <li><strong>Fonética:</strong> en arameo, mosquito y camello son casi la misma palabra —<em>qalmā</em> y <em>gamlā</em>—. Un juego de palabras que el griego ya no pudo conservar. La sugerencia viene de Olmstead (1942) y la popularizó Matthew Black; hoy aparece en comentarios estándar. El chiste probablemente <em>sonaba</em> gracioso además de verse gracioso.</li>
+    </ul>
+
+    <details class="persiana">
+      <summary><span class="chev">›</span>El resto del repertorio</summary>
+      <div class="persiana-body">
+        <ul class="capas">
+          <li>La lámpara debajo de la cama o del cajón (Mc 4:21) — absurdo doméstico.</li>
+          <li>Guías ciegos guiando ciegos, ambos al hoyo (Mt 15:14) — comedia física implícita.</li>
+          <li>¿Se recogen uvas de los espinos, o higos de los cardos? (Mt 7:16) — ironía de huerto.</li>
+          <li>Los apodos: «Boanerges», hijos del trueno, para dos hermanos impulsivos (Mc 3:17); «Roca» para el discípulo menos estable del grupo —apodo que suena a profecía o a cariñosa ironía—.</li>
+          <li>Isaías burlándose de los ídolos (Is 44) y el Salmo 2:4 («el que está en el cielo se ríe»): el humor no entra a la Biblia con Jesús; Jesús hereda una tradición hebrea de sátira profética.</li>
+        </ul>
+      </div>
+    </details>
+
+    <p class="fuentes-seccion">Fuentes: <a href="https://archive.org/details/humorofchrist00elto" target="_blank" rel="noopener">Trueblood, The Humor of Christ</a> · <a href="https://ferrelljenkins.blog/2012/04/26/more-camel-humor/" target="_blank" rel="noopener">Ferrell's Travel Blog</a> · <a href="https://www.equip.org/articles/luke-1426/" target="_blank" rel="noopener">Christian Research Institute — Hate or Hyperbole</a> · <a href="https://bibleq.net/answer/9076/" target="_blank" rel="noopener">Bible Q — gnat and camel</a> · <a href="https://www.studylight.org/commentary/matthew/23-24.html" target="_blank" rel="noopener">StudyLight — Mateo 23:24</a> · <a href="https://liturgy.co.nz/the-gnat-and-the-camel" target="_blank" rel="noopener">Liturgy.co.nz</a></p>
+  </section>
+
+  <section id="s3" class="revela">
+    <div class="eyebrow"><span class="num">III</span><span class="tag">Palanca de paradigma</span></div>
+    <h2>El humor como palanca de sistema</h2>
+    <div class="voz ingeniera">
+      <div class="quien">La Ingeniera de Sistemas</div>
+      <p>Un guion mental (<em>script</em>) es un modelo mental comprimido: «los ricos son los bendecidos», «los fariseos son los puros». El chiste de Jesús toma el guion del oyente, lo tensa hasta el absurdo y lo deja caer. Lo que se resuelve no es solo el chiste: es el <strong>modelo mental</strong> el que queda agrietado.</p>
+    </div>
+    <p>En el lenguaje de Donella Meadows, la mayoría de las intervenciones empujan parámetros; el humor de Jesús interviene en el punto de apalancamiento más alto —<strong>el paradigma desde el cual el sistema se ve a sí mismo</strong>—. No discute con el rico sobre porcentajes de limosna; hace <em>reír</em> (o jadear) a la audiencia con una imagen que vuelve el paradigma insostenible.</p>
+    <p class="destacado">La risa es el sonido de un paradigma cediendo.</p>
+    <p>Por eso la incongruencia <em>tiene</em> que ser desproporcionada. Una exageración moderada se negocia («bueno, es difícil pero…»); un camello en una aguja no se negocia. La hipérbole cómica es a prueba de regateo: o sueltas el guion viejo, o te quedas mirando el camello. Y el bucle inverso: la <strong>solemnidad es un lazo de refuerzo</strong>. Tratamos el texto como sagrado → lo leemos con tono grave → el tono grave filtra la sorpresa → sin sorpresa no hay incongruencia percibida → suena más «serio» todavía. El sistema converge a un Jesús sin sonrisa, no porque el texto lo diga, sino porque el bucle lo fabrica.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://plato.stanford.edu/entries/humor/" target="_blank" rel="noopener">Stanford Encyclopedia of Philosophy — Philosophy of Humor</a> · <a href="https://personal.ua.es/francisco.yus/site/cases.pdf" target="_blank" rel="noopener">Yus — Incongruity-resolution cases in jokes</a></p>
+  </section>
+
+  <section id="s4" class="revela">
+    <div class="eyebrow"><span class="num">IV</span><span class="tag">La autopsia</span></div>
+    <h2>¿Quién mató el chiste?</h2>
+    <div class="voz provocador">
+      <div class="quien">El Provocador</div>
+      <p>Tres sospechosos, los tres culpables.</p>
+    </div>
+    <ul class="capas">
+      <li><strong>La traducción.</strong> El humor viaja mal entre lenguas y peor entre milenios. El juego <em>qalmā/gamlā</em> murió al pasar al griego; el ritmo oral, el gesto, la pausa antes del remate —nada de eso cabe en un manuscrito—. Leemos la transcripción de un monólogo sin el comediante.</li>
+      <li><strong>La familiaridad.</strong> Un chiste oído mil veces deja de ser chiste; se vuelve refrán. «El ojo de la aguja» ya es idioma fosilizado —la imagen ya no se <em>ve</em>, solo se <em>cita</em>—. Nuestra supuesta familiaridad con el texto es precisamente lo que nos hace perder la broma.</li>
+      <li><strong>La solemnización.</strong> Trueblood la llama ser «sagradamente serios»; Kierkegaard, más brutal, «estúpidamente serios». Como el relato termina en cruz, leemos hasta los chistes en tono de viernes santo. Pero el hombre de dolores fue también <em>el hombre al que invitaban a todas las fiestas</em>: la acusación de sus enemigos fue «comilón y bebedor» (Lc 7:34) —que no es el apodo que le ponen a un hombre solemne—.</li>
+    </ul>
+    <p>Y la pregunta incómoda: <strong>si no escuchamos el chiste, ¿entendimos la enseñanza?</strong> La hipérbole no es decoración sobre el punto; es el <em>mecanismo</em> del punto. Quien le inventa una puertecita al camello no está suavizando el estilo de Jesús —está desactivando su teología—. El chiste decía «imposible para el hombre, posible para Dios» (Mc 10:27); la puertecita dice «difícil, pero con esfuerzo pasas». Son dos evangelios distintos, y el segundo no es el de Marcos.</p>
+    <p>Y una conexión con la sesión de las emociones censuradas: si los copistas suavizaron la ira y la angustia de Jesús, y la tradición suavizó su humor, el patrón es el mismo —<strong>domesticamos los extremos de su rango emocional por ambos lados</strong>—. Le bajamos el volumen a la carcajada y al grito a la vez.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.goodreads.com/en/book/show/803428" target="_blank" rel="noopener">The Humor of Christ — reseñas</a> · <a href="https://um-insight.net/perspectives/christy-thomas/help-did-jesus-ever-laugh/" target="_blank" rel="noopener">United Methodist Insight — Did Jesus Ever Laugh?</a> · <a href="https://thepreachersword.com/2018/04/30/word-of-the-week-humor/" target="_blank" rel="noopener">ThePreachersWord — Humor</a></p>
+  </section>
+
+  <section id="s5" class="revela">
+    <div class="eyebrow"><span class="num">V</span><span class="tag">El medio</span></div>
+    <h2>El timing es diseño</h2>
+    <div class="voz disenadora">
+      <div class="quien">La Diseñadora</div>
+      <p>Un chiste es una pieza de diseño temporal: planteamiento (expectativa), pausa (tensión), remate (liberación). El texto impreso, leído en bloque y con entonación litúrgica, <strong>aplana la curva de tensión</strong>. Es como ver una película con todos los cuadros proyectados a la vez.</p>
+    </div>
+    <p>Jesús diseñaba para <strong>oralidad y cuerpo</strong>: sus imágenes son escenificables —el hombre de la viga se puede <em>actuar</em>; el camello se puede <em>mimar</em>—. La caricatura es retórica visual: exagera un rasgo para volverlo innegable, exactamente lo que hace un caricaturista de prensa.</p>
+    <p>La propuesta para la página (y para la enseñanza) es <strong>desfamiliarizar</strong>: recuperar la sorpresa exige romper el empaque solemne —releer el dicho en lenguaje de hoy antes de leerlo en DHH, dejar que la imagen se vea <em>primero</em> como imagen absurda y <em>después</em> como versículo—. La persiana que revela el remate solo al abrirse es el equivalente estructural de la pausa cómica: el HTML puede hacer el trabajo del timing que el papel perdió.</p>
+    <p>Precaución de diseño: la meta no es hacer «gracioso» a Jesús ni convertir la página en un especial de comedia. El registro es el de siempre —cálido, hondo, sin ñoñería—. El humor aquí es bisturí, no confeti.</p>
+  </section>
+
+  <section id="s6" class="revela">
+    <div class="eyebrow"><span class="num">VI</span><span class="tag">El experimento</span></div>
+    <h2>Probar si el chiste todavía funciona</h2>
+    <div class="voz metodologo">
+      <div class="quien">El Metodólogo PDCA</div>
+      <p>Bajemos la sesión a un experimento enseñable.</p>
+    </div>
+    <div class="pdca">
+      <div class="paso"><b>Plan.</b> Elegir un grupo (célula, clase, panel de amigos) y un dicho hiperbólico —la viga es el candidato ideal: fue el que hizo reír al niño de cuatro años—. Hipótesis: si el dicho se presenta desfamiliarizado, la audiencia percibirá la incongruencia (sonrisa, risa, sorpresa) y recordará mejor el punto una semana después.</div>
+      <div class="paso"><b>Do.</b> Presentarlo primero como escena («imagínate al tipo del ojo con la viga…»), con timing, sin decir que es un versículo. Solo después, leer Mateo 7:3–5 en DHH.</div>
+      <div class="paso"><b>Check.</b> Dos señales. Inmediata: ¿hubo reacción física (risa, sonrisa, el «¡ah!» de la resolución)? Diferida: a los siete días, ¿recuerdan la <em>imagen</em> y el <em>punto</em>, o solo «que hablamos de no juzgar»? Cuidado con la métrica de vanidad: la risa por sí sola no es la meta; la meta es la <strong>re-percepción</strong> —medimos el diseño, no el alma; la tierra, no el viento—.</div>
+      <div class="paso"><b>Act.</b> Si funciona, incorporar la desfamiliarización como paso estándar del método de enseñanza; si no, revisar si el fallo estuvo en el timing (ejecución) o en la selección del dicho (material).</div>
+    </div>
+  </section>
+
+  <section id="s7" class="revela">
+    <div class="eyebrow"><span class="num">VII</span><span class="tag">Balance</span></div>
+    <h2>Lo que el panel afirma — y con cuánta confianza</h2>
+    <div class="tabla-wrap">
+      <table class="confianza">
+        <thead><tr><th>Afirmación</th><th>Confianza</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td>Jesús usó hipérbole y absurdo deliberados como recurso retórico</td><td><span class="badge alta">Alta</span></td><td>Consenso amplio; tratamiento en Stein, <em>Difficult Sayings in the Gospels</em>.</td></tr>
+          <tr><td>Esos dichos encajan en la anatomía formal del chiste (incongruencia resuelta)</td><td><span class="badge alta">Alta</span></td><td>Análisis directo: guiones opuestos, desproporción, resolución.</td></tr>
+          <tr><td>Las audiencias del s. I los percibían como <em>cómicos</em> (risa audible)</td><td><span class="badge media">Media</span></td><td>Los evangelios nunca registran risa; la inferencia es plausible pero moderna.</td></tr>
+          <tr><td>El juego arameo <em>qalmā/gamlā</em> es intencional</td><td><span class="badge mediaalta">Media-alta</span></td><td>Conjetura de Olmstead (1942) adoptada por comentarios estándar.</td></tr>
+          <tr><td>La «puerta del ojo de la aguja» en Jerusalén</td><td><span class="badge alta">Alta (mito)</span></td><td>Sin evidencia; invención tardía que neutraliza la hipérbole.</td></tr>
+          <tr><td>La solemnización moderna suprime la percepción del humor</td><td><span class="badge alta">Alta</span></td><td>Tesis central de Trueblood; el niño de cuatro años como evidencia anecdótica.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.equip.org/articles/luke-1426/" target="_blank" rel="noopener">Christian Research Institute (ref. a Stein)</a> · <a href="https://bibleq.net/answer/9076/" target="_blank" rel="noopener">Bible Q — gnat and camel</a></p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="semilla" class="revela">
+    <div class="eyebrow plain"><span class="num">Semilla</span><span class="tag">Práctica de siete días</span></div>
+    <h2>Siete días de escuchar el chiste</h2>
+    <details class="persiana semilla" open>
+      <summary><span class="chev">›</span>La práctica · siete días, un dicho por día</summary>
+      <div class="persiana-body">
+        <p>Cada día, tres pasos de cinco minutos: (1) leer el dicho en DHH <strong>una sola vez</strong>, despacio; (2) dibujarlo o describirlo literalmente en una frase propia —el camello <em>de verdad</em>, la viga <em>de verdad</em>— hasta que la imagen dé risa o al menos sorpresa; (3) escribir en una línea qué guion mental propio acaba de agrietarse.</p>
+        <ul class="semana">
+          <li><b>Día 1</b> — La viga y la astilla (Mt 7:3–5)</li>
+          <li><b>Día 2</b> — El camello y la aguja (Mc 10:25–27), incluida la reacción de los discípulos</li>
+          <li><b>Día 3</b> — Colar el mosquito, tragarse el camello (Mt 23:24)</li>
+          <li><b>Día 4</b> — La lámpara bajo la cama (Mc 4:21)</li>
+          <li><b>Día 5</b> — Ciegos guiando ciegos (Mt 15:14)</li>
+          <li><b>Día 6</b> — Uvas de los espinos (Mt 7:16)</li>
+          <li><b>Día 7</b> — Releer los seis de corrido y responder por escrito: <em>¿cuál de mis solemnidades era en realidad una forma de no escuchar?</em></li>
+        </ul>
+      </div>
+    </details>
+    <p class="cierre">No se trata de reírse <em>de</em> Jesús, sino de reírse <em>con</em> él —y descubrir que la carcajada era parte de la exégesis—. El chiste no compite con la reverencia; el chiste es la puerta de servicio por donde la verdad entra cuando la puerta principal está custodiada por nuestros guiones. Un camello sigue esperando, paciente, junto a una aguja. La pregunta de la semana es si esta vez lo vamos a ver.</p>
+  </section>
+
+  <footer>Café con Claude · El Panel Pregunta · Nº 15 · Julio 2026
+    <p class="model-note">Investigación redactada con Claude Fable 5 · página construida con Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  var navLinks = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  navLinks.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        navLinks.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(function (s) { spy.observe(s); });
+
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
