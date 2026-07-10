@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas 051–060 · Psicología, Sociología y Antropología · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;                 /* above the drawer so ✕ stays visible */
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+
+  main h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin:1.4rem 0 0.5rem; color:var(--ink); }
+  main ul, main ol { margin:0 0 1.1rem 1.2rem; }
+  main li { margin-bottom:0.5rem; }
+  blockquote { margin:1.4rem 0; padding:0.6rem 1.1rem; border-left:4px solid var(--amber); background:rgba(201,138,45,0.08); font-style:italic; color:var(--muted); }
+  code { font-family:'Courier New',monospace; font-size:0.9em; background:rgba(43,33,24,0.06); padding:0.05em 0.35em; border-radius:3px; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:0.92rem; }
+  th, td { text-align:left; padding:0.5rem 0.7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-family:'Fraunces',serif; color:var(--terracotta); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">100 Preguntas a Fable</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">051</span>Los dos sistemas de la mente</a></li>
+    <li><a href="#s2"><span class="num">052</span>Por qué la gente buena discrepa</a></li>
+    <li><a href="#s3"><span class="num">053</span>Qué hace un ritual</a></li>
+    <li><a href="#s4"><span class="num">054</span>Lo sagrado como hecho social</a></li>
+    <li><a href="#s5"><span class="num">055</span>El capital social medido</a></li>
+    <li><a href="#s6"><span class="num">056</span>El don que obliga</a></li>
+    <li><a href="#s7"><span class="num">057</span>Nosotros y ellos</a></li>
+    <li><a href="#s8"><span class="num">058</span>¿Existen universales humanos?</a></li>
+    <li><a href="#s9"><span class="num">059</span>Las variedades de la experiencia religiosa</a></li>
+    <li><a href="#s10"><span class="num">060</span>Frankl más allá del eslogan</a></li>
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <span class="eyebrow">100 Preguntas a Fable</span>
+    <h1>Preguntas 051–060 · Psicología, Sociología y Antropología</h1>
+    <p class="subtitle">Backlog de investigación · Café con Claude · Bloque 6 de 10</p>
+  </header>
+
+  <main>
+    <section id="s1" class="revela">
+<h2>051 · Los dos sistemas de la mente</h2>
+<p><strong>Área:</strong> Psicología cognitiva · <strong>Profundidad:</strong> Introductorio–Intermedio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo conviven en una misma cabeza el pensamiento rápido e intuitivo y el lento y deliberado, y en qué situaciones cada uno nos traiciona?<br>
+<strong>Por qué:</strong> Kahneman es el Deming de la mente individual: donde tú ves variación en procesos, él ve variación en juicios. Enseñas, diseñas y decides todos los días; conocer los sesgos sistemáticos del Sistema 1 te dará un "control de calidad" para tus propias conclusiones — incluyendo las exegéticas.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #030, #063</p>
+</section>
+<section id="s2" class="revela">
+<h2>052 · Por qué la gente buena discrepa</h2>
+<p><strong>Área:</strong> Psicología moral · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué descubrieron Kohlberg y Haidt sobre cómo se desarrolla y se fundamenta el juicio moral, y por qué personas igualmente sinceras llegan a morales opuestas?<br>
+<strong>Por qué:</strong> Discipular es, en parte, acompañar desarrollo moral. Haidt además explica por qué tus conversaciones difíciles (en la iglesia, en la familia) no se resuelven con más argumentos: las intuiciones van primero y la razón las escolta. Es psicología directamente aplicable a tu ministerio.<br>
+<strong>Previos:</strong> #051 ayuda. · <strong>Relacionadas:</strong> #024, #057</p>
+</section>
+<section id="s3" class="revela">
+<h2>053 · Qué hace un ritual</h2>
+<p><strong>Área:</strong> Antropología · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué dicen los antropólogos (Turner, Rappaport, Douglas) que los rituales <em>hacen</em> en una comunidad — y qué hace la Cena del Señor que un texto no puede hacer?<br>
+<strong>Por qué:</strong> Tu serie es intensamente textual; el cristianismo, en cambio, es también gesto, pan, agua y cuerpo. La antropología del ritual explica por qué la liminalidad transforma donde la información solo informa — exactamente la pregunta que tu Metodólogo hizo sobre medir transformación y no solo información.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #054, #087, #058</p>
+</section>
+<section id="s4" class="revela">
+<h2>054 · Lo sagrado como hecho social</h2>
+<p><strong>Área:</strong> Sociología · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué quiso decir Durkheim con que la religión es "una cosa eminentemente social", y qué explica (y qué no) esa lectura de lo sagrado?<br>
+<strong>Por qué:</strong> Durkheim es el interlocutor incómodo que tu eclesiología necesita: un no creyente que tomó la religión más en serio que muchos creyentes. Leerlo te obliga a distinguir qué parte de la vida de tu iglesia es efervescencia colectiva y qué parte es otra cosa — una pregunta que fortalece la fe que la sobrevive.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #053, #055, #059</p>
+</section>
+<section id="s5" class="revela">
+<h2>055 · El capital social medido</h2>
+<p><strong>Área:</strong> Sociología · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es el capital social según Putnam, cómo se mide, por qué está colapsando en Occidente, y qué implica eso para "The Network is the Church"?<br>
+<strong>Por qué:</strong> Esta es quizá la pregunta más directamente conectada con tu marco teológico personal. Putnam puso datos a lo que tú intuyes: las redes de confianza son infraestructura invisible, se están erosionando, y las iglesias fueron históricamente sus mayores generadoras. Tu tesis de la red-iglesia deja de ser metáfora cuando conoce sus números.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #066, #076, #100</p>
+</section>
+<section id="s6" class="revela">
+<h2>056 · El don que obliga</h2>
+<p><strong>Área:</strong> Antropología económica · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué descubrió Mauss sobre el don en las culturas humanas — dar, recibir, devolver — y qué luz (o sombra) arroja sobre la gracia bíblica?<br>
+<strong>Por qué:</strong> Mauss demostró que en ninguna cultura el regalo es "gratis": todo don crea vínculo y deuda. Ese hallazgo hace la gracia de Dios más escandalosa, no menos — y te da una categoría nueva para <em>hesed</em>, tu palabra sin aduana. Es el tipo de pregunta donde antropología y teología se afilan mutuamente.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #002, #053, #061</p>
+</section>
+<section id="s7" class="revela">
+<h2>057 · Nosotros y ellos</h2>
+<p><strong>Área:</strong> Psicología social · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué muestran los experimentos de identidad grupal (Tajfel, Sherif) sobre lo poco que hace falta para crear un "nosotros" contra un "ellos"?<br>
+<strong>Por qué:</strong> El grupo mínimo de Tajfel es una de las noticias más incómodas de la psicología: basta una moneda al aire para que favorezcamos a los nuestros. Para alguien que piensa en iglesias, denominaciones y discipulado, entender esta maquinaria es entender tanto el poder de la comunidad como su patología.<br>
+<strong>Previos:</strong> #051 ayuda. · <strong>Relacionadas:</strong> #052, #030</p>
+</section>
+<section id="s8" class="revela">
+<h2>058 · ¿Existen universales humanos?</h2>
+<p><strong>Área:</strong> Antropología cultural · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es común a todas las culturas humanas conocidas, qué es radicalmente variable, y dónde queda el relativismo cultural después de un siglo de etnografía?<br>
+<strong>Por qué:</strong> Tu mensaje aspira a ser universal ("id a todas las naciones"), pero tu formación es de una sola matriz cultural. Saber qué es universal (el ritual, la reciprocidad, la narrativa) y qué es local (casi todo lo demás) es esencial para distinguir evangelio de costumbre — el error misionero clásico.<br>
+<strong>Previos:</strong> #053 recomendado. · <strong>Relacionadas:</strong> #011, #053, #081</p>
+</section>
+<section id="s9" class="revela">
+<h2>059 · Las variedades de la experiencia religiosa</h2>
+<p><strong>Área:</strong> Psicología de la religión · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué observó William James al estudiar la conversión y la experiencia mística como fenómenos psicológicos, y qué sigue vigente de su método un siglo después?<br>
+<strong>Por qué:</strong> James hizo con la experiencia religiosa lo que tú haces con Marcos: mirarla de cerca, sin anestesia y sin burla. Su pragmatismo ("por sus frutos los conoceréis" convertido en método) te dará categorías para pensar los testimonios, las conversiones y tu propio recorrido espiritual.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #054, #060, #026</p>
+</section>
+<section id="s10" class="revela">
+<h2>060 · Frankl más allá del eslogan</h2>
+<p><strong>Área:</strong> Psicología existencial · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es realmente la logoterapia como sistema clínico — no como cita motivacional — y qué relación técnica tiene el sentido con el sufrimiento y el duelo?<br>
+<strong>Por qué:</strong> Ya conoces a Frankl como autor admirado; falta conocerlo como clínico riguroso. La distinción entre placer, poder y sentido como motores de la vida conecta con tus cuatro hornillas de Go Epic: ¿qué optimiza realmente cada área? Es una segunda visita a un viejo amigo, esta vez con cuaderno de ingeniero.<br>
+<strong>Previos:</strong> Tu lectura previa de Frankl. · <strong>Relacionadas:</strong> #059, #028, #100</p>
+<p><em>Siguiente bloque: Preguntas 061–070 · Economía, Decisiones y Estadística aplicada.</em></p>
+</section>
+  </main>
+
+  <footer>Café con Claude · 100 Preguntas a Fable · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>

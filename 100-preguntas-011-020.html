@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas 011–020 · Historia · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;                 /* above the drawer so ✕ stays visible */
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+
+  main h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin:1.4rem 0 0.5rem; color:var(--ink); }
+  main ul, main ol { margin:0 0 1.1rem 1.2rem; }
+  main li { margin-bottom:0.5rem; }
+  blockquote { margin:1.4rem 0; padding:0.6rem 1.1rem; border-left:4px solid var(--amber); background:rgba(201,138,45,0.08); font-style:italic; color:var(--muted); }
+  code { font-family:'Courier New',monospace; font-size:0.9em; background:rgba(43,33,24,0.06); padding:0.05em 0.35em; border-radius:3px; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:0.92rem; }
+  th, td { text-align:left; padding:0.5rem 0.7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-family:'Fraunces',serif; color:var(--terracotta); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">100 Preguntas a Fable</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">011</span>El siglo en que despertó el mundo</a></li>
+    <li><a href="#s2"><span class="num">012</span>La imprenta como palanca de Meadows</a></li>
+    <li><a href="#s3"><span class="num">013</span>Cómo se fabrica un hecho histórico</a></li>
+    <li><a href="#s4"><span class="num">014</span>La edad de oro que Occidente olvidó</a></li>
+    <li><a href="#s5"><span class="num">015</span>Por qué colapsan los imperios</a></li>
+    <li><a href="#s6"><span class="num">016</span>Del rollo a la persiana</a></li>
+    <li><a href="#s7"><span class="num">017</span>La peste como experimento natural</a></li>
+    <li><a href="#s8"><span class="num">018</span>Cuando se mezclaron los mundos</a></li>
+    <li><a href="#s9"><span class="num">019</span>Tu propia matriz: las independencias</a></li>
+    <li><a href="#s10"><span class="num">020</span>¿Hubo revolución científica?</a></li>
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <span class="eyebrow">100 Preguntas a Fable</span>
+    <h1>Preguntas 011–020 · Historia</h1>
+    <p class="subtitle">Backlog de investigación · Café con Claude · Bloque 2 de 10</p>
+  </header>
+
+  <main>
+    <p>Tu historia hasta ahora ha sido historia de la iglesia e historia americana. Este bloque abre el gran angular: cómo se escribe la historia, y los episodios que explican el mundo entero.</p>
+<section id="s1" class="revela">
+<h2>011 · El siglo en que despertó el mundo</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3–4 semanas<br>
+<strong>Pregunta:</strong> ¿Por qué entre el 800 y el 200 a.C. surgieron casi simultáneamente Buda, Confucio, Lao-Tsé, los profetas de Israel, Zoroastro y los filósofos griegos — sin contacto entre sí? ¿Qué explica la Era Axial?<br>
+<strong>Por qué:</strong> Es la pregunta histórica con más potencial de cambiar tu mapa mental. Tu fe pertenece a una de varias tradiciones que nacieron en la misma ventana temporal, todas girando hacia la interioridad, la ética universal y la crítica del ritual vacío. Jaspers, Bellah y Eisenstadt ofrecen explicaciones rivales (urbanización, alfabetización, segundos hijos de élites). Ninguna respuesta te dejará igual.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #004, #058, #053</p>
+</section>
+<section id="s2" class="revela">
+<h2>012 · La imprenta como palanca de Meadows</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Fue la Reforma protestante posible sin la imprenta — y qué nos enseña ese caso sobre cómo una tecnología de información reconfigura estructuras de poder?<br>
+<strong>Por qué:</strong> Es el caso de estudio perfecto en tu intersección exacta: tecnología + iglesia + sistemas. Lutero fue el primer "creador de contenido viral" de Occidente: panfletos cortos, en lengua vulgar, con imágenes. Las analogías con internet y con tu propio trabajo de páginas son directas y las diferencias son igual de instructivas.<br>
+<strong>Previos:</strong> Nociones de la Reforma. · <strong>Relacionadas:</strong> #016, #096, #013</p>
+</section>
+<section id="s3" class="revela">
+<h2>013 · Cómo se fabrica un hecho histórico</h2>
+<p><strong>Área:</strong> Historia (historiografía) · <strong>Profundidad:</strong> Introductorio–Intermedio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es un "hecho histórico" y quién lo fabrica? ¿Cómo trabaja realmente un historiador con fuentes incompletas, interesadas y contradictorias?<br>
+<strong>Por qué:</strong> Es la pregunta-llave de todo el bloque: define cómo leerás cualquier historia después. Carr (<em>¿Qué es la historia?</em>) y Bloch (<em>Apología para la historia</em>) son cortos y demoledores. Además tiene aplicación directa a los evangelios: los criterios de un historiador ante Tácito son los mismos que ante Marcos, y conocerlos te hará mejor apologista y mejor lector.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #021, #005, #019</p>
+</section>
+<section id="s4" class="revela">
+<h2>014 · La edad de oro que Occidente olvidó</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué produjo la edad de oro islámica (siglos VIII–XIII) — la Casa de la Sabiduría, Averroes, Alhacén, el álgebra — y cómo llegó ese saber a Europa?<br>
+<strong>Por qué:</strong> Tu canon es anglo-hispano y cristiano; este es el capítulo que falta entre "los griegos" y "el Renacimiento". Sin los traductores de Bagdad y Toledo no hay Tomás de Aquino ni revolución científica. Es también una historia de traducción a escala civilizacional — tu tema de "palabras sin aduana" elevado a geopolítica.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #081, #020, #002</p>
+</section>
+<section id="s5" class="revela">
+<h2>015 · Por qué colapsan los imperios</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Por qué cayó Roma — y qué dicen las teorías sistémicas del colapso (Tainter: rendimientos decrecientes de la complejidad) sobre toda organización que envejece, incluidas las iglesias?<br>
+<strong>Por qué:</strong> Tainter argumenta que las sociedades colapsan cuando el costo marginal de su propia complejidad supera el beneficio — una tesis que puedes aplicar a Roma, a denominaciones y a arquitecturas de software por igual. Es historia leída con tus lentes de ingeniera de sistemas, y alimenta directamente tu pregunta sobre iglesias estancadas.<br>
+<strong>Previos:</strong> Tu pensamiento sistémico. · <strong>Relacionadas:</strong> #072, #080</p>
+</section>
+<section id="s6" class="revela">
+<h2>016 · Del rollo a la persiana</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 1–2 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo cambió la historia de la lectura — del rollo al códice, del scriptorium a la pantalla — lo que entendemos por "leer", y dónde encajan tus páginas en esa historia?<br>
+<strong>Por qué:</strong> Tú fabricas objetos de lectura: persianas, scroll-spy, tipografía deliberada. La historia del libro (Manguel, Chartier) te mostrará que cada soporte reprograma al lector — el códice hizo posible "buscar un versículo"; la pantalla hizo posible tu serie. Es contexto profundo para tu oficio.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #012, #098, #097</p>
+</section>
+<section id="s7" class="revela">
+<h2>017 · La peste como experimento natural</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo reconfiguró la Peste Negra (1347–1351) la economía, la religión y la estructura social de Europa — y qué revela un shock demográfico sobre los sistemas que golpea?<br>
+<strong>Por qué:</strong> Mató a un tercio de Europa y, al hacerlo, subió salarios, debilitó el feudalismo, sacudió la autoridad eclesial y preparó el Renacimiento. Es el experimento natural más brutal de la historia: un sistema entero sometido a prueba de estrés. Para un sistemista, es material de primera.<br>
+<strong>Previos:</strong> #013 ayuda. · <strong>Relacionadas:</strong> #015, #099</p>
+</section>
+<section id="s8" class="revela">
+<h2>018 · Cuando se mezclaron los mundos</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P3 · <strong>Tiempo estimado:</strong> 1–2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué fue el intercambio colombino — la transferencia de plantas, animales, personas y patógenos entre hemisferios después de 1492 — y por qué es la globalización original?<br>
+<strong>Por qué:</strong> El tomate es americano, el café es africano, el caballo de las praderas es europeo. Crosby mostró que 1492 fue ante todo un evento <em>biológico</em> cuyas consecuencias (demográficas, culinarias, epidémicas) superan a las políticas. Reordena el mapa mental de "descubrimiento" hacia "colisión de ecosistemas".<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #093, #019</p>
+</section>
+<section id="s9" class="revela">
+<h2>019 · Tu propia matriz: las independencias</h2>
+<p><strong>Área:</strong> Historia · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Por qué las independencias hispanoamericanas produjeron caudillismo e inestabilidad donde la estadounidense produjo continuidad institucional — y qué explicaciones compiten (instituciones, geografía, herencia colonial)?<br>
+<strong>Por qué:</strong> Acabas de estudiar América a los 250; esta es la pregunta espejo sobre tu propia matriz cultural hispana. Las respuestas rivales (North, Acemoglu, la tradición borbónica) son un torneo de marcos explicativos — y entender por qué Bolívar murió amargado ilumina tanto la historia como la teoría institucional.<br>
+<strong>Previos:</strong> #013 recomendado. · <strong>Relacionadas:</strong> #013, #093, #070</p>
+</section>
+<section id="s10" class="revela">
+<h2>020 · ¿Hubo revolución científica?</h2>
+<p><strong>Área:</strong> Historia de la ciencia · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué pasó realmente entre Copérnico y Newton — y por qué los historiadores discuten si la "revolución científica" fue revolución, evolución o mito historiográfico?<br>
+<strong>Por qué:</strong> Shapin abre su libro famoso diciendo que no hubo tal cosa como la revolución científica — y que su libro trata sobre ella. La pregunta te obliga a ver la ciencia como actividad humana con historia, no como método caído del cielo, y prepara el terreno perfecto para la filosofía de la ciencia (#022). Bonus: casi todos los protagonistas eran creyentes intentando leer "el libro de la naturaleza".<br>
+<strong>Previos:</strong> #013. · <strong>Relacionadas:</strong> #022, #010, #033</p>
+<p><em>Siguiente bloque: Filosofía y Lógica (021–030).</em></p>
+</section>
+  </main>
+
+  <footer>Café con Claude · 100 Preguntas a Fable · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>

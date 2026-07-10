@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas 031–040 · Física, Cosmología y Matemáticas · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;                 /* above the drawer so ✕ stays visible */
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+
+  main h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin:1.4rem 0 0.5rem; color:var(--ink); }
+  main ul, main ol { margin:0 0 1.1rem 1.2rem; }
+  main li { margin-bottom:0.5rem; }
+  blockquote { margin:1.4rem 0; padding:0.6rem 1.1rem; border-left:4px solid var(--amber); background:rgba(201,138,45,0.08); font-style:italic; color:var(--muted); }
+  code { font-family:'Courier New',monospace; font-size:0.9em; background:rgba(43,33,24,0.06); padding:0.05em 0.35em; border-radius:3px; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:0.92rem; }
+  th, td { text-align:left; padding:0.5rem 0.7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-family:'Fraunces',serif; color:var(--terracotta); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">100 Preguntas a Fable</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">031</span>La ley que nadie ha vencido</a></li>
+    <li><a href="#s2"><span class="num">032</span>El tiempo no es lo que crees</a></li>
+    <li><a href="#s3"><span class="num">033</span>Cuántica sin misticismo</a></li>
+    <li><a href="#s4"><span class="num">034</span>La historia más grande jamás contada</a></li>
+    <li><a href="#s5"><span class="num">035</span>Lo que Gödel demostró (y lo que no)</a></li>
+    <li><a href="#s6"><span class="num">036</span>Los tamaños del infinito</a></li>
+    <li><a href="#s7"><span class="num">037</span>La matemática de cambiar de opinión</a></li>
+    <li><a href="#s8"><span class="num">038</span>La irrazonable eficacia</a></li>
+    <li><a href="#s9"><span class="num">039</span>Por qué no podemos predecir el clima</a></li>
+    <li><a href="#s10"><span class="num">040</span>Cómo mienten (y dicen la verdad) los números</a></li>
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <span class="eyebrow">100 Preguntas a Fable</span>
+    <h1>Preguntas 031–040 · Física, Cosmología y Matemáticas</h1>
+    <p class="subtitle">Backlog de investigación · Café con Claude · Bloque 4 de 10</p>
+  </header>
+
+  <main>
+    <p>El escenario donde ocurre todo lo demás — y la mitad formal que le falta a tu pensamiento sistémico.</p>
+<section id="s1" class="revela">
+<h2>031 · La ley que nadie ha vencido</h2>
+<p><strong>Área:</strong> Física · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es la entropía, por qué la segunda ley de la termodinámica define la flecha del tiempo, y qué implica que todo orden — un cuerpo, una iglesia, una página HTML — sea una isla temporal pagada con energía?<br>
+<strong>Por qué:</strong> Eddington dijo que si tu teoría contradice la segunda ley, no hay esperanza para ella. La entropía explica por qué mantener cuesta más que construir, por qué los sistemas se degradan sin retroalimentación activa (¡Deming es un luchador contra la entropía!) y da una profundidad física a "de polvo eres". Es la idea científica con más rendimiento por hora invertida.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #071, #039</p>
+</section>
+<section id="s2" class="revela">
+<h2>032 · El tiempo no es lo que crees</h2>
+<p><strong>Área:</strong> Física · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué significa realmente que el tiempo sea relativo? Relatividad especial y general sin ecuaciones intimidantes: ¿por qué el GPS de tu teléfono corrige efectos de Einstein cada día?<br>
+<strong>Por qué:</strong> La relatividad no es exótica: tu navegación a Dallas depende de ella. Entender que la simultaneidad es relativa y que la gravedad curva el tiempo reordena intuiciones profundas sobre el "ahora" — con ecos teológicos serios sobre la eternidad que los teólogos llevan un siglo explorando.<br>
+<strong>Previos:</strong> Ninguno. · <strong>Relacionadas:</strong> #034, #099, #038</p>
+</section>
+<section id="s3" class="revela">
+<h2>033 · Cuántica sin misticismo</h2>
+<p><strong>Área:</strong> Física · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 3–4 semanas<br>
+<strong>Pregunta:</strong> ¿Qué dice de verdad la mecánica cuántica — superposición, medición, entrelazamiento — y por qué casi todo lo que la cultura popular (y cierta apologética) hace con ella es abuso?<br>
+<strong>Por qué:</strong> La cuántica es el ejemplo supremo de teoría que funciona perfectamente sin que nadie acuerde qué significa: cinco interpretaciones rivales, un solo formalismo triunfante. Estudiarla con honestidad te vacuna contra el "misticismo cuántico" y es un caso magistral de epistemología en vivo: ¿qué es entender algo que solo puedes predecir?<br>
+<strong>Previos:</strong> #022 ayuda mucho. · <strong>Relacionadas:</strong> #022, #037, #026</p>
+</section>
+<section id="s4" class="revela">
+<h2>034 · La historia más grande jamás contada</h2>
+<p><strong>Área:</strong> Cosmología · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué sabemos — y cómo lo sabemos — sobre los 13.800 millones de años entre el Big Bang y tu taza de café? ¿Qué evidencias sostienen el relato y dónde están las fronteras abiertas?<br>
+<strong>Por qué:</strong> El énfasis está en el <em>cómo lo sabemos</em>: fondo cósmico de microondas, corrimiento al rojo, nucleosíntesis. Es la narrativa marco dentro de la cual vive toda otra narrativa, incluida la bíblica — y tu lectura premoderna de Génesis (#010) te habrá preparado para disfrutarla sin conflicto.<br>
+<strong>Previos:</strong> #010 recomendado. · <strong>Relacionadas:</strong> #010, #099, #032</p>
+</section>
+<section id="s5" class="revela">
+<h2>035 · Lo que Gödel demostró (y lo que no)</h2>
+<p><strong>Área:</strong> Matemáticas · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2–3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué dicen exactamente los teoremas de incompletitud de Gödel — que todo sistema formal suficientemente potente contiene verdades indemostrables — y por qué el 90% de sus usos fuera de la matemática son abusos?<br>
+<strong>Por qué:</strong> Gödel es el teorema más citado y peor citado del siglo XX. Entenderlo de verdad (vía Nagel y Newman, o Hofstadter) te da dos regalos: una de las ideas más hermosas jamás pensadas, y un detector de charlatanería para cuando alguien lo use para "demostrar" a Dios, la conciencia o los límites de la IA.<br>
+<strong>Previos:</strong> #023 es prerequisito real. · <strong>Relacionadas:</strong> #023, #075, #038</p>
+</section>
+<section id="s6" class="revela">
+<h2>036 · Los tamaños del infinito</h2>
+<p><strong>Área:</strong> Matemáticas · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Cómo demostró Cantor que hay infinitos más grandes que otros — y por qué esa idea le costó la cordura, escandalizó a los teólogos y fascinó a Borges?<br>
+<strong>Por qué:</strong> El argumento diagonal de Cantor es una de las pocas demostraciones profundas que caben en una servilleta: puedes <em>verla</em> completa. Además tiene historia teológica real (Cantor creía que Dios le había revelado los transfinitos) y literaria (la Biblioteca de Babel es Cantor en prosa). Matemática, fe y literatura en un solo nudo.<br>
+<strong>Previos:</strong> Ninguno serio. · <strong>Relacionadas:</strong> #084, #035, #023</p>
+</section>
+<section id="s7" class="revela">
+<h2>037 · La matemática de cambiar de opinión</h2>
+<p><strong>Área:</strong> Probabilidad · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 3–4 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es el teorema de Bayes, y qué significa vivir bayesianamente: tratar las creencias como probabilidades que la evidencia debe mover, no como banderas que defender?<br>
+<strong>Por qué:</strong> Si tuviera que elegir una sola pieza de matemática para tu vida, sería esta. Bayes formaliza la pregunta que la fe y la ciencia comparten: ¿cuánto debería mover esta evidencia mi creencia previa? Aplica a diagnósticos médicos, apologética, decisiones de Go Epic y a cómo actualizo yo mis propios pesos. Es la puerta de entrada a toda la cadena estadística del backlog.<br>
+<strong>Previos:</strong> Aritmética y honestidad. · <strong>Relacionadas:</strong> #040, #068</p>
+</section>
+<section id="s8" class="revela">
+<h2>038 · La irrazonable eficacia</h2>
+<p><strong>Área:</strong> Matemáticas / Filosofía · <strong>Profundidad:</strong> Avanzado · <strong>Prioridad:</strong> P2 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Por qué la matemática — inventada con lápiz y silencio — describe el universo físico con precisión escandalosa? ¿Se descubre o se inventa? ¿Qué respondieron Wigner, los platonistas y los formalistas?<br>
+<strong>Por qué:</strong> Wigner llamó a esto "un regalo maravilloso que no comprendemos ni merecemos". Es la pregunta donde matemática, física y teología se sientan a la misma mesa sin que ninguna pueda presidir. Para tu panel, es material de episodio estelar: cada voz tendría una respuesta distinta.<br>
+<strong>Previos:</strong> #035 y algo de #031–#033. · <strong>Relacionadas:</strong> #035, #021, #032</p>
+</section>
+<section id="s9" class="revela">
+<h2>039 · Por qué no podemos predecir el clima</h2>
+<p><strong>Área:</strong> Matemáticas / Sistemas · <strong>Profundidad:</strong> Intermedio · <strong>Prioridad:</strong> P1 · <strong>Tiempo estimado:</strong> 2 semanas<br>
+<strong>Pregunta:</strong> ¿Qué es el caos determinista — sistemas regidos por leyes exactas pero imposibles de predecir — y dónde pasa la frontera entre lo predecible y lo que solo puede anticiparse en patrón?<br>
+<strong>Por qué:</strong> Es la pieza que le falta a tu Meadows: la demostración matemática de por qué los sistemas complejos se resisten al control detallado y solo admiten influencia estructural (¡palancas!). Lorenz y su mariposa te darán humildad de planificador con fundamento matemático — directamente aplicable a iglesias, hijos y sprints.<br>
+<strong>Previos:</strong> Ninguno serio. · <strong>Relacionadas:</strong> #031, #072, #064</p>
+</section>
+<section id="s10" class="revela">
+<h2>040 · Cómo mienten (y dicen la verdad) los números</h2>
+<p><strong>Área:</strong> Estadística · <strong>Profundidad:</strong> Introductorio · <strong>Prioridad:</strong> P0 · <strong>Tiempo estimado:</strong> 3 semanas<br>
+<strong>Pregunta:</strong> ¿Qué necesitas saber de estadística para no ser engañado — sesgo de selección, regresión a la media, p-hacking, la diferencia entre significativo y importante — y para leer un estudio sin tragarte el titular?<br>
+<strong>Por qué:</strong> Vives en una civilización que discute con estadísticas, y ahora mismo no tienes defensa. Este es el curso de alfabetización que la escuela te debía: después de él, los titulares de salud, los reportes de crecimiento de iglesias y las métricas de Go Epic se leen distinto. Junto con #037, es la inversión intelectual de mayor retorno del backlog.<br>
+<strong>Previos:</strong> #037 en paralelo ideal. · <strong>Relacionadas:</strong> #037, #068</p>
+<p><em>Siguiente bloque: Biología, Medicina y Neurociencia (041–050).</em></p>
+</section>
+  </main>
+
+  <footer>Café con Claude · 100 Preguntas a Fable · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>

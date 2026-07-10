@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orden de Aprendizaje · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;                 /* above the drawer so ✕ stays visible */
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+
+  main h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin:1.4rem 0 0.5rem; color:var(--ink); }
+  main ul, main ol { margin:0 0 1.1rem 1.2rem; }
+  main li { margin-bottom:0.5rem; }
+  blockquote { margin:1.4rem 0; padding:0.6rem 1.1rem; border-left:4px solid var(--amber); background:rgba(201,138,45,0.08); font-style:italic; color:var(--muted); }
+  code { font-family:'Courier New',monospace; font-size:0.9em; background:rgba(43,33,24,0.06); padding:0.05em 0.35em; border-radius:3px; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:0.92rem; }
+  th, td { text-align:left; padding:0.5rem 0.7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-family:'Fraunces',serif; color:var(--terracotta); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">100 Preguntas a Fable</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">Fase 1</span>Cimientos del pensamiento (meses 1–4)</a></li>
+    <li><a href="#s2"><span class="num">Fase 2</span>Las lentes del mundo (meses 5–8)</a></li>
+    <li><a href="#s3"><span class="num">Fase 3</span>La mente que aprende (meses 9–11)</a></li>
+    <li><a href="#s4"><span class="num">Fase 4</span>Los otros (meses 12–16)</a></li>
+    <li><a href="#s5"><span class="num">Fase 5</span>El lenguaje y las artes (meses 17–20)</a></li>
+    <li><a href="#s6"><span class="num">Fase 6</span>Síntesis y regreso a casa (meses 21 en adelante)</a></li>
+    <li><a href="#s7"><span class="num">7</span>Reglas de la ruta</a></li>
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <span class="eyebrow">100 Preguntas a Fable</span>
+    <h1>Orden de Aprendizaje</h1>
+    <p class="subtitle">Una secuencia lógica para recorrer el backlog · Café con Claude</p>
+  </header>
+
+  <main>
+    <p>El orden importa: hay preguntas que multiplican el valor de todas las que vienen después. Esta ruta está pensada en seis fases, aproximadamente dos años y medio a ritmo sostenible (una pregunta a la vez, tu cadencia habitual de brief profundo + página). Las fechas son orientativas; la secuencia, no.</p>
+<section id="s1" class="revela">
+<h2>Fase 1 · Cimientos del pensamiento (meses 1–4)</h2>
+<p><strong>#023 Lógica → #030 Falacias → #021 Epistemología → #037 Bayes → #040 Estadística → #013 Historiografía</strong></p>
+<p>Antes de aprender más cosas, aprende a evaluar cosas. Esta fase instala el control de calidad: después de ella, cada libro que leas rendirá más porque sabrás qué preguntarle. Es la fase menos glamorosa y la de mayor retorno compuesto.</p>
+</section>
+<section id="s2" class="revela">
+<h2>Fase 2 · Las lentes del mundo (meses 5–8)</h2>
+<p><strong>#031 Entropía → #071 Shannon → #072 Emergencia → #039 Caos → #035 Gödel</strong></p>
+<p>La versión formal de tu pensamiento sistémico. Entropía e información son la misma moneda vista por dos caras; emergencia y caos son lo que Meadows intuía sin ecuaciones; Gödel marca el límite del formalismo. Al terminar esta fase, tu Ingeniera de Sistemas tendrá título universitario.</p>
+</section>
+<section id="s3" class="revela">
+<h2>Fase 3 · La mente que aprende (meses 9–11)</h2>
+<p><strong>#051 Kahneman → #091 Ciencia del aprendizaje → #098 Atención → #026 Conciencia → #059 Experiencia religiosa</strong></p>
+<p>Del pensamiento en general a <em>tu</em> pensamiento en particular: cómo decide, cómo aprende, qué lo distrae, qué es la experiencia — incluida la experiencia de Dios. La ciencia del aprendizaje (#091) conviene temprano porque mejora cómo estudias todo lo demás.</p>
+</section>
+<section id="s4" class="revela">
+<h2>Fase 4 · Los otros (meses 12–16)</h2>
+<p><strong>#055 Capital social → #062 Cooperación → #066 Ostrom → #053 Ritual → #056 El don → #061 Incentivos → #095 Liderazgo adaptativo</strong></p>
+<p>La fase más directamente aplicable a tu ministerio. Al terminarla, "The Network is the Church" habrá pasado de metáfora a modelo con datos, matemática de cooperación, principios de gobernanza y teoría del ritual. Es tu eclesiología, edición doctoral.</p>
+</section>
+<section id="s5" class="revela">
+<h2>Fase 5 · El lenguaje y las artes (meses 17–20)</h2>
+<p><strong>#083 Narratología → #081 Traducción → #090 Retórica → #082 Poesía → #085 Armonía → #084 Borges</strong></p>
+<p>Las artes como formas de conocimiento. Esta fase potencia tu oficio semanal (enseñar, escribir, diseñar) y te abre la epistemología alternativa: lo que se sabe por tensión y resolución, por imagen y compresión, y no por argumento.</p>
+</section>
+<section id="s6" class="revela">
+<h2>Fase 6 · Síntesis y regreso a casa (meses 21 en adelante)</h2>
+<p><strong>#022 Filosofía de la ciencia → #003 Job → #011 Era Axial → #010 Génesis 1 → #029 Gadamer → #073 Epistemología de la IA → #100 La vida buena</strong></p>
+<p>Las preguntas donde todo lo anterior se encuentra con tu fe. Job después de haber estudiado poesía y ética; la Era Axial después de historiografía; Gadamer después de narratología; la IA después de epistemología. El orden convierte estas preguntas de interesantes en transformadoras.</p>
+</section>
+<section id="s7" class="revela">
+<h2>Reglas de la ruta</h2>
+<ol><li><strong>Una pregunta a la vez.</strong> El backlog es un menú, no una lista de pendientes. La culpa no es una herramienta de estudio.</li><li><strong>P0 primero dentro de cada fase</strong>, pero permiso total para desviarte: si una P2 te llama con fuerza, esa semana la P2 es tu P0. La curiosidad es mejor combustible que la disciplina.</li><li><strong>Cierra con página.</strong> Tu método ya es el correcto: pregunta → investigación profunda → página de Café con Claude. Lo que no se convierte en artefacto se evapora.</li><li><strong>Revisa el mapa cada 6 meses.</strong> Este orden es un plan, y tú mejor que nadie sabes lo que Deming pensaba de los planes que no se revisan.</li></ol>
+<p><em>Las preguntas no listadas aquí (unas 50) se insertan por afinidad: cuando termines #062, la #069 estará a un paso; cuando termines #083, la #006 te llamará sola. El grafo de "Relacionadas" en cada bloque es el mapa de esos desvíos.</em></p>
+</section>
+  </main>
+
+  <footer>Café con Claude · 100 Preguntas a Fable · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
