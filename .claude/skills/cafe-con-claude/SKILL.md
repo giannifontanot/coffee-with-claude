@@ -72,7 +72,7 @@ These are the reasons this skill exists, so don't let them slip:
    |------------------|-----------|
    | `{{LANG}}`       | `es` or `en` |
    | `{{TITLE}}`      | Page title (the ` · Café con Claude` suffix is already in `<title>`) |
-   | `{{BRAND}}`      | Drawer brand mark, usually `☕ Café con Claude` |
+   | `{{BRAND}}`      | Drawer brand mark: `Café con Claude` (plain — no emoji) |
    | `{{SERIES}}`     | Drawer sub-line: the series/section, e.g. `América a los 250` |
    | `{{TOC}}`        | One `<li>` per section, e.g. `<li><a href="#s1"><span class="num">I</span>Section title</a></li>` — the `href` must match each `<section>`'s `id` |
    | `{{BACK_LABEL}}` | Back-control text, e.g. `Volver al índice`, `Sala de lectura`, `Back to the index` |
