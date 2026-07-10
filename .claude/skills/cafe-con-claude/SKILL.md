@@ -111,6 +111,18 @@ These are the reasons this skill exists, so don't let them slip:
    index's sections may be plain `<section>`s or collapsible `<details>`
    accordions; insert into whichever container holds that section's list.
 
+7. **Mark the source Markdown as converted.** When the page was rendered from a
+   source `.md` file that lives in the repo (e.g. `research/mi-tema.md`), rename
+   that file once the HTML exists and is registered — insert `.publicado` before
+   the extension: `research/mi-tema.md` → `research/mi-tema.publicado.md` (use
+   `git mv` so history follows). This makes it obvious at a glance which research
+   docs are already on the site: the pending ones are those *without*
+   `.publicado.` in the name. Only rename a real source file you actually
+   consumed — never invent one, and skip this step when the content came from
+   pasted text rather than a repo file. As a durable record, also add
+   `rendered_to: mi-tema.html` and `rendered_on: YYYY-MM-DD` to the MD's YAML
+   front-matter if it has one.
+
 ## The model note
 
 Fill `{{MODEL_NOTE}}` with the model that is generating the page right now and the
@@ -140,6 +152,8 @@ Before you call it done, open the file and confirm:
 - [ ] A `<p class="model-note">` exists near the bottom with a real model name.
 - [ ] Fonts are Fraunces + Spectral; the `:root` palette matches the reference.
 - [ ] `<html lang>` matches the content language.
+- [ ] The page is linked from `index.html` (in the fitting section, count bumped).
+- [ ] If rendered from a repo `.md` source, that file is renamed to `*.publicado.md`.
 - [ ] It's a valid, self-contained page (no unclosed tags; opens standalone).
 
 If you have a browser tool available, load the page and: click the hamburger to
