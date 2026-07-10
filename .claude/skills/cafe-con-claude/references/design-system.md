@@ -113,9 +113,14 @@ The hub page is deliberately plainer — a hand-edited table of contents:
   system-ui`) only for the small uppercase section labels and tags.
 - Palette: `--ink #2C2C2A`, `--paper #FAFAF7`, `--accent #BA7517`, `--muted
   #9A9A93`, `--rule #E7E4DC`; dark header `#1A1A18` with a gold subtitle `#C9A36B`.
-- `max-width: 640px`. Sections have an uppercase `.label` with a bottom rule, then
-  a `<ul>` of `<a>` links (optionally a `.tag` span like `Essay`).
-- Footer: `Café con Claude · hand-edited index`.
+- `max-width: 640px`. Sections are collapsible **persianas**: each is a
+  `<details class="persiana">` whose `<summary>` holds a chevron (`›`), the
+  uppercase section title (`.label-txt`), and an item `.count`, followed by a
+  `<ul>` of `<a>` links (optionally a `.tag` span like `Essay`). Sections are
+  collapsed by default; a top-right `#toggle-all` button expands/collapses all.
+- Footer: `Café con Claude · índice curado a mano, ordenado con Fable`.
 
-If asked to "add the new page to the index," append an `<li><a href="…">Title</a></li>`
-to the most fitting `<section>` in `index.html` — do not restyle the index.
+When you add a page to the index (always do this — see SKILL.md), append an
+`<li><a href="…">Title</a></li>` to the `<ul>` inside the most fitting
+`<details class="persiana">`, and **increment that section's `.count`** by one.
+Don't restyle the index or reorder existing entries.
