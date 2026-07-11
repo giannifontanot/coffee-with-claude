@@ -120,7 +120,18 @@ The hub page is deliberately plainer — a hand-edited table of contents:
   collapsed by default; a top-right `#toggle-all` button expands/collapses all.
 - Footer: `Café con Claude · índice curado a mano, ordenado con Fable`.
 
+- Above the persianas sits a **theme-filter chip row** (`.filtros`): multi-select
+  chips whose `data-filtro` values match the `data-tags` on each `<li>`. Active
+  chips show the union of matching links; sections auto-open and their counts
+  become «n de total»; «Todo» clears the filter. The controlled tag vocabulary is:
+  `marcos` · `biblia` · `discipulado` · `metodo` · `sistemas` · `humor` ·
+  `historia` · `panel` · `infografia`.
+
 When you add a page to the index (always do this — see SKILL.md), append an
-`<li><a href="…">Title</a></li>` to the `<ul>` inside the most fitting
-`<details class="persiana">`, and **increment that section's `.count`** by one.
-Don't restyle the index or reorder existing entries.
+`<li data-tags="…"><a href="…">Title</a></li>` to the `<ul>` inside the most
+fitting `<details class="persiana">`, **increment that section's `.count`** by
+one, and give the `data-tags` attribute 1–4 themes from the controlled
+vocabulary above (a page can — and often should — carry several; that's how it
+shows up under more than one filter). Don't invent new tag values without
+also adding a chip for them. Don't restyle the index or reorder existing
+entries.
