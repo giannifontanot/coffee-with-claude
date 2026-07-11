@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juan responde a Marcos · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#f7f1e5; --cream-deep:#f0e7d5; --ink:#2b2118; --terracotta:#b4532a;
+    --amber:#c98a2d; --olive:#6b7a3f; --plum:#6e4a6e; --steel:#4a6b7a;
+    --line:#d9cdb8; --muted:#6a5b48; --card:#fcf8ef;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); color:var(--ink); font-family:'Spectral',serif; line-height:1.7; padding:4.5rem 1.25rem 5rem; }
+  .progress-bar { position:fixed; top:0; left:0; height:3px; width:0%; background:linear-gradient(90deg,var(--olive),var(--amber),var(--plum),var(--terracotta),var(--steel)); z-index:100; }
+  #nav-toggle { position:fixed; top:1rem; left:1rem; z-index:80; width:2.5rem; height:2.5rem; display:inline-flex; align-items:center; justify-content:center; background:var(--ink); color:var(--cream); border:none; border-radius:4px; font-size:1.15rem; line-height:1; cursor:pointer; box-shadow:0 2px 8px rgba(43,33,24,0.18); transition:background 0.2s; }
+  #nav-toggle:hover { background:var(--terracotta); }
+  nav.sidebar { position:fixed; top:0; left:0; width:290px; max-width:82vw; height:100vh; padding:4.5rem 1.6rem 2rem; background:var(--cream); border-right:1px solid var(--line); box-shadow:6px 0 24px rgba(43,33,24,0.14); overflow-y:auto; transform:translateX(-100%); transition:transform 0.32s cubic-bezier(.4,0,.2,1); z-index:70; }
+  nav.sidebar.open { transform:translateX(0); }
+  nav.sidebar .brand { font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; margin-bottom:0.2rem; }
+  nav.sidebar .brand-sub { font-size:0.78rem; font-style:italic; color:var(--muted); margin-bottom:1.8rem; }
+  nav.sidebar ol { list-style:none; }
+  nav.sidebar ol li { margin-bottom:0.85rem; }
+  nav.sidebar ol a { display:flex; align-items:baseline; gap:0.6rem; color:var(--muted); text-decoration:none; font-size:0.86rem; line-height:1.35; transition:color 0.2s; }
+  nav.sidebar ol a .num { font-family:'Fraunces',serif; font-weight:600; font-size:0.8rem; min-width:2rem; color:var(--line); transition:color 0.2s; }
+  nav.sidebar ol a:hover { color:var(--ink); }
+  nav.sidebar ol a.active { color:var(--terracotta); font-weight:600; }
+  nav.sidebar ol a.active .num { color:var(--terracotta); }
+  #nav-scrim { position:fixed; inset:0; background:rgba(43,33,24,0.38); opacity:0; pointer-events:none; transition:opacity 0.3s; z-index:65; }
+  #nav-scrim.open { opacity:1; pointer-events:auto; }
+  .wrap { max-width:720px; margin:0 auto; }
+  .back-link { display:inline-block; font-family:'Spectral',serif; font-size:0.85rem; color:var(--terracotta); background:none; border:none; border-bottom:1px solid var(--terracotta); padding:0 0 1px; margin-bottom:2.4rem; cursor:pointer; }
+  .back-link:hover { color:var(--ink); border-color:var(--ink); }
+  .kicker { font-family:'Fraunces',serif; font-size:0.8rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--terracotta); font-weight:600; margin-bottom:0.8rem; }
+  h1 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08; margin-bottom:0.35rem; }
+  .title-sub { font-family:'Fraunces',serif; font-style:italic; font-weight:600; font-size:clamp(1.2rem,3.6vw,1.7rem); line-height:1.2; color:var(--terracotta); margin-bottom:1.1rem; }
+  .pregunta { font-family:'Fraunces',serif; font-style:italic; font-size:1.12rem; color:var(--plum); border-left:3px solid var(--plum); padding:0.2rem 0 0.2rem 1.1rem; margin-bottom:1.4rem; }
+  blockquote.biblia { margin:1.3rem 0; padding:1.2rem 1.4rem; background:var(--cream-deep); border-left:4px solid var(--amber); font-family:'Fraunces',serif; font-style:italic; font-size:1.06rem; line-height:1.6; }
+  blockquote.biblia .ref { display:block; margin-top:0.6rem; font-family:'Spectral',serif; font-style:normal; font-size:0.8rem; letter-spacing:0.03em; color:var(--muted); }
+  .registros { display:grid; grid-template-columns:repeat(3,1fr); gap:0.7rem; margin:1.6rem 0; }
+  .registros .reg { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:0.8rem 0.9rem; }
+  .registros .reg b { font-family:'Fraunces',serif; display:block; font-size:0.95rem; margin-bottom:0.2rem; }
+  .registros .reg.c1 { border-top:3px solid var(--terracotta); } .registros .reg.c1 b { color:var(--terracotta); }
+  .registros .reg.c2 { border-top:3px solid var(--olive); }      .registros .reg.c2 b { color:var(--olive); }
+  .registros .reg.c3 { border-top:3px solid var(--steel); }      .registros .reg.c3 b { color:var(--steel); }
+  .registros .reg span { font-size:0.85rem; color:var(--muted); }
+  .thesis { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:6px; padding:1.2rem 1.4rem; margin-bottom:3rem; }
+  .thesis .lead { font-family:'Fraunces',serif; font-weight:600; color:var(--terracotta); }
+  section { margin-bottom:3rem; scroll-margin-top:1.5rem; }
+  .eyebrow { display:flex; align-items:center; gap:0.7rem; margin-bottom:0.5rem; }
+  .eyebrow .num { font-family:'Fraunces',serif; font-weight:700; font-size:0.9rem; color:var(--cream); background:var(--terracotta); width:1.7rem; height:1.7rem; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; flex:none; }
+  .eyebrow.plain .num { background:var(--olive); font-size:0.62rem; width:auto; height:1.7rem; border-radius:999px; padding:0 0.7rem; letter-spacing:0.08em; text-transform:uppercase; }
+  .eyebrow .tag { font-family:'Fraunces',serif; font-size:0.76rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(1.5rem,4.2vw,2rem); line-height:1.16; margin:0 0 1rem; }
+  p { margin-bottom:1.1rem; }
+  em { color:var(--ink); font-style:italic; }
+  a { color:var(--terracotta); }
+  .voz { margin:1.5rem 0; padding-left:1.1rem; border-left:3px solid var(--line); }
+  .voz .quien { font-family:'Fraunces',serif; font-weight:600; font-size:0.95rem; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.5rem; }
+  .voz .quien::before { content:""; width:0.6em; height:0.6em; border-radius:50%; display:inline-block; flex:none; }
+  .voz p:last-child { margin-bottom:0; }
+  .voz.exegeta{border-color:var(--terracotta)} .voz.exegeta .quien{color:var(--terracotta)} .voz.exegeta .quien::before{background:var(--terracotta)}
+  .voz.ingeniera{border-color:var(--olive)} .voz.ingeniera .quien{color:var(--olive)} .voz.ingeniera .quien::before{background:var(--olive)}
+  .voz.provocador{border-color:var(--plum)} .voz.provocador .quien{color:var(--plum)} .voz.provocador .quien::before{background:var(--plum)}
+  .voz.disenadora{border-color:var(--amber)} .voz.disenadora .quien{color:var(--amber)} .voz.disenadora .quien::before{background:var(--amber)}
+  .voz.metodologo{border-color:var(--steel)} .voz.metodologo .quien{color:var(--steel)} .voz.metodologo .quien::before{background:var(--steel)}
+  ol.casos { list-style:none; counter-reset:caso; margin:1rem 0; }
+  ol.casos > li { counter-increment:caso; position:relative; padding-left:2rem; margin-bottom:1rem; }
+  ol.casos > li::before { content:counter(caso); position:absolute; left:0; top:0.1rem; font-family:'Fraunces',serif; font-weight:700; font-size:0.8rem; color:var(--cream); background:var(--plum); width:1.5rem; height:1.5rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+  ol.casos b { font-family:'Fraunces',serif; }
+  .badge { font-family:'Fraunces',serif; font-size:0.68rem; font-weight:600; letter-spacing:0.03em; padding:0.1rem 0.5rem; border-radius:999px; white-space:nowrap; font-style:normal; }
+  .badge.alta{background:rgba(107,122,63,0.16); color:var(--olive)}
+  .badge.media{background:rgba(201,138,45,0.18); color:#9a6a12}
+  .badge.debatido{background:rgba(110,74,110,0.16); color:var(--plum)}
+  .confianza-nota { display:flex; align-items:baseline; gap:0.5rem; font-size:0.88rem; color:var(--muted); font-style:italic; margin:1rem 0; }
+  .comparador { display:grid; grid-template-columns:1fr 1.4rem 1fr; align-items:stretch; gap:0; margin:1.2rem 0; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  .comparador .cab { font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; padding:0.5rem 0.8rem; color:var(--cream); }
+  .comparador .cab.m { background:var(--steel); } .comparador .cab.j { background:var(--terracotta); text-align:right; }
+  .comparador .flechacab { background:var(--ink); }
+  .comparador .celda { padding:0.6rem 0.8rem; font-size:0.9rem; border-top:1px solid var(--line); }
+  .comparador .celda.j { text-align:right; }
+  .comparador .flecha { display:flex; align-items:center; justify-content:center; color:var(--terracotta); border-top:1px solid var(--line); font-size:0.9rem; background:var(--card); }
+  ul.ausencias { list-style:none; margin:1rem 0; }
+  ul.ausencias li { position:relative; padding-left:1.5rem; margin-bottom:0.6rem; }
+  ul.ausencias li::before { content:"✕"; position:absolute; left:0; color:var(--terracotta); font-size:0.8rem; top:0.15rem; }
+  ul.ausencias li b { font-family:'Fraunces',serif; }
+  .destacado { font-family:'Fraunces',serif; font-weight:600; font-size:1.35rem; line-height:1.3; color:var(--ink); border-left:4px solid var(--terracotta); padding:0.2rem 0 0.2rem 1.2rem; margin:1.8rem 0; }
+  details.persiana { border:1px solid var(--line); border-radius:6px; background:var(--card); margin:1.4rem 0; overflow:hidden; }
+  details.persiana > summary { list-style:none; cursor:pointer; padding:0.9rem 1.2rem; font-family:'Fraunces',serif; font-weight:600; font-size:0.95rem; color:var(--ink); display:flex; align-items:center; gap:0.6rem; }
+  details.persiana > summary::-webkit-details-marker { display:none; }
+  details.persiana > summary .chev { color:var(--terracotta); transition:transform 0.2s; }
+  details.persiana[open] > summary .chev { transform:rotate(90deg); }
+  details.persiana .persiana-body { padding:0 1.3rem 1.1rem; }
+  details.persiana.semilla { border-color:var(--olive); } details.persiana.semilla > summary, details.persiana.semilla > summary .chev { color:var(--olive); }
+  .semana { list-style:none; margin:0.4rem 0 0; }
+  .semana li { padding:0.45rem 0; border-bottom:1px dotted var(--line); font-size:0.95rem; }
+  .semana li b { font-family:'Fraunces',serif; color:var(--terracotta); }
+  .cierre { font-size:1.02rem; margin-top:1.2rem; }
+  .fuentes-seccion { font-size:0.85rem; color:var(--muted); font-style:italic; margin-top:1rem; }
+  .fuentes-seccion a { border-bottom:1px solid rgba(180,83,42,0.35); text-decoration:none; }
+  hr.rule { border:none; border-top:2px solid var(--ink); margin:3.2rem 0 2.6rem; opacity:0.85; }
+  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); font-size:0.85rem; font-style:italic; color:var(--muted); text-align:center; }
+  .model-note { margin-top:0.8rem; font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.04em; color:var(--muted); opacity:0.85; text-align:center; }
+  .revela { opacity:0; transform:translateY(14px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .revela{opacity:1;transform:none;transition:none} nav.sidebar,#nav-scrim,#nav-toggle,details.persiana>summary .chev{transition:none} }
+  @media (max-width:640px){ body{padding:4.2rem 1rem 4rem} .registros{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">El Panel Pregunta · Segunda ronda · Nº 1</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>¿Isla o diálogo?</a></li>
+    <li><a href="#s2"><span class="num">II</span>Lo que corrige</a></li>
+    <li><a href="#s3"><span class="num">III</span>Lo que amplifica</a></li>
+    <li><a href="#s4"><span class="num">IV</span>Sobre qué calla</a></li>
+    <li><a href="#s5"><span class="num">V</span>¿Complemento o reemplazo?</a></li>
+    <li><a href="#semilla"><span class="num">✦</span>Semilla · leer en estéreo</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <div class="kicker">El Panel Pregunta · Segunda ronda · Nº 1</div>
+    <h1>Juan responde a Marcos</h1>
+    <p class="title-sub">Los dos evangelios extremos, frente a frente</p>
+    <p class="pregunta">¿Qué pasa si leo Juan como una respuesta deliberada a Marcos — qué corrige, qué amplifica, y sobre qué guarda silencio?</p>
+
+    <blockquote class="biblia">«Jesús hizo muchas otras señales en presencia de sus discípulos, las cuales no están escritas en este libro. Pero estas se han escrito para que ustedes crean que Jesús es el Mesías, el Hijo de Dios, y para que creyendo tengan vida por medio de él.»<span class="ref">Juan 20:30–31 · DHH — la tesis de toda la página: Juan no escribe en el vacío; escribe seleccionando.</span></blockquote>
+
+    <div class="registros">
+      <div class="reg c1"><b>Corrige</b><span>Reescribe escenas que el lector ya tiene de Marcos.</span></div>
+      <div class="reg c2"><b>Amplifica</b><span>Lo puntual en Marcos se vuelve estructura total.</span></div>
+      <div class="reg c3"><b>Calla</b><span>Omite lo que da por sabido: el silencio como enlace.</span></div>
+    </div>
+
+    <div class="thesis">
+      <p><span class="lead">En una línea:</span> si Juan escribió para lectores que ya tenían a Marcos en las manos, cada diferencia entre ambos deja de ser azar y se vuelve una <em>decisión editorial con intención teológica</em>.</p>
+    </div>
+  </header>
+
+  <section id="s1" class="revela">
+    <div class="eyebrow"><span class="num">I</span><span class="tag">El pleito del siglo XX</span></div>
+    <h2>¿Isla o diálogo?</h2>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Paradoja histórica: la iglesia antigua <em>siempre</em> leyó a Juan como consciente de los otros. Eusebio dice que Juan recibió los tres evangelios previos, los confirmó y escribió para llenar lo que ellos callaron. La «independencia» de Juan es una <strong>innovación de mediados del siglo XX</strong> —Gardner-Smith (1938) y Dodd—, la era dorada de la «tradición oral» como comodín. Su debilidad: la tradición oral no explica bien los acuerdos verbales exactos ni los paralelos de estructura literaria.</p></div>
+    <p>El péndulo regresa. Bauckham (1998) trae el argumento del <em>interlocking</em>: Juan 3:24 («porque Juan todavía no había sido encarcelado») solo tiene sentido como <strong>glosa cronológica para lectores de Marcos</strong>, que en Marcos 1:14 ven a Jesús comenzar <em>después</em> del arresto del Bautista. Y Juan 11:2 presenta a María «la que ungió al Señor» <em>antes</em> de narrar la unción: presupone que el lector ya conoce la escena de Marcos 14.</p>
+    <p>Goodacre (2025) va más lejos: Juan omite precisamente las escenas que puede dar por sabidas —bautismo, transfiguración, institución de la cena— y las presupone. Su tesis provocadora: «sinóptico» es cuestión de <em>grados</em>, y Juan se comporta como sinóptico más veces de las que admitimos. Windisch (1926) ya había mapeado las cuatro relaciones posibles: Juan <strong>suplementa</strong>, es <strong>independiente</strong>, <strong>interpreta</strong> o busca <strong>reemplazar</strong>. Recorreremos las cuatro y dejaremos la última como tensión final.</p>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera de Sistemas</div><p>En teoría de sistemas, dos componentes que «encajan» sin coordinarse es casi imposible; el <em>interlocking</em> de cronologías (Jn 3:24 ↔ Mc 1:14) huele a interfaz diseñada, no a coincidencia.</p></div>
+    <p class="confianza-nota"><span class="badge debatido">En ascenso, aún debatido</span> La dependencia de Juan respecto de Marcos no es consenso; la página la trata como hipótesis de trabajo fértil, no como hecho cerrado.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.patheos.com/blogs/inchrist/2025/10/the-fourth-synoptic-gospel-an-interview-with-mark-goodacre/" target="_blank" rel="noopener">Entrevista a Goodacre — Patheos</a> · <a href="https://wordandway.org/2026/01/07/review-the-fourth-synoptic-gospel/" target="_blank" rel="noopener">Reseña — Word&amp;Way</a> · <a href="https://thetextualmechanic.blogspot.com/2015/07/the-gospel-of-john-and-readers-of-mark.html" target="_blank" rel="noopener">Bauckham y los lectores de Marcos</a> · <a href="https://jimmyakin.com/2014/11/did-john-use-mark-as-a-template.html" target="_blank" rel="noopener">Jimmy Akin — ¿Juan usó a Marcos como plantilla?</a></p>
+  </section>
+
+  <section id="s2" class="revela">
+    <div class="eyebrow"><span class="num">II</span><span class="tag">Lo que corrige o reubica</span></div>
+    <h2>Reescribir sin pedir permiso</h2>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>Corregir a un evangelio ya canonizado en la memoria de la iglesia es un acto de audacia teológica. Juan lo hace sin pedir permiso.</p></div>
+    <ol class="casos">
+      <li><b>Getsemaní reescrito.</b> <span class="badge alta">Alta</span> Marcos 14:32–36: Jesús angustiado hasta la muerte pide que pase la copa. Juan 12:27: Jesús se pregunta <em>retóricamente</em> si debe decir «Padre, líbrame de esta hora» —y rechaza la oración de Marcos en voz alta—. El Jesús juanino no suplica; consiente.</li>
+      <li><b>El grito de abandono, eliminado.</b> <span class="badge alta">Alta</span> El <em>Eloi, Eloi</em> de Marcos 15:34 desaparece; en su lugar, «Todo está cumplido» (Jn 19:30). Marcos termina en pregunta sin respuesta; Juan, en veredicto. Juan es, en cierto modo, la iglesia respondiendo al silencio de Marcos 16:8.</li>
+      <li><b>La cruz sin Simón de Cirene.</b> <span class="badge media">Media</span> Marcos 15:21: Simón carga la cruz. Juan 19:17 subraya que Jesús salió «cargando su propia cruz». Nadie ayuda al Jesús juanino; nadie <em>puede</em>. Él pone la vida por su cuenta (Jn 10:18).</li>
+      <li><b>Cronología del templo.</b> <span class="badge debatido">Debatido</span> La purificación se muda del final (Marcos 11) al principio (Juan 2). ¿Corrección histórica o reubicación teológica? Ambas lecturas siguen vivas.</li>
+      <li><b>El día de la crucifixión.</b> <span class="badge media">Media</span> En Juan, Jesús muere en la preparación de la Pascua, a la hora en que se sacrifican los corderos. Si Juan conoce el calendario de Marcos y lo mueve, la «corrección» es un sermón: el Cordero muere con los corderos.</li>
+      <li><b>Los anónimos reciben nombre.</b> <span class="badge alta">Alta</span> La mujer que unge en Marcos 14 es María de Betania; el que corta la oreja es Pedro, y el siervo se llama Malco. Juan escribe como quien <em>completa el expediente</em> de un relato ya conocido.</li>
+    </ol>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Matiz obligatorio: «corregir» no siempre significa «declarar falso». A veces Juan reubica para revelar; el género evangelio permite verdad teológica mediante arquitectura narrativa. No caigamos en el binario corrección-histórica vs. invención.</p></div>
+  </section>
+
+  <section id="s3" class="revela">
+    <div class="eyebrow"><span class="num">III</span><span class="tag">Lo que amplifica</span></div>
+    <h2>De evento puntual a estructura total</h2>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera de Sistemas</div><p>Juan no agrega módulos a Marcos; <strong>cambia la escala del sistema</strong>. Lo que en Marcos es un evento puntual, en Juan se vuelve la estructura de todo el evangelio.</p></div>
+    <div class="comparador">
+      <div class="cab m">Marcos · puntual</div><div class="cab flechacab"></div><div class="cab j">Juan · estructura</div>
+      <div class="celda">«No se lo digas a nadie» (secreto mesiánico)</div><div class="flecha">→</div><div class="celda j">«Yo soy» en público desde el cap. 4</div>
+      <div class="celda">Transfiguración en el monte, ante tres</div><div class="flecha">→</div><div class="celda j">«Vimos su gloria» (Jn 1:14): 21 capítulos</div>
+      <div class="celda">Dicho: «el que sirva» (Mc 10:43–45)</div><div class="flecha">→</div><div class="celda j">El lavamiento de pies dramatizado (Jn 13)</div>
+      <div class="celda">«¿Quién dicen que soy?» (Mc 8:29)</div><div class="flecha">→</div><div class="celda j">Siete «Yo soy» entregados firmados</div>
+    </div>
+    <p><strong>La transfiguración desmontañada</strong> es la imagen central: Juan omite la escena del monte porque <em>todo su evangelio es la transfiguración hecha pública</em>. Lo que Marcos concede a tres discípulos por un instante, Juan lo extiende a todo lector. El monte se hizo llanura. Amplificar no es alargar: es convertir instrucción en experiencia —el dicho del servicio se vuelve una toalla; la cena instituida se vuelve el discurso del Pan de Vida (Jn 6)—.</p>
+    <div class="voz disenadora"><div class="quien">La Diseñadora</div><p>Y una pregunta sembrada para más adelante: Marcos hace al lector <em>trabajar</em> la cristología («¿quién dicen que soy?»); Juan se la entrega firmada (siete «Yo soy»). ¿Cuál de las dos pedagogías forma mejores discípulos? —puente con las páginas de Kirkpatrick y PDCA—.</p></div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.chinachristiandaily.com/news/church-ministries/2026-04-03/dr-goodacre-argues-john-is-the-fourth-synoptic-gospel-15990" target="_blank" rel="noopener">Goodacre — Juan como transfiguración pública</a> · <a href="https://vridar.org/2016/09/26/how-the-gospel-of-john-uses-and-completes-the-gospel-of-mark/" target="_blank" rel="noopener">Juan usa y completa a Marcos — Vridar</a></p>
+  </section>
+
+  <section id="s4" class="revela">
+    <div class="eyebrow"><span class="num">IV</span><span class="tag">Sobre qué guarda silencio</span></div>
+    <h2>El inventario de las ausencias</h2>
+    <div class="voz metodologo"><div class="quien">El Metodólogo PDCA</div><p>Antes de interpretar los silencios, inventariémoslos.</p></div>
+    <ul class="ausencias">
+      <li><b>Ni un solo exorcismo.</b> Marcos expulsa demonios desde el capítulo 1; Juan, cero. El conflicto cósmico se concentra en un solo adversario («el príncipe de este mundo») y una sola hora.</li>
+      <li><b>El bautismo de Jesús no se narra</b> —solo el testimonio del Bautista (Jn 1:32–34)—. Se omite lo que el lector ya tiene por escrito.</li>
+      <li><b>Ninguna parábola.</b> El género didáctico central de Marcos desaparece; en su lugar, discursos y «figuras».</li>
+      <li><b>Casi nada de «reino de Dios»</b> —solo en Juan 3—. El vocabulario central de Marcos se sustituye por «vida eterna».</li>
+      <li><b>Ni transfiguración, ni institución de la cena, ni oración de Getsemaní</b> —las tres presupuestas y transformadas—.</li>
+    </ul>
+    <p>La clave: hay <strong>dos clases de silencio</strong>. El de ignorancia (no lo sabía) y el de confianza (sé que ya lo tienes). Si Juan escribe para lectores de Marcos, sus omisiones son del segundo tipo: no son huecos, son <em>enlaces</em>. Marcos es la capa de crónica, Juan la capa de interpretación, y las glosas tipo Jn 3:24 son la interfaz entre ambas.</p>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>¿Y qué calla Juan que <em>no</em> está en Marcos? El silencio más ruidoso: ninguna agonía real, casi ninguna debilidad. El Jesús juanino no es tentado en el desierto ni desfallece en el huerto. ¿Ganamos gloria y perdimos fragilidad? —queda abierto, y conecta con la página de las emociones censuradas de Jesús—.</p></div>
+  </section>
+
+  <section id="s5" class="revela">
+    <div class="eyebrow"><span class="num">V</span><span class="tag">La tensión final</span></div>
+    <h2>¿Complemento o reemplazo?</h2>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Windisch sostuvo que Juan quiso <strong>desplazar</strong> a los sinópticos —ser el único evangelio—.</p></div>
+    <div class="voz metodologo"><div class="quien">Bauckham (según La Ingeniera)</div><p>Lo contrario: Juan escribió para <strong>complementar</strong> a Marcos, contando con que su lector lo conserve.</p></div>
+    <div class="voz provocador"><div class="quien">Goodacre, en medio</div><p>Dependencia literaria real, transformación libre: Juan conoce, usa y trasciende.</p></div>
+    <p>Pero hay un dato que ninguna teoría puede ignorar: la iglesia canonizó <em>los dos</em>. No eligió entre el grito de abandono y el «todo está cumplido»; encuadernó ambos. <strong>El canon es la decisión de vivir dentro de la tensión, no de resolverla.</strong></p>
+    <p class="destacado">Leer solo a Juan produce cristianos de gloria sin noche oscura; leer solo a Marcos, cristianos de cruz sin certeza de victoria.</p>
+    <p>El Nuevo Testamento nos obliga a la estereofonía: sostener el grito y el consumado en las dos manos, sin soltar ninguno.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.bobcornwall.com/2026/01/the-fourth-synoptic-gospel-johns.html" target="_blank" rel="noopener">Reseña — Bob Cornwall</a> · <a href="https://doctoraldiscipleship.substack.com/p/the-gospel-of-john-strikes-back" target="_blank" rel="noopener">Panorama del debate — Doctoral Discipleship</a></p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="semilla" class="revela">
+    <div class="eyebrow plain"><span class="num">Semilla</span><span class="tag">Práctica de siete días</span></div>
+    <h2>Leer en estéreo</h2>
+    <p>Cada día, un par de textos en paralelo (DHH), una pregunta de observación y una frase para llevar. Sin moralina.</p>
+    <details class="persiana semilla" open>
+      <summary><span class="chev">›</span>Siete días · Marcos y Juan en paralelo</summary>
+      <div class="persiana-body">
+        <ul class="semana">
+          <li><b>Día 1 · La apertura</b> — Marcos 1:9–11 // Juan 1:29–34. ¿Qué se narra y qué se testifica?</li>
+          <li><b>Día 2 · El templo</b> — Marcos 11:15–18 // Juan 2:13–22. ¿Qué cambia cuando la escena abre en vez de cerrar?</li>
+          <li><b>Día 3 · El huerto</b> — Marcos 14:32–36 // Juan 12:27–28. Subraya la petición que Marcos registra y Juan descarta.</li>
+          <li><b>Día 4 · El servicio</b> — Marcos 10:42–45 // Juan 13:1–17. Del dicho a la toalla.</li>
+          <li><b>Día 5 · La gloria</b> — Marcos 9:2–8 // Juan 1:14. ¿Dónde quedó el monte?</li>
+          <li><b>Día 6 · El final</b> — Marcos 15:33–37 // Juan 19:28–30. Sostén el grito y el «consumado» en las dos manos.</li>
+          <li><b>Día 7 · La tesis</b> — Juan 20:30–31 solo. ¿Qué eligió callar Juan <em>sobre mí</em> —qué parte de mi historia asume ya contada, y cuál vino a interpretar?</li>
+        </ul>
+      </div>
+    </details>
+    <p class="cierre">Citas bíblicas breves y parafraseadas (DHH); abre el texto completo en tu propia Biblia —esa es la mitad del ejercicio—.</p>
+  </section>
+
+  <footer>Café con Claude · El Panel Pregunta · Segunda ronda · Nº 1 · Julio 2026
+    <p class="model-note">Investigación redactada con Claude Fable 5 · página construida con Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () { var d=document.documentElement, t=d.scrollHeight-window.innerHeight; bar.style.width=(t>0?(window.scrollY/t)*100:0)+'%'; };
+    window.addEventListener('scroll', onScroll, { passive:true }); window.addEventListener('resize', onScroll); onScroll();
+  }
+  var toggle=document.getElementById('nav-toggle'), sidebar=document.getElementById('sidebar'), scrim=document.getElementById('nav-scrim');
+  function setNav(o){ sidebar.classList.toggle('open',o); scrim.classList.toggle('open',o); toggle.textContent=o?'✕':'☰'; toggle.setAttribute('aria-expanded',o?'true':'false'); }
+  toggle.addEventListener('click', function(){ setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function(){ setNav(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') setNav(false); });
+  var navLinks=document.querySelectorAll('nav.sidebar .toc a'), byId={};
+  navLinks.forEach(function(l){ byId[l.getAttribute('href').slice(1)]=l; l.addEventListener('click', function(){ setNav(false); }); });
+  var spy=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ navLinks.forEach(function(l){l.classList.remove('active')}); var k=byId[e.target.id]; if(k)k.classList.add('active'); } }); }, { rootMargin:'-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(function(s){ spy.observe(s); });
+  var rev=document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { rev.forEach(function(el){ el.classList.add('visible'); }); }
+  else { var obs=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('visible'); obs.unobserve(en.target); } }); }, { threshold:0.12 }); rev.forEach(function(el){ obs.observe(el); }); }
+</script>
+</body>
+</html>

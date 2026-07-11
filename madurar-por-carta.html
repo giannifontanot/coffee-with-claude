@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madurar por carta · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#f7f1e5; --cream-deep:#f0e7d5; --ink:#2b2118; --terracotta:#b4532a;
+    --amber:#c98a2d; --olive:#6b7a3f; --plum:#6e4a6e; --steel:#4a6b7a;
+    --line:#d9cdb8; --muted:#6a5b48; --card:#fcf8ef;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); color:var(--ink); font-family:'Spectral',serif; line-height:1.7; padding:4.5rem 1.25rem 5rem; }
+  .progress-bar { position:fixed; top:0; left:0; height:3px; width:0%; background:linear-gradient(90deg,var(--olive),var(--amber),var(--plum),var(--terracotta),var(--steel)); z-index:100; }
+  #nav-toggle { position:fixed; top:1rem; left:1rem; z-index:80; width:2.5rem; height:2.5rem; display:inline-flex; align-items:center; justify-content:center; background:var(--ink); color:var(--cream); border:none; border-radius:4px; font-size:1.15rem; line-height:1; cursor:pointer; box-shadow:0 2px 8px rgba(43,33,24,0.18); transition:background 0.2s; }
+  #nav-toggle:hover { background:var(--terracotta); }
+  nav.sidebar { position:fixed; top:0; left:0; width:290px; max-width:82vw; height:100vh; padding:4.5rem 1.6rem 2rem; background:var(--cream); border-right:1px solid var(--line); box-shadow:6px 0 24px rgba(43,33,24,0.14); overflow-y:auto; transform:translateX(-100%); transition:transform 0.32s cubic-bezier(.4,0,.2,1); z-index:70; }
+  nav.sidebar.open { transform:translateX(0); }
+  nav.sidebar .brand { font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; margin-bottom:0.2rem; }
+  nav.sidebar .brand-sub { font-size:0.78rem; font-style:italic; color:var(--muted); margin-bottom:1.8rem; }
+  nav.sidebar ol { list-style:none; }
+  nav.sidebar ol li { margin-bottom:0.85rem; }
+  nav.sidebar ol a { display:flex; align-items:baseline; gap:0.6rem; color:var(--muted); text-decoration:none; font-size:0.86rem; line-height:1.35; transition:color 0.2s; }
+  nav.sidebar ol a .num { font-family:'Fraunces',serif; font-weight:600; font-size:0.8rem; min-width:2rem; color:var(--line); transition:color 0.2s; }
+  nav.sidebar ol a:hover { color:var(--ink); }
+  nav.sidebar ol a.active { color:var(--terracotta); font-weight:600; }
+  nav.sidebar ol a.active .num { color:var(--terracotta); }
+  #nav-scrim { position:fixed; inset:0; background:rgba(43,33,24,0.38); opacity:0; pointer-events:none; transition:opacity 0.3s; z-index:65; }
+  #nav-scrim.open { opacity:1; pointer-events:auto; }
+  .wrap { max-width:720px; margin:0 auto; }
+  .back-link { display:inline-block; font-family:'Spectral',serif; font-size:0.85rem; color:var(--terracotta); background:none; border:none; border-bottom:1px solid var(--terracotta); padding:0 0 1px; margin-bottom:2.4rem; cursor:pointer; }
+  .back-link:hover { color:var(--ink); border-color:var(--ink); }
+  .kicker { font-family:'Fraunces',serif; font-size:0.8rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--terracotta); font-weight:600; margin-bottom:0.8rem; }
+  h1 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08; margin-bottom:0.35rem; }
+  .title-sub { font-family:'Fraunces',serif; font-style:italic; font-weight:600; font-size:clamp(1.2rem,3.6vw,1.7rem); line-height:1.2; color:var(--terracotta); margin-bottom:1.1rem; }
+  .subtitle { font-style:italic; color:var(--muted); font-size:1.1rem; max-width:34em; margin-bottom:1.4rem; }
+  .pregunta { font-family:'Fraunces',serif; font-style:italic; font-size:1.15rem; color:var(--terracotta); border-left:3px solid var(--terracotta); padding:0.2rem 0 0.2rem 1.1rem; margin-bottom:1.6rem; }
+  .pregunta .quien { display:block; font-family:'Spectral',serif; font-style:normal; font-size:0.8rem; letter-spacing:0.04em; color:var(--muted); margin-top:0.5rem; }
+  .chips-label { font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; }
+  .chips { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.8rem; }
+  .chips span { font-size:0.8rem; color:var(--ink); background:var(--card); border:1px solid var(--line); border-radius:999px; padding:0.3rem 0.85rem; }
+  .thesis { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:6px; padding:1.2rem 1.4rem; margin-bottom:3rem; }
+  .thesis .lead { font-family:'Fraunces',serif; font-weight:600; color:var(--terracotta); }
+  section { margin-bottom:3rem; scroll-margin-top:1.5rem; }
+  .eyebrow { display:flex; align-items:center; gap:0.7rem; margin-bottom:0.5rem; }
+  .eyebrow .num { font-family:'Fraunces',serif; font-weight:700; font-size:0.9rem; color:var(--cream); background:var(--terracotta); width:1.7rem; height:1.7rem; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; flex:none; }
+  .eyebrow.plain .num { background:var(--olive); font-size:0.62rem; width:auto; height:1.7rem; border-radius:999px; padding:0 0.7rem; letter-spacing:0.08em; text-transform:uppercase; }
+  .eyebrow .tag { font-family:'Fraunces',serif; font-size:0.76rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(1.5rem,4.2vw,2rem); line-height:1.16; margin:0 0 1rem; }
+  h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.1rem; margin:1.6rem 0 0.5rem; color:var(--ink); }
+  p { margin-bottom:1.1rem; }
+  em { color:var(--ink); font-style:italic; }
+  a { color:var(--terracotta); }
+  .voz { margin:1.5rem 0; padding-left:1.1rem; border-left:3px solid var(--line); }
+  .voz .quien { font-family:'Fraunces',serif; font-weight:600; font-size:0.95rem; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.5rem; }
+  .voz .quien::before { content:""; width:0.6em; height:0.6em; border-radius:50%; display:inline-block; flex:none; }
+  .voz p:last-child { margin-bottom:0; }
+  .voz.exegeta{border-color:var(--terracotta)} .voz.exegeta .quien{color:var(--terracotta)} .voz.exegeta .quien::before{background:var(--terracotta)}
+  .voz.ingeniera{border-color:var(--olive)} .voz.ingeniera .quien{color:var(--olive)} .voz.ingeniera .quien::before{background:var(--olive)}
+  .voz.provocador{border-color:var(--plum)} .voz.provocador .quien{color:var(--plum)} .voz.provocador .quien::before{background:var(--plum)}
+  .voz.disenadora{border-color:var(--amber)} .voz.disenadora .quien{color:var(--amber)} .voz.disenadora .quien::before{background:var(--amber)}
+  .voz.metodologo{border-color:var(--steel)} .voz.metodologo .quien{color:var(--steel)} .voz.metodologo .quien::before{background:var(--steel)}
+  .escena { font-style:italic; color:var(--muted); font-size:0.98rem; margin:1.2rem 0; }
+  .destacado { font-family:'Fraunces',serif; font-weight:600; font-size:1.4rem; line-height:1.3; color:var(--ink); border-left:4px solid var(--terracotta); padding:0.2rem 0 0.2rem 1.2rem; margin:1.8rem 0; }
+  .confianza-nota { display:flex; align-items:baseline; gap:0.5rem; font-size:0.88rem; color:var(--muted); font-style:italic; margin:1rem 0; }
+  .badge { font-family:'Fraunces',serif; font-size:0.72rem; font-weight:600; letter-spacing:0.03em; padding:0.15rem 0.55rem; border-radius:999px; white-space:nowrap; font-style:normal; }
+  .badge.alta{background:rgba(107,122,63,0.16); color:var(--olive)}
+  .badge.media{background:rgba(201,138,45,0.18); color:#9a6a12}
+  .badge.mediaalta{background:rgba(74,107,122,0.16); color:var(--steel)}
+  .badge.baja{background:rgba(180,83,42,0.14); color:var(--terracotta)}
+  .estanteria { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:1rem 1.2rem; margin:1rem 0; font-size:0.95rem; }
+  .estanteria .et { font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.4rem; }
+  .estanteria .cadena { line-height:1.9; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table.datos { width:100%; border-collapse:collapse; font-size:0.9rem; }
+  table.datos th, table.datos td { text-align:left; padding:0.55rem 0.6rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.datos th { font-family:'Fraunces',serif; font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+  /* Timeline */
+  .timeline { display:flex; gap:0; margin:1.4rem 0; overflow-x:auto; padding-bottom:0.5rem; }
+  .timeline .hito { flex:1 0 auto; min-width:92px; text-align:center; position:relative; padding-top:1.2rem; }
+  .timeline .hito::before { content:""; position:absolute; top:0.35rem; left:0; right:0; height:2px; background:var(--line); }
+  .timeline .hito::after { content:""; position:absolute; top:0.05rem; left:50%; transform:translateX(-50%); width:0.7rem; height:0.7rem; border-radius:50%; background:var(--terracotta); border:2px solid var(--cream); }
+  .timeline .hito:first-child::before { left:50%; }
+  .timeline .hito:last-child::before { right:50%; }
+  .timeline .carta { font-family:'Fraunces',serif; font-weight:600; font-size:0.86rem; }
+  .timeline .anio { font-size:0.75rem; color:var(--muted); }
+  /* Descending stair */
+  .escalera { list-style:none; margin:1.2rem 0; }
+  .escalera li { font-family:'Fraunces',serif; padding:0.55rem 0.9rem; margin-bottom:0.35rem; background:var(--card); border-left:4px solid var(--amber); border-radius:0 6px 6px 0; }
+  .escalera li:nth-child(1){ margin-left:0 } .escalera li:nth-child(2){ margin-left:1.4rem } .escalera li:nth-child(3){ margin-left:2.8rem } .escalera li:nth-child(4){ margin-left:4.2rem }
+  .escalera .ref { display:block; font-family:'Spectral',serif; font-size:0.8rem; font-style:italic; color:var(--muted); }
+  details.persiana { border:1px solid var(--line); border-radius:6px; background:var(--card); margin:1.4rem 0; overflow:hidden; }
+  details.persiana > summary { list-style:none; cursor:pointer; padding:0.9rem 1.2rem; font-family:'Fraunces',serif; font-weight:600; font-size:0.95rem; color:var(--ink); display:flex; align-items:center; gap:0.6rem; }
+  details.persiana > summary::-webkit-details-marker { display:none; }
+  details.persiana > summary .chev { color:var(--terracotta); transition:transform 0.2s; }
+  details.persiana[open] > summary .chev { transform:rotate(90deg); }
+  details.persiana .persiana-body { padding:0 1.3rem 1.1rem; }
+  details.persiana.semilla { border-color:var(--olive); } details.persiana.semilla > summary, details.persiana.semilla > summary .chev { color:var(--olive); }
+  .semana { list-style:none; margin:0.4rem 0 0; }
+  .semana li { padding:0.4rem 0; border-bottom:1px dotted var(--line); font-size:0.96rem; }
+  .semana li b { font-family:'Fraunces',serif; color:var(--terracotta); }
+  .panel-vota { background:var(--cream-deep); border-radius:6px; padding:1.2rem 1.4rem; margin:1.4rem 0; }
+  .panel-vota .vt { font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.7rem; }
+  .panel-vota p { margin-bottom:0.6rem; font-size:0.97rem; }
+  .panel-vota .q { font-family:'Fraunces',serif; font-weight:600; }
+  .cierre { font-size:1.02rem; margin-top:1.2rem; }
+  .fuentes-seccion { font-size:0.85rem; color:var(--muted); font-style:italic; margin-top:1rem; }
+  .fuentes-seccion a { border-bottom:1px solid rgba(180,83,42,0.35); text-decoration:none; }
+  hr.rule { border:none; border-top:2px solid var(--ink); margin:3.2rem 0 2.6rem; opacity:0.85; }
+  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); font-size:0.85rem; font-style:italic; color:var(--muted); text-align:center; }
+  .model-note { margin-top:0.8rem; font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.04em; color:var(--muted); opacity:0.85; text-align:center; }
+  .revela { opacity:0; transform:translateY(14px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .revela{opacity:1;transform:none;transition:none} nav.sidebar,#nav-scrim,#nav-toggle,details.persiana>summary .chev{transition:none} }
+  @media (max-width:640px){ body{padding:4.2rem 1rem 4rem} .escalera li:nth-child(n){margin-left:0} }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">El Panel Pregunta · Segunda ronda · Nº 4</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>La biblioteca por peso</a></li>
+    <li><a href="#s2"><span class="num">II</span>Las dos estanterías</a></li>
+    <li><a href="#s3"><span class="num">III</span>Aprender a morir</a></li>
+    <li><a href="#s4"><span class="num">IV</span>La curva del ego</a></li>
+    <li><a href="#s5"><span class="num">V</span>Cuidado con la novela</a></li>
+    <li><a href="#s6"><span class="num">VI</span>Canon y cronología</a></li>
+    <li><a href="#s7"><span class="num">VII</span>Plan de cuatro semanas</a></li>
+    <li><a href="#semilla"><span class="num">✦</span>Semilla · siete días</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <div class="kicker">El Panel Pregunta · Segunda ronda · Nº 4</div>
+    <h1>Madurar por carta</h1>
+    <p class="title-sub">Pablo en orden cronológico: ver a un hombre madurar en tiempo real</p>
+    <p class="pregunta">¿Cómo cambia Pablo si leo sus cartas en orden cronológico y no en orden canónico?
+      <span class="quien">La pregunta la trae El Exégeta.</span></p>
+
+    <p class="chips-label">Fuentes de un vistazo</p>
+    <div class="chips">
+      <span>1 Tesalonicenses ~50</span>
+      <span>Filipenses ~61</span>
+      <span>7 cartas indiscutidas</span>
+      <span>Orden por longitud</span>
+    </div>
+
+    <div class="thesis">
+      <p><span class="lead">En una línea:</span> el canon ordena las cartas de Pablo por <em>longitud</em>, no por fecha; leerlas en orden cronológico revela lo que el canon esconde: la dirección del viaje de un hombre.</p>
+    </div>
+  </header>
+
+  <section id="s1" class="revela">
+    <div class="eyebrow"><span class="num">I</span><span class="tag">Apertura</span></div>
+    <h2>La biblioteca ordenada por peso</h2>
+    <p class="escena">La cafetera silba. El Exégeta llega con dos pilas de papeles idénticos, pero ordenados distinto. Los pone sobre la mesa, uno junto al otro.</p>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Antes de responder, un dato que casi nadie sabe y que lo cambia todo: el Nuevo Testamento no ordena las cartas de Pablo por fecha, ni por tema, ni por importancia teológica. Las ordena <strong>por longitud</strong>. Romanos va primero porque es la más larga; Filemón va última entre las cartas a personas porque es la más corta. Es una biblioteca ordenada por peso.</p></div>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>O sea que durante veinte siglos hemos leído la autobiografía de un hombre… barajada.</p></div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Peor: barajada con criterio de imprenta. El lector promedio conoce primero al Pablo de Romanos —el teólogo maduro, sistemático, sereno— y solo después, si llega, al Pablo joven de 1 Tesalonicenses. Es como conocer a alguien por su tesis doctoral y luego encontrar sus diarios de juventud.</p></div>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera</div><p>En mi mundo eso tiene nombre: es la diferencia entre un directorio ordenado alfabéticamente y un <code>git log</code>. El primero te dice qué existe. El segundo te dice <strong>cómo llegó a existir</strong>.</p></div>
+    <p class="confianza-nota"><span class="badge alta">Confianza alta</span> Que el canon ordena las cartas por longitud decreciente (iglesias primero, individuos después) es consenso académico transversal.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://en.wikipedia.org/wiki/Pauline_epistles" target="_blank" rel="noopener">Pauline epistles — Wikipedia</a> · <a href="https://rsc.byu.edu/new-testament-history-culture-society/epistles-apostle-paul" target="_blank" rel="noopener">The Epistles of the Apostle Paul — BYU RSC</a></p>
+  </section>
+
+  <section id="s2" class="revela">
+    <div class="eyebrow"><span class="num">II</span><span class="tag">Las dos estanterías</span></div>
+    <h2>La misma pila, dos órdenes</h2>
+    <div class="estanteria">
+      <span class="et">Estantería canónica · por longitud</span>
+      <div class="cadena">Romanos → 1 Corintios → 2 Corintios → Gálatas → Efesios → Filipenses → Colosenses → 1 Tesalonicenses → 2 Tesalonicenses → 1 Timoteo → 2 Timoteo → Tito → Filemón</div>
+    </div>
+    <p>Y ahora la reconstrucción cronológica mayoritaria —con su nivel de confianza declarado, porque en esta mesa no maquillamos datos—:</p>
+    <div class="tabla-wrap">
+      <table class="datos">
+        <thead><tr><th>#</th><th>Carta</th><th>Fecha aprox.</th><th>Contexto</th><th>Confianza</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>1 Tesalonicenses</strong></td><td>49–51</td><td>Desde Corinto, 2.º viaje</td><td><span class="badge alta">Alta</span> — texto cristiano más antiguo</td></tr>
+          <tr><td>2</td><td><strong>Gálatas</strong></td><td>48–55</td><td>Fecha muy debatida</td><td><span class="badge media">Media</span></td></tr>
+          <tr><td>3</td><td><strong>1 Corintios</strong></td><td>53–54</td><td>Desde Éfeso, 3.er viaje</td><td><span class="badge alta">Alta</span></td></tr>
+          <tr><td>4</td><td><strong>2 Corintios</strong></td><td>55–56</td><td>Desde Macedonia</td><td><span class="badge alta">Alta</span></td></tr>
+          <tr><td>5</td><td><strong>Romanos</strong></td><td>55–57</td><td>Desde Corinto, colecta lista</td><td><span class="badge alta">Alta</span></td></tr>
+          <tr><td>6</td><td><strong>Filipenses / Filemón</strong></td><td>60–62 (¿o ~55?)</td><td>Cartas de la prisión</td><td><span class="badge media">Media</span></td></tr>
+          <tr><td>7</td><td>Colosenses / Efesios</td><td>60–62</td><td>Autoría debatida</td><td><span class="badge baja">Baja-Media</span></td></tr>
+          <tr><td>8</td><td>2 Tesalonicenses</td><td>¿50–51 o post?</td><td>Autoría debatida</td><td><span class="badge media">Media</span></td></tr>
+          <tr><td>9</td><td>Pastorales (1–2 Tim, Tito)</td><td>62–67 o post</td><td>Mayoría: pseudoepígrafas</td><td><span class="badge baja">Baja</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Nota metodológica honesta: la mayoría de los especialistas considera <strong>siete</strong> cartas indiscutiblemente paulinas (Romanos, 1–2 Corintios, Gálatas, Filipenses, 1 Tesalonicenses, Filemón), tres muy debatidas y tres que la mayoría atribuye a discípulos posteriores. Todo lo que digamos sobre «la maduración de Pablo» tiene que declarar sobre cuál de esos círculos se apoya.</p></div>
+    <div class="voz metodologo"><div class="quien">El Metodólogo</div><p>Eso me gusta. Es como auditar una serie de datos antes de graficarla: primero declaras qué puntos son medición directa y cuáles son interpolación.</p></div>
+
+    <h3>Las siete indiscutidas, en el tiempo</h3>
+    <div class="timeline">
+      <div class="hito"><div class="carta">1 Tes</div><div class="anio">~50</div></div>
+      <div class="hito"><div class="carta">Gálatas</div><div class="anio">48–55</div></div>
+      <div class="hito"><div class="carta">1 Cor</div><div class="anio">53–54</div></div>
+      <div class="hito"><div class="carta">2 Cor</div><div class="anio">55–56</div></div>
+      <div class="hito"><div class="carta">Romanos</div><div class="anio">55–57</div></div>
+      <div class="hito"><div class="carta">Filipenses</div><div class="anio">~61</div></div>
+      <div class="hito"><div class="carta">Filemón</div><div class="anio">~61</div></div>
+    </div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.bartehrman.com/apostle-paul-timeline/" target="_blank" rel="noopener">Pauline Chronology — Bart Ehrman</a> · <a href="https://en.wikipedia.org/wiki/First_Epistle_to_the_Thessalonians" target="_blank" rel="noopener">1 Thessalonians — Wikipedia</a> · <a href="https://www.britannica.com/topic/letters-of-Paul-to-the-Thessalonians" target="_blank" rel="noopener">Britannica</a> · <a href="https://wearefaith.org/blog/mapping-pauls-letters-in-time-and-space/" target="_blank" rel="noopener">Mapping Paul's Letters</a></p>
+  </section>
+
+  <section id="s3" class="revela">
+    <div class="eyebrow"><span class="num">III</span><span class="tag">Primera transformación</span></div>
+    <h2>Un hombre que aprende a morir</h2>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Aquí está el hallazgo más dramático de la lectura cronológica, de los que no se pueden des-ver.</p></div>
+    <p>En <strong>1 Tesalonicenses 4</strong> (~50), Pablo escribe a una comunidad angustiada porque algunos hermanos murieron antes del regreso de Jesús. Y fíjense cómo se incluye: habla de «nosotros, los que vivamos» hasta la venida del Señor. Pablo, a sus cuarenta y tantos, <em>espera estar vivo</em> cuando Cristo vuelva. Lo mismo asoma en 1 Corintios 15: el «nosotros seremos transformados» lo cuenta entre los sobrevivientes.</p>
+    <p>En <strong>2 Corintios 4–5</strong> (unos cinco años después, tras la crisis de Asia donde dice que perdió hasta la esperanza de vivir), el tono cambia: la muerte ya «actúa en nosotros». Empieza a hablar de qué pasa si la tienda de campaña terrenal se deshace.</p>
+    <p>Y en <strong>Filipenses 1</strong> (desde la cárcel, quizá una década después de Tesalónica) llega la frase que un hombre joven no escribe: partir y estar con Cristo es <em>mucho mejor</em>. El morir es ganancia.</p>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>O sea que en orden canónico lees primero al Pablo que ya hizo las paces con su muerte, y al final al Pablo que creía que no iba a morir. La película al revés.</p></div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Exacto. En orden cronológico ves lo que el canon esconde: un hombre que esperaba ver la parusía <strong>aprendiendo, carta a carta, a enfrentar su propio funeral</strong>. No es cambio de doctrina —la resurrección sigue firme hasta Filipenses 3—; es un cambio de <em>posición existencial</em> dentro de la misma doctrina. Pasó de contarse entre los que esperan a contarse entre los que parten.</p></div>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera</div><p>Eso es un sistema recalibrando con datos nuevos sin cambiar su función objetivo. La meta no se movió; el modelo del propio nodo dentro de la red, sí.</p></div>
+    <p class="confianza-nota"><span class="badge mediaalta">Medio-alta</span> El contraste textual es innegable; si constituye «desarrollo» o solo respuesta a circunstancias distintas es debate abierto (ver §V).</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.thegospelcoalition.org/themelios/article/did-paul-change-his-mind-an-examination-of-some-aspects-of-pauline-eschatology/" target="_blank" rel="noopener">Did Paul Change His Mind? — Themelios</a> · <a href="https://www.clintburnett.com/2014/10/01/pauls-eschatology-in-philippians/" target="_blank" rel="noopener">Paul's Eschatology in Philippians</a> · <a href="https://thirdmill.org/seminary/lesson.asp/vid/7" target="_blank" rel="noopener">Paul and the Thessalonians — Thirdmill</a></p>
+  </section>
+
+  <section id="s4" class="revela">
+    <div class="eyebrow"><span class="num">IV</span><span class="tag">Segunda transformación</span></div>
+    <h2>La curva descendente del ego</h2>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Hay una segunda línea, casi una parábola. Sigan cómo Pablo se describe a sí mismo con los años:</p></div>
+    <ul class="escalera">
+      <li>«No lo recibí de ningún hombre» — un volcán con pluma <span class="ref">Gálatas (temprana)</span></li>
+      <li>«El más insignificante de los apóstoles» <span class="ref">1 Corintios 15:9 (~54)</span></li>
+      <li>«Menos que el más pequeño de todos los santos» <span class="ref">Efesios 3:8 (tardía, autoría debatida)</span></li>
+      <li>«El primero de los pecadores» <span class="ref">1 Timoteo 1:15 (pastoral)</span></li>
+    </ul>
+    <div class="voz disenadora"><div class="quien">La Diseñadora</div><p>Es una escalera que baja: apóstoles → santos → pecadores. Tres peldaños, tres décadas.</p></div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Y aquí la honestidad muerde: los dos últimos peldaños están en cartas cuya autoría paulina la mayoría cuestiona. Dos lecturas posibles, ambas hermosas: (1) si Pablo escribió las cuatro, vemos a un hombre cuya percepción de la gracia crece más rápido que su currículum —cuanto más conoce a Cristo, más pequeño se ve y más amado se sabe—; (2) si las últimas son de discípulos, la escalera es el retrato que <em>la comunidad paulina</em> guardó de su maestro: no lo recordaron cada vez más grande, sino cada vez más humilde.</p></div>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>Me niego a elegir. Las dos versiones predican.</p></div>
+    <p class="confianza-nota"><span class="badge alta">Alta</span> para Gálatas y 1 Corintios; <span class="badge baja">Baja-media</span> para atribuir los peldaños de Efesios y 1 Timoteo al Pablo histórico.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://en.wikipedia.org/wiki/Pauline_epistles" target="_blank" rel="noopener">Pauline epistles — Wikipedia</a></p>
+  </section>
+
+  <section id="s5" class="revela">
+    <div class="eyebrow"><span class="num">V</span><span class="tag">El Provocador pide la palabra</span></div>
+    <h2>Cuidado con la novela</h2>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>Esta pregunta tiene una trampa deliciosa. La narrativa «Pablo madura en tiempo real» es tan atractiva que corremos el riesgo de escribirle una novela de formación que nunca vivió. Tres alfileres para el globo.</p></div>
+    <p><strong>Alfiler 1 — Contingencia, no evolución.</strong> Cada carta responde a una crisis concreta: Timoteo trae noticias de Tesalónica, la gente de Cloé reporta divisiones en Corinto, unos judaizantes invaden Galacia. Quizá Pablo no «maduró»: quizá le <em>hicieron preguntas distintas</em>. El Pablo furioso de Gálatas y el tierno de Filipenses podrían ser el mismo hombre el mismo año, respondiendo a una traición y a una amistad. Beker lo llamó la tensión entre <em>coherencia</em> (el núcleo estable) y <em>contingencia</em> (la respuesta a cada situación).</p>
+    <p><strong>Alfiler 2 — La muestra es minúscula.</strong> Siete cartas seguras en diez o quince años. Pablo mismo menciona cartas que perdimos. Trazar una curva de maduración con siete puntos y huecos de años es estadística valiente.</p>
+    <p><strong>Alfiler 3 — Las fechas bailan.</strong> Gálatas puede ser la primera carta o la cuarta según a qué especialista preguntes. Si es tempranísima, el «volcán» es el punto de partida; si es contemporánea de Romanos, el volcán y el teólogo sereno coexisten.</p>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Concedido, concedido y concedido. Y sin embargo: el dato de la escatología (§III) sobrevive a los tres alfileres, porque no depende de Gálatas ni de las cartas disputadas. 1 Tesalonicenses es <em>seguro</em> temprana, Filipenses <em>seguro</em> tardía entre las indiscutidas, y el desplazamiento existencial entre ambas es textual, no novelesco.</p></div>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>Por eso pincho el globo pero no la mesa. La lectura cronológica no te da una novela de formación garantizada; te da algo mejor: <strong>un hombre en situaciones reales, sin la anestesia del orden editorial.</strong></p></div>
+    <p class="confianza-nota"><span class="badge alta">Alta</span> que el debate desarrollo-vs-contingencia existe y sigue abierto es, irónicamente, lo más seguro de la página.</p>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.bartehrman.com/apostle-paul-timeline/" target="_blank" rel="noopener">Pauline Chronology — Bart Ehrman</a> · <a href="https://www.thegospelcoalition.org/themelios/article/did-paul-change-his-mind-an-examination-of-some-aspects-of-pauline-eschatology/" target="_blank" rel="noopener">Did Paul Change His Mind? — Themelios</a></p>
+  </section>
+
+  <section id="s6" class="revela">
+    <div class="eyebrow"><span class="num">VI</span><span class="tag">La Ingeniera</span></div>
+    <h2>El canon como snapshot, la cronología como log</h2>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera</div><p><em>(servilleta, plumón)</em> Nombre técnico a lo que venimos haciendo: <strong>orden canónico</strong> = el repositorio ordenado por tamaño de archivo, útil para consulta («¿dónde está la justificación?» → Romanos, el archivo grande de arriba). <strong>Orden cronológico</strong> = <code>git log --reverse</code>: ves cada <em>commit</em> con su contexto, su bug que lo motivó. Romanos no cayó del cielo: es el <em>release</em> estable después de años de <em>hotfixes</em> en Corinto y Galacia.</p></div>
+    <p>Y algo más fino: cada carta es un <strong>bucle de retroalimentación</strong> completo —señal de la red (el informe de Timoteo, la delegación de Corinto) → procesamiento → respuesta escrita → nueva señal—. El corpus paulino es el registro de un pastor operando una red distribuida por correspondencia, con latencias de meses. Que la teología cristiana más influyente se haya escrito como <em>respuestas a tickets de soporte</em> debería consolar a cualquiera que sienta que su mejor trabajo nace apagando incendios.</p>
+    <div class="voz metodologo"><div class="quien">El Metodólogo</div><p>Romanos es el único documento que Pablo escribió <em>sin</em> incendio activo —planificando su viaje a España, con la colecta lista—. Por eso es sistemático: la única vez que tuvo el lujo del <em>Plan</em> antes del <em>Do</em>.</p></div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://rsc.byu.edu/new-testament-history-culture-society/epistles-apostle-paul" target="_blank" rel="noopener">The Epistles of the Apostle Paul — BYU RSC</a> · <a href="https://bible.usccb.org/bible/1thessalonians/0" target="_blank" rel="noopener">1 Thessalonians — USCCB</a></p>
+  </section>
+
+  <section id="s7" class="revela">
+    <div class="eyebrow"><span class="num">VII</span><span class="tag">El Metodólogo cierra</span></div>
+    <h2>Plan de lectura de cuatro semanas</h2>
+    <div class="voz metodologo"><div class="quien">El Metodólogo</div><p>Nada de esto sirve si queda en teoría. Propuesta concreta, solo con las siete indiscutidas, en orden cronológico.</p></div>
+    <ul class="semana">
+      <li><b>Semana 1 · El joven</b> — 1 Tesalonicenses. ¿Dónde se nota que Pablo espera ver el regreso de Cristo en vida?</li>
+      <li><b>Semana 2 · El volcán</b> — Gálatas. ¿Qué defiende con esa furia, y a quién protege al defenderlo?</li>
+      <li><b>Semana 3 · El bombero</b> — 1 Corintios 1–7, 12–15 y 2 Corintios 1–5. ¿Cómo cambia su tono cuando la crisis es con hijos espirituales y no con invasores?</li>
+      <li><b>Semana 4 · El anciano</b> — Filemón + Filipenses + Romanos 8 y 12. Compara Filipenses 1:21–23 con tu nota de la semana 1. ¿Qué le pasó a este hombre?</li>
+    </ul>
+    <p><strong>Check</strong> al final de cada semana: una sola nota — <em>¿qué versión de mí mismo reconocí en esta versión de Pablo?</em></p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="semilla" class="revela">
+    <div class="eyebrow plain"><span class="num">Semilla</span><span class="tag">Práctica de siete días</span></div>
+    <h2>Leer una vida en orden</h2>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Pablo no nos dejó un sistema; nos dejó una correspondencia. Y toda correspondencia leída en orden revela lo que ninguna carta suelta puede mostrar: la dirección del viaje.</p></div>
+    <details class="persiana semilla" open>
+      <summary><span class="chev">›</span>La semilla · siete días</summary>
+      <div class="persiana-body">
+        <ul class="semana">
+          <li><b>Día 1</b> — Lee 1 Tesalonicenses 4:13–18. Anota la edad aproximada de Pablo (~45) y la tuya.</li>
+          <li><b>Día 2</b> — Lee Filipenses 1:21–26. Mismo hombre, ~10 años después, preso. ¿Qué cambió?</li>
+          <li><b>Día 3</b> — Busca tu «carta más antigua»: un mensaje, diario o email tuyo de hace 10+ años. Léelo sin editar la vergüenza.</li>
+          <li><b>Día 4</b> — Escribe qué le dirías hoy a esa versión tuya. Una carta corta, real, con fecha.</li>
+          <li><b>Día 5</b> — Lee Gálatas 2:11–14. ¿Cuándo fue la última vez que tu enojo protegió a alguien en vez de solo desahogarte?</li>
+          <li><b>Día 6</b> — Lee 1 Corintios 15:9–10. Completa: «Por la gracia de Dios soy lo que soy» — y sigue con tu propia historia.</li>
+          <li><b>Día 7</b> — Para el café: si alguien leyera <em>tus</em> cartas en orden cronológico, ¿qué curva vería? ¿Y qué commit falta todavía?</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="panel-vota">
+      <div class="vt">El panel vota · su hallazgo favorito</div>
+      <p><span class="q" style="color:var(--terracotta)">El Exégeta:</span> el canon esconde la película; la cronología la proyecta.</p>
+      <p><span class="q" style="color:var(--olive)">La Ingeniera:</span> el corpus paulino como <code>git log</code> de una red viva.</p>
+      <p><span class="q" style="color:var(--plum)">El Provocador:</span> que la humildad de Pablo crezca justo en las cartas de autoría dudosa. El dato más incómodo y más fértil.</p>
+      <p><span class="q" style="color:var(--amber)">La Diseñadora:</span> la escalera descendente —apóstoles, santos, pecadores—.</p>
+      <p><span class="q" style="color:var(--steel)">El Metodólogo:</span> Romanos como el único ciclo que empezó por el Plan. Todo lo demás fue Act primero. Como la vida.</p>
+    </div>
+    <p class="cierre">Citas bíblicas breves y parafraseadas (DHH); el lector debe abrir el texto completo en su propia Biblia —esa es la mitad del ejercicio—.</p>
+  </section>
+
+  <footer>Café con Claude · El Panel Pregunta · Segunda ronda · Nº 4 · Julio 2026
+    <p class="model-note">Investigación redactada con Claude Fable 5 · página construida con Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () { var d=document.documentElement, t=d.scrollHeight-window.innerHeight; bar.style.width=(t>0?(window.scrollY/t)*100:0)+'%'; };
+    window.addEventListener('scroll', onScroll, { passive:true }); window.addEventListener('resize', onScroll); onScroll();
+  }
+  var toggle=document.getElementById('nav-toggle'), sidebar=document.getElementById('sidebar'), scrim=document.getElementById('nav-scrim');
+  function setNav(o){ sidebar.classList.toggle('open',o); scrim.classList.toggle('open',o); toggle.textContent=o?'✕':'☰'; toggle.setAttribute('aria-expanded',o?'true':'false'); }
+  toggle.addEventListener('click', function(){ setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function(){ setNav(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') setNav(false); });
+  var navLinks=document.querySelectorAll('nav.sidebar .toc a'), byId={};
+  navLinks.forEach(function(l){ byId[l.getAttribute('href').slice(1)]=l; l.addEventListener('click', function(){ setNav(false); }); });
+  var spy=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ navLinks.forEach(function(l){l.classList.remove('active')}); var k=byId[e.target.id]; if(k)k.classList.add('active'); } }); }, { rootMargin:'-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(function(s){ spy.observe(s); });
+  var rev=document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { rev.forEach(function(el){ el.classList.add('visible'); }); }
+  else { var obs=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('visible'); obs.unobserve(en.target); } }); }, { threshold:0.12 }); rev.forEach(function(el){ obs.observe(el); }); }
+</script>
+</body>
+</html>

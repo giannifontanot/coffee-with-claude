@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El kata del discípulo · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#f7f1e5; --cream-deep:#f0e7d5; --ink:#2b2118; --terracotta:#b4532a;
+    --amber:#c98a2d; --olive:#6b7a3f; --plum:#6e4a6e; --steel:#4a6b7a;
+    --line:#d9cdb8; --muted:#6a5b48; --card:#fcf8ef;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); color:var(--ink); font-family:'Spectral',serif; line-height:1.7; padding:4.5rem 1.25rem 5rem; }
+  .progress-bar { position:fixed; top:0; left:0; height:3px; width:0%; background:linear-gradient(90deg,var(--olive),var(--amber),var(--plum),var(--terracotta),var(--steel)); z-index:100; }
+  #nav-toggle { position:fixed; top:1rem; left:1rem; z-index:80; width:2.5rem; height:2.5rem; display:inline-flex; align-items:center; justify-content:center; background:var(--ink); color:var(--cream); border:none; border-radius:4px; font-size:1.15rem; line-height:1; cursor:pointer; box-shadow:0 2px 8px rgba(43,33,24,0.18); transition:background 0.2s; }
+  #nav-toggle:hover { background:var(--terracotta); }
+  nav.sidebar { position:fixed; top:0; left:0; width:290px; max-width:82vw; height:100vh; padding:4.5rem 1.6rem 2rem; background:var(--cream); border-right:1px solid var(--line); box-shadow:6px 0 24px rgba(43,33,24,0.14); overflow-y:auto; transform:translateX(-100%); transition:transform 0.32s cubic-bezier(.4,0,.2,1); z-index:70; }
+  nav.sidebar.open { transform:translateX(0); }
+  nav.sidebar .brand { font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; margin-bottom:0.2rem; }
+  nav.sidebar .brand-sub { font-size:0.78rem; font-style:italic; color:var(--muted); margin-bottom:1.8rem; }
+  nav.sidebar ol { list-style:none; }
+  nav.sidebar ol li { margin-bottom:0.85rem; }
+  nav.sidebar ol a { display:flex; align-items:baseline; gap:0.6rem; color:var(--muted); text-decoration:none; font-size:0.86rem; line-height:1.35; transition:color 0.2s; }
+  nav.sidebar ol a .num { font-family:'Fraunces',serif; font-weight:600; font-size:0.8rem; min-width:2rem; color:var(--line); transition:color 0.2s; }
+  nav.sidebar ol a:hover { color:var(--ink); }
+  nav.sidebar ol a.active { color:var(--terracotta); font-weight:600; }
+  nav.sidebar ol a.active .num { color:var(--terracotta); }
+  #nav-scrim { position:fixed; inset:0; background:rgba(43,33,24,0.38); opacity:0; pointer-events:none; transition:opacity 0.3s; z-index:65; }
+  #nav-scrim.open { opacity:1; pointer-events:auto; }
+  .wrap { max-width:720px; margin:0 auto; }
+  .back-link { display:inline-block; font-family:'Spectral',serif; font-size:0.85rem; color:var(--terracotta); background:none; border:none; border-bottom:1px solid var(--terracotta); padding:0 0 1px; margin-bottom:2.4rem; cursor:pointer; }
+  .back-link:hover { color:var(--ink); border-color:var(--ink); }
+  .kicker { font-family:'Fraunces',serif; font-size:0.8rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--terracotta); font-weight:600; margin-bottom:0.8rem; }
+  h1 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08; margin-bottom:0.7rem; }
+  .subtitle { font-style:italic; color:var(--muted); font-size:1.1rem; max-width:34em; margin-bottom:1.4rem; }
+  .pregunta { font-family:'Fraunces',serif; font-style:italic; font-size:1.12rem; color:var(--steel); border-left:3px solid var(--steel); padding:0.2rem 0 0.2rem 1.1rem; margin-bottom:1.4rem; }
+  .pregunta .quien { display:block; font-family:'Spectral',serif; font-style:normal; font-size:0.8rem; letter-spacing:0.04em; color:var(--muted); margin-top:0.5rem; }
+  blockquote.biblia { margin:1.3rem 0; padding:1.2rem 1.4rem; background:var(--cream-deep); border-left:4px solid var(--amber); font-family:'Fraunces',serif; font-style:italic; font-size:1.06rem; line-height:1.6; }
+  blockquote.biblia .ref { display:block; margin-top:0.6rem; font-family:'Spectral',serif; font-style:normal; font-size:0.8rem; letter-spacing:0.03em; color:var(--muted); }
+  .chips-label { font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; }
+  .chips { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.8rem; }
+  .chips span { font-size:0.8rem; color:var(--ink); background:var(--card); border:1px solid var(--line); border-radius:999px; padding:0.3rem 0.85rem; }
+  .thesis { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:6px; padding:1.2rem 1.4rem; margin-bottom:3rem; }
+  .thesis .lead { font-family:'Fraunces',serif; font-weight:600; color:var(--terracotta); }
+  section { margin-bottom:3rem; scroll-margin-top:1.5rem; }
+  .eyebrow { display:flex; align-items:center; gap:0.7rem; margin-bottom:0.5rem; }
+  .eyebrow .num { font-family:'Fraunces',serif; font-weight:700; font-size:0.9rem; color:var(--cream); background:var(--terracotta); width:1.7rem; height:1.7rem; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; flex:none; }
+  .eyebrow.plain .num { background:var(--olive); font-size:0.62rem; width:auto; height:1.7rem; border-radius:999px; padding:0 0.7rem; letter-spacing:0.08em; text-transform:uppercase; }
+  .eyebrow .tag { font-family:'Fraunces',serif; font-size:0.76rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(1.5rem,4.2vw,2rem); line-height:1.16; margin:0 0 1rem; }
+  h3 { font-family:'Fraunces',serif; font-weight:600; font-size:1.05rem; margin:1.6rem 0 0.5rem; color:var(--terracotta); }
+  p { margin-bottom:1.1rem; }
+  em { color:var(--ink); font-style:italic; }
+  a { color:var(--terracotta); }
+  .voz { margin:1.5rem 0; padding-left:1.1rem; border-left:3px solid var(--line); }
+  .voz .quien { font-family:'Fraunces',serif; font-weight:600; font-size:0.95rem; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.5rem; }
+  .voz .quien::before { content:""; width:0.6em; height:0.6em; border-radius:50%; display:inline-block; flex:none; }
+  .voz p:last-child { margin-bottom:0; }
+  .voz.metodologo{border-color:var(--steel)} .voz.metodologo .quien{color:var(--steel)} .voz.metodologo .quien::before{background:var(--steel)}
+  .voz.exegeta{border-color:var(--terracotta)} .voz.exegeta .quien{color:var(--terracotta)} .voz.exegeta .quien::before{background:var(--terracotta)}
+  .voz.ingeniera{border-color:var(--olive)} .voz.ingeniera .quien{color:var(--olive)} .voz.ingeniera .quien::before{background:var(--olive)}
+  .voz.provocador{border-color:var(--plum)} .voz.provocador .quien{color:var(--plum)} .voz.provocador .quien::before{background:var(--plum)}
+  .voz.disenadora{border-color:var(--amber)} .voz.disenadora .quien{color:var(--amber)} .voz.disenadora .quien::before{background:var(--amber)}
+  .escena { font-style:italic; color:var(--muted); font-size:0.98rem; margin:1.2rem 0; }
+  .destacado { font-family:'Fraunces',serif; font-weight:600; font-size:1.35rem; line-height:1.3; color:var(--ink); border-left:4px solid var(--terracotta); padding:0.2rem 0 0.2rem 1.2rem; margin:1.8rem 0; }
+  .principio { text-align:center; font-family:'Fraunces',serif; font-weight:600; font-size:1.25rem; color:var(--steel); background:var(--cream-deep); border-radius:6px; padding:1rem 1.2rem; margin:1.8rem 0; }
+  .tabla-wrap { overflow-x:auto; margin:1.2rem 0; }
+  table.datos { width:100%; border-collapse:collapse; font-size:0.9rem; }
+  table.datos th, table.datos td { text-align:left; padding:0.6rem 0.7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.datos th { font-family:'Fraunces',serif; font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+  table.datos td.niebla { color:var(--muted); font-style:italic; width:38%; }
+  .badge { font-family:'Fraunces',serif; font-size:0.7rem; font-weight:600; letter-spacing:0.03em; padding:0.12rem 0.5rem; border-radius:999px; white-space:nowrap; font-style:normal; }
+  .badge.alta{background:rgba(107,122,63,0.16); color:var(--olive)}
+  .badge.media{background:rgba(201,138,45,0.18); color:#9a6a12}
+  .badge.esp{background:rgba(110,74,110,0.16); color:var(--plum)}
+  /* Kata ribbon */
+  .kata-ribbon { display:flex; flex-wrap:wrap; gap:0.5rem; align-items:stretch; margin:1.4rem 0; }
+  .kata-ribbon .paso { flex:1 1 130px; background:var(--steel); color:var(--cream); border-radius:6px; padding:0.7rem 0.8rem; position:relative; }
+  .kata-ribbon .paso .n { font-family:'DM Mono',monospace; font-size:0.7rem; opacity:0.8; }
+  .kata-ribbon .paso .t { font-family:'Fraunces',serif; font-weight:600; font-size:0.9rem; line-height:1.2; }
+  .kata-ribbon .paso:nth-child(4) { background:var(--terracotta); }
+  /* Coaching kata card */
+  .kata-card { border:2px solid var(--steel); border-radius:10px; background:var(--card); padding:1.2rem 1.3rem; margin:1.4rem 0; }
+  .kata-card .kc-tit { font-family:'Fraunces',serif; font-weight:700; color:var(--steel); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.9rem; }
+  .kata-card ol { list-style:none; counter-reset:kq; }
+  .kata-card ol li { counter-increment:kq; position:relative; padding-left:2.1rem; margin-bottom:0.9rem; }
+  .kata-card ol li::before { content:counter(kq); position:absolute; left:0; top:0.05rem; font-family:'Fraunces',serif; font-weight:700; font-size:0.8rem; color:var(--cream); background:var(--steel); width:1.55rem; height:1.55rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+  .kata-card li b { font-family:'Fraunces',serif; }
+  .kata-card .pliegue { text-align:center; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:0.08em; color:var(--terracotta); border-top:1px dashed var(--terracotta); border-bottom:1px dashed var(--terracotta); padding:0.5rem 0; margin:0.9rem 0; }
+  .kata-card .pliegue small { display:block; color:var(--muted); font-style:italic; margin-top:0.2rem; }
+  /* Learner storyboard */
+  .storyboard { border:2px solid var(--steel); border-radius:8px; overflow:hidden; margin:1.4rem 0; font-size:0.92rem; }
+  .storyboard .sb-row { padding:0.75rem 1rem; border-bottom:1px solid var(--line); }
+  .storyboard .sb-split { display:grid; grid-template-columns:1fr 1fr; }
+  .storyboard .sb-split > div { padding:0.75rem 1rem; border-bottom:1px solid var(--line); }
+  .storyboard .sb-split > div:first-child { border-right:1px solid var(--line); }
+  .storyboard .lbl { font-family:'DM Mono',monospace; font-size:0.66rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--steel); display:block; margin-bottom:0.25rem; }
+  .storyboard .sb-row:last-child { border-bottom:none; }
+  .cargo { margin:1.4rem 0; padding-left:1.1rem; border-left:3px solid var(--plum); }
+  .cargo .ct { font-family:'Fraunces',serif; font-weight:700; color:var(--plum); display:block; margin-bottom:0.3rem; }
+  details.persiana { border:1px solid var(--line); border-radius:6px; background:var(--card); margin:1.4rem 0; overflow:hidden; }
+  details.persiana > summary { list-style:none; cursor:pointer; padding:0.9rem 1.2rem; font-family:'Fraunces',serif; font-weight:600; font-size:0.95rem; color:var(--ink); display:flex; align-items:center; gap:0.6rem; }
+  details.persiana > summary::-webkit-details-marker { display:none; }
+  details.persiana > summary .chev { color:var(--terracotta); transition:transform 0.2s; }
+  details.persiana[open] > summary .chev { transform:rotate(90deg); }
+  details.persiana .persiana-body { padding:0 1.3rem 1.1rem; }
+  details.persiana.semilla { border-color:var(--olive); } details.persiana.semilla > summary, details.persiana.semilla > summary .chev { color:var(--olive); }
+  .semana { list-style:none; margin:0.4rem 0 0; }
+  .semana li { padding:0.45rem 0; border-bottom:1px dotted var(--line); font-size:0.95rem; }
+  .semana li b { font-family:'Fraunces',serif; color:var(--terracotta); }
+  .cierre { font-size:1.02rem; margin-top:1.2rem; }
+  .fuentes-seccion { font-size:0.85rem; color:var(--muted); font-style:italic; margin-top:1rem; }
+  .fuentes-seccion a { border-bottom:1px solid rgba(180,83,42,0.35); text-decoration:none; }
+  hr.rule { border:none; border-top:2px solid var(--ink); margin:3.2rem 0 2.6rem; opacity:0.85; }
+  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); font-size:0.85rem; font-style:italic; color:var(--muted); text-align:center; }
+  .model-note { margin-top:0.8rem; font-family:'Fraunces',serif; font-size:0.72rem; letter-spacing:0.04em; color:var(--muted); opacity:0.85; text-align:center; }
+  .revela { opacity:0; transform:translateY(14px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .revela{opacity:1;transform:none;transition:none} nav.sidebar,#nav-scrim,#nav-toggle,details.persiana>summary .chev{transition:none} }
+  @media (max-width:640px){ body{padding:4.2rem 1rem 4rem} .storyboard .sb-split{grid-template-columns:1fr} .storyboard .sb-split>div:first-child{border-right:none} }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">El Panel Pregunta · Nº 21</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>La palabra del gimnasio</a></li>
+    <li><a href="#s2"><span class="num">II</span>Por qué la niebla no forma</a></li>
+    <li><a href="#s3"><span class="num">III</span>La condición objetivo</a></li>
+    <li><a href="#s4"><span class="num">IV</span>El kata de mejora</a></li>
+    <li><a href="#s5"><span class="num">V</span>El kata de coaching</a></li>
+    <li><a href="#s6"><span class="num">VI</span>Tres maneras de arruinarlo</a></li>
+    <li><a href="#s7"><span class="num">VII</span>El storyboard</a></li>
+    <li><a href="#semilla"><span class="num">✦</span>Semilla · siete días</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <div class="kicker">El Panel Pregunta · Nº 21</div>
+    <h1>El kata del discípulo</h1>
+    <p class="subtitle">«Ser más paciente» no es una meta: es niebla. Toyota aprendió a caminar en la niebla con un método. ¿Puede el discípulo aprender lo mismo sin convertir la gracia en fábrica?</p>
+    <p class="pregunta">¿Cómo aplicar el Toyota Kata a la formación espiritual? Práctica deliberada diaria con condición objetivo, no metas vagas.
+      <span class="quien">La pregunta la trae El Metodólogo PDCA, anfitrión de esta sesión.</span></p>
+
+    <blockquote class="biblia">«Ejercítate en la piedad; porque el ejercicio físico trae algún provecho, pero la piedad es útil para todo, pues tiene promesa para esta vida y para la venidera.»<span class="ref">1 Timoteo 4:7b–8 · DHH — el verbo es <em>gymnazō</em>, la raíz de «gimnasio»: la piedad se <strong>entrena</strong>.</span></blockquote>
+
+    <p class="chips-label">Fuentes de un vistazo</p>
+    <div class="chips">
+      <span>1 Timoteo 4:7–8</span>
+      <span>Rother · Toyota Kata (2009)</span>
+      <span>Ericsson · práctica deliberada</span>
+      <span>Willard · medios de gracia</span>
+    </div>
+
+    <div class="thesis">
+      <p><span class="lead">En una línea:</span> la piedad se entrena, y entrenar es una tecnología que se puede hacer bien o mal; el kata da método a la práctica deliberada del discípulo —sin convertir la gracia en fábrica—.</p>
+    </div>
+  </header>
+
+  <section id="s1" class="revela">
+    <div class="eyebrow"><span class="num">I</span><span class="tag">Apertura</span></div>
+    <h2>La palabra que Pablo tomó del gimnasio</h2>
+    <p class="escena">La cafetera silba. El Metodólogo llega con una tarjeta plastificada del tamaño de la palma, gastada por los bordes. La pone en el centro de la mesa, boca abajo.</p>
+    <div class="voz metodologo"><div class="quien">El Metodólogo PDCA</div><p>La palabra <em>kata</em> suena a fábrica japonesa, pero es del dojo: una secuencia de movimientos que se repite miles de veces hasta que el patrón vive en el cuerpo. Mike Rother la tomó prestada en 2009 para nombrar lo que descubrió estudiando Toyota: su ventaja no eran las herramientas, sino dos <strong>rutinas de pensamiento</strong> practicadas a diario —el kata de mejora y el kata de coaching—.</p></div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Y aquí la sorpresa: Pablo hizo el mismo movimiento dos mil años antes. En 1 Timoteo 4:7 no dice «esfuérzate» ni «ten más fe». Dice <em>gymnaze seauton</em> —<strong>entrénate</strong> a ti mismo en la piedad—. <em>Gymnazō</em>: la palabra del atleta que se quita todo estorbo y repite el gesto hasta dominarlo. Pablo importó al discipulado el vocabulario técnico del entrenamiento deportivo, como Rother importó al management el del dojo.</p></div>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>O sea que la pregunta 21 no es anacronismo. No forzamos a Toyota dentro de la Biblia: notamos que la Biblia ya hablaba en idioma gimnasio y nosotros la tradujimos a idioma «buenas intenciones».</p></div>
+    <div class="voz disenadora"><div class="quien">La Diseñadora</div><p>Esa es la herida que esta página toca: hemos leído «ejercítate en la piedad» como si dijera «desea la piedad con más intensidad». Y el deseo intenso sin diseño de práctica es exactamente lo que Rother llama… niebla.</p></div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.mudamasters.com/en/lean-production/toyota-kata-m-rother-summary" target="_blank" rel="noopener">Toyota Kata — resumen (MudaMasters)</a> · <a href="https://www.lean.org/lexicon-terms/kata/" target="_blank" rel="noopener">Kata — Lean Enterprise Institute</a> · <a href="https://www.preceptaustin.org/1_timothy_47-8" target="_blank" rel="noopener">1 Timoteo 4:7 — léxico (Precept Austin)</a></p>
+  </section>
+
+  <section id="s2" class="revela">
+    <div class="eyebrow"><span class="num">II</span><span class="tag">El diagnóstico</span></div>
+    <h2>Por qué las metas vagas no forman a nadie</h2>
+    <div class="voz metodologo"><div class="quien">El Metodólogo PDCA</div><p>Rother observó que los procesos no se mantienen solos: sin práctica estructurada, todo proceso organizado se degrada —no por indisciplina, sino por entropía e interacciones del sistema—. Es la experiencia universal del propósito de Año Nuevo espiritual: «este año voy a orar más».</p></div>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera de Sistemas</div><p>«Orar más» es una señal sin referencia. Un termostato necesita dos cosas: una lectura (¿cuántos grados hay?) y un punto de ajuste (¿cuántos quiero?). «Más» no es un punto de ajuste. El lazo no puede cerrarse porque no hay contra qué comparar. Resultado: la culpa difusa sustituye al aprendizaje —sientes que «deberías orar más» para siempre, sin saber jamás si avanzas—.</p></div>
+    <div class="voz metodologo"><div class="quien">El Metodólogo PDCA</div><p>Ericsson lo dice desde la psicología: <em>juego</em> (por placer), <em>trabajo</em> (por recompensa) y <strong>práctica deliberada</strong> —estructurada, con metas específicas, retroalimentación inmediata y repetición en el borde de la capacidad—. Y nombró al villano: la <strong>práctica ingenua</strong>, repetir algo esperando que la mera repetición te mejore.</p></div>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>Práctica ingenua: asistir al culto 40 años esperando que la asistencia, por sí sola, produzca el carácter de Cristo. Cuatro décadas de banca y el mismo temperamento del primer día.</p></div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Con un matiz: el problema no fue asistir, sino confundir <em>exposición</em> con <em>entrenamiento</em>. El sembrador de Marcos 4 tira la misma semilla en cuatro tierras; lo que varía es el terreno. La práctica deliberada, en clave bíblica, es <strong>labranza</strong>: preparar condiciones. No fabrica el fruto —eso lo hace Dios—, pero decide si la semilla cae en camino pisado o en tierra arada.</p></div>
+    <div class="principio">Medimos el diseño, no el alma — la tierra, no el viento.</div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://theagileist.wordpress.com/2016/05/16/toyota-kata-part-ii/" target="_blank" rel="noopener">Toyota Kata (part II) — The Agileist</a> · <a href="https://www.sciencedirect.com/topics/psychology/deliberate-practice" target="_blank" rel="noopener">Deliberate Practice — ScienceDirect</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7461852/" target="_blank" rel="noopener">¿Es defendible la práctica deliberada? — PMC</a></p>
+  </section>
+
+  <section id="s3" class="revela">
+    <div class="eyebrow"><span class="num">III</span><span class="tag">La pieza central</span></div>
+    <h2>Qué es una condición objetivo (y qué no)</h2>
+    <div class="voz metodologo"><div class="quien">El Metodólogo PDCA</div><p>Una <strong>condición objetivo</strong> no es una meta numérica ni un deseo. Es la descripción de cómo debería operar un proceso —un estado, con fecha, alcanzable en semanas, no en años—. Rother insiste: no defines la solución por adelantado; defines el estado deseado y dejas que la solución <em>emerja</em> por ciclos de experimentación.</p></div>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera de Sistemas</div><p>Tres capas que la gente mezcla: <strong>Visión</strong> —el horizonte lejano, «ser transformados a imagen de Cristo» (Ro 8:29): no se alcanza, orienta—; <strong>Desafío</strong> —un logro grande a meses—; <strong>Condición objetivo</strong> —el próximo estado del proceso, a 1–4 semanas, descrito con detalle para saber si ya operas así o todavía no—.</p></div>
+    <h3>De la niebla a la condición objetivo</h3>
+    <div class="tabla-wrap">
+      <table class="datos">
+        <thead><tr><th>Meta vaga (niebla)</th><th>Condición objetivo (proceso descrito)</th></tr></thead>
+        <tbody>
+          <tr><td class="niebla">«Quiero orar más»</td><td>Durante dos semanas: al poner la cafetera, oro los 4 minutos que tarda el café, usando el Padrenuestro como estructura. La cafetera es el disparador; el café servido, el cierre.</td></tr>
+          <tr><td class="niebla">«Quiero ser más paciente con mis hijos»</td><td>Cuando sienta que subo el tono: pausa de una respiración + pregunta en voz alta («¿me lo cuentas otra vez?») antes de responder. Registro cada noche: ¿cuántas veces apareció el disparador y cuántas corrió el proceso?</td></tr>
+          <tr><td class="niebla">«Quiero conocer mejor la Biblia»</td><td>Leo Marcos completo en 4 semanas: un capítulo por día laboral, a las 6:40, con una sola pregunta escrita al margen por capítulo.</td></tr>
+          <tr><td class="niebla">«Quiero perdonar a X»</td><td>Cada día, al aparecer el recuerdo: nombrarlo sin narrarlo y orar una frase fija por esa persona. No mido el sentimiento; mido si el proceso corrió.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>Nótese la trampa que la columna derecha esquiva: ninguna condición objetivo dice «sentir paz», «sentir amor», «tener ganas». Todas describen conducta y proceso, nunca estados del alma.</p></div>
+    <div class="voz disenadora"><div class="quien">La Diseñadora</div><p>Porque el alma no acepta KPIs. El sentimiento es el viento de Juan 3:8 —sopla de donde quiere—. El proceso es la tierra. Diseñamos tierra.</p></div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Y esto tiene pedigrí bíblico literal. Daniel 6:10: oraba <strong>tres veces al día, de rodillas, junto a la ventana que daba a Jerusalén</strong> —frecuencia, postura, lugar, orientación—: una condición de proceso, no una meta vaga. Josué 1:8: meditar «de día y de noche», un ritmo. Salmo 119:164: «siete veces al día te alabo». La espiritualidad hebrea era escandalosamente concreta; la niebla es invento posterior.</p></div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.mudamasters.com/en/lean-production/toyota-kata-m-rother-summary" target="_blank" rel="noopener">Toyota Kata — MudaMasters</a> · <a href="https://www.goodreads.com/book/show/6736366-toyota-kata" target="_blank" rel="noopener">Toyota Kata — Goodreads</a> · <a href="https://blog.proactioninternational.com/en/toyota-kata-guide" target="_blank" rel="noopener">Guía Toyota Kata — Proaction</a></p>
+  </section>
+
+  <section id="s4" class="revela">
+    <div class="eyebrow"><span class="num">IV</span><span class="tag">El kata de mejora</span></div>
+    <h2>Cuatro pasos, traducidos al discipulado</h2>
+    <div class="kata-ribbon">
+      <div class="paso"><div class="n">Paso 1</div><div class="t">Entender la dirección</div></div>
+      <div class="paso"><div class="n">Paso 2</div><div class="t">Captar la condición actual</div></div>
+      <div class="paso"><div class="n">Paso 3</div><div class="t">Definir la condición objetivo</div></div>
+      <div class="paso"><div class="n">Paso 4</div><div class="t">Experimentos PDCA, un obstáculo a la vez</div></div>
+    </div>
+    <p><strong>Paso 1 · La dirección</strong> no la eliges tú; te fue dada —Cristo formado en ti (Gálatas 4:19)—. Esto descarta el primer abuso: el kata espiritual no optimiza cualquier cosa (más plataforma, más imagen); solo sirve apuntado a ese norte.</p>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p><strong>Paso 2 · La condición actual.</strong> La tradición cristiana tiene una herramienta de 500 años que Rother habría admirado: el <strong>examen</strong> ignaciano. Repasar el día sin autoengaño, notando dónde hubo vida y dónde no. El examen <em>es</em> el «ir a ver» (<em>genchi genbutsu</em>) del alma: datos de primera mano sobre tu proceso real. El Salmo 139:23–24 lo pide en oración, con la honestidad de reconocer que el corazón se autoengaña (Jeremías 17:9) y necesita auditoría externa.</p></div>
+    <p><strong>Paso 3 · La condición objetivo</strong> a dos semanas, descrita como proceso (§III).</p>
+    <p><strong>Paso 4 · Experimentos PDCA.</strong> Cada paso es una hipótesis: «si hago X, espero Y». Rother subraya lo más hermoso: el aprendizaje ocurre cuando hay <strong>sorpresa</strong> —cuando la realidad difiere de la expectativa—. Una hipótesis refutada no es fracaso: es la localización exacta de tu <em>umbral de conocimiento</em>.</p>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera de Sistemas</div><p>Fallar el experimento es el momento de mayor aprendizaje, no de mayor culpa. Compáralo con la cultura espiritual promedio, donde «rompí la racha» produce vergüenza, y la vergüenza, abandono. El kata desactiva ese circuito: si la práctica no corrió, eso es <em>dato</em>, no <em>veredicto</em>. La pregunta pasa de «¿qué clase de cristiano soy?» a «¿qué obstáculo apareció que mi diseño no contemplaba?».</p></div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Que es la anatomía de Pedro. Su triple negación fue una hipótesis refutada —«aunque todos te abandonen, yo no» era su condición imaginada, no su condición actual—. Y Jesús, en Juan 21, no le administra vergüenza: le rediseña el proceso con tres preguntas y una condición nueva («apacienta mis ovejas»). El Maestro tratando el fracaso como umbral de conocimiento, no como expediente.</p></div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.slideshare.net/slideshow/the-five-questions/10609725" target="_blank" rel="noopener">Las 5 preguntas — Mike Rother</a> · <a href="https://www.methodsandtools.com/archive/toyotakata.php" target="_blank" rel="noopener">Toyota Kata — Methods &amp; Tools</a> · <a href="https://dwillard.org/resources/articles/spirituality-going-beyond-the-limits" target="_blank" rel="noopener">Dallas Willard — más allá de los límites</a></p>
+  </section>
+
+  <section id="s5" class="revela">
+    <div class="eyebrow"><span class="num">V</span><span class="tag">El kata de coaching</span></div>
+    <h2>Nadie se entrena solo</h2>
+    <div class="voz metodologo"><div class="quien">El Metodólogo PDCA</div><p>El kata de mejora no sobrevive sin el <strong>kata de coaching</strong>: una relación aprendiz–coach donde el coach no da soluciones, sino que hace, en orden, cinco preguntas. <em>Voltea por fin la tarjeta que trajo.</em></p></div>
+    <div class="kata-card">
+      <div class="kc-tit">La tarjeta de las 5 preguntas · versión discipulado</div>
+      <ol>
+        <li><b>¿Cuál es tu condición objetivo?</b> ¿Qué práctica estás construyendo y cómo se ve cuando opera?</li>
+        <li><b>¿Cuál es tu condición actual, hoy?</b> ¿Qué pasó realmente esta semana? (datos del examen, no impresiones)</li>
+      </ol>
+      <div class="pliegue">— voltea la tarjeta —<small>reflexión sobre el último paso: ¿qué hiciste, qué esperabas, qué pasó, qué aprendiste?</small></div>
+      <ol start="3">
+        <li><b>¿Qué obstáculos te impiden llegar? ¿Cuál atacas ahora?</b> Uno solo a la vez.</li>
+        <li><b>¿Cuál es tu próximo paso y qué esperas de él?</b> El próximo experimento, en pequeño.</li>
+        <li><b>¿Cuándo vamos a ver qué aprendiste?</b> Fecha del próximo café. Sin fecha no hay lazo.</li>
+      </ol>
+    </div>
+    <div class="voz exegeta"><div class="quien">El Exégeta</div><p>Lo que me eriza la piel: Jesús discipulaba a preguntas. «¿Quién dicen que soy yo?» (Mc 8:27–29) —condición actual, luego umbral—. «¿Qué quieres que haga por ti?» (Mc 10:51) —obligando a Bartimeo a definir su condición objetivo en voz alta—. «¿Cuántos panes tienen? Vayan a ver» (Mc 6:38) —<em>genchi genbutsu</em> puro: no me lo imaginen, cuenten—. El rabino operaba como coach de kata siglos antes del dojo.</p></div>
+    <div class="voz disenadora"><div class="quien">La Diseñadora</div><p>Por eso el kata espiritual <strong>no es una app de hábitos para la soledad</strong>. Requiere un hermano que haga las cinco preguntas cada semana, con café de por medio. Ericsson lo confirma: lo que separa la práctica deliberada de la voluntariosa es el <strong>entrenador</strong> que observa y devuelve señal. La retroalimentación es lo que la autoayuda no fabrica sola.</p></div>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera de Sistemas</div><p>Nota para la iglesia: esto redefine «discipulado» de <em>transferencia de contenido</em> (yo sé, te enseño) a <em>coaching de proceso</em> (tú experimentas, yo pregunto). El coach no necesita ser más santo que el aprendiz; necesita dominar el patrón de preguntas. Escala mejor y ostenta menos.</p></div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://ccitracc.com/blog/toyota-kata/" target="_blank" rel="noopener">5 preguntas del Coaching Kata — CCI</a> · <a href="https://reverscore.com/5-coaching-kata-questions-improvement-kata-to-drive-results/" target="_blank" rel="noopener">Coaching Kata — Rever</a> · <a href="https://sentio.org/what-is-deliberate-practice" target="_blank" rel="noopener">Deliberate Practice — Sentio</a></p>
+  </section>
+
+  <section id="s6" class="revela">
+    <div class="eyebrow"><span class="num">VI</span><span class="tag">El Provocador presenta cargos</span></div>
+    <h2>Tres maneras de arruinarlo todo</h2>
+    <div class="voz provocador"><div class="quien">El Provocador</div><p>Amo el método, y por eso enumero cómo se pudre. Tres cargos.</p></div>
+    <div class="cargo"><span class="ct">Cargo 1 · Pelagianismo con storyboard</span><p>Si el kata se vuelve la <em>causa</em> de la transformación, reinventamos la justificación por obras con papelería japonesa. Willard: una disciplina es algo en mi poder hacer, que me capacita para recibir lo que <strong>no</strong> está en mi poder por esfuerzo directo. Trabaja por <em>indirección</em>: medio de gracia, no mérito. El agricultor de Marcos 4:26–29 siembra y duerme, «y la semilla brota sin que él sepa cómo». El kata organiza la siembra y la vigilia; el crecimiento sigue siendo don.</p></div>
+    <div class="cargo"><span class="ct">Cargo 2 · La ley de Goodhart con barniz devocional</span><p>Cuando la métrica se vuelve el objetivo, deja de medir lo que importaba. Si mido «días seguidos de oración», optimizaré la racha y no el encuentro —el fariseo de Lucas 18 tenía métricas espléndidas y volvió a casa sin justificación—. Antídoto irrenunciable: las métricas del kata espiritual solo miden <strong>fidelidad al diseño</strong> (¿corrió el proceso?), jamás resultado del alma (¿ya soy humilde?). La tierra, no el viento.</p></div>
+    <div class="cargo"><span class="ct">Cargo 3 · El kata como ansiedad estructurada</span><p>Para ciertas personalidades, «condición objetivo + revisión semanal» es gasolina para el perfeccionismo escrupuloso. Para ellas la condición objetivo quizá deba ser, paradójicamente, de descanso: «esta semana mi práctica es no producir nada delante de Dios durante 10 minutos diarios». El método debe poder prescribir su propio silencio —el sábado también es un kata, el más antiguo de todos—.</p></div>
+    <details class="persiana">
+      <summary><span class="chev">›</span>Cómo saber si tu kata se pudrió · tres olores y sus antídotos</summary>
+      <div class="persiana-body">
+        <ul class="semana">
+          <li><b>Huele a mérito</b> (crees que el método te transforma) → recuerda la indirección: es siembra, no fábrica.</li>
+          <li><b>Huele a racha</b> (optimizas la métrica, no el encuentro) → mide solo fidelidad al diseño, nunca el estado del alma.</li>
+          <li><b>Huele a ansiedad</b> (el tablero te aprieta) → prescribe descanso; el sábado es el kata más antiguo.</li>
+        </ul>
+      </div>
+    </details>
+    <p class="fuentes-seccion">Fuentes: <a href="https://www.soulshepherding.org/spiritual-disciplines-list/" target="_blank" rel="noopener">Disciplinas espirituales — Soul Shepherding</a> · <a href="https://dwillard.org/resources/articles/spirituality-going-beyond-the-limits" target="_blank" rel="noopener">Willard — disciplinas como medios de gracia</a> · <a href="https://explorethebible.lifeway.com/blog/adults/2-simple-steps-to-spiritual-fitness-session-4-1-timothy-41-13/" target="_blank" rel="noopener">Entrenamiento en la piedad — 1 Tim 4</a></p>
+  </section>
+
+  <section id="s7" class="revela">
+    <div class="eyebrow"><span class="num">VII</span><span class="tag">La maqueta</span></div>
+    <h2>El storyboard del aprendiz</h2>
+    <div class="voz disenadora"><div class="quien">La Diseñadora</div><p>Rother inventó el <em>learner's storyboard</em>: un tablero donde aprendiz y coach se encuentran. Aquí, su versión discipular —una sola tarjeta con cinco casillas—.</p></div>
+    <div class="storyboard">
+      <div class="sb-row"><span class="lbl">Visión · no negociable, recibida</span>Cristo formado en mí — Gálatas 4:19</div>
+      <div class="sb-row"><span class="lbl">Desafío · este trimestre</span>p. ej. «Ser presencia paciente en mi casa»</div>
+      <div class="sb-split">
+        <div><span class="lbl">Condición actual</span>Datos del examen de esta semana, sin poesía.</div>
+        <div><span class="lbl">Condición objetivo</span>Proceso descrito, horizonte: 2 semanas.</div>
+      </div>
+      <div class="sb-row"><span class="lbl">Obstáculo único en curso + próximo experimento</span>«Si ___, espero ___. Revisamos el ___ con ___.»</div>
+    </div>
+    <div class="voz metodologo"><div class="quien">El Metodólogo PDCA</div><p>El ritmo operativo, en una línea: <strong>examen cada noche</strong> (condición actual) · <strong>práctica diseñada cada día</strong> (experimento) · <strong>café con las 5 preguntas cada semana</strong> (coaching) · <strong>nueva condición objetivo cada dos semanas</strong> · <strong>sábado sin tablero</strong> (gracia).</p></div>
+    <div class="voz ingeniera"><div class="quien">La Ingeniera de Sistemas</div><p>Es un lazo anidado: micro-PDCA diario dentro de macro-PDCA quincenal dentro del desafío trimestral dentro de la visión eterna. La misma arquitectura fractal que vimos en Apocalipsis 2–3: la escala cambia, el patrón no.</p></div>
+    <h3>Fichas de confianza</h3>
+    <div class="tabla-wrap">
+      <table class="datos">
+        <thead><tr><th>Afirmación</th><th>Confianza</th></tr></thead>
+        <tbody>
+          <tr><td>El kata de mejora/coaching es codificación de Rother (2009) de rutinas de Toyota</td><td><span class="badge alta">Alta</span></td></tr>
+          <tr><td><em>Gymnazō</em> en 1 Tim 4:7 es vocabulario técnico del entrenamiento atlético griego</td><td><span class="badge alta">Alta</span></td></tr>
+          <tr><td>La práctica deliberada supera a la repetición ingenua</td><td><span class="badge alta">Alta</span> (con debate sobre su peso exacto)</td></tr>
+          <tr><td>El examen ignaciano funciona como «captar la condición actual»</td><td><span class="badge media">Media</span> (analogía estructural, no equivalencia histórica)</td></tr>
+          <tr><td>Jesús empleaba deliberadamente un patrón de «coaching por preguntas»</td><td><span class="badge media">Media</span> (el patrón es observable; la intencionalidad es lectura nuestra)</td></tr>
+          <tr><td>Las disciplinas operan por indirección como medios de gracia (Willard)</td><td><span class="badge alta">Alta</span> como posición teológica establecida</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fuentes-seccion">Fuentes: <a href="https://impruver.com/toyota-kata-summary/" target="_blank" rel="noopener">Learner's Storyboard — Impruver</a> · <a href="https://www.lean.org/lexicon-terms/kata/" target="_blank" rel="noopener">Kata — Lean Enterprise Institute</a></p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="semilla" class="revela">
+    <div class="eyebrow plain"><span class="num">Semilla</span><span class="tag">Meta-práctica de siete días</span></div>
+    <h2>Siete días para construir tu primer kata</h2>
+    <details class="persiana semilla" open>
+      <summary><span class="chev">›</span>El kata de siete días</summary>
+      <div class="persiana-body">
+        <ul class="semana">
+          <li><b>Día 1 · La dirección</b> — Lee Gálatas 4:19 y Romanos 8:29. Escribe en una línea el desafío del trimestre: un territorio, no una niebla.</li>
+          <li><b>Día 2 · La condición actual</b> — Primer examen nocturno: qué pasó realmente en ese territorio, sin adjetivos morales. Solo datos. (Salmo 139:23–24 de apertura.)</li>
+          <li><b>Día 3 · La condición objetivo</b> — Redacta tu práctica de dos semanas: <em>disparador + acción + cierre + qué registro</em>. Si mide el alma, reescríbela hasta que mida solo la tierra.</li>
+          <li><b>Día 4 · El primer experimento</b> — Ejecuta. Antes escribe la hipótesis: «espero que ___». En la noche, examen: ¿qué pasó vs. qué esperabas? La sorpresa es tu tesoro.</li>
+          <li><b>Día 5 · El obstáculo</b> — Nombra el obstáculo único (uno; los demás al estacionamiento). Ajusta el diseño, no el veredicto sobre ti.</li>
+          <li><b>Día 6 · El coach</b> — Pídele a una persona 20 minutos semanales de café con la tarjeta de las 5 preguntas. Envíale la foto de tu storyboard. Sin fecha no hay lazo.</li>
+          <li><b>Día 7 · El sábado del kata</b> — No midas nada. Lee Marcos 4:26–29 y duerme como el agricultor: la semilla crece de noche, sin que sepas cómo. El tablero es tuyo; el crecimiento, no.</li>
+        </ul>
+      </div>
+    </details>
+    <p class="cierre">La piedad se entrena, pero el fruto se recibe. El kata organiza la siembra y la vigilia; el crecimiento sigue siendo don —<em>automatē</em>, por sí solo—. Medimos el diseño, no el alma; la tierra, no el viento.</p>
+  </section>
+
+  <footer>Café con Claude · El Panel Pregunta · Nº 21 · Julio 2026
+    <p class="model-note">Investigación redactada con Claude Fable 5 · página construida con Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () { var d=document.documentElement, t=d.scrollHeight-window.innerHeight; bar.style.width=(t>0?(window.scrollY/t)*100:0)+'%'; };
+    window.addEventListener('scroll', onScroll, { passive:true }); window.addEventListener('resize', onScroll); onScroll();
+  }
+  var toggle=document.getElementById('nav-toggle'), sidebar=document.getElementById('sidebar'), scrim=document.getElementById('nav-scrim');
+  function setNav(o){ sidebar.classList.toggle('open',o); scrim.classList.toggle('open',o); toggle.textContent=o?'✕':'☰'; toggle.setAttribute('aria-expanded',o?'true':'false'); }
+  toggle.addEventListener('click', function(){ setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function(){ setNav(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') setNav(false); });
+  var navLinks=document.querySelectorAll('nav.sidebar .toc a'), byId={};
+  navLinks.forEach(function(l){ byId[l.getAttribute('href').slice(1)]=l; l.addEventListener('click', function(){ setNav(false); }); });
+  var spy=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ navLinks.forEach(function(l){l.classList.remove('active')}); var k=byId[e.target.id]; if(k)k.classList.add('active'); } }); }, { rootMargin:'-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(function(s){ spy.observe(s); });
+  var rev=document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { rev.forEach(function(el){ el.classList.add('visible'); }); }
+  else { var obs=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('visible'); obs.unobserve(en.target); } }); }, { threshold:0.12 }); rev.forEach(function(el){ obs.observe(el); }); }
+</script>
+</body>
+</html>
