@@ -104,8 +104,11 @@ These are the reasons this skill exists, so don't let them slip:
    pick the section whose theme best fits the new page (match by topic — a Marcos
    study goes under the Marcos section, a discipleship piece under «Discipulado y
    carácter», an infographic under «Infografías», etc.), and append one
-   `<li><a href="new-file.html">Title</a></li>` — optionally with a
-   `<span class="tag">…</span>` label — to the end of that section's list. If no
+   `<li data-tags="…"><a href="new-file.html">Title</a></li>` — optionally with a
+   `<span class="tag">…</span>` label — to the end of that section's list. Fill
+   `data-tags` with 1–4 themes from the index's controlled vocabulary (see the
+   index register in `references/design-system.md`) so the page appears under
+   the right filter chips; also bump the section's `.count`. If no
    section genuinely fits, add a new one in the index's existing style. Don't
    restyle the index or reorder the entries that are already there. Note the
    index's sections may be plain `<section>`s or collapsible `<details>`
