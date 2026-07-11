@@ -65,9 +65,32 @@
   .filtros {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 8px 16px;
     margin-bottom: 14px;
   }
+  .chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1 1 480px;
+    min-width: 0;
+  }
+  #buscador {
+    margin-left: auto;
+    width: 200px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.78rem;
+    color: var(--ink);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 6px 14px;
+    transition: border-color 0.15s;
+  }
+  #buscador::placeholder { color: var(--muted); }
+  #buscador:hover { border-color: var(--muted); }
+  #buscador:focus { outline: none; border-color: var(--accent); }
   .chip {
     font-family: ui-sans-serif, system-ui, sans-serif;
     font-size: 0.7rem;
@@ -205,6 +228,7 @@
 <main>
 
 <div class="filtros" id="filtros" aria-label="Filtrar por tema">
+  <div class="chips-wrap">
   <button class="chip activo" data-filtro="todo" type="button">Todo</button>
   <button class="chip" data-filtro="marcos" type="button">Marcos</button>
   <button class="chip" data-filtro="biblia" type="button">Biblia y teología</button>
@@ -215,6 +239,8 @@
   <button class="chip" data-filtro="historia" type="button">Historia</button>
   <button class="chip" data-filtro="panel" type="button">Panel</button>
   <button class="chip" data-filtro="infografia" type="button">Infografías</button>
+  </div>
+  <input id="buscador" type="search" placeholder="Buscar…" aria-label="Buscar en los títulos">
 </div>
 
 <div class="toolbar"><button id="toggle-all" type="button">Expandir todo</button></div>
@@ -405,8 +431,13 @@
   syncLabel();
 
   // Filtro por tema (chips excluyentes: cada chip activo restringe más — intersección)
+  // combinado con el cuadro de búsqueda (texto en el título, sin acentos ni mayúsculas)
   var chips = Array.prototype.slice.call(document.querySelectorAll('.filtros .chip'));
   var chipTodo = chips.filter(function (c) { return c.dataset.filtro === 'todo'; })[0];
+  var buscador = document.getElementById('buscador');
+  function normaliza(s) {
+    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
   items.forEach(function (d) {
     var c = d.querySelector('.count');
     if (c) c.dataset.total = c.textContent;
@@ -417,13 +448,16 @@
   }
   function aplicarFiltro() {
     var activos = filtrosActivos();
-    var modoTodo = activos.length === 0;
-    chipTodo.classList.toggle('activo', modoTodo);
+    var texto = normaliza(buscador.value.trim());
+    var modoTodo = activos.length === 0 && texto === '';
+    chipTodo.classList.toggle('activo', activos.length === 0);
     items.forEach(function (d) {
       var visibles = 0;
       Array.prototype.forEach.call(d.querySelectorAll('li'), function (li) {
         var tags = (li.getAttribute('data-tags') || '').split(/\s+/);
-        var ok = modoTodo || activos.every(function (f) { return tags.indexOf(f) !== -1; });
+        var pasaChips = activos.every(function (f) { return tags.indexOf(f) !== -1; });
+        var pasaTexto = texto === '' || normaliza(li.textContent).indexOf(texto) !== -1;
+        var ok = pasaChips && pasaTexto;
         li.style.display = ok ? '' : 'none';
         if (ok) visibles++;
       });
@@ -451,12 +485,14 @@
     ch.addEventListener('click', function () {
       if (ch === chipTodo) {
         chips.forEach(function (x) { if (x !== chipTodo) x.classList.remove('activo'); });
+        buscador.value = '';
       } else {
         ch.classList.toggle('activo');
       }
       aplicarFiltro();
     });
   });
+  buscador.addEventListener('input', aplicarFiltro);
 </script>
 
 </body>
