@@ -24,36 +24,40 @@
   header {
     background: #1A1A18;
     color: #FAFAF7;
-    padding: 32px 24px;
-    margin-bottom: 40px;
+    padding: 10px 24px;
+    margin-bottom: 24px;
   }
   .header-inner {
-    max-width: 640px;
+    max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
   }
   main {
-    max-width: 640px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px 64px;
   }
   h1 {
-    font-size: 2.1rem;
-    margin: 0 0 6px;
+    font-size: 1.25rem;
+    margin: 0;
     letter-spacing: -0.01em;
     color: #FAFAF7;
   }
   .date {
     color: #9A9A93;
-    margin: 0 0 4px;
+    margin: 0 0 0 auto;
     font-family: ui-sans-serif, system-ui, sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
   .sub {
     color: #C9A36B;
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-style: italic;
   }
 
@@ -100,9 +104,18 @@
   }
   #toggle-all:hover { text-decoration: underline; }
 
-  /* Grupos de persianas (áreas de conocimiento) */
-  section.grupo { margin-top: 36px; }
-  section.grupo:first-of-type { margin-top: 0; }
+  /* Grupos de persianas (áreas de conocimiento) en columnas fluidas */
+  .grupos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 28px 40px;
+  }
+  section.grupo {
+    flex: 1 1 320px;
+    min-width: 0;
+    max-width: 560px;
+  }
   .grupo-titulo {
     font-family: ui-sans-serif, system-ui, sans-serif;
     font-size: 0.68rem;
@@ -205,6 +218,8 @@
 </div>
 
 <div class="toolbar"><button id="toggle-all" type="button">Expandir todo</button></div>
+
+<div class="grupos">
 
 <section class="grupo">
 <h2 class="grupo-titulo">Biblia y discipulado</h2>
@@ -366,6 +381,8 @@
 </details>
 
 </section>
+
+</div>
 
 <footer>Café con Claude · índice curado a mano, ordenado con Fable</footer>
 
