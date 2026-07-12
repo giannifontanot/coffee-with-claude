@@ -225,6 +225,15 @@
     .revela { opacity: 1; transform: none; transition: none; }
     nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
   }
+  /* Desktop: dock the drawer as a fixed left rail; the hamburger is mobile-only. */
+  @media (min-width: 1180px) {
+    #nav-toggle, #nav-scrim { display: none; }
+    nav.sidebar, nav.sidebar.open {
+      transform: none; box-shadow: none; padding-top: 2.6rem;
+    }
+    .wrap { margin-left: max(340px, calc(50% - 360px)); margin-right: auto; }
+  }
+  @media (min-width: 1500px) { .wrap { margin: 0 auto; } }
   @media (max-width: 640px) { body { padding: 4.2rem 1rem 4rem; } }
 </style>
 </head>
