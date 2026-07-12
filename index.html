@@ -108,6 +108,31 @@
   .chip.activo { color: #FAFAF7; background: var(--accent); border-color: var(--accent); }
   @media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
 
+  /* En escritorio la persiana de filtros vive siempre abierta y sin summary;
+     en móvil se pliega como cualquier otra persiana */
+  details.persiana-filtros > summary { display: none; }
+  @media (max-width: 640px) {
+    details.persiana-filtros { border-bottom: 1px solid var(--rule); margin-bottom: 10px; }
+    details.persiana-filtros > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    details.persiana-filtros > summary::-webkit-details-marker { display: none; }
+    details.persiana-filtros > summary:hover { color: var(--ink); }
+    details.persiana-filtros .filtros { padding-bottom: 16px; margin-bottom: 0; }
+    details.persiana-filtros #buscador { width: 100%; margin-left: 0; }
+  }
+
   /* Toolbar: expand / collapse all */
   .toolbar {
     display: flex;
@@ -227,6 +252,8 @@
 
 <main>
 
+<details class="persiana-filtros" id="filtros-persiana" open>
+<summary><span class="chev">›</span><span class="label-txt">Filtrar y buscar</span><span class="count" id="filtros-count"></span></summary>
 <div class="filtros" id="filtros" aria-label="Filtrar por tema">
   <div class="chips-wrap">
   <button class="chip activo" data-filtro="todo" type="button">Todo</button>
@@ -242,6 +269,7 @@
   </div>
   <input id="buscador" type="search" placeholder="Buscar…" aria-label="Buscar en los títulos">
 </div>
+</details>
 
 <div class="toolbar"><button id="toggle-all" type="button">Expandir todo</button></div>
 
@@ -442,6 +470,15 @@
   var chips = Array.prototype.slice.call(document.querySelectorAll('.filtros .chip'));
   var chipTodo = chips.filter(function (c) { return c.dataset.filtro === 'todo'; })[0];
   var buscador = document.getElementById('buscador');
+  var filtrosCount = document.getElementById('filtros-count');
+
+  // En móvil los filtros viven plegados en una persiana; en escritorio, siempre abiertos
+  var persianaFiltros = document.getElementById('filtros-persiana');
+  var mqMovil = window.matchMedia('(max-width: 640px)');
+  function syncPersianaFiltros() { persianaFiltros.open = !mqMovil.matches; }
+  syncPersianaFiltros();
+  if (mqMovil.addEventListener) mqMovil.addEventListener('change', syncPersianaFiltros);
+  else mqMovil.addListener(syncPersianaFiltros);
   function normaliza(s) {
     return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
@@ -458,6 +495,8 @@
     var texto = normaliza(buscador.value.trim());
     var modoTodo = activos.length === 0 && texto === '';
     chipTodo.classList.toggle('activo', activos.length === 0);
+    var n = activos.length + (texto !== '' ? 1 : 0);
+    filtrosCount.textContent = n === 0 ? '' : n + (n === 1 ? ' activo' : ' activos');
     items.forEach(function (d) {
       var visibles = 0;
       Array.prototype.forEach.call(d.querySelectorAll('li'), function (li) {
