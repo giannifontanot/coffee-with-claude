@@ -3,7 +3,7 @@
 > **Serie:** El Panel Pregunta · **Formato:** Diálogo Meta-Lúdico
 > **Tema:** La comunicación no verbal en la danza de Michael Jackson — libertad, liderazgo y los valores ocultos que el público adora
 > **Nota de encuadre:** Este análisis excluye deliberadamente todo contenido médico o biológico. Se apoya en semiótica, historia de la danza, estudios de performance y psicología de la emoción.
-> **Modelo:** Claude Fable 5 (brief de investigación) → pendiente de conversión HTML con Opus + `coffee-with-claude-page-builder`
+> **Modelo:** Claude Fable 5 (brief de investigación) → convertido a HTML: `el-cuerpo-que-firma.html` (2026-07-12)
 
 ---
 
