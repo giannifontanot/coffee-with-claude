@@ -179,13 +179,15 @@
     nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
   }
 
-  /* Desktop: dock the drawer as a fixed left rail; the hamburger is mobile-only. */
-  @media (min-width: 1180px) {
+  /* Desktop: dock the drawer as a fixed left rail; the hamburger is mobile-only.
+     Breakpoint kept low (1000px) so laptops running OS display-scaling — which
+     report a CSS width well below their physical pixels — still get the rail. */
+  @media (min-width: 1000px) {
     #nav-toggle, #nav-scrim { display: none; }
     nav.sidebar, nav.sidebar.open {
       transform: none; box-shadow: none; padding-top: 2.6rem;
     }
-    .wrap { margin-left: max(320px, calc(50% - 360px)); margin-right: auto; }
+    .wrap { margin-left: max(324px, calc(50% - 360px)); margin-right: auto; }
   }
   @media (min-width: 1500px) {
     .wrap { margin: 0 auto; }
