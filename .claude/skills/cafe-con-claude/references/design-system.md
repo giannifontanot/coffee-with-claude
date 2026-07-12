@@ -71,9 +71,12 @@ e.g. `rgba(180,83,42,0.06)` (terracotta wash) for source boxes and hover states.
   links (`#s1`, `#s2`, …) point at the page's section ids; a scroll-spy adds
   `.active` to the current one. This is the site's standard navigation for any
   multi-section piece — see `porque-tenian-miedo.html`, `dichas-una-sola-vez.html`.
-  (Some older pages keep the drawer permanently docked on desktop and only show
-  the hamburger on mobile; the skill uses one always-available top-left hamburger
-  with an overlay drawer, which reads the same and works at every width.)
+  The drawer is **responsive**, matching the house convention (see
+  `vestirse-para-ser-amado.html`): on desktop (`min-width: 1180px`) it docks as a
+  fixed left rail — always visible, no overlay — with the hamburger and scrim
+  hidden and the article column shifted right (re-centring past `1500px`); below
+  `1180px` it goes off-canvas and the top-left `☰` hamburger slides it in over a
+  scrim. Never leave the hamburger collapsed on desktop.
 - **Reading progress bar** — fixed, full-width, 3px, gradient of the accents,
   `z-index:100`. Width driven by scroll in JS. Common but optional.
 - **Back control (top)** — a link-styled control at the very top. See SKILL.md:
