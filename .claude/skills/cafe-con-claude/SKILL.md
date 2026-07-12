@@ -137,9 +137,13 @@ These are the reasons this skill exists, so don't let them slip:
    has to come back and click. Once the page is verified (step 5) and registered
    (steps 6–7), commit, push, open the PR, and **merge it right away** (a plain
    merge is fine) — don't leave it open for review. Because the merge is immediate,
-   there's nothing to babysit: **skip subscribing to PR activity and don't schedule
-   any `send_later` / trigger check-in** for it. The one exception is if the merge
-   itself fails (conflict, protected branch) — then leave the PR open, say so, and
+   there's nothing to babysit: **don't schedule any `send_later` / trigger check-in,
+   and don't manually call `unsubscribe_pr_activity`.** The harness auto-subscribes
+   the session when the PR is created and **auto-unsubscribes it the moment the PR
+   merges** — so a manual unsubscribe is redundant and only makes the owner approve
+   an extra permission prompt. Just merge and stop; the watch tears itself down. The
+   one exception is if the merge itself fails (conflict, protected branch) — then
+   leave the PR open, say so, and
    let the owner decide. This overrides the default "open the PR and watch it"
    flow *for pages produced by this skill*.
 
