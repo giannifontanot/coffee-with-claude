@@ -126,6 +126,17 @@ These are the reasons this skill exists, so don't let them slip:
    `rendered_to: mi-tema.html` and `rendered_on: YYYY-MM-DD` to the MD's YAML
    front-matter if it has one.
 
+8. **Ship it and merge immediately.** This is a solo-authored static site with no
+   CI and no review gate, so a page waiting in an open PR is just a chore the owner
+   has to come back and click. Once the page is verified (step 5) and registered
+   (steps 6–7), commit, push, open the PR, and **merge it right away** (a plain
+   merge is fine) — don't leave it open for review. Because the merge is immediate,
+   there's nothing to babysit: **skip subscribing to PR activity and don't schedule
+   any `send_later` / trigger check-in** for it. The one exception is if the merge
+   itself fails (conflict, protected branch) — then leave the PR open, say so, and
+   let the owner decide. This overrides the default "open the PR and watch it"
+   flow *for pages produced by this skill*.
+
 ## The model note
 
 Fill `{{MODEL_NOTE}}` with the model that is generating the page right now and the
