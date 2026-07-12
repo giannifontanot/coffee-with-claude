@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El cuerpo que firma · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --steel:     #4a6b7a;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 820px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 34em; }
+
+  .encuadre-nota {
+    margin-top: 1.4rem;
+    font-size: 0.88rem; color: var(--muted);
+    border-left: 3px solid var(--line);
+    padding: 0.4rem 0 0.4rem 1rem;
+  }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.8rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.9rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* Voces del panel */
+  .hablante {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 1.02rem;
+  }
+  .hablante.metodologo { color: var(--olive); }
+  .hablante.exegeta    { color: var(--terracotta); }
+  .hablante.ingeniera  { color: var(--steel); }
+  .hablante.provocador { color: var(--plum); }
+  .hablante.disenadora { color: var(--amber); }
+
+  .panelistas {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem;
+    margin: 1.6rem 0 0;
+    font-size: 0.85rem; color: var(--muted); font-style: italic;
+  }
+  .panelistas span::before {
+    content: '●'; margin-right: 0.4rem; font-style: normal; font-size: 0.7em;
+  }
+  .panelistas .p-metodologo::before { color: var(--olive); }
+  .panelistas .p-exegeta::before    { color: var(--terracotta); }
+  .panelistas .p-ingeniera::before  { color: var(--steel); }
+  .panelistas .p-provocador::before { color: var(--plum); }
+  .panelistas .p-disenadora::before { color: var(--amber); }
+
+  .fuentes-seccion {
+    font-size: 0.82rem; color: var(--muted);
+    border-top: 1px dashed var(--line);
+    padding-top: 0.5rem; margin-top: 1.4rem;
+  }
+  .fuentes-seccion a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes-seccion a:hover { color: var(--ink); border-color: var(--ink); }
+
+  .cierre {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--terracotta);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    font-style: italic;
+  }
+  .cierre p:last-child { margin-bottom: 0; }
+
+  /* Sources box */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">El Panel Pregunta · Diálogo meta-lúdico</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">☕</span>El encuadre</a></li>
+    <li><a href="#s2"><span class="num">I</span>La danza como lenguaje: el cuerpo que firma</a></li>
+    <li><a href="#s3"><span class="num">II</span>Libertad: el cuerpo que desobedece a la física</a></li>
+    <li><a href="#s4"><span class="num">III</span>Liderazgo: la geometría del que va al frente</a></li>
+    <li><a href="#s5"><span class="num">IV</span>Los valores ocultos</a></li>
+    <li><a href="#s6"><span class="num">V</span>Síntesis del panel</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <!-- Back control: browser history back, with a graceful fallback to the index
+       only when there is no history to go back to (e.g. opened in a fresh tab). -->
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Sala de lectura
+  </button>
+
+  <header>
+    <span class="eyebrow">El Panel Pregunta · Diálogo meta-lúdico</span>
+    <h1>¿Qué dice el cuerpo de Michael Jackson cuando baila?</h1>
+    <p class="subtitle">La comunicación no verbal en su danza — libertad, liderazgo y los valores ocultos que el público adora.</p>
+    <p class="encuadre-nota">Nota de encuadre: este análisis excluye deliberadamente todo contenido médico o biológico. Se apoya en semiótica, historia de la danza, estudios de performance y psicología de la emoción.</p>
+    <div class="panelistas">
+      <span class="p-metodologo">El Metodólogo PDCA</span>
+      <span class="p-exegeta">El Exégeta</span>
+      <span class="p-ingeniera">La Ingeniera de Sistemas</span>
+      <span class="p-provocador">El Provocador</span>
+      <span class="p-disenadora">La Diseñadora</span>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="s1">
+      <h2>El encuadre</h2>
+      <p><strong class="hablante metodologo">El Metodólogo PDCA:</strong> Antes de empezar, definamos el problema como es debido. La pregunta no es «¿por qué baila bien?». Es: <em>¿cuál es el mensaje no verbal codificado en su movimiento, y qué valores ocultos está leyendo la audiencia cuando lo adora?</em> Hipótesis inicial de Gianni: libertad y liderazgo. Vamos a verificarla... y a expandirla.</p>
+    </section>
+
+    <section id="s2" class="revela">
+      <h2>I. La danza como lenguaje: el cuerpo que firma</h2>
+      <p><strong class="hablante exegeta">El Exégeta:</strong> Empecemos por el fundamento. La investigación semiótica contemporánea trata la danza como un sistema de signos en el sentido de Saussure y Barthes: los movimientos físicos, gestos y expresiones faciales actúan como «significantes» que comunican significado dentro de los códigos de distintos estilos, funcionando como un sistema multimodal de comunicación que cruza culturas. Es decir: cuando Michael Jackson baila, no está «decorando» la música. Está <em>hablando</em>. Cada aislamiento del hombro, cada pausa, cada inclinación es una palabra en una oración que el público entiende sin traducción.</p>
+      <p><strong class="hablante ingeniera">La Ingeniera de Sistemas:</strong> Y como todo lenguaje, tiene gramática. La suya se construye sobre una tensión estructural: control absoluto vs. explosión. Los coreógrafos que trabajaron con él lo describen como una capacidad de aislar cada hueso, cada músculo, con intensidad, mientras las piernas fluían «como mercurio». Fíjate en el patrón: rigidez mecánica arriba (el robot, los <em>hits</em>), fluidez líquida abajo (el deslizamiento). Dos mensajes opuestos emitidos por el mismo cuerpo al mismo tiempo. Esa contradicción controlada es lo que el ojo no puede dejar de mirar.</p>
+      <p class="fuentes-seccion">Fuentes: <a href="https://journals.bilpubgroup.com/index.php/fls/article/view/10046">Forum for Linguistic Studies</a> · <a href="https://newyork.mjthemusical.com/michaels-moves-the-choreography-of-mj-the-musical/">MJ The Musical</a></p>
+    </section>
+
+    <section id="s3" class="revela">
+      <h2>II. Libertad: el cuerpo que desobedece a la física</h2>
+      <p><strong class="hablante provocador">El Provocador:</strong> Gianni dijo «libertad porque nada lo jala». Casi. Yo lo afinaría: <em>algo sí lo jala — pero es invisible, y él parece no resistirse</em>. Esa es la genialidad del moonwalk. Técnicamente, el bailarín transfiere el peso de tal forma que un pie parece avanzar mientras el cuerpo se desliza hacia atrás; bien ejecutado, parece que una fuerza invisible lo arrastra sin esfuerzo mecánico alguno. El mensaje no verbal es: <em>las leyes que te gobiernan a ti no me gobiernan a mí</em>. No es casualidad que el nombre «moonwalk» ganara sobre el técnico «backslide»: evoca astronautas moviéndose en baja gravedad, y capturó la esencia de la ilusión mucho mejor que el término técnico.</p>
+      <p><strong class="hablante exegeta">El Exégeta:</strong> Y esto conecta con un anhelo humano profundísimo. La fricción, el peso, la gravedad son metáforas corporales de toda limitación: la rutina, la pobreza, la ley, la muerte. Un hombre que camina sin fricción está escenificando, con su cuerpo, la libertad que todos deseamos y no tenemos. En el imaginario del público, el moonwalk se volvió metáfora de la capacidad de Jackson de desafiar las leyes del entretenimiento, tal como parecía desafiar las leyes de la gravedad en el escenario. Y el famoso <em>lean</em> de Smooth Criminal lo hace literal: Jackson y sus bailarines se inclinaban en un ángulo de 45 grados que desafía la gravedad, gracias a un diseño de zapato patentado por él mismo. Nota el detalle: no esperó a que la física se lo permitiera. <em>Inventó y patentó</em> el mecanismo. La libertad, en su caso, fue ingeniería.</p>
+      <p><strong class="hablante disenadora">La Diseñadora:</strong> Hay algo más sutil. La libertad no se comunica solo con el truco, sino con la <em>calidad</em> del movimiento: la parte superior del cuerpo relajada, el rostro sereno mientras los pies hacen lo imposible. El cuerpo cuenta una historia y los pies cuentan otra — esa es exactamente la decepción fundamental que hace funcionar el moonwalk, la misma que el mimo Marcel Marceau codificó en sus rutinas de caminar contra el viento y bajar escaleras invisibles. El público lee ese contraste como <em>soltura</em>, como quien dice: «esto que a ti te parece milagro, para mí es martes».</p>
+      <p class="fuentes-seccion">Fuentes: <a href="https://theprint.in/entertainment/michael-jackson-moonwalk-biopic-dance/2910674/">The Print</a> · <a href="https://www.iconradio.com/10242/michael-jacksons-first-moon-walk-an-iconic-moment/">Icon Radio</a> · <a href="https://abcnews.com/Entertainment/michael-jackson-learned-moonwalk/story?id=55336603">ABC News</a> · <a href="https://historycollection.com/michael-jackson-moonwalk-history-origins/">History Collection</a></p>
+    </section>
+
+    <section id="s4" class="revela">
+      <h2>III. Liderazgo: la geometría del que va al frente</h2>
+      <p><strong class="hablante ingeniera">La Ingeniera de Sistemas:</strong> Ahora la segunda hipótesis de Gianni: liderazgo. Y aquí el análisis de sistemas es delicioso. Antes de Jackson, la coreografía en la música popular estaba en el fondo: los bailarines se movían detrás del cantante, las rutinas eran simples y olvidables. Él invirtió la arquitectura. Piénsalo como red: él es el nodo central, los bailarines son nodos sincronizados que <em>amplifican su señal</em>. Cuando doce cuerpos hacen exactamente el mismo movimiento y uno solo lo inicia, lo varía o lo rompe, el ojo identifica instantáneamente quién es la fuente. El unísono no compite con el líder — lo <em>demuestra</em>. Es Ashby aplicado al escenario: el líder es el único con variedad libre; el grupo tiene variedad restringida.</p>
+      <p><strong class="hablante provocador">El Provocador:</strong> Y su legado confirma que era una tecnología de liderazgo replicable: toda la infraestructura de performance del K-Pop — las formaciones sincronizadas, los movimientos limpios, los gestos-firma diseñados para que los fans los repliquen — sigue el modelo que Jackson fue pionero en establecer. Fíjate en esa frase: <em>gestos diseñados para ser replicados por los fans</em>. El liderazgo de Jackson no termina en el escenario; se extiende a millones de personas imitándolo en sus cocinas. Un líder no es quien manda: es quien logra que otros <em>quieran</em> moverse como él. Tras Motown 25, niños en todas partes lo imitaban. Eso es liderazgo medido empíricamente.</p>
+      <p><strong class="hablante disenadora">La Diseñadora:</strong> Y hay un elemento de liderazgo que casi nadie nombra: la <em>quietud</em>. Un aprendizaje que viene de la línea de Fosse: la gente recuerda a Jackson por el movimiento — el moonwalk, los giros, el lean — pero sobrevive en la memoria por las pausas: la pose, la imagen sostenida. Fosse sabía que un bailarín domina la sala quedándose quieto con una sola muñeca viva. Detenerse en seco frente a miles de personas gritando, y sostener la pose tres segundos completos, comunica un mensaje no verbal brutal: <em>yo controlo el tiempo de este lugar, no ustedes</em>. Solo los líderes se pueden permitir el silencio.</p>
+      <p><strong class="hablante metodologo">El Metodólogo PDCA:</strong> Añado la evidencia de intencionalidad, porque el liderazgo sin intención es suerte. Quien lo interpreta hoy en Broadway lo resume: Michael hacía todo con intención — un paso, un giro, la inclinación del sombrero; ningún momento se desperdiciaba, todo estaba al servicio de la música y del sentimiento que quería provocar. Cero desperdicio, todo al servicio del propósito. Eso es Deming bailando.</p>
+      <p class="fuentes-seccion">Fuentes: <a href="https://www.dancemogul.com/how-michael-jackson-changed-modern-choreography-forever/">Dance Mogul</a> · <a href="https://www.biography.com/musicians/how-michael-jackson-changed-dance-history">Biography</a> · <a href="https://pmamagazine.org/the-snake-the-glove-and-the-fedora-how-bob-fosse-shaped-michael-jacksons-moves/">PMA Magazine</a> · <a href="https://newyork.mjthemusical.com/spotlight-on-broadway-dance-the-choreography-that-captivates-new-york/">MJ The Musical</a></p>
+    </section>
+
+    <section id="s5" class="revela">
+      <h2>IV. Los valores ocultos: qué está adorando realmente la gente</h2>
+      <p><strong class="hablante provocador">El Provocador:</strong> Aquí va la pregunta fuerte de Gianni: ¿qué es lo que la gente <em>realmente</em> mira cuando lo mira? La psicología de la emoción tiene respuesta. Keltner y Haidt definen el asombro (awe) como la sensación de estar ante algo vasto que trasciende tu comprensión del mundo — y esa «vastedad» no es solo tamaño físico: incluye marcadores intangibles. Un cuerpo que se desliza hacia atrás sin explicación aparente es, en miniatura, <em>vastedad</em>: algo que tu modelo del mundo no puede procesar. Por eso la gente no aplaude en el primer moonwalk de Motown 25 — primero hay un jadeo colectivo, <em>después</em> la ovación. El asombro precede al aplauso.</p>
+      <p><strong class="hablante exegeta">El Exégeta:</strong> Y la investigación distingue algo precioso para nuestra pregunta: la admiración es una forma de asombro dirigida a agentes, y está íntimamente relacionada con el deseo de imitar. Además, la admiración surge cuando percibimos una excelencia que supera los estándares convencionales pero que juzgamos legítima y — crucialmente — alcanzable mediante esfuerzo y aprendizaje. Aquí está el valor oculto número uno: <strong>la promesa de que la excelencia es aprendible</strong>. La gente no adora a Jackson como se mira un eclipse (inalcanzable); lo adora como se mira una puerta abierta. «Si un niño de Gary, Indiana, llegó ahí a fuerza de ensayo, tal vez yo también puedo volar un poco.»</p>
+      <p><strong class="hablante disenadora">La Diseñadora:</strong> Valor oculto número dos: <strong>el esfuerzo escondido</strong>, lo que el Renacimiento llamaba <em>sprezzatura</em>. Los estudiosos de la virtuosidad señalan que el público espera que la técnica suprema se ejecute con facilidad — la «máscara de indiferencia» — y que los sentimientos de asombro y admiración ante lo sublime producen experiencias intensamente poderosas, similares a las de la experiencia religiosa. Nadie ve las diez mil horas; ven el resultado sin costuras. Pero el dato duro contradice el mito del «talento natural»: durante la era Bad, Jackson practicaba con los bailarines Jeffrey Daniel y Gregg Burge y estudiaba obsesivamente películas de Fred Astaire, Gene Kelly y Bob Fosse; se escribió a sí mismo una nota: «Estudia a los grandes y hazte más grande». El valor que la gente adora sin saberlo es la disciplina disfrazada de magia.</p>
+      <p><strong class="hablante ingeniera">La Ingeniera de Sistemas:</strong> Valor oculto número tres: <strong>la síntesis</strong>. Jackson no inventó el moonwalk — el «backslide» era un elemento básico del popping que los Electric Boogaloos ejecutaban en la costa oeste durante los años setenta, con raíces que los historiadores rastrean hasta la «Virginia essence», pasando por Cab Calloway, los Nicholas Brothers y James Brown. Lo que hizo fue algo más raro: tenía un don extraordinario para la compresión — podía tomar un ángulo de Broadway, un ataque de funk, un deslizamiento de tap, una ilusión de danza callejera y una silueta lista para cámara, y fundirlos en algo que parecía inevitable. La gente adora en él la integración: un sistema donde piezas heterogéneas se vuelven un solo organismo coherente. Y hay dignidad histórica en ello: su cuerpo es un archivo viviente de la danza vernácula afroamericana, elevada al escenario más grande del planeta.</p>
+      <p><strong class="hablante metodologo">El Metodólogo PDCA:</strong> Y el valor oculto número cuatro, el que amarra libertad con liderazgo: <strong>la soberanía sobre uno mismo</strong>. Un aislamiento perfecto del hombro dice: «mi cuerpo me obedece hasta el último hueso». La audiencia intuye una verdad antigua: nadie puede liderar a doce bailarines — ni a un estadio — si primero no se gobierna a sí mismo. El autocontrol extremo es la precondición visible tanto de su libertad (puede hacer lo que quiera con su cuerpo) como de su liderazgo (otros confían en seguir a quien nunca pierde el control). Libertad y liderazgo no son dos mensajes: son dos caras del mismo dominio propio.</p>
+      <p class="fuentes-seccion">Fuentes: <a href="https://www.psychologytoday.com/us/blog/understanding-awe/201704/the-emerging-science-awe-and-its-benefits">Psychology Today – Awe</a> · <a href="https://www.psychologytoday.com/us/blog/live-in-concert/201903/virtuosity-virtue-or-vice">Psychology Today – Virtuosity</a> · <a href="https://www.psychologytoday.com/us/blog/natured-nurture/202207/the-awesome-psychology-of-awe">Psychology Today – Awe Psychology</a> · <a href="https://www.dancemogul.com/the-history-of-the-moonwalk-explained/">Dance Mogul</a> · <a href="https://pmamagazine.org/the-snake-the-glove-and-the-fedora-how-bob-fosse-shaped-michael-jacksons-moves/">PMA Magazine</a></p>
+    </section>
+
+    <section id="s6" class="revela">
+      <h2>V. Síntesis del panel</h2>
+      <p><strong class="hablante metodologo">El Metodólogo PDCA:</strong> Verificamos la hipótesis de Gianni y la ampliamos. El mensaje no verbal de la danza de Michael Jackson se puede formular en cinco proposiciones que el cuerpo enuncia sin palabras.</p>
+      <p>La hipótesis de <strong>libertad</strong> es correcta, pero es más precisa así: <em>trascendencia de los límites</em> — el cuerpo escenifica la desobediencia a la gravedad, la fricción y la mecánica ordinaria, y el espectador lee ahí su propio anhelo de no estar atado. La hipótesis de <strong>liderazgo</strong> también es correcta, y su mecanismo es la arquitectura: él invirtió el lugar del bailarín (del fondo al centro), usa el unísono del grupo como amplificador de su señal, y domina mediante la pausa — el lujo del que controla el tiempo. Pero debajo de ambas hay tres valores que la gente adora sin nombrarlos: la <strong>excelencia alcanzable</strong> (la admiración, a diferencia del asombro puro, invita a imitar — por eso el mundo entero intentó el moonwalk), el <strong>esfuerzo invisible</strong> (sprezzatura: disciplina de estudioso presentada como magia sin costuras), y la <strong>soberanía sobre el propio cuerpo</strong> — el dominio propio que es, a la vez, la raíz de su libertad y la credencial de su liderazgo.</p>
+      <div class="cierre">
+        <p><strong class="hablante exegeta">El Exégeta:</strong> Cierro con una resonancia, porque no puedo evitarlo: la multitud que jadea ante un hombre que camina sin fricción está confesando, sin saberlo, que fuimos hechos para la libertad y que reconocemos al que camina en ella. Lo que adoran no es el truco. Es el recordatorio encarnado de que las cadenas — las visibles y las invisibles — no tienen la última palabra.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="fuentes revela">
+    <strong>Fuentes consultadas:</strong>
+    <a href="https://journals.bilpubgroup.com/index.php/fls/article/view/10046">Forum for Linguistic Studies</a> ·
+    <a href="https://newyork.mjthemusical.com/michaels-moves-the-choreography-of-mj-the-musical/">MJ The Musical (coreografía)</a> ·
+    <a href="https://newyork.mjthemusical.com/spotlight-on-broadway-dance-the-choreography-that-captivates-new-york/">MJ The Musical (Broadway)</a> ·
+    <a href="https://theprint.in/entertainment/michael-jackson-moonwalk-biopic-dance/2910674/">The Print</a> ·
+    <a href="https://www.iconradio.com/10242/michael-jacksons-first-moon-walk-an-iconic-moment/">Icon Radio</a> ·
+    <a href="https://abcnews.com/Entertainment/michael-jackson-learned-moonwalk/story?id=55336603">ABC News</a> ·
+    <a href="https://historycollection.com/michael-jackson-moonwalk-history-origins/">History Collection</a> ·
+    <a href="https://www.dancemogul.com/how-michael-jackson-changed-modern-choreography-forever/">Dance Mogul (coreografía moderna)</a> ·
+    <a href="https://www.dancemogul.com/the-history-of-the-moonwalk-explained/">Dance Mogul (historia del moonwalk)</a> ·
+    <a href="https://www.biography.com/musicians/how-michael-jackson-changed-dance-history">Biography</a> ·
+    <a href="https://pmamagazine.org/the-snake-the-glove-and-the-fedora-how-bob-fosse-shaped-michael-jacksons-moves/">PMA Magazine</a> ·
+    <a href="https://www.psychologytoday.com/us/blog/understanding-awe/201704/the-emerging-science-awe-and-its-benefits">Psychology Today – Awe</a> ·
+    <a href="https://www.psychologytoday.com/us/blog/live-in-concert/201903/virtuosity-virtue-or-vice">Psychology Today – Virtuosity</a> ·
+    <a href="https://www.psychologytoday.com/us/blog/natured-nurture/202207/the-awesome-psychology-of-awe">Psychology Today – Awe Psychology</a>
+  </div>
+
+  <footer>Café con Claude · El Panel Pregunta · Julio 2026
+    <p class="model-note">Generada por Claude Fable 5</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
