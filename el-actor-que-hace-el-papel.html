@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El actor que hace el papel de sí mismo · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* Top-left hamburger + off-canvas drawer */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem; z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 300px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream); border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem; }
+  nav.sidebar .brand-sub { font-size: 0.78rem; font-style: italic; color: var(--muted); margin-bottom: 1.8rem; }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a { display: flex; align-items: baseline; gap: 0.6rem; color: var(--muted); text-decoration: none; font-size: 0.86rem; line-height: 1.35; transition: color 0.2s; }
+  nav.sidebar ol a .num { font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem; min-width: 2.1rem; color: var(--line); transition: color 0.2s; }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  #nav-scrim { position: fixed; inset: 0; background: rgba(43,33,24,0.38); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65; }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.4rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* Hero */
+  .kicker {
+    font-family: 'Fraunces', serif; font-size: 0.8rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600; margin-bottom: 0.8rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2.2rem, 6.5vw, 3.4rem); line-height: 1.06; margin-bottom: 0.3rem;
+  }
+  .title-sub {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 600;
+    font-size: clamp(1.3rem, 4vw, 1.9rem); line-height: 1.15;
+    color: var(--terracotta); margin-bottom: 1.1rem;
+  }
+  .subtitle {
+    font-style: italic; color: var(--muted); font-size: 1.1rem;
+    max-width: 33em; margin-bottom: 1.6rem;
+  }
+  .chips-label {
+    font-family: 'Fraunces', serif; font-size: 0.72rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.6rem;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.8rem; }
+  .chips span {
+    font-size: 0.8rem; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: 0.3rem 0.85rem;
+  }
+  .thesis {
+    background: var(--card); border: 1px solid var(--line);
+    border-left: 4px solid var(--amber); border-radius: 6px;
+    padding: 1.2rem 1.4rem; margin-bottom: 3rem;
+  }
+  .thesis .lead { font-family: 'Fraunces', serif; font-weight: 600; color: var(--terracotta); }
+
+  /* Sections */
+  section { margin-bottom: 2.9rem; scroll-margin-top: 1.5rem; }
+  .eyebrow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.5rem; }
+  .eyebrow .num {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 0.9rem;
+    color: var(--cream); background: var(--terracotta);
+    width: 1.7rem; height: 1.7rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%; flex: none;
+  }
+  .eyebrow.plain .num { background: var(--plum); font-size: 0.66rem; width: auto; height: 1.7rem; border-radius: 999px; padding: 0 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .eyebrow .tag {
+    font-family: 'Fraunces', serif; font-size: 0.76rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); font-weight: 600;
+  }
+  h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4.2vw, 2.05rem); line-height: 1.16; margin: 0 0 0.9rem;
+  }
+  h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.15rem; line-height: 1.25; color: var(--terracotta);
+    margin: 1.8rem 0 0.7rem;
+  }
+  p { margin-bottom: 1.15rem; }
+  p.drop::first-letter {
+    font-family: 'Fraunces', serif; font-weight: 700; float: left;
+    font-size: 3.2rem; line-height: 0.8; padding: 0.3rem 0.6rem 0 0; color: var(--terracotta);
+  }
+  em { color: var(--ink); font-style: italic; }
+  strong { font-weight: 600; }
+  a { color: var(--terracotta); }
+
+  ul.plan { list-style: none; margin: 0.4rem 0 1.15rem; }
+  ul.plan li {
+    position: relative; padding-left: 1.3rem; margin-bottom: 0.7rem; line-height: 1.55;
+  }
+  ul.plan li::before {
+    content: "›"; position: absolute; left: 0; top: -0.05rem;
+    font-family: 'Fraunces', serif; font-weight: 700; color: var(--amber); font-size: 1.05rem;
+  }
+  ul.plan li strong { font-family: 'Fraunces', serif; color: var(--ink); }
+
+  .metricas { counter-reset: m; list-style: none; margin: 0.4rem 0 1.15rem; }
+  .metricas li { position: relative; padding-left: 1.6rem; margin-bottom: 0.6rem; }
+  .metricas li::before {
+    counter-increment: m; content: "(" counter(m, lower-alpha) ")";
+    position: absolute; left: 0; top: 0; color: var(--terracotta); font-weight: 600; font-size: 0.85rem;
+  }
+
+  .pull {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.35rem; line-height: 1.3; color: var(--ink);
+    border-left: 4px solid var(--terracotta); padding: 0.2rem 0 0.2rem 1.2rem; margin: 1.8rem 0;
+  }
+
+  .idea-clave {
+    background: rgba(201, 138, 45, 0.10);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.2rem; margin: 1.6rem 0 1.2rem;
+  }
+  .idea-clave .ic-label {
+    display: block; font-family: 'Fraunces', serif; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--terracotta);
+    font-weight: 600; margin-bottom: 0.25rem;
+  }
+  .idea-clave p { margin: 0; }
+
+  .fuentes-seccion { font-size: 0.85rem; color: var(--muted); font-style: italic; margin-top: 0.4rem; }
+  .fuentes-seccion a { border-bottom: 1px solid rgba(180,83,42,0.35); text-decoration: none; }
+
+  .rule { border: none; border-top: 2px solid var(--ink); margin: 3.2rem 0 2.6rem; opacity: 0.85; }
+
+  /* Sources */
+  .fuentes {
+    margin-top: 3rem; padding: 1.2rem 1.4rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes ol { margin: 0.6rem 0 0 1.1rem; }
+  .fuentes li { margin-bottom: 0.55rem; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem; font-family: 'Fraunces', serif; font-size: 0.72rem;
+    letter-spacing: 0.04em; color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+  @media (max-width: 640px) { body { padding: 4.2rem 1rem 4rem; } }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">Comunicación · Actuación · Atención</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>El nombre de lo que te falta</a></li>
+    <li><a href="#s2"><span class="num">II</span>Qué es la atención</a></li>
+    <li><a href="#s3"><span class="num">III</span>La escuela del actor</a></li>
+    <li><a href="#s4"><span class="num">IV</span>Estatus y presencia</a></li>
+    <li><a href="#s5"><span class="num">V</span>El instrumento</a></li>
+    <li><a href="#s6"><span class="num">VI</span>El discurso: retórica y relato</a></li>
+    <li><a href="#s7"><span class="num">VII</span>La lección del mago</a></li>
+    <li><a href="#s8"><span class="num">VIII</span>El plan: doce semanas</a></li>
+    <li><a href="#s9"><span class="num">Sínt.</span>El actor que hace su papel</a></li>
+    <li><a href="#s10"><span class="num">Cier.</span>Para llevar</a></li>
+    <li><a href="#fuentes"><span class="num">Ap.</span>Fuentes consultadas</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Volver al índice
+  </button>
+
+  <header>
+    <div class="kicker">Estudio intensivo · Comunicación · Actuación · Retórica · Atención</div>
+    <h1>El actor que hace el papel de sí mismo</h1>
+    <p class="title-sub">Qué hay que aprender para hablar con intención — y ganar la atención sin dejar de ser sincero</p>
+    <p class="subtitle">Sientes que tienes muchas virtudes menos una: hablar con intención de ganar la atención. Sospechas que la respuesta está en un curso de actuación, y citas a Robert-Houdin: un mago es un actor que hace el papel de mago. Este estudio toma esa intuición en serio, la desarma en seis disciplinas aprendibles y termina en un plan de entrenamiento de doce semanas.</p>
+
+    <p class="chips-label">Fuentes de un vistazo</p>
+    <div class="chips">
+      <span>Robert-Houdin</span>
+      <span>Stanislavski</span>
+      <span>Meisner</span>
+      <span>Johnstone</span>
+      <span>Rodenburg</span>
+      <span>Aristóteles</span>
+      <span>Nelms</span>
+      <span>Macknik &amp; Martinez-Conde</span>
+    </div>
+
+    <div class="thesis">
+      <p><span class="lead">En una línea:</span> La atención no se gana fingiendo sino preparando la sinceridad hasta poder ejercerla a voluntad: el que habla con intención es un actor que hace el papel de sí mismo.</p>
+    </div>
+  </header>
+
+  <section id="s1" class="revela">
+    <div class="eyebrow"><span class="num">I</span><span class="tag">El diagnóstico</span></div>
+    <h2>El nombre de lo que te falta</h2>
+    <p class="drop">Empecemos por precisar el diagnóstico, porque «no sé hablar con intención» mezcla tres cosas distintas que conviene separar. La primera es un malentendido sobre la sinceridad: mucha gente honesta cree que preparar <em>cómo</em> va a decir algo es una forma de mentir — que la persona sincera habla como le sale, y que todo lo demás es teatro en el mal sentido. Esa creencia es la que hay que derribar primero, y Robert-Houdin la derriba con una sola frase.</p>
+    <p>Cuando escribió que <em>un prestidigitador no es un malabarista: es un actor que interpreta el papel de un mago</em>, no estaba confesando un fraude. Estaba diciendo que la técnica del mago no son los dedos sino la actuación: el mago sabe exactamente qué quiere que el público sienta en cada segundo, y organiza su voz, su cuerpo y su ritmo para producirlo. El malabarista exhibe destreza; el actor produce experiencia. La frase generaliza: el maestro es un actor que hace el papel de maestro; el padre que cuenta una historia en la sobremesa es un actor que hace el papel de narrador. Y ninguno de los dos miente — le dan forma deliberada a algo que sienten de verdad.</p>
+    <p>La segunda cosa es la confusión entre intención y contenido. Tú probablemente preparas muy bien <em>qué</em> vas a decir — las ideas, los argumentos, el orden. Lo que no preparas es <em>qué quieres que le pase al otro</em> mientras lo dices. Dos actores pueden decir la misma línea de texto y producir efectos opuestos, porque la línea no es el mensaje; la intención con que se dice es el mensaje. La tercera es un déficit de entrenamiento físico, no de carácter: hablar para ganar atención es una destreza psicomotora — voz, respiración, pausa, mirada, postura — y las destrezas psicomotoras no se aprenden leyendo: se ensayan. Por eso tu instinto de buscar un curso de actuación es correcto. No porque te falte personalidad, sino porque te falta <em>repetición supervisada</em>.</p>
+    <p>Con el diagnóstico separado en tres — un permiso (actuar no es fingir), un concepto (intención ≠ contenido) y un régimen (esto se entrena, no se entiende) —, la pregunta «¿qué debo aprender?» tiene una respuesta concreta: seis disciplinas, cada una con maestros de nombre y apellido. La ciencia de la atención, la intención escénica, el estatus y la presencia, el instrumento, la arquitectura del discurso y el showmanship sincero.</p>
+    <p class="pull">Actuar no es fingir lo que no sientes; es darle forma deliberada a lo que sí sientes.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>Tu problema no es falta de sinceridad ni de contenido: es que nunca has entrenado la intención como destreza separada. Y la intención se entrena exactamente como sospechabas — con las herramientas del actor.</p></div>
+  </section>
+
+  <section id="s2" class="revela">
+    <div class="eyebrow"><span class="num">II</span><span class="tag">La ciencia de la atención</span></div>
+    <h2>Qué es la atención — y por qué se gana, no se exige</h2>
+    <p>La atención humana tiene tres propiedades que todo comunicador serio debería saberse de memoria. <strong>Primera: es escasa y selectiva.</strong> La psicología cognitiva —desde Daniel Kahneman en <em>Attention and Effort</em>— la describe como un recurso limitado que la mente asigna, no un estado que simplemente ocurre. El cerebro de tu oyente filtra permanentemente, y el filtro favorece tres cosas: lo <em>novedoso</em> (lo que rompe el patrón), lo <em>relevante</em> (lo que le afecta a él, no a ti) y lo <em>emocional</em>. Un discurso puede ser verdadero, importante y bien organizado, y aun así perder contra ese filtro — porque el filtro no mide verdad; mide novedad, relevancia y emoción.</p>
+    <p><strong>Segunda: la atención sigue a la curiosidad, y la curiosidad es una brecha.</strong> George Loewenstein la formuló como un hueco entre lo que alguien sabe y lo que quiere saber. La consecuencia práctica es enorme: la manera de ganar atención no es dar información sino administrarla — abrir una pregunta antes de responderla, mostrar el destino antes de dar el mapa, hacer sentir el hueco antes de llenarlo. El que lo dice todo de entrada, en el orden en que lo pensó, está regalando el final de la película en el primer minuto.</p>
+    <p><strong>Tercera: la atención es dirigible, y nadie lo sabe mejor que los magos.</strong> Los neurocientíficos Stephen Macknik y Susana Martinez-Conde estudiaron a magos profesionales en <em>Sleights of Mind</em> y encontraron que la misdirección no es distracción burda: es dirección fina de la atención mediante la mirada del propio mago, el movimiento amplio que tapa al pequeño, la pregunta que ocupa la mente mientras las manos trabajan. El que habla dirige la atención del que escucha, lo sepa o no. El comunicador sin entrenamiento la dirige al azar; el entrenado, a propósito.</p>
+    <p>De estas tres propiedades sale la regla que gobierna todo lo demás: la atención es una transacción. El oyente te la presta a cambio de novedad, relevancia y emoción, y te la retira —sin avisar y sin culpa— cuando dejas de pagar. Exigirla («esto es importante, escúchenme») es pedir fiado; ganarla es pagar en cada frase.</p>
+    <p class="pull">El público no decide dónde mirar; mira donde el ejecutante mira.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>La atención es un recurso escaso que se asigna a lo novedoso, lo relevante y lo emocional, y que sigue las brechas de curiosidad. No se exige: se compra en cada frase, y el que habla —entrenado o no— está siempre dirigiéndola hacia algún lado.</p></div>
+    <p class="fuentes-seccion">Fuentes: Kahneman, <em>Attention and Effort</em> (1973) · Loewenstein (1994) · Macknik &amp; Martinez-Conde, <em>Sleights of Mind</em> (2010).</p>
+  </section>
+
+  <section id="s3" class="revela">
+    <div class="eyebrow"><span class="num">III</span><span class="tag">La intención escénica</span></div>
+    <h2>La escuela del actor: intención antes que palabras</h2>
+    <p>Aquí está el corazón del estudio, porque aquí está la técnica que pediste. La respuesta la tiene un siglo de pedagogía teatral, y se destila en tres herramientas. <strong>El objetivo de Stanislavski.</strong> En escena no se puede «estar» — hay que <em>querer algo</em> en todo momento. Cada escena, cada parlamento, cada línea tiene un objetivo, y el objetivo se formula siempre como un verbo activo dirigido al otro: no «estar molesto» sino <em>quiero sacudirte</em>; no «explicar el proyecto» sino <em>quiero que te enamores del proyecto</em>. El verbo cambia la ejecución completa sin cambiar una palabra del texto. Ésta es la herramienta más directamente transferible: antes de cualquier conversación que importe, formula el verbo. El día que entres a cada conversación con un verbo, ya estarás hablando con intención, aunque no hayas entrenado nada más.</p>
+    <p><strong>La atención de Meisner.</strong> Sanford Meisner definió actuar como <em>vivir con verdad en circunstancias imaginarias</em>, y su ejercicio fundamental —la repetición— consiste en poner el cien por ciento de la atención en el otro. Su descubrimiento resuelve tu tensión entre «sincero» e «intencional»: la actuación falsa nace de la atención puesta en uno mismo (¿cómo me veo?, ¿cómo sueno?); la actuación verdadera nace de la atención puesta en el otro. La sinceridad no es un estado interno que se protege — es una dirección de la atención que se practica.</p>
+    <p><strong>Los círculos de atención.</strong> El propio Stanislavski entrenaba círculos concéntricos: el pequeño (yo y un objeto), el mediano (yo y mi interlocutor), el grande (yo y toda la sala). El actor aprende a expandir y contraer el círculo a voluntad — y eso es lo que hace un buen conversador cuando «recoge» a los distraídos de una mesa: agranda su círculo hasta incluirlos, sin subir el volumen.</p>
+    <p>¿Y el curso de actuación que estás considerando? Tómalo — pero con una precisión: para tu objetivo, un curso de <strong>improvisación teatral</strong> es mejor punto de partida que uno de actuación con texto. El de texto te entrena en interpretar palabras de otro; la impro te entrena en lo que te falta: atención radical al otro, espontaneidad bajo presión, juego de estatus, y la experiencia repetida de sostener la mirada de un público sin guion detrás del cual esconderte.</p>
+    <p class="pull">El orador que se observa a sí mismo suena actuado; el que observa a su público suena presente.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>Hablar con intención tiene una técnica precisa: formular cada intervención como un verbo activo dirigido al otro (Stanislavski) y sostener la atención en el otro, no en uno mismo (Meisner). Y sí — toma el curso: pero empieza por improvisación, no por texto.</p></div>
+    <p class="fuentes-seccion">Fuentes: Stanislavski, <em>An Actor Prepares</em> (1936) · Meisner, <em>On Acting</em> (1987).</p>
+  </section>
+
+  <section id="s4" class="revela">
+    <div class="eyebrow"><span class="num">IV</span><span class="tag">Estatus y presencia</span></div>
+    <h2>El juego debajo de la conversación</h2>
+    <p>Hay una capa de la comunicación que decide quién es escuchado antes de que nadie diga nada inteligente, y casi nadie la ve porque opera debajo de las palabras. <strong>El estatus de Johnstone.</strong> En <em>Impro</em>, Keith Johnstone hizo el descubrimiento que revolucionó la enseñanza de la improvisación: toda interacción humana es una transacción de estatus. No estatus social — estatus <em>conductual</em>, micronegociado segundo a segundo: quién sostiene la mirada y quién la esquiva, quién se mueve con calma y quién se toca la cara, quién completa sus frases y quién las deja caer. Dos lecciones para ti. Los marcadores de estatus alto son físicos y aprendibles —quietud, frases que terminan firmes, pausas sin miedo, ocupar el espacio sin pedir permiso—. Y, más fino: el que gana la atención no es el estatus más alto de la sala, sino el que puede <em>moverse</em> de estatus a voluntad — bajar para dar confianza, subir para dar dirección. La rigidez es lo que aburre.</p>
+    <p><strong>Los círculos de Rodenburg.</strong> Patsy Rodenburg describe tres estados de energía en <em>The Second Circle</em>. El Primer Círculo es energía hacia adentro: la persona replegada que no llega. El Tercer Círculo es energía forzada hacia afuera: el vendedor a presión que actúa <em>sobre</em> la gente en vez de <em>con</em> ella — se nota, y produce rechazo. El Segundo Círculo es la energía que fluye en ambas direcciones: doy y recibo al mismo tiempo, te afecto y me dejo afectar. Eso es la presencia, y es el nombre técnico de lo que tú llamas «sincera pero intencional». El Tercer Círculo es intencional sin sincero; el Primero es sincero sin intencional; el Segundo es exactamente la intersección que buscas.</p>
+    <p><strong>El carisma como conducta.</strong> Olivia Fox Cabane, en <em>The Charisma Myth</em>, sintetiza la investigación en una fórmula útil: el carisma percibido combina <em>presencia</em> (estoy completamente aquí, contigo), <em>poder</em> (puedo afectar el mundo) y <em>calidez</em> (quiero tu bien). Las tres son conductas observables y entrenables, no rasgos de nacimiento. La falla más común es la de la gente inteligente y bien intencionada: calidez sin poder (agradables pero ignorables) o poder sin calidez (respetados pero evitados). La combinación es lo raro — y lo que se entrena.</p>
+    <p class="pull">El Tercer Círculo es intencional sin sincero; el Primero es sincero sin intencional; el Segundo es la intersección que buscas.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>Debajo de las palabras corre un juego de estatus y presencia que decide a quién se escucha. Se gana no con estatus alto permanente sino con movilidad de estatus, y el estado que buscas tiene nombre: Segundo Círculo — energía que da y recibe a la vez.</p></div>
+    <p class="fuentes-seccion">Fuentes: Johnstone, <em>Impro</em> (1979) · Rodenburg, <em>The Second Circle</em> (2008) · Cabane, <em>The Charisma Myth</em> (2012).</p>
+  </section>
+
+  <section id="s5" class="revela">
+    <div class="eyebrow"><span class="num">V</span><span class="tag">El instrumento</span></div>
+    <h2>Voz, cuerpo y silencio</h2>
+    <p>Todo lo anterior se ejecuta a través de un instrumento físico, y el instrumento sin afinar traiciona a la mejor intención. <strong>La voz.</strong> La tradición del entrenamiento vocal —Cicely Berry, Kristin Linklater— parte de una premisa contraintuitiva: el trabajo vocal no es aprender a proyectar sino <em>quitar</em> las tensiones que bloquean la voz natural (mandíbula apretada, respiración alta y corta, garganta cerrada por hábito de disculpa). La voz que gana atención no es la más fuerte; es la apoyada en la respiración — grave sin forzarse, estable al final de la frase, capaz de variar. Julian Treasure inventaría la caja de herramientas: registro, timbre, <em>prosodia</em> (la melodía de la frase — la voz monótona es la primera causa de fuga de atención), ritmo, volumen (bajar puede captar más que subir) y silencio.</p>
+    <p><strong>El silencio</strong> merece su propio párrafo porque es la herramienta más barata y menos usada. La pausa antes de la frase importante crea la brecha de curiosidad de Loewenstein en su forma más pura: dos segundos de silencio y toda la mesa te está mirando. La pausa después deja que la frase aterrice. El que no soporta el silencio —y lo rellena de «eh», «o sea», «¿no?»— le comunica al público que ni él mismo cree que valga la pena esperar sus palabras.</p>
+    <p><strong>El cuerpo.</strong> No hace falta el inventario completo del lenguaje corporal; hacen falta cuatro decisiones: <em>quietud</em> (el movimiento sin propósito drena atención; el gesto deliberado la concentra), <em>mirada</em> (repartida y sostenida por frases completas, no barrida en pánico), <em>postura</em> (abierta, ocupando tu espacio sin invadir el ajeno) y <em>rostro</em> (que anuncie — la expresión llega medio segundo antes que la palabra y prepara su recepción; Vanessa Van Edwards lo documenta en <em>Cues</em>). Una advertencia honesta: parte de la literatura popular sobre «poses de poder» prometió efectos hormonales que la replicación científica no sostuvo; lo que sí está firme es lo conductual — la postura abierta cambia cómo te perciben y cómo te comportas, no tu química.</p>
+    <p>La buena noticia es que el instrumento es lo más entrenable de todo el estudio: quince minutos diarios de respiración, lectura en voz alta grabada y revisión producen mejoras audibles en semanas. La mala noticia es que nadie mejora sin grabarse: la brecha entre cómo crees que suenas y cómo suenas es el primer hallazgo —y el más incómodo— de todo el que empieza.</p>
+    <p class="pull">Sostener una pausa es la demostración física de que confías en lo que vas a decir.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>La voz apoyada, la prosodia variada, la quietud deliberada y —sobre todo— el silencio son destrezas físicas que se entrenan con repetición diaria y grabación. El instrumento se afina en semanas; lo único imprescindible es escucharse grabado.</p></div>
+    <p class="fuentes-seccion">Fuentes: Berry, <em>Voice and the Actor</em> (1973) · Linklater, <em>Freeing the Natural Voice</em> (1976) · Treasure, TED (2014) · Van Edwards, <em>Cues</em> (2022).</p>
+  </section>
+
+  <section id="s6" class="revela">
+    <div class="eyebrow"><span class="num">VI</span><span class="tag">La arquitectura del discurso</span></div>
+    <h2>Retórica y relato</h2>
+    <p>Queda lo que se dice — y eso tiene veinticinco siglos de ingeniería acumulada. <strong>La retórica clásica.</strong> Aristóteles organizó la persuasión en tres apelaciones que siguen siendo el mejor checklist disponible: <em>ethos</em> (el carácter percibido del que habla), <em>pathos</em> (la emoción movilizada en el que escucha) y <em>logos</em> (el argumento mismo). Dos observaciones te tocan directamente. Aristóteles consideraba el ethos la más poderosa de las tres — el público decide primero si <em>tú</em> eres creíble y solo después evalúa lo que dices; tu sinceridad, bien comunicada, no es un adorno del argumento sino su fundamento. Y los tres son necesarios: el comunicador honesto típico carga todo al logos —más datos, más razones— y se pregunta por qué no aterriza; le falta pathos, que no es manipulación sino el respeto de reconocer que el oyente es una persona completa. A esto la tradición añade el <em>kairós</em> — el momento oportuno: la misma frase dicha en el momento justo vale diez veces más.</p>
+    <p><strong>La ingeniería moderna de lo memorable.</strong> Chip y Dan Heath, en <em>Made to Stick</em>, destilaron por qué unas ideas se pegan: las que sobreviven son simples (un núcleo, no doce), inesperadas (rompen un patrón), concretas (imágenes y casos: «el termostato roto», no «la disfunción regulatoria»), creíbles, emocionales y narradas. Nota cuántas de esas propiedades son decisiones de <em>forma</em> que se toman antes de abrir la boca.</p>
+    <p><strong>El relato.</strong> La historia es la tecnología de atención más antigua que existe, porque es una brecha de curiosidad con patas: alguien quería algo, algo se interpuso — y el cerebro del oyente ya no puede irse sin saber cómo termina. Nancy Duarte, en <em>Resonate</em>, añade la corrección estructural que separa al orador que conecta del que se exhibe: el público es el héroe de la historia, y tú eres el mentor — no al revés. Y Chris Anderson, desde TED, lo comprime en una regla: una charla es un <em>regalo</em> que le haces al público — una idea que ellos se llevan — no una actuación que el público te regala a ti. Ese es tu salvoconducto ético: si lo que preparas es un regalo, toda la técnica de este estudio es generosidad.</p>
+    <p class="pull">El público es el héroe de la historia, y tú eres el mentor — no al revés.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>Lo que se dice se diseña: ethos-pathos-logos como checklist, lo simple-inesperado-concreto-emocional-narrado como filtro, y el relato con el público de héroe como forma maestra. La forma no es cosmética del contenido; es la mitad del contenido.</p></div>
+    <p class="fuentes-seccion">Fuentes: Aristóteles, <em>Retórica</em> · Heath &amp; Heath, <em>Made to Stick</em> (2007) · Duarte, <em>Resonate</em> (2010) · Anderson, <em>TED Talks</em> (2016).</p>
+  </section>
+
+  <section id="s7" class="revela">
+    <div class="eyebrow"><span class="num">VII</span><span class="tag">El showmanship sincero</span></div>
+    <h2>La lección del mago</h2>
+    <p>Volvamos a Robert-Houdin, porque la magia —tu propia metáfora— resulta ser el laboratorio más avanzado del problema exacto que quieres resolver: cómo ser completamente deliberado y completamente honesto a la vez. Piénsalo: el mago es el único performer cuyo público <em>sabe</em> que está siendo engañado, lo consiente y lo agradece. Ese contrato solo se sostiene con una sinceridad de segundo orden: el mago es honesto sobre el marco («esto es un espectáculo de ilusión») y dentro de ese marco despliega toda la intencionalidad de la que es capaz. Tu situación es la misma con el signo invertido: tu marco es verdadero (crees lo que dices) y lo que te falta es atreverte a desplegar, dentro de ese marco, la misma intencionalidad total del mago.</p>
+    <p>Henning Nelms escribió en <em>Magic and Showmanship</em> el tratado sobre esa intencionalidad, y su tesis central te sirve palabra por palabra: al espectador no le importa el método; le importa el <em>significado</em>. Un truco técnicamente perfecto sin dramatización es un acertijo — interesante, olvidable. El mismo truco enmarcado en significado es una experiencia. Traducción a tu terreno: una idea correcta expuesta sin dramatización es un dato; la misma idea con marco, tensión y resolución es algo que el oyente <em>vive</em>. Nelms también da la disciplina de la economía: todo lo que no suma al efecto, resta. Darwin Ortiz, en <em>Strong Magic</em>, añade la gestión de audiencia: el ritmo se administra, los momentos fuertes se colocan (el mejor efecto al final, el segundo al principio), y la diferencia entre un truco y un momento de asombro no está en las manos sino en cuánto le <em>importa</em> al público lo que está a punto de pasar.</p>
+    <p>¿Y la ética? En el criterio que Dale Carnegie puso en el centro hace un siglo: el interés por el otro tiene que ser <em>genuino</em>. La técnica de este estudio es moralmente neutra — la misma prosodia sirve al maestro y al estafador. Lo que separa al showman sincero del manipulador no es la cantidad de técnica sino su dirección: el manipulador usa la atención del otro para extraerle algo; el showman sincero la usa para entregarle algo. Houdin otra vez: su público salía del teatro más rico —en asombro— de lo que entró. Mientras tu intención sea que el otro salga más rico de la conversación, ninguna cantidad de preparación te hace menos sincero; te hace más generoso, porque preparaste el regalo.</p>
+    <p class="pull">El manipulador usa la atención del otro para extraerle algo; el showman sincero la usa para entregarle algo.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>El mago demuestra que la intencionalidad total y la honestidad total son compatibles: se es honesto sobre el marco y deliberado dentro de él. El test ético es la dirección de la técnica —extraer o entregar— y mientras entregues, prepararte más te hace más generoso, no menos sincero.</p></div>
+    <p class="fuentes-seccion">Fuentes: Robert-Houdin, <em>Comment on devient sorcier</em> (1868) · Nelms, <em>Magic and Showmanship</em> (1969) · Ortiz, <em>Strong Magic</em> (1994) · Carnegie (1936).</p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="s8" class="revela">
+    <div class="eyebrow"><span class="num">VIII</span><span class="tag">El plan de entrenamiento</span></div>
+    <h2>Doce semanas de práctica deliberada</h2>
+    <p>Las seis disciplinas se entrenan en tres fases de cuatro semanas. El principio de diseño: <strong>cada día algo físico, cada semana algo público, cada fase una capa nueva sin soltar la anterior.</strong> Presupuesto realista: 45–60 minutos diarios más una sesión semanal larga.</p>
+
+    <h3>Fase 1 · Semanas 1–4 — El instrumento</h3>
+    <p>Se empieza por el cuerpo porque es lo más entrenable y porque sus mejoras financian la moral del resto del plan.</p>
+    <ul class="plan">
+      <li><strong>Diario (20 min):</strong> respiración baja · articulación con trabalenguas · lectura en voz alta <em>grabada</em> de un párrafo bueno, leído tres veces: neutro, exagerando la prosodia, y buscando el punto medio.</li>
+      <li><strong>Diario (10 min):</strong> revisión de la grabación de ayer con oído de auditor: ¿dónde murió la frase? ¿dónde sobró una muletilla? ¿dónde faltó una pausa?</li>
+      <li><strong>Práctica encubierta:</strong> una conversación real al día donde tu único objetivo es sostener una pausa de dos segundos antes de tu frase más importante.</li>
+      <li><strong>Entregable semanal:</strong> una lectura de 2 minutos grabada en video. Al final de la fase, comparar la semana 4 contra la 1 — esa diferencia audible es el combustible para la Fase 2.</li>
+    </ul>
+
+    <h3>Fase 2 · Semanas 5–8 — La intención</h3>
+    <p>Aquí entra el teatro. Acción no negociable de la semana 5: <strong>inscribirte en un curso de improvisación teatral presencial.</strong> Es la pieza que ningún ejercicio en solitario sustituye — repetición supervisada, público real, permiso institucional para jugar.</p>
+    <ul class="plan">
+      <li><strong>Diario (10 min):</strong> el verbo de Stanislavski. Antes de cada interacción que importe, escribe el verbo (<em>quiero tranquilizarla</em>, <em>quiero que se entusiasme</em>). Por la noche: ¿lo perseguí o me fui al contenido?</li>
+      <li><strong>Diario (15 min):</strong> atención meisneriana en conversación real: observar al otro más de lo que te observas. La medida del éxito: poder describir su comportamiento después.</li>
+      <li><strong>Semanal:</strong> la clase de impro (2–3 h) y un experimento de estatus de Johnstone — un día un punto más alto que tu default, otro día un punto más bajo. Anota qué cambió en cómo te respondieron.</li>
+      <li><strong>Entregable semanal:</strong> contar una historia personal de 3 minutos, grabada en video, con un verbo definido antes de grabar. Revisar preguntando una sola cosa: ¿se nota el verbo?</li>
+    </ul>
+
+    <h3>Fase 3 · Semanas 9–12 — El discurso en el mundo</h3>
+    <p>La fase de integración: diseñar piezas completas y ponerlas frente a públicos reales.</p>
+    <ul class="plan">
+      <li><strong>Semanal (sesión larga):</strong> escribir y pulir una pieza de 5 minutos — forma Duarte (qué es / qué podría ser), filtro Heath (¿simple, inesperada, concreta, emocional, narrada?), el público como héroe. Ensayarla con el instrumento de la Fase 1 y un verbo de la Fase 2.</li>
+      <li><strong>Semanal (innegociable):</strong> entregarla a un público real. Una clase, un grupo de estudio, una sobremesa familiar, un club tipo Toastmasters, la reunión donde normalmente mandarías un documento. Cuatro semanas, cuatro públicos distintos.</li>
+      <li><strong>Después de cada entrega (15 min):</strong> el ritual del mago según Ortiz — ¿dónde estuvo el momento más fuerte y estaba bien colocado? ¿qué sobraba (Nelms: lo que no suma, resta)? ¿qué pregunta abrí en el primer minuto y cuándo la cerré?</li>
+      <li><strong>Mantenimiento (15 min):</strong> respiración + lectura grabada, ya en piloto automático.</li>
+    </ul>
+
+    <h3>Medición y cierre</h3>
+    <p>Tres métricas honestas, tomadas en la semana 1 y en la 12:</p>
+    <ol class="metricas">
+      <li>Minutos de video comparados lado a lado — la evidencia física.</li>
+      <li>Conteo de muletillas y de pausas sostenidas por minuto en la grabación.</li>
+      <li>El test externo: ¿te pidieron que repitieras, que siguieras, que contaras más? La atención ganada se mide en invitaciones a seguir hablando.</li>
+    </ol>
+    <p>Y una regla para las doce semanas: prohibido evaluar tu progreso por cómo te sentiste. «Me sentí nervioso» no es un dato de ejecución — los actores profesionales sienten nervios y ejecutan igual. Solo cuenta lo que está en la grabación y lo que hizo el público.</p>
+    <p class="pull">Cada día algo físico, cada semana algo público, cada fase una capa nueva sin soltar la anterior.</p>
+    <div class="idea-clave"><span class="ic-label">Idea clave</span><p>Doce semanas: cuatro para el instrumento, cuatro para la intención (con curso de impro incluido — esa es tu «clase de actuación»), cuatro para piezas completas ante públicos reales. Se mide con grabaciones y con la reacción del público, nunca con cómo te sentiste.</p></div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="s9" class="revela">
+    <div class="eyebrow plain"><span class="num">Síntesis</span><span class="tag">La lógica del estudio</span></div>
+    <h2>El actor que hace el papel de sí mismo</h2>
+    <p>La frase de Robert-Houdin que te ronda la cabeza era la respuesta completa desde el principio; solo había que desplegarla. El mago no es menos honesto por ser actor — es eficaz <em>porque</em> es actor: porque decidió qué experiencia quiere producir y entrenó cada herramienta que la produce. Lo que este estudio añade es que cada una de esas herramientas tiene escuela y maestro: la atención se entiende con los científicos (es escasa, sigue la curiosidad, obedece al que la dirige), la intención se entrena con Stanislavski (el verbo) y Meisner (la atención en el otro), la presencia tiene nombre técnico (el Segundo Círculo de Rodenburg: ni replegado ni forzado), el instrumento se afina grabándose, el discurso se diseña con Aristóteles y con los ingenieros modernos de lo memorable, y la ética queda resuelta con un solo criterio: la técnica que entrega enriquece; la que extrae, corrompe.</p>
+    <p>La tensión que sentías entre «sincero» e «intencional» era falsa: la sinceridad sin intención no llega, y la intención sin sinceridad no dura. El punto donde se cruzan tiene un nombre viejo —presencia— y un camino concreto: doce semanas, empezando por la respiración.</p>
+  </section>
+
+  <section id="s10" class="revela">
+    <div class="eyebrow plain"><span class="num">Cierre</span><span class="tag">Para llevar</span></div>
+    <h2>Tres movimientos para esta semana</h2>
+    <p><strong>Hoy:</strong> grábate leyendo en voz alta dos minutos de cualquier página de este sitio. No la revises todavía; es tu línea base, y en la semana 12 vas a agradecer tenerla.</p>
+    <p><strong>Esta semana:</strong> busca cursos de improvisación teatral presenciales cerca de ti y apúntate a uno que empiece dentro del próximo mes. Ese es «el curso de actuación» que intuías — la intuición era correcta; solo tenía el género equivocado.</p>
+    <p><strong>En tu próxima conversación importante:</strong> escribe el verbo antes de entrar. Un solo verbo activo, dirigido al otro. Es la unidad mínima de hablar con intención, y está disponible desde ya, gratis, sin entrenamiento previo.</p>
+    <p>Y una pregunta abierta para la edición 2 de este documento: cuando el plan termine, ¿qué públicos nuevos vas a buscar para que la destreza no se duerma? La atención ganada, como el instrumento, se mantiene con uso.</p>
+  </section>
+
+  <div class="fuentes revela" id="fuentes">
+    <strong>Fuentes consultadas:</strong>
+    <ol>
+      <li>Jean-Eugène Robert-Houdin, <em>Comment on devient sorcier</em> (1868) — «un prestidigitador no es un malabarista; es un actor que interpreta el papel de un mago».</li>
+      <li>Konstantin Stanislavski, <em>An Actor Prepares</em> (1936) — el objetivo como verbo activo y los círculos de atención.</li>
+      <li>Sanford Meisner, <em>Sanford Meisner on Acting</em> (1987) — actuar como vivir con verdad; la atención puesta en el otro.</li>
+      <li>Keith Johnstone, <em>Impro</em> (1979) — el estatus como transacción conductual presente en toda interacción.</li>
+      <li>Patsy Rodenburg, <em>The Second Circle</em> (2008) — los tres círculos de energía; la presencia como energía que da y recibe.</li>
+      <li>Aristóteles, <em>Retórica</em> (s. IV a. C.) — ethos, pathos, logos; el ethos como la apelación más poderosa.</li>
+      <li>Daniel Kahneman, <em>Attention and Effort</em> (1973) — la atención como recurso limitado que la mente asigna.</li>
+      <li>George Loewenstein, «The Psychology of Curiosity», <em>Psychological Bulletin</em> (1994) — la curiosidad como brecha de información.</li>
+      <li>Stephen Macknik y Susana Martinez-Conde, <em>Sleights of Mind</em> (2010) — la neurociencia de la misdirección.</li>
+      <li>Cicely Berry, <em>Voice and the Actor</em> (1973) y Kristin Linklater, <em>Freeing the Natural Voice</em> (1976) — el trabajo vocal como liberación de tensiones.</li>
+      <li>Julian Treasure, «How to Speak So That People Want to Listen», TED (2014) — la caja de herramientas vocal.</li>
+      <li>Olivia Fox Cabane, <em>The Charisma Myth</em> (2012) — presencia, poder y calidez como conductas entrenables.</li>
+      <li>Vanessa Van Edwards, <em>Cues</em> (2022) — las señales no verbales que preceden a la recepción del contenido.</li>
+      <li>Chip Heath y Dan Heath, <em>Made to Stick</em> (2007) — simple, inesperado, concreto, creíble, emocional, narrado.</li>
+      <li>Nancy Duarte, <em>Resonate</em> (2010) — el público como héroe; la oscilación entre lo que es y lo que podría ser.</li>
+      <li>Chris Anderson, <em>TED Talks</em> (2016) — la charla como regalo de una idea.</li>
+      <li>Henning Nelms, <em>Magic and Showmanship</em> (1969) — el significado por encima del método.</li>
+      <li>Darwin Ortiz, <em>Strong Magic</em> (1994) — gestión de audiencia: ritmo y colocación de los momentos fuertes.</li>
+      <li>Dale Carnegie, <em>How to Win Friends and Influence People</em> (1936) — el interés genuino por el otro como núcleo ético.</li>
+    </ol>
+  </div>
+
+  <footer>Café con Claude · Comunicación · «El actor que hace el papel de sí mismo» · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  var navLinks = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  navLinks.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        navLinks.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section[id], div[id="fuentes"]').forEach(function (s) { spy.observe(s); });
+
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>

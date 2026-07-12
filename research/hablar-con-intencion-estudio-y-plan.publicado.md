@@ -6,6 +6,8 @@ eyebrow: "Estudio intensivo · Comunicación · Actuación · Retórica · Atenc
 lang: "es"
 status: "Documento vivo · edición 1"
 date: "2026-07-12"
+rendered_to: "el-actor-que-hace-el-papel.html"
+rendered_on: "2026-07-12"
 sources_at_a_glance:
   - "Robert-Houdin"
   - "Stanislavski"
