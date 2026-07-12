@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Iglesia primitiva · una investigación interdisciplinaria · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 300px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.7rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.84rem; line-height: 1.3;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.78rem;
+    min-width: 1.9rem; color: var(--line); transition: color 0.2s; text-align: right;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 820px; margin: 0 auto; }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.08rem; max-width: 36em; }
+  .standfirst { margin-top: 1.4rem; font-size: 1.05rem; max-width: 40em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.8rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2.05rem); line-height: 1.15; margin: 0 0 0.3rem;
+  }
+  section h2 .sec-num {
+    display: block; font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--terracotta); font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.2rem; line-height: 1.25; margin: 1.8rem 0 0.5rem;
+    color: var(--ink);
+  }
+  h4 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.02rem; margin: 1.3rem 0 0.4rem; color: var(--plum);
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+  strong { font-weight: 600; }
+
+  main ul, main ol { margin: 0 0 1.1rem 1.3rem; }
+  main li { margin-bottom: 0.45rem; }
+
+  .lede {
+    font-size: 1.05rem; font-style: italic; color: var(--muted);
+    border-left: 3px solid var(--line); padding-left: 1rem; margin-bottom: 1.4rem;
+  }
+
+  /* Tables */
+  .tabla-wrap { overflow-x: auto; margin: 0.4rem 0 1.5rem; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 34rem; }
+  table.compacta { min-width: 0; }
+  th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.82rem;
+    color: var(--terracotta); border-bottom: 2px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+  tbody tr:hover { background: rgba(180,83,42,0.04); }
+  td strong { color: var(--ink); }
+
+  /* Confidence + source badges */
+  .conf {
+    font-family: 'Fraunces', serif; font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 0.08rem 0.42rem; border-radius: 3px; white-space: nowrap;
+    background: rgba(107,122,63,0.16); color: #4f5b2e; margin-left: 0.15rem;
+  }
+  .conf.media { background: rgba(201,138,45,0.18); color: #8a5e17; }
+  .conf.baja  { background: rgba(180,83,42,0.14); color: #8f3d1f; }
+  .src {
+    font-family: 'Fraunces', serif; font-size: 0.66rem; font-weight: 700;
+    letter-spacing: 0.06em; padding: 0.05rem 0.34rem; border-radius: 3px;
+    background: rgba(110,74,110,0.12); color: var(--plum); white-space: nowrap;
+  }
+
+  /* Panel voice lead-in */
+  .voz { color: var(--plum); font-weight: 600; font-style: italic; }
+
+  /* Callout: idea clave / síntesis */
+  .idea {
+    margin: 1.4rem 0; padding: 1rem 1.2rem;
+    background: rgba(201,138,45,0.09);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 4px 4px 0; font-size: 0.98rem;
+  }
+  .idea strong { font-family: 'Fraunces', serif; }
+
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+  .fuentes ul { margin: 0.6rem 0 0 1.2rem; }
+  .fuentes li { margin-bottom: 0.35rem; }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">La Iglesia primitiva · informe de investigación</div>
+  <ol class="toc">
+    <li><a href="#s0"><span class="num">·</span>Método y equipo</a></li>
+    <li><a href="#s1"><span class="num">I</span>Identidad</a></li>
+    <li><a href="#s2"><span class="num">II</span>Vida diaria</a></li>
+    <li><a href="#s3"><span class="num">III</span>Crecimiento</a></li>
+    <li><a href="#s4"><span class="num">IV</span>Liderazgo</a></li>
+    <li><a href="#s5"><span class="num">V</span>Las grandes iglesias</a></li>
+    <li><a href="#s6"><span class="num">VI</span>Personajes</a></li>
+    <li><a href="#s7"><span class="num">VII</span>Retos</a></li>
+    <li><a href="#s8"><span class="num">VIII</span>Doctrina</a></li>
+    <li><a href="#s9"><span class="num">IX</span>Economía</a></li>
+    <li><a href="#s10"><span class="num">X</span>Mujeres</a></li>
+    <li><a href="#s11"><span class="num">XI</span>Evangelización</a></li>
+    <li><a href="#s12"><span class="num">XII</span>Persecución</a></li>
+    <li><a href="#s13"><span class="num">XIII</span>Cronología</a></li>
+    <li><a href="#s14"><span class="num">XIV</span>Mitos</a></li>
+    <li><a href="#s15"><span class="num">XV</span>Lecciones</a></li>
+    <li><a href="#s16"><span class="num">XVI</span>El efecto espejo</a></li>
+    <li><a href="#s17"><span class="num">→</span>Conclusión</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Sala de lectura
+  </button>
+
+  <header>
+    <span class="eyebrow">Informe de investigación · Panel interdisciplinario</span>
+    <h1>La Iglesia primitiva</h1>
+    <p class="subtitle">Cómo era realmente, cómo vivía, por qué creció y qué podemos aprender de ella (siglos I–IV).</p>
+    <p class="standfirst">Un informe con niveles de confianza explícitos y un compromiso declarado: la evidencia histórica por encima de la tradición, la apologética o la polémica. Diez especialistas, cuatro tipos de fuente, y un abogado del diablo que vigila cada conclusión cómoda.</p>
+  </header>
+
+  <main>
+
+    <section id="s0" class="revela">
+      <h2><span class="sec-num">Preliminares</span>El equipo, el método y la honestidad</h2>
+
+      <p>Este informe está redactado como el trabajo conjunto de un panel interdisciplinario. Cada voz aporta su método y sus límites.</p>
+
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Especialista</th><th>Aporte principal</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Historiador del cristianismo (ss. I–IV)</strong></td><td>Síntesis de fuentes cristianas tempranas y desarrollo institucional</td></tr>
+            <tr><td><strong>Experto en Nuevo Testamento</strong></td><td>Análisis crítico del testimonio bíblico como fuente histórica</td></tr>
+            <tr><td><strong>Especialista en Hechos</strong></td><td>Cronología, geografía y verosimilitud del relato lucano</td></tr>
+            <tr><td><strong>Experto en judaísmo del Segundo Templo</strong></td><td>El contexto judío del que nació el movimiento</td></tr>
+            <tr><td><strong>Historiador del Imperio Romano</strong></td><td>Marco legal, político y administrativo</td></tr>
+            <tr><td><strong>Arqueólogo del Mediterráneo del s. I</strong></td><td>Evidencia material: casas, inscripciones, papiros</td></tr>
+            <tr><td><strong>Sociólogo de movimientos religiosos</strong></td><td>Modelos de conversión, redes y crecimiento</td></tr>
+            <tr><td><strong>Economista histórico</strong></td><td>Finanzas, patronazgo, pobreza y redistribución</td></tr>
+            <tr><td><strong>Lingüista (koiné, hebreo, arameo, latín)</strong></td><td>Lo que las palabras revelan y lo que ocultan</td></tr>
+            <tr><td><strong>Investigador de la verdad</strong></td><td>El abogado del diablo: cuestiona conclusiones cómodas</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Cómo leer este informe</h3>
+      <p><strong>Cuatro tipos de fuente</strong>, siempre distinguidos:</p>
+      <ul>
+        <li><span class="src">NT</span> &mdash; Testimonio bíblico. Fuente primaria del s. I, pero escrita por creyentes con intención teológica. Se usa críticamente, no ingenuamente.</li>
+        <li><span class="src">FC</span> &mdash; Fuentes cristianas tempranas no canónicas: Didaché, 1 Clemente, Ignacio, Policarpo, Justino, Ireneo, Tertuliano, Cipriano, Eusebio, actas de mártires.</li>
+        <li><span class="src">FNC</span> &mdash; Fuentes no cristianas: Tácito, Suetonio, Plinio el Joven, Josefo, Luciano de Samósata, Celso (vía Orígenes), Galeno, papiros, inscripciones.</li>
+        <li><span class="src">ARQ</span> &mdash; Arqueología: la iglesia-casa de Dura-Europos, catacumbas, inscripciones funerarias, grafitos (como el de Alexámenos), papiros documentales.</li>
+      </ul>
+      <p><span class="src">MOD</span> marca interpretaciones modernas (Stark, MacMullen, Meeks, Hurtado, Moss, Frend, Lampe, Kreider, etc.), que son hipótesis explicativas, no datos.</p>
+
+      <p><strong>Niveles de confianza</strong>: <span class="conf">Alta</span> múltiples fuentes independientes, evidencia material directa o consenso amplio. <span class="conf media">Media</span> fuente única creíble o inferencia sólida no verificable de forma independiente. <span class="conf baja">Baja</span> tradición tardía, estimación especulativa o debate sin resolver.</p>
+
+      <div class="idea">
+        <strong>Advertencia del Investigador de la verdad:</strong> la mayor tentación de este estudio es doble &mdash; la nostalgia (idealizar el pasado) y el presentismo (juzgarlo con categorías actuales). Ambas se señalan cuando aparecen.
+      </div>
+    </section>
+
+    <section id="s1" class="revela">
+      <h2><span class="sec-num">Parte I</span>Identidad</h2>
+
+      <h3>¿Qué entendían por «ser Iglesia»?</h3>
+      <p><span class="voz">El Lingüista abre la sesión:</span> la palabra <em>ekklesía</em> (ἐκκλησία) no era un término religioso en griego cotidiano. Designaba la asamblea de ciudadanos convocada para deliberar (así en Hechos 19:32, 39, 41 para una turba en Éfeso). Pero en la Septuaginta traduce el hebreo <em>qahal</em>, la asamblea de Israel convocada por Dios. Al elegir esa palabra, los primeros creyentes hicieron una afirmación audaz: <strong>somos la asamblea escatológica del Dios de Israel, convocada por el Mesías</strong>. <span class="conf">Alta</span> en el uso lingüístico; <span class="conf media">Media</span> en que todos captaran el matiz teológico.</p>
+      <p><strong>Autodesignaciones documentadas</strong> <span class="src">NT</span>: «el Camino» (Hch 9:2; 19:9, 23; 24:14), «los santos», «los hermanos», «los que invocan el nombre», «los discípulos». El término «cristianos» (<em>christianoi</em>) nació en Antioquía (Hch 11:26) y muy probablemente fue una <strong>etiqueta externa</strong>, quizá burlona, siguiendo el patrón latino de partidos (herodianos, cesarianos: los del partido de Christos). En el NT aparece solo tres veces, dos en boca de externos. <span class="conf">Alta</span></p>
+      <p><strong>Conclusión sobre identidad:</strong> «ser Iglesia» no era pertenecer a una institución ni asistir a un edificio (no había edificios). Era pertenecer a una <strong>familia ficticia</strong> (hermanos sin lazos de sangre), a un <strong>pueblo</strong> (el Israel renovado, ampliado a las naciones) y a una <strong>asamblea</strong> convocada por un Señor vivo. La metáfora dominante en Pablo es corporal y familiar, no organizacional. <span class="conf">Alta</span></p>
+
+      <h3>¿Cómo definían su misión?</h3>
+      <ul>
+        <li><strong>Testimonio del Resucitado:</strong> el núcleo verificable más antiguo es el kerygma de 1 Corintios 15:3–5, que Pablo dice haber <em>recibido</em> (fórmula técnica de transmisión), fechable a los primeros 2–5 años tras la crucifixión. <span class="conf">Alta</span></li>
+        <li><strong>Hacer discípulos:</strong> Mateo 28:19–20 refleja la autocomprensión de al menos una comunidad importante del s. I. La Didaché (ca. 50–120) confirma que la instrucción moral («los dos caminos») precedía al bautismo: la misión incluía <strong>formación</strong>, no solo proclamación. <span class="conf">Alta</span></li>
+        <li><strong>Lo que la misión NO era:</strong> no hay evidencia de un programa de reforma social del Imperio, de conquista política o de construcción institucional. Su horizonte era escatológico: el Señor vuelve. <span class="conf">Alta</span></li>
+      </ul>
+
+      <h3>Identidad dentro del Imperio</h3>
+      <p><span class="voz">El Historiador de Roma:</span> el Imperio clasificaba a las personas por ciudad, etnia y culto ancestral. Los judíos eran una <em>natio</em> con costumbres toleradas (la frase «religio licita» es de Tertuliano, no un estatus legal romano; existían privilegios concedidos caso por caso). Los cristianos, al separarse del judaísmo, quedaron en un <strong>vacío clasificatorio</strong>: no eran etnia, no tenían templos, no sacrificaban, no tenían imágenes ni sacerdocio visible. Para el observador romano eran una <em>superstitio</em> (Tácito: «superstición dañina»; Plinio: «depravada y desmesurada»; Suetonio: «nueva y maléfica»). <span class="conf">Alta</span></p>
+      <p>Los propios cristianos desarrollaron una autocomprensión notable: la <strong>Epístola a Diogneto</strong> (s. II) los describe habitando cada patria como ciudadanos y soportándolo todo como extranjeros: «toda tierra extraña es patria para ellos, y toda patria, tierra extraña». Aristides y otros hablan de un <strong>«tercer género»</strong> (<em>tertium genus</em>): ni judíos ni paganos. <span class="conf">Alta</span></p>
+
+      <h3>¿Qué los distinguía de judíos y paganos?</h3>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Rasgo</th><th>Frente al paganismo</th><th>Frente al judaísmo</th></tr></thead>
+          <tbody>
+            <tr><td>Monoteísmo exclusivo</td><td>Radical: negaban a otros dioses como dignos de culto</td><td>Compartido</td></tr>
+            <tr><td>Culto sin templo ni imágenes</td><td>Incomprensible («ateos»)</td><td>El judaísmo pos-70 también, pero conservaba Torá, circuncisión, kashrut</td></tr>
+            <tr><td>Membresía transétnica</td><td>Los cultos paganos no exigían conversión exclusiva</td><td>El prosélito debía adoptar identidad étnico-legal judía</td></tr>
+            <tr><td>Ética sexual y familiar estricta</td><td>Contracultural: rechazo del aborto, el infanticidio y la exposición</td><td>Ampliamente compartida</td></tr>
+            <tr><td>Rechazo del culto imperial</td><td>El punto de fricción letal</td><td>Los judíos tenían exención ancestral; los cristianos gentiles, no</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>La «separación de los caminos» con el judaísmo fue <strong>gradual, desigual por región y nunca total</strong> en este periodo: fronteras porosas hasta el s. IV (Juan Crisóstomo aún predicaba en 386 contra cristianos que frecuentaban sinagogas). El <em>fiscus Judaicus</em> tras el 70 y la revuelta de Bar Kokhba (132–135) fueron aceleradores. <span class="conf">Alta</span> en la gradualidad; <span class="conf baja">Baja</span> en cualquier fecha única.</p>
+    </section>
+
+    <section id="s2" class="revela">
+      <h2><span class="sec-num">Parte II</span>Vida diaria</h2>
+
+      <h3>El escenario físico: la casa</h3>
+      <p><span class="voz">El Arqueólogo:</span> durante casi dos siglos no existieron edificios eclesiásticos. La comunidad se reunía en casas con espacio suficiente (Rom 16:5; Col 4:15; Flm 2). Una <em>domus</em> mediterránea acomodaba 30–50 personas; la mayoría vivía en apartamentos (<em>insulae</em>) mucho más pequeños. La evidencia material más antigua de un edificio adaptado para culto es la <strong>iglesia-casa de Dura-Europos</strong> (Siria, ca. 240–256): vivienda remodelada con sala para ~60–70 personas y un baptisterio con frescos (el Buen Pastor, la curación del paralítico, las mujeres ante la tumba). <span class="conf">Alta</span> &mdash; evidencia material directa.</p>
+      <p><strong>Implicación:</strong> una ciudad con muchos cristianos no tenía «una iglesia grande» sino una <strong>red de células domésticas</strong> con líderes propios, lo que explica tanto la resiliencia (imposible de decapitar) como los conflictos de facciones (1 Cor 1:12). <span class="conf">Alta</span></p>
+
+      <h3>Un domingo típico</h3>
+      <p><span class="voz">La fuente no cristiana más valiosa</span> <span class="src">FNC</span>: Plinio el Joven, gobernador de Bitinia, escribe a Trajano hacia el 112 tras interrogar (y torturar) a cristianos, incluidas dos esclavas llamadas <em>ministrae</em>. Confesaban:</p>
+      <ul>
+        <li>Reunirse <strong>un día fijo, antes del amanecer</strong> (el domingo era laboral; no existía el fin de semana).</li>
+        <li>Cantar <strong>«un himno a Cristo como a un dios»</strong> (<em>carmen Christo quasi deo</em>): evidencia externa tempranísima de adoración a Jesús.</li>
+        <li>Comprometerse con juramento (<em>sacramentum</em>) <strong>a no robar, no adulterar, no defraudar, no negar depósitos</strong>: una ética, no una conspiración.</li>
+        <li>Reunirse después para <strong>una comida común e inocente</strong>, abandonada cuando Plinio prohibió las asociaciones.</li>
+      </ul>
+      <p><span class="conf">Alta</span> &mdash; testigo hostil, contemporáneo, sin motivo para embellecer.</p>
+      <p><span class="voz">La fuente cristiana más detallada</span> <span class="src">FC</span>: Justino Mártir, <em>Primera Apología</em> 67 (Roma, ca. 155), describe el domingo: se reúnen de ciudad y campo; se <strong>leen</strong> las «memorias de los apóstoles» y los profetas; el que preside <strong>exhorta</strong>; <strong>oran</strong> juntos; pan y vino con agua, el presidente da gracias (<em>eucharistía</em>) y el pueblo responde «Amén»; los <strong>diáconos</strong> distribuyen y llevan porción a los ausentes; <strong>colecta voluntaria</strong> para «huérfanos y viudas, enfermos, presos, forasteros de paso». <span class="conf">Alta</span> para Roma a mediados del s. II; <span class="conf media">Media</span> al retroproyectarlo al s. I, cuando la reunión giraba en torno a una cena completa (1 Cor 11).</p>
+
+      <h3>Prácticas cotidianas documentadas</h3>
+      <ul>
+        <li><strong>Oración:</strong> la Didaché prescribe el Padre Nuestro tres veces al día y ayuno miércoles y viernes (distintos del lunes y jueves de «los hipócritas»: rivalidad fraterna con la sinagoga). <span class="conf">Alta</span></li>
+        <li><strong>Enseñanza y discipulado:</strong> catequesis moral pre-bautismal («los dos caminos»); hacia el s. III el <strong>catecumenado</strong> se formalizó en un proceso de hasta tres años con examen de conducta y de oficio. <span class="conf">Alta</span> para el s. III.</li>
+        <li><strong>Trabajo:</strong> los cristianos <strong>no se retiraron de la economía</strong>. Pablo fabricaba tiendas y convirtió el taller en plataforma misionera. Solo los oficios ligados a idolatría o espectáculos sangrientos generaban conflicto. <span class="conf">Alta</span></li>
+        <li><strong>Familia:</strong> los «códigos domésticos» cristianizan la estructura grecorromana sin abolirla, pero introducen reciprocidad inaudita. Cada hogar mixto (creyente + pagano) era una cabeza de playa misionera. <span class="conf">Alta</span></li>
+        <li><strong>Ayuda mutua:</strong> Tertuliano (<em>Apología</em> 39, ca. 197) describe un <strong>fondo común</strong> de aportes mensuales <strong>voluntarios</strong>, gastado en pobres, huérfanos, ancianos, náufragos y presos por la fe. Y registra la reacción pagana: <strong>«¡Mirad cómo se aman!»</strong>. <span class="conf">Alta</span></li>
+        <li><strong>Viudas y huérfanos:</strong> de problema logístico (Hch 6) a institución (1 Tim 5:3–16). Hacia 251, Cornelio de Roma reporta más de <strong>1.500 viudas y necesitados</strong> sostenidos (Eusebio, <em>HE</em> 6.43). <span class="conf">Alta</span></li>
+        <li><strong>Hospitalidad:</strong> infraestructura del movimiento, con reglas contra abusos: la Didaché limita al profeta itinerante a dos días; «si pide dinero, es un falso profeta»; acuña <em>christémporos</em>, «traficante de Cristo». <span class="conf">Alta</span></li>
+        <li><strong>Disciplina:</strong> proceso gradual de Mateo 18; prohibición de litigar ante tribunales paganos (1 Cor 6); exclusión del ofensor grave con meta explícita de <strong>restauración</strong>. <span class="conf">Alta</span></li>
+      </ul>
+      <div class="idea">
+        <strong>El Sociólogo, hallazgo central:</strong> el cristianismo primitivo no era un evento semanal sino una <strong>densa economía de cuidado mutuo de siete días</strong>, incrustada en hogares y oficios. La reunión era la punta visible; la vida compartida era el iceberg.
+      </div>
+    </section>
+
+    <section id="s3" class="revela">
+      <h2><span class="sec-num">Parte III</span>Crecimiento</h2>
+
+      <h3>La aritmética: de cientos a millones</h3>
+      <p>El cálculo más influyente es el de Rodney Stark (<em>The Rise of Christianity</em>, 1996): partiendo de ~1.000 cristianos hacia el año 40 y llegando a <strong>5–7,5 millones hacia el 300</strong> (en un imperio de ~60 millones), basta un crecimiento sostenido de <strong>40% por década (~3,4% anual)</strong>: la tasa de movimientos religiosos modernos bien documentados. Conclusión demoledora: <strong>no se necesitan conversiones masivas ni eventos extraordinarios</strong>; basta que, cada década, cada diez cristianos incorporen a cuatro personas de su red. Keith Hopkins llegó a cifras similares; Bart Ehrman valida el orden de magnitud.</p>
+      <div class="tabla-wrap">
+        <table class="compacta">
+          <thead><tr><th>Año</th><th>Cristianos (curva de Stark)</th><th>% del Imperio</th></tr></thead>
+          <tbody>
+            <tr><td>40</td><td>~1.000</td><td>0,0017%</td></tr>
+            <tr><td>100</td><td>~7.500</td><td>0,013%</td></tr>
+            <tr><td>150</td><td>~40.000</td><td>0,07%</td></tr>
+            <tr><td>200</td><td>~220.000</td><td>0,36%</td></tr>
+            <tr><td>250</td><td>~1.170.000</td><td>~2%</td></tr>
+            <tr><td>300</td><td>~6.300.000</td><td>~10,5%</td></tr>
+            <tr><td>350</td><td>~34.000.000</td><td>~56%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><span class="conf media">Media</span> &mdash; la lógica exponencial es sólida y el orden de magnitud goza de amplio respaldo; los números concretos son estimaciones, no censos. Nadie contó cristianos en la antigüedad.</p>
+      <p><span class="voz">El Investigador de la verdad interviene:</span> nótese lo que este modelo destruye. Si el crecimiento fue exponencial y ordinario, entonces (a) no hubo «época dorada de avivamiento masivo» seguida de decadencia, y (b) el gran salto numérico ocurrió en el s. III–IV, no en el I. La iglesia del s. I era estadísticamente <strong>invisible</strong>: hacia el año 100, menos de una persona de cada 7.000 en el Imperio era cristiana.</p>
+
+      <h3>Los factores, ordenados por impacto probable</h3>
+      <ol>
+        <li><strong>Redes personales y familiares (oikos)</strong> <span class="conf">Alta</span> &mdash; la gente se convierte por vínculos preexistentes, no por predicación a extraños. El propio Celso se burla de que el cristianismo se propaga por laneros y lavanderas «en casas privadas y talleres»: su desprecio es nuestra mejor descripción del mecanismo real.</li>
+        <li><strong>El cuidado de enfermos y pobres, sobre todo en las epidemias</strong> <span class="conf">Media-Alta</span> &mdash; la peste Antonina (165–180) y la de Cipriano (249–262). Los cristianos se quedaron a atender mientras muchos huían; la enfermería elemental reduce la mortalidad, y los sobrevivientes quedaban ligados a la comunidad. El emperador pagano <strong>Juliano</strong> se queja de que «los impíos galileos alimentan no solo a sus pobres sino también a los nuestros»: el enemigo confirma la práctica.</li>
+        <li><strong>La infraestructura del Imperio</strong> <span class="conf">Alta</span> (como facilitador) &mdash; calzadas, rutas marítimas, koiné y sinagogas de la diáspora con «temerosos de Dios». Movimiento <strong>urbano</strong> durante siglos: <em>paganus</em> (aldeano) terminó significando «no cristiano».</li>
+        <li><strong>El papel de las mujeres y las familias</strong> <span class="conf media">Media</span> &mdash; sobre-representación femenina probable, matrimonios mixtos, rechazo del aborto y el infanticidio, mayor fertilidad relativa. El mecanismo es plausible; su peso exacto, incierto.</li>
+        <li><strong>Exigencia moral alta + comunidad de alto compromiso</strong> <span class="conf media">Media</span> &mdash; los grupos exigentes retienen y movilizan mejor. Kreider: la iglesia pre-constantiniana casi no predicaba a las masas; <strong>fermentaba</strong> por la paciencia y el hábito visible.</li>
+        <li><strong>Milagros, sanidades y exorcismos</strong> <span class="conf media">Media</span> &mdash; el historiador no verifica milagros, pero sí que las fuentes de todos los bandos los tratan como el gran argumento popular. MacMullen: el exorcismo era la demostración pública más eficaz.</li>
+        <li><strong>Lectura pública de las Escrituras y enseñanza</strong> <span class="conf media">Media</span> &mdash; en una sociedad ~90% analfabeta, una comunidad <strong>textual</strong> daba a artesanos y esclavos acceso a un universo intelectual.</li>
+        <li><strong>Persecución y martirio</strong> <span class="conf baja">Media-Baja</span> como factor directo &mdash; «la sangre de los mártires es semilla» es retórica brillante, no estadística. Cohesionó al grupo, pero también produjo apostasías masivas y cismas. Efecto neto ambiguo.</li>
+        <li><strong>Comercio y movilidad</strong> <span class="conf media">Media</span> &mdash; mercaderes, soldados y esclavos transportaron la fe sin ser «misioneros».</li>
+      </ol>
+      <div class="idea">
+        <strong>Síntesis del panel:</strong> el crecimiento no tuvo bala de plata. Fue un <strong>mensaje universal + una comunidad que funcionaba mejor que sus alternativas + redes ordinarias + infraestructura imperial</strong>, sostenido con paciencia exponencial durante 250 años. La mayor sorpresa: la evangelización organizada y masiva es el factor <em>menos</em> documentado tras la generación apostólica.
+      </div>
+    </section>
+
+    <section id="s4" class="revela">
+      <h2><span class="sec-num">Parte IV</span>Liderazgo</h2>
+      <h3>De carisma itinerante a oficio local</h3>
+      <p><strong>Fase 1 (ca. 30–70):</strong> liderazgo mixto &mdash; los Doce y otros apóstoles, profetas, maestros y muy pronto <strong>ancianos</strong> (<em>presbyteroi</em>) locales, calcados de la sinagoga. Jerusalén con Santiago como figura central. <span class="conf">Alta</span></p>
+      <p><strong>Fase 2 (ca. 70–110):</strong> convivencia de itinerantes y locales. La Didaché muestra la transición: prueba a apóstoles y profetas itinerantes y a la vez ordena «elegíos obispos y diáconos dignos del Señor». En el NT, <em>episkopos</em> y <em>presbyteros</em> son intercambiables, siempre en plural por ciudad, junto a diáconos. <span class="conf">Alta</span></p>
+      <p><strong>Fase 3 (ca. 110–250):</strong> el episcopado monárquico. Ignacio de Antioquía (ca. 110) es el primer testigo de la tríada <strong>un obispo + presbiterio + diáconos</strong>, y la promueve con vehemencia (señal de que aún no era universal). Hacia el s. III el obispo único por ciudad es la norma. <span class="conf">Alta</span> en la trayectoria; los ritmos variaron por región.</p>
+      <h3>¿Cómo se escogían?</h3>
+      <p>Criterios escritos y públicos (1 Tim 3; Tito 1): abrumadoramente de <strong>carácter y competencia doméstica</strong> («que gobierne bien su casa»), no de carisma ni de éxito. Único requisito de habilidad: «apto para enseñar». Mecanismo mixto: nombramiento por líderes <strong>con consentimiento comunitario</strong> (la Didaché dice «elegíos»; 1 Clemente y Cipriano insisten en la aprobación del pueblo). <span class="conf">Alta</span> en el carácter mixto.</p>
+      <h3>Conflictos, herejías y formación</h3>
+      <p><strong>Modelo conciliar:</strong> Hechos 15 fija el patrón &mdash; debate abierto, testimonio, Escritura, decisión colegiada y carta circular. <strong>Cartas y enviados:</strong> 1 Clemente interviene con solo persuasión, Escritura y vergüenza fraterna. <strong>Contra la herejía, cuatro herramientas</strong> (s. II): la regla de fe, la sucesión apostólica como argumento epistémico de Ireneo, el canon emergente (acelerado por Marción) y el catecumenado. Se desarrollaban líderes por <strong>aprendizaje en el camino</strong>: 2 Timoteo 2:2 comprime cuatro generaciones en una frase (Pablo → Timoteo → fieles → otros). <span class="conf">Alta</span></p>
+    </section>
+
+    <section id="s5" class="revela">
+      <h2><span class="sec-num">Parte V</span>Las grandes iglesias</h2>
+      <p class="lede">Los «tamaños» antiguos son estimaciones de baja confianza salvo donde se indica. La influencia sí es medible por la producción de textos, líderes y decisiones.</p>
+      <h4>Jerusalén</h4>
+      <p>Iglesia madre (Pentecostés, ca. 30/33); liderada por los Doce y luego por Santiago hasta su ejecución (62, atestiguada por Josefo <span class="src">FNC</span>). Comunidad de bienes <strong>voluntaria</strong> (Hch 5:4); pobreza crónica; tensión helenistas/hebreos. Tras el 70, simbólica más que operativa. <span class="conf">Alta</span> en lo esencial.</p>
+      <h4>Antioquía de Siria</h4>
+      <p>Tercera ciudad del Imperio; primera iglesia mixta judeo-gentil a gran escala; allí nació el nombre «cristianos» y la misión organizada. Escenario del choque Pablo–Pedro (Gál 2). Ignacio (ca. 110); probable cuna de Mateo y la Didaché <span class="conf media">Media</span>. Modelo de iglesia-base misionera.</p>
+      <h4>Roma</h4>
+      <p>Existía ya en los años 40 (expulsión por Claudio «a causa de Chrestus», Suetonio <span class="src">FNC</span>). Estructura de múltiples comunidades domésticas (Lampe). En 251, una máquina asistencial: <strong>46 presbíteros, 7 diáconos, 7 subdiáconos, 42 acólitos, 52 exorcistas/lectores/porteros y más de 1.500 asistidos</strong> (Eusebio, HE 6.43), lo que sugiere decenas de miles de miembros. <span class="conf">Alta</span> en los datos del 251.</p>
+      <h4>Alejandría</h4>
+      <p>Orígenes oscuros <span class="conf baja">Baja</span>; emerge a fines del s. II como capital intelectual: la escuela catequética de Panteno, Clemente y <strong>Orígenes</strong>, el mayor erudito bíblico de la antigüedad. Puente fe–filosofía; frontera difusa con el gnosticismo en sus inicios.</p>
+      <h4>Éfeso</h4>
+      <p>Base paulina de ~3 años (Hch 19), taller de la misión a toda Asia; asociada después a la tradición joánica <span class="conf media">Media</span>. El diagnóstico más citado: «has dejado tu primer amor» (Ap 2:4): ortodoxia con enfriamiento relacional. Sede del concilio del 431.</p>
+      <h4>Corinto</h4>
+      <p>Fundada por Pablo (~50–52, datable por la inscripción de Galión <span class="src">ARQ</span>: el ancla cronológica más firme del NT). La iglesia mejor documentada del s. I &mdash; y la más conflictiva: facciones, pleitos, inmoralidad, caos litúrgico, negación de la resurrección. Sus problemas nos dieron 1 Corintios 13 y 15. <strong>Dones ≠ madurez.</strong> <span class="conf">Alta</span></p>
+      <h4>Filipos, Tesalónica, Esmirna, Laodicea</h4>
+      <p><strong>Filipos:</strong> primera iglesia de Europa (Lidia), la favorita de Pablo, sociedad financiera repetida (Flp 4:15–16). <strong>Tesalónica:</strong> fundada en semanas; confusión escatológica y ociosos («si alguno no quiere trabajar, que tampoco coma»). <strong>Esmirna:</strong> iglesia pobre en ciudad rica, líder <strong>Policarpo</strong>, mártir a los 86 años de fe; paradigma del martirio sereno y no buscado. <strong>Laodicea:</strong> ciudad banquera «tibia… dices: soy rica»: la prosperidad como anestesia espiritual. <span class="conf">Alta</span></p>
+      <h4>Cesarea Marítima y Cartago</h4>
+      <p><strong>Cesarea:</strong> puerta de los gentiles (Cornelio, Hch 10); hogar de la biblioteca de Orígenes y de <strong>Eusebio</strong>, padre de la historia de la Iglesia. <strong>Cartago:</strong> el cristianismo latino nace aquí (no en Roma, grecoparlante hasta el s. III): actas de Escilio (180, primer texto cristiano en latín), la Pasión de <strong>Perpetua y Felicidad</strong> (203), <strong>Tertuliano</strong> (creador del vocabulario teológico latino) y <strong>Cipriano</strong>. El ADN del cristianismo occidental: jurídico, moral, eclesiológico. <span class="conf">Alta</span></p>
+    </section>
+
+    <section id="s6" class="revela">
+      <h2><span class="sec-num">Parte VI</span>Personajes</h2>
+      <p class="lede">Contribución al crecimiento + nivel de certeza sobre lo que sabemos de cada uno.</p>
+      <ul>
+        <li><strong>Pedro</strong> &mdash; puente y pionero: legitimar la misión gentil desde dentro del núcleo judío. Martirio en Roma bajo Nerón <span class="conf">Media-Alta</span>; la crucifixión invertida es tardía <span class="conf baja">Baja</span>.</li>
+        <li><strong>Pablo</strong> &mdash; arquitecto de la expansión gentil: teología portátil, estrategia urbana y tecnología de red (cartas + equipo + casas). Escribió los documentos cristianos más antiguos. <span class="conf">Alta</span> en las siete cartas indiscutidas.</li>
+        <li><strong>Santiago (hermano del Señor)</strong> &mdash; el ancla judía; presidió Jerusalén ~30 años; su ejecución (62) la narra <strong>Josefo</strong> <span class="src">FNC</span>, una de las confirmaciones externas más sólidas del periodo. <span class="conf">Alta</span></li>
+        <li><strong>Juan</strong> &mdash; la memoria profunda: el corpus de Éfeso dio la cristología más alta y el vocabulario de amor, verdad y testimonio. <span class="conf media">Media</span> en biografía; Alta en impacto.</li>
+        <li><strong>Bernabé</strong> &mdash; el multiplicador invisible: avaló a Saulo, lo formó y le cedió el liderazgo. Sin Bernabé no hay Pablo operativo. <span class="conf">Alta</span> según Hechos.</li>
+        <li><strong>Timoteo y Tito</strong> &mdash; el discípulo-prototipo formado en el camino, y el solucionador de misiones imposibles. El liderazgo primitivo no exigía temperamento dominante (la timidez de Timoteo es dato precioso). <span class="conf">Alta</span></li>
+        <li><strong>Priscila y Aquila</strong> &mdash; la pareja-plataforma con iglesia en casa en cada ciudad; instruyeron «con mayor exactitud» a Apolos (una mujer enseñando teología a un predicador brillante, sin escándalo). Priscila aparece primero en 4 de 6 menciones. <span class="conf">Alta</span></li>
+        <li><strong>Febe y Lidia</strong> &mdash; <em>diakonos</em> y <em>prostatis</em> (patrona) de Cencrea, probable portadora y primera lectora de Romanos; y la primera conversa de Europa, comerciante de púrpura, base de Filipos. <span class="conf">Alta</span> en el texto.</li>
+        <li><strong>Ignacio, Clemente, Policarpo, Justino, Ireneo</strong> &mdash; el teólogo camino al martirio; la voz de la estabilidad (ca. 96); el eslabón humano que conecta el s. I con el II; el filósofo con toga; el sistematizador antignóstico. <span class="conf">Alta</span></li>
+      </ul>
+    </section>
+
+    <section id="s7" class="revela">
+      <h2><span class="sec-num">Parte VII</span>Retos y su gestión</h2>
+      <p>Ocho desafíos, con lo que funcionó y lo que fracasó:</p>
+      <ul>
+        <li><strong>Persecución:</strong> el mayor daño no fueron los muertos sino los apóstatas (crisis de los <em>lapsi</em>, 250–251) y los cismas. Funcionó la readmisión penitencial; fracasó el rigorismo, que fabricó cismas de siglos.</li>
+        <li><strong>Pobreza:</strong> el fondo común voluntario y la colecta interprovincial de Pablo (2 Cor 8–9: el primer proyecto de ayuda internacional del movimiento). <span class="conf">Alta</span></li>
+        <li><strong>Divisiones internas:</strong> facciones, conflictos étnico-culturales, choques personales. Funcionó la confrontación directa, cartas, delegados y estructuras nuevas; a veces nada funcionó a corto plazo (Pablo–Bernabé), aunque el resultado neto fueron dos equipos misioneros.</li>
+        <li><strong>Judaizantes:</strong> la primera crisis teológica, resuelta con proceso <em>y</em> doctrina (Hch 15; Gálatas, Romanos).</li>
+        <li><strong>Gnosticismo:</strong> el desafío intelectual mayor del s. II. La respuesta de Ireneo y Tertuliano tardó dos generaciones; Marción construyó una contraiglesia que duró siglos.</li>
+        <li><strong>Montanismo:</strong> la «Nueva Profecía» &mdash; los concilios protegieron el orden, pero enfriaron un carisma que el NT daba por normal.</li>
+        <li><strong>Corrupción y liderazgo fallido:</strong> Diótrefes (3 Juan), los mercaderes de Cristo, y la sátira de Luciano sobre Peregrino <span class="src">FNC</span>. La concentración de poder y dinero en el obispo del s. III creó la vulnerabilidad que estallaría tras Constantino.</li>
+        <li><strong>Cansancio espiritual:</strong> Hebreos entero es un sermón contra el desgaste; Apocalipsis 2–3 diagnostica enfriamiento, tibieza y reputación sin vida. Remedios de las fuentes: memoria, comunidad y horizonte. <span class="conf">Alta</span></li>
+      </ul>
+    </section>
+
+    <section id="s8" class="revela">
+      <h2><span class="sec-num">Parte VIII</span>Doctrina</h2>
+      <h3>El núcleo innegociable</h3>
+      <p>El estrato más antiguo recuperable es el <strong>kerygma pre-paulino</strong> (1 Cor 15:3–5, años 30): Cristo murió por nuestros pecados según las Escrituras, fue sepultado, resucitó al tercer día y se apareció. A esto se suma: un solo Dios creador; Jesús como Señor (<em>Kyrios</em>) e Hijo, adorado junto al Padre desde época sorprendentemente temprana (himno de Flp 2; el <em>carmen Christo quasi deo</em> de Plinio; la «cristología alta temprana» de Hurtado y Bauckham); la venida real en carne; el bautismo y la cena. <span class="conf">Alta</span></p>
+      <h3>Una teología del desacuerdo tolerable</h3>
+      <p>Romanos 14–15 y Colosenses 2:16 documentan una categoría explícita de <strong>adiaphora</strong> (opinables): alimentos, días, prácticas ascéticas. «Recibíos los unos a los otros.» La iglesia primitiva no solo tenía esenciales; tenía un mecanismo para el desacuerdo. <span class="conf">Alta</span></p>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Disputa</th><th>Época</th><th>Resolución</th><th>Evaluación</th></tr></thead>
+          <tbody>
+            <tr><td>Circuncisión de gentiles</td><td>48–60</td><td>Concilio + cartas + teología paulina</td><td>Éxito histórico total</td></tr>
+            <tr><td>Fecha de la Pascua</td><td>s. II</td><td>Víctor amenazó excomulgar a Asia; <strong>Ireneo medió</strong></td><td>Éxito de la mediación; precedente ambiguo</td></tr>
+            <tr><td>Readmisión de los <em>lapsi</em></td><td>250s</td><td>Vía media de Cipriano/Cornelio</td><td>Éxito pastoral; cisma residual</td></tr>
+            <tr><td>Rebautismo de herejes</td><td>250s</td><td>Cipriano vs. Esteban de Roma: sin resolver</td><td>Empate con moraleja</td></tr>
+            <tr><td>Cristología (Arrio)</td><td>s. II–IV</td><td>Regla de fe → concilios → <strong>Nicea (325)</strong></td><td>El proceso escaló al nivel del problema</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s9" class="revela">
+      <h2><span class="sec-num">Parte IX</span>Economía</h2>
+      <p><strong>Ingresos:</strong> cien por ciento voluntarios y desproporcionadamente de gente común &mdash; apartado semanal personal (1 Cor 16:2), aportes mensuales al fondo (Tertuliano), primicias a profetas/maestros residentes, donaciones de patronos y patronas (Febe, Lidia, Gayo, Filemón). <strong>No hubo diezmo obligatorio</strong> en este periodo. <span class="conf">Alta</span></p>
+      <p><strong>Egresos, por prioridad documentada:</strong> (1) pobres, viudas, huérfanos, enfermos, presos y entierros de indigentes; (2) hospitalidad e ayuda entre iglesias; (3) sostenimiento de líderes. <strong>La asistencia social era el presupuesto principal.</strong> <span class="conf">Alta</span> en las categorías; <span class="conf media">Media</span> en montos.</p>
+      <p><strong>Sostenimiento de líderes, modelo dual:</strong> «el obrero es digno de su salario» &mdash; y sin embargo Pablo renunció a ese derecho en Corinto para no dar apariencia de lucro. El patrón bivocacional coexistió siempre con el sostenido, con el criterio antifraude de la Didaché (<em>christémporos</em>). <strong>Administración:</strong> los diáconos nacen como gestores de distribución equitativa (Hch 6): el primer conflicto de la iglesia fue contable. <span class="conf">Alta</span></p>
+    </section>
+
+    <section id="s10" class="revela">
+      <h2><span class="sec-num">Parte X</span>Mujeres</h2>
+      <p class="lede">Solo evidencia, en tres estratos.</p>
+      <p><strong>Estrato 1 &mdash; textos del s. I</strong> <span class="src">NT</span>: <strong>Febe</strong> (<em>diakonos</em> y <em>prostatis</em>); <strong>Junia</strong>, «distinguida entre los apóstoles» (el nombre es femenino; la lectura «Junias» es enmienda sin base manuscrita &mdash; Epp es concluyente) <span class="conf">Alta</span> en el nombre, <span class="conf media">Media</span> en el alcance de «apóstol»; <strong>Priscila</strong> enseña a Apolos; <strong>Lidia, Ninfa</strong> y otras hospedan iglesias; las <strong>cuatro hijas de Felipe</strong> profetizan. En tensión, los mismos corpus contienen restricciones (1 Cor 14:34–35; 1 Tim 2:11–12) cuya interpretación divide honestamente a los especialistas. <strong>Ambas líneas están en las fuentes.</strong></p>
+      <p><strong>Estrato 2 &mdash; s. II–III</strong>: Plinio torturó a dos esclavas <em>ministrae</em> (las informantes cualificadas eran mujeres, y esclavas); Celso se burla de que recluta «lavanderas y mujeres» (el desprecio confirma la demografía); <strong>Perpetua</strong> (203) dejó probablemente el primer diario cristiano femenino; el orden de las viudas y las diaconisas se institucionalizan en Oriente.</p>
+      <p><strong>Estrato 3 &mdash; síntesis sociológica</strong> <span class="src">MOD</span>: Stark argumenta mayoría femenina y estatus comparativamente alto como motor de crecimiento; los críticos objetan la base epigráfica. Dirección probable, magnitud incierta. <span class="conf media">Media</span></p>
+      <div class="idea">
+        <strong>Conclusión:</strong> la evidencia muestra mujeres como patronas, diáconos, profetas, catequistas, mártires y mayoría demográfica probable, dentro de una cultura patriarcal que la iglesia moderó sin abolir, con una <strong>trayectoria de restricción creciente entre el s. I y el III</strong>. Quien afirme «las mujeres no hacían nada» o «no había ninguna diferencia con los varones» contradice, en ambos casos, las fuentes.
+      </div>
+    </section>
+
+    <section id="s11" class="revela">
+      <h2><span class="sec-num">Parte XI</span>Evangelización</h2>
+      <p><strong>El hallazgo incómodo primero:</strong> tras la generación apostólica, las fuentes casi no mencionan evangelistas profesionales ni predicación masiva. Los sermones pre-constantinianos <strong>no exhortan a evangelizar</strong>: exhortan a vivir de tal manera que los de afuera pregunten. Y sin embargo el movimiento crecía 40% por década. <span class="conf">Alta</span> en el silencio de las fuentes; la interpretación es <span class="src">MOD</span>.</p>
+      <p><strong>Los métodos reales, por orden de evidencia:</strong> (1) conversación en la red natural; (2) la comunidad como argumento (caridad visible, entierros dignos, conducta en plagas, honestidad); (3) hospitalidad y ágape como puerta de entrada; (4) exorcismo y oración por enfermos como demostración pública; (5) apologistas por escrito hacia élites; (6) predicación pública, central en Hechos, rara después.</p>
+      <div class="idea">
+        <strong>La pregunta operativa</strong> de la iglesia primitiva no era «¿cómo atraemos gente?» sino «¿cómo vivimos de modo que nuestra vida exija explicación?».
+      </div>
+    </section>
+
+    <section id="s12" class="revela">
+      <h2><span class="sec-num">Parte XII</span>Persecución</h2>
+      <h3>El marco legal real</h3>
+      <p>No existió (hasta 249) una ley general contra el cristianismo. El documento clave es el intercambio <strong>Plinio–Trajano</strong> (ca. 112): los cristianos <strong>no deben ser buscados</strong> (<em>conquirendi non sunt</em>); si son denunciados y convictos, se les castiga; si niegan y sacrifican, se les perdona; los anónimos se desechan. Cristianismo punible pero perseguido solo reactivamente. <span class="conf">Alta</span> &mdash; documentos oficiales conservados.</p>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Fecha</th><th>Episodio</th><th>Alcance</th></tr></thead>
+          <tbody>
+            <tr><td>64</td><td>Nerón culpa a los cristianos del incendio de Roma</td><td>Local (Roma)</td></tr>
+            <tr><td>~112</td><td>Procesos de Plinio en Bitinia</td><td>Provincial, reactivo</td></tr>
+            <tr><td>~155/156</td><td>Policarpo en Esmirna</td><td>Local, presión popular</td></tr>
+            <tr><td>177</td><td>Pogromo de Lyon y Vienne (Blandina, Potino)</td><td>Local</td></tr>
+            <tr><td>202–203</td><td>Perpetua y Felicidad en Cartago</td><td>Regional</td></tr>
+            <tr><td><strong>249–251</strong></td><td><strong>Decio: edicto universal de sacrificar (<em>libellus</em>)</strong></td><td>Primer golpe imperial general</td></tr>
+            <tr><td>257–258</td><td>Valeriano: contra clero y bienes; muere Cipriano</td><td>Imperial, dirigida</td></tr>
+            <tr><td><strong>303–313</strong></td><td><strong>La Gran Persecución (Diocleciano, Galerio)</strong></td><td>La más dura, sobre todo en Oriente</td></tr>
+            <tr><td>313</td><td>Acuerdo de Milán: libertad de culto y restitución</td><td>Imperial</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Mitos sobre la persecución</h3>
+      <ul>
+        <li><strong>«300 años de persecución continua»: FALSO.</strong> Hostilidad social crónica + persecución esporádica y local, con solo dos oleadas imperiales generales. Moss y sus críticos coinciden en esto; discrepan en cuánto minimizar.</li>
+        <li><strong>«Millones de mártires»: FALSO.</strong> Ninguna estimación seria supera decenas de miles en tres siglos. <span class="conf">Alta</span> en el orden de magnitud.</li>
+        <li><strong>«Vivían escondidos en las catacumbas»: MAYORMENTE FALSO.</strong> Eran cementerios legales y conocidos, no ciudad refugio. <span class="conf">Alta</span></li>
+      </ul>
+    </section>
+
+    <section id="s13" class="revela">
+      <h2><span class="sec-num">Parte XIII</span>Cronología: de Pentecostés a Nicea</h2>
+      <p class="lede">El ancla más firme del s. I es la inscripción de Galión (Pablo en Corinto, 50–52).</p>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Año</th><th>Evento</th></tr></thead>
+          <tbody>
+            <tr><td>30 o 33</td><td>Crucifixión y Pentecostés; comunidad de Jerusalén</td></tr>
+            <tr><td>~34–36</td><td>Esteban; dispersión helenista; conversión de Pablo</td></tr>
+            <tr><td>48/49</td><td><strong>Concilio de Jerusalén</strong>: gentiles sin circuncisión</td></tr>
+            <tr><td>49</td><td>Claudio expulsa a los judíos de Roma («impulsore Chresto»)</td></tr>
+            <tr><td>50–52</td><td>Pablo en Corinto (<strong>inscripción de Galión</strong>)</td></tr>
+            <tr><td>~50–51</td><td>1 Tesalonicenses: probable documento cristiano más antiguo</td></tr>
+            <tr><td>~53–57</td><td>Éfeso; 1–2 Corintios, Gálatas, <strong>Romanos</strong></td></tr>
+            <tr><td>62</td><td>Ejecución de Santiago, hermano de Jesús (<strong>Josefo</strong>)</td></tr>
+            <tr><td>64</td><td>Incendio de Roma; persecución de Nerón (<strong>Tácito</strong>)</td></tr>
+            <tr><td>66–73</td><td>Guerra judía; <strong>70: destrucción del Templo</strong></td></tr>
+            <tr><td>~96</td><td>1 Clemente (Roma → Corinto)</td></tr>
+            <tr><td>~110–117</td><td>Cartas y martirio de <strong>Ignacio</strong></td></tr>
+            <tr><td>~112</td><td><strong>Plinio–Trajano</strong>: marco legal reactivo</td></tr>
+            <tr><td>132–135</td><td>Bar Kokhba; aceleración de la separación con el judaísmo</td></tr>
+            <tr><td>~144</td><td><strong>Marción</strong> expulsado en Roma; impulso al canon</td></tr>
+            <tr><td>~155</td><td>Primera Apología de <strong>Justino</strong>; martirio de <strong>Policarpo</strong></td></tr>
+            <tr><td>~180</td><td><strong>Ireneo</strong>, Adversus Haereses</td></tr>
+            <tr><td>203</td><td><strong>Perpetua y Felicidad</strong> en Cartago</td></tr>
+            <tr><td>~240s</td><td><strong>Iglesia-casa de Dura-Europos</strong> <span class="src">ARQ</span></td></tr>
+            <tr><td><strong>249–251</strong></td><td><strong>Persecución de Decio</strong>; crisis de los <em>lapsi</em></td></tr>
+            <tr><td>257–258</td><td>Persecución de <strong>Valeriano</strong>; martirio de Cipriano</td></tr>
+            <tr><td>313</td><td>Acuerdo de <strong>Milán</strong>: libertad de culto</td></tr>
+            <tr><td><strong>325</strong></td><td><strong>Concilio de NICEA</strong>: el Hijo <em>homoousios</em> con el Padre</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s14" class="revela">
+      <h2><span class="sec-num">Parte XIV</span>Mitos: auditoría de afirmaciones populares</h2>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Afirmación popular</th><th>Veredicto</th><th>Por qué</th></tr></thead>
+          <tbody>
+            <tr><td>Perseguidos sin tregua durante 300 años</td><td><strong>Falsa</strong></td><td>Hostilidad crónica sí; persecución estatal esporádica, con dos oleadas imperiales</td></tr>
+            <tr><td>Hubo millones de mártires</td><td><strong>Falsa</strong></td><td>Probablemente miles/decenas de miles; cifras exactas irrecuperables</td></tr>
+            <tr><td>La iglesia vivía escondida en catacumbas</td><td><strong>Mayormente falsa</strong></td><td>Cementerios legales y visibles; culto funerario sí, escondite habitual no</td></tr>
+            <tr><td>Todos vendían todo; comunismo obligatorio</td><td><strong>Parcialmente verdadera</strong></td><td>Jerusalén, comunidad de bienes intensa y VOLUNTARIA (Hch 5:4); patrón general: propiedad + generosidad + fondo común</td></tr>
+            <tr><td>La iglesia primitiva era pura y sin conflictos</td><td><strong>Falsa</strong></td><td>Corinto, Gálatas, Hch 5–6 y 15, 3 Juan, los lapsi… fuentes brutalmente honestas</td></tr>
+            <tr><td>Constantino inventó la divinidad de Cristo en Nicea</td><td><strong>Falsa</strong></td><td>Adoración a Jesús documentada desde el s. I (Flp 2; Plinio). Nicea definió CÓMO articularla y no trató el canon</td></tr>
+            <tr><td>El canon del NT se decidió en Nicea</td><td><strong>Falsa</strong></td><td>Nicea no discutió el canon; el núcleo estaba estable desde el s. II</td></tr>
+            <tr><td>Era un cristianismo uniforme y monolítico</td><td><strong>Parcialmente falsa</strong></td><td>Diversidad real, pero con corriente mayoritaria de núcleo kerigmático común</td></tr>
+            <tr><td>Los cristianos eran todos pobres y esclavos</td><td><strong>Parcialmente falsa</strong></td><td>Sección transversal urbana (Meeks): artesanos, comerciantes, libertos, algunos acomodados, esclavos y pobres</td></tr>
+            <tr><td>El domingo lo impuso Constantino</td><td><strong>Parcialmente falsa</strong></td><td>El primer día como reunión está en el s. I–II; Constantino legisló el descanso civil (321)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s15" class="revela">
+      <h2><span class="sec-num">Parte XV</span>Lecciones</h2>
+      <h3>Los principios que la hicieron crecer</h3>
+      <ol>
+        <li>Identidad más fuerte que la cultura circundante, sin retirarse de ella.</li>
+        <li>Comunidad que resolvía problemas reales: comida, entierro, enfermedad, viudez, pertenencia.</li>
+        <li>Crecimiento por multiplicación relacional ordinaria, sostenida por generaciones.</li>
+        <li>Formación exigente antes y después de la conversión: pertenecer costaba, y por eso valía.</li>
+        <li>Liderazgo por carácter probado y transmisión deliberada (2 Tim 2:2), plural y cercano al pueblo.</li>
+        <li>Textualidad: lectura pública, cartas circulares, memoria escrita.</li>
+        <li>Mecanismos de reparación: disciplina con meta de restauración, concilios, mediadores.</li>
+        <li>Un centro doctrinal claro con periferia flexible reconocida (kerygma + adiaphora).</li>
+      </ol>
+      <h3>Los errores que cometieron (documentados)</h3>
+      <p>Conflictos étnico-culturales gestionados tarde; rigorismo recurrente que fabricó cismas duraderos; lentitud de dos generaciones frente al gnosticismo; enfriamiento del carisma profético por sobre-reacción al montanismo; concentración progresiva de poder y dinero en una sola figura local; y una <strong>polémica antijudía creciente</strong> &mdash; la semilla de siglos de daño.</p>
+      <h3>Qué perdió y qué ganó con los siglos</h3>
+      <p><strong>Perdió</strong> (sobre todo tras Constantino): la centralidad del hogar; el bautismo como frontera costosa; la ministerialidad amplia (incluida la participación femenina temprana); la independencia frente al poder; la expectativa escatológica; la distintividad que hacía preguntar. <strong>Ganó</strong>: alcance masivo; estabilidad doctrinal articulada; capacidad institucional para caridad, educación y memoria a gran escala; supervivencia a la caída del propio Imperio. <strong>El panel se niega a romantizar en cualquier dirección.</strong></p>
+    </section>
+
+    <section id="s16" class="revela">
+      <h2><span class="sec-num">Parte XVI</span>El efecto espejo</h2>
+      <p class="lede">La Iglesia primitiva y la contemporánea, frente a frente. Ni nostalgia ni presentismo.</p>
+      <p><strong>Lo que ellos hacían y hoy nos sorprendería:</strong> reunirse antes del amanecer de un día laboral bajo riesgo legal; un catecumenado de meses o años; disciplina comunitaria real con meta de restauración; la cena como comida completa y redistributiva; el fondo de pobres como primer rubro del presupuesto; besarse como saludo litúrgico y llamarse hermano entre esclavo y senadora; la expectativa de que confesar la fe podía costar la vida &mdash; y la prohibición de buscarlo.</p>
+      <p><strong>Lo que de nosotros les costaría entender:</strong> edificios enormes como mayor gasto; el fin de semana; el anonimato; el cristiano-consumidor; el bautismo sin proceso; la fragmentación denominacional asumida como normal; ministros como profesión con carrera; y, lo más hondo, la <strong>baja expectativa escatológica</strong>.</p>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Dimensión</th><th>Iglesia primitiva</th><th>Iglesia contemporánea común</th></tr></thead>
+          <tbody>
+            <tr><td>Prioridades</td><td>Fidelidad, pobres, formación</td><td>Alcance, programas, experiencia</td></tr>
+            <tr><td>Liderazgo</td><td>Plural→episcopal, carácter probado, cercano</td><td>Profesional, credencializado, a menudo distante</td></tr>
+            <tr><td>Adoración</td><td>Participativa, doméstica, sobria</td><td>Dirigida desde plataforma, orientada a la experiencia</td></tr>
+            <tr><td>Comunidad</td><td>Densa, obligante, conocida</td><td>Extensa, opcional, anónima posible</td></tr>
+            <tr><td>Evangelización</td><td>Red ordinaria + vida que interroga</td><td>Eventos, medios, programas</td></tr>
+            <tr><td>Conflictos</td><td>Proceso interno cara a cara</td><td>Evitación, salida silenciosa, o litigio</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>De ellos nos sorprendería</strong> que era pequeña, lenta, pobre, doméstica, exigente y feliz &mdash; creciendo un paciente 3,4% anual durante 250 años mientras enterraba a sus muertos con esperanza y a los muertos ajenos con misericordia. <strong>De nosotros les sorprendería</strong> el milagro logístico &mdash; la Escritura en toda lengua, los hospitales, la libertad de culto &mdash; y les desconcertaría que, teniéndolo todo, tan a menudo nos falte lo único que ellos tuvieron: <strong>una comunidad cuya vida ordinaria era imposible de explicar sin el Resucitado.</strong> Su pregunta para nosotros no sería «¿cuántos son?» sino la que Plinio no supo responder: <em>¿qué hace exactamente esta gente que no pueda hacer nadie más?</em></p>
+    </section>
+
+    <section id="s17" class="revela">
+      <h2><span class="sec-num">Cierre</span>Conclusión: imitar, adaptar, no copiar</h2>
+      <p><strong>Imitar</strong> (principios universales con respaldo histórico sólido): el kerygma en el centro; la comunidad como familia obligante; los pobres como presupuesto y no como programa; formación exigente; liderazgo plural de carácter probado; esenciales claros + opinables reconocidos; la reparación de conflictos; la paciencia exponencial; la distintividad ética que obliga a preguntar.</p>
+      <p><strong>Adaptar</strong> (el principio permanece, la forma se traduce): la casa → escala doméstica dentro de cualquier estructura; el catecumenado → procesos formativos serios; el fondo del obispo → transparencia financiera con los pobres primero; las cartas → medios actuales para comunión real; los concilios → estructuras vivas de rendición de cuentas.</p>
+      <p><strong>No copiar literalmente</strong> (contextual, o incluso error entonces): sus horarios y vehículos culturales grecorromanos como si fueran mandato; la comunidad de bienes forzosa (ni ellos la practicaron así); las estructuras esclavistas y patriarcales; su dureza penitencial y rigorismo cismático; su polémica antijudía &mdash; el error que más caro costó; la búsqueda del martirio; la ausencia de contrapesos al poder concentrado.</p>
+      <div class="idea">
+        <strong>Última palabra del panel, por unanimidad:</strong> la Iglesia primitiva no fue un modelo perfecto congelado para copiar, sino un organismo vivo que resolvió, con los materiales de su tiempo y una fidelidad frecuentemente heroica, el mismo problema que toda generación cristiana debe resolver de nuevo: <strong>cómo ser, visiblemente y a costo real, el pueblo del Resucitado en medio de un mundo que no lo espera.</strong> Imitarla de verdad no es reproducir sus formas: es aceptar su problema.
+      </div>
+    </section>
+
+  </main>
+
+  <div class="fuentes revela">
+    <strong>Fuentes consultadas.</strong> Fuentes primarias: Nuevo Testamento; Didaché; 1 Clemente; cartas de Ignacio; Martirio de Policarpo; Justino Mártir; Epístola a Diogneto; Ireneo; Tertuliano; Cipriano; Pasión de Perpetua y Felicidad; Eusebio, <em>Historia Eclesiástica</em>; Plinio el Joven, <em>Cartas</em> 10.96–97; Tácito, <em>Anales</em> 15.44; Suetonio; Josefo; Luciano; Orígenes, <em>Contra Celso</em>.
+    <ul>
+      <li>Rodney Stark, <em>The Rise of Christianity</em> (1996) &mdash; <a href="https://www.humanscience.org/docs/Stark%20(1996)%20Rise%20of%20Christianity%201-2.pdf">caps. 1–2 (PDF)</a>.</li>
+      <li>Bart D. Ehrman, <em>The Triumph of Christianity</em> (2018) &mdash; <a href="https://ehrmanblog.org/the-rate-of-christian-growth/">sobre la tasa de crecimiento</a>.</li>
+      <li>Wayne A. Meeks, <em>The First Urban Christians</em>; Ramsay MacMullen, <em>Christianizing the Roman Empire</em>; Larry W. Hurtado, <em>Lord Jesus Christ</em>; Alan Kreider, <em>The Patient Ferment of the Early Church</em>; Peter Lampe, <em>From Paul to Valentinus</em>; Robert L. Wilken, <em>The Christians as the Romans Saw Them</em>.</li>
+      <li>Candida Moss, <em>The Myth of Persecution</em> (2013) &mdash; <a href="https://en.wikipedia.org/wiki/The_Myth_of_Persecution">panorama</a> y <a href="https://www.equip.org/articles/the-myth-of-persecution-a-provocative-title-an-overdone-thesis/">reseña crítica</a>. James D. G. Dunn, <em>The Partings of the Ways</em>; Everett Ferguson, <em>Backgrounds of Early Christianity</em>; Eldon J. Epp, <em>Junia: The First Woman Apostle</em>; Justo L. González, <em>Historia del Cristianismo</em>, t. 1.</li>
+    </ul>
+  </div>
+
+  <footer>Café con Claude · Informe de investigación · «La Iglesia primitiva» · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>

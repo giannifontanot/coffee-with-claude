@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El carácter de Jesús · una investigación interdisciplinaria · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 300px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.7rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.84rem; line-height: 1.3;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.78rem;
+    min-width: 1.4rem; color: var(--line); transition: color 0.2s; text-align: right;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 820px; margin: 0 auto; }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.08rem; max-width: 36em; }
+  .standfirst { margin-top: 1.4rem; font-size: 1.05rem; max-width: 40em; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.8rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2.05rem); line-height: 1.15; margin: 0 0 0.3rem;
+  }
+  section h2 .sec-num {
+    display: block; font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--terracotta); font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.2rem; line-height: 1.25; margin: 1.8rem 0 0.5rem;
+    color: var(--ink);
+  }
+  h4 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.02rem; margin: 1.3rem 0 0.4rem; color: var(--plum);
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+  strong { font-weight: 600; }
+
+  main ul, main ol { margin: 0 0 1.1rem 1.3rem; }
+  main li { margin-bottom: 0.45rem; }
+
+  .lede {
+    font-size: 1.05rem; font-style: italic; color: var(--muted);
+    border-left: 3px solid var(--line); padding-left: 1rem; margin-bottom: 1.4rem;
+  }
+
+  .griego { font-style: italic; }
+
+  .tabla-wrap { overflow-x: auto; margin: 0.4rem 0 1.5rem; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 34rem; }
+  table.compacta { min-width: 0; }
+  th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.82rem;
+    color: var(--terracotta); border-bottom: 2px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+  tbody tr:hover { background: rgba(180,83,42,0.04); }
+  td strong { color: var(--ink); }
+
+  .conf {
+    font-family: 'Fraunces', serif; font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 0.08rem 0.42rem; border-radius: 3px; white-space: nowrap;
+    background: rgba(107,122,63,0.16); color: #4f5b2e; margin-left: 0.15rem;
+  }
+  .conf.media { background: rgba(201,138,45,0.18); color: #8a5e17; }
+  .conf.baja  { background: rgba(180,83,42,0.14); color: #8f3d1f; }
+  .marca {
+    font-family: 'Fraunces', serif; font-size: 0.66rem; font-weight: 700;
+    letter-spacing: 0.06em; padding: 0.05rem 0.34rem; border-radius: 3px;
+    background: rgba(110,74,110,0.12); color: var(--plum); white-space: nowrap;
+  }
+
+  .voz { color: var(--plum); font-weight: 600; font-style: italic; }
+
+  .idea {
+    margin: 1.4rem 0; padding: 1rem 1.2rem;
+    background: rgba(201,138,45,0.09);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 4px 4px 0; font-size: 0.98rem;
+  }
+  .idea strong { font-family: 'Fraunces', serif; }
+
+  .gesto {
+    margin: 0 0 1.1rem; padding-left: 1rem;
+    border-left: 2px solid var(--line);
+  }
+  .gesto .g-num {
+    font-family: 'Fraunces', serif; font-weight: 700; color: var(--terracotta);
+    margin-right: 0.4rem;
+  }
+
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(180, 83, 42, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(180,83,42,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+  .fuentes ul { margin: 0.6rem 0 0 1.2rem; }
+  .fuentes li { margin-bottom: 0.35rem; }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">El carácter de Jesús · informe de investigación</div>
+  <ol class="toc">
+    <li><a href="#s0"><span class="num">0</span>Metodología</a></li>
+    <li><a href="#s1"><span class="num">1</span>El vocabulario emocional</a></li>
+    <li><a href="#s2"><span class="num">2</span>Dieciséis preguntas</a></li>
+    <li><a href="#s3"><span class="num">3</span>Detalles que revelan</a></li>
+    <li><a href="#s4"><span class="num">4</span>Perfiles integrados</a></li>
+    <li><a href="#s5"><span class="num">5</span>Valores y principios</a></li>
+    <li><a href="#s6"><span class="num">6</span>Rasgos por evidencia</a></li>
+    <li><a href="#s7"><span class="num">7</span>Donde no hay acuerdo</a></li>
+    <li><a href="#s8"><span class="num">8</span>Auditoría de sesgos</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Sala de lectura
+  </button>
+
+  <header>
+    <span class="eyebrow">Informe de investigación · Panel interdisciplinario</span>
+    <h1>El carácter de Jesús</h1>
+    <p class="subtitle">Una investigación interdisciplinaria sobre el retrato que emerge de los cuatro Evangelios.</p>
+    <p class="standfirst">Un panel &mdash; judaísmo del siglo I, crítica textual, historia de la Iglesia primitiva, lingüística koiné, psicología de la personalidad, filosofía ética y un investigador orientado a la verdad &mdash; lee las conductas de Jesús versículo por versículo, con categorías de evidencia y niveles de confianza explícitos.</p>
+  </header>
+
+  <main>
+
+    <section id="s0" class="revela">
+      <h2><span class="sec-num">Sección 0</span>Metodología y honestidad intelectual</h2>
+      <p><span class="voz">El Investigador (verdad ante todo):</span> tres aclaraciones que gobiernan todo el documento.</p>
+      <p><strong>Primera: qué objeto estudiamos.</strong> Este estudio describe el carácter de Jesús <em>tal como lo retratan los cuatro Evangelios</em>. Cuánto de ese retrato corresponde punto por punto al Jesús histórico es un problema distinto que señalamos donde es relevante, pero que no resolvemos aquí. Dicho esto, hay un dato metodológicamente valioso: cuando cuatro documentos con teologías y audiencias distintas convergen en los mismos patrones de conducta (compasión ante el sufrimiento, conflicto con la élite religiosa, mesa compartida con marginados), la probabilidad de que ese patrón refleje memoria histórica real aumenta. Los historiadores lo llaman <em>atestación múltiple</em>.</p>
+      <p><strong>Segunda: las categorías de evidencia.</strong></p>
+      <ul>
+        <li><span class="marca">E</span> <strong>Explícito</strong> &mdash; el texto lo afirma directamente («Jesús lloró»).</li>
+        <li><span class="marca">I</span> <strong>Inferencia razonable</strong> &mdash; no está dicho, pero se deduce con solidez («Jesús notaba detalles pequeños de las personas»).</li>
+        <li><span class="marca">P</span> <strong>Interpretación posible</strong> &mdash; una lectura plausible entre varias («Jesús usaba el humor y la ironía»).</li>
+      </ul>
+      <p><strong>Tercera: los niveles de confianza.</strong> <span class="conf">Alta</span> atestación múltiple, vocabulario explícito, sin variantes textuales comprometidas. <span class="conf media">Media</span> atestación limitada o dependiente de una interpretación léxica discutida. <span class="conf baja">Baja</span> pasajes textualmente inseguros, argumentos del silencio o lecturas minoritarias.</p>
+      <p><span class="voz">El experto en crítica textual:</span> trabajamos sobre el texto crítico griego (Nestle-Aland/UBS). Pasajes de autenticidad dudosa &mdash; la mujer adúltera (Jn 7:53–8:11), el final largo de Marcos (16:9–20), «Padre, perdónalos» (Lc 23:34a) y el sudor como gotas de sangre (Lc 22:43–44) &mdash; no se usan como evidencia primaria, por queridos que sean. La honestidad exige no construir el retrato sobre cimientos inseguros; pero incluso si son adiciones tempranas, muestran cómo la comunidad primitiva <em>entendía</em> a Jesús: nadie inserta «Padre, perdónalos» en la boca de un personaje al que recuerda vengativo.</p>
+      <p><span class="voz">El especialista en judaísmo del s. I:</span> Jesús fue un judío galileo observante de la Torá, asistente a la sinagoga (Lc 4:16), peregrino a las fiestas, vestido con flecos rituales (los <span class="griego">tzitzit</span> que la hemorroísa toca en Mt 9:20). Sus conflictos no fueron «Jesús contra el judaísmo» sino debates <em>intra</em>judíos sobre la Torá &mdash; del tipo que Hillel y Shammai tenían entre sí. Leer sus choques con los fariseos como antijudaísmo es un anacronismo que la historia posterior pagó muy caro, y que este estudio evita deliberadamente.</p>
+    </section>
+
+    <section id="s1" class="revela">
+      <h2><span class="sec-num">Sección 1</span>El vocabulario emocional</h2>
+      <p><span class="voz">El lingüista:</span> antes de las escenas, el léxico. Los evangelistas no escriben psicología moderna; escriben griego koiné con sustrato semítico, y las emociones de Jesús aparecen en un repertorio de verbos sorprendentemente concreto y corporal.</p>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Término griego</th><th>Sentido</th><th>Trasfondo</th></tr></thead>
+          <tbody>
+            <tr><td><span class="griego">splanchnízomai</span></td><td>«conmoverse en las entrañas» — compasión visceral (Mt 9:36; 14:14; 15:32; 20:34; Mc 1:41; 6:34; 8:2; Lc 7:13)</td><td>De <span class="griego">splanchna</span>, las vísceras. Refleja el hebreo <span class="griego">raḥamim</span> (de <span class="griego">reḥem</span>, útero). En el NT es, estadísticamente, SU emoción</td></tr>
+            <tr><td><span class="griego">orgē / orgízomai</span></td><td>ira, enojo (Mc 3:5, único uso narrativo seguro)</td><td>Sigue el patrón profético de la ira de YHWH ante la injusticia</td></tr>
+            <tr><td><span class="griego">aganaktéō</span></td><td>indignarse (Mc 10:14, con los niños)</td><td>Indignación moral, no berrinche</td></tr>
+            <tr><td><span class="griego">embrimáomai</span></td><td>resoplar/bramar; conmoción severa (Jn 11:33, 38)</td><td>Verbo violento — del resoplido de caballos</td></tr>
+            <tr><td><span class="griego">dakrýō</span></td><td>derramar lágrimas (Jn 11:35)</td><td>Lágrimas silenciosas, no lamento ritual</td></tr>
+            <tr><td><span class="griego">klaíō</span></td><td>llorar con lamento audible (Lc 19:41, sobre Jerusalén)</td><td>El llanto fuerte del duelo semítico</td></tr>
+            <tr><td><span class="griego">agalliáō / chará</span></td><td>exultar / gozo (Lc 10:21; Jn 15:11; 17:13)</td><td>Gozo intenso, casi litúrgico</td></tr>
+            <tr><td><span class="griego">thaumázō</span></td><td>asombrarse (Mt 8:10 fe del centurión; Mc 6:6 incredulidad de Nazaret)</td><td>Solo dos cosas lo asombran: la fe donde no se espera, la incredulidad donde sí</td></tr>
+            <tr><td><span class="griego">perílypos</span></td><td>angustia extrema (Mc 14:34: «hasta la muerte»)</td><td>Eco de Sal 42–43 LXX</td></tr>
+            <tr><td><span class="griego">tarássō</span></td><td>turbarse (Jn 11:33; 12:27; 13:21)</td><td>Juan, el Evangelio del Jesús más «alto», conserva tres turbaciones</td></tr>
+            <tr><td><span class="griego">stenázō</span></td><td>suspirar, gemir (Mc 7:34; 8:12)</td><td>Cansancio, carga, dolor por la condición humana</td></tr>
+            <tr><td><span class="griego">agapáō / philéō</span></td><td>amar (Mc 10:21 el joven rico; Jn 11 Lázaro; Jn 13:23 el discípulo amado)</td><td>Amor por individuos con nombre, no solo genérico</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Conclusiones de frecuencia:</strong></p>
+      <ol>
+        <li><strong>La emoción más atestiguada es la compasión visceral</strong> (<span class="griego">splanchnízomai</span>): 8 usos narrativos en tres Evangelios, más 3 en parábolas. <span class="marca">E</span> <span class="conf">Alta</span> Ya B. B. Warfield lo concluyó en el estudio clásico.</li>
+        <li><strong>La segunda familia es la del dolor</strong>: angustia, turbación, lágrimas, gemidos (Getsemaní, Lázaro, Jerusalén). <span class="marca">E</span> <span class="conf">Alta</span></li>
+        <li><strong>La ira aparece, pero es selectiva</strong>: nunca contra pecadores, enfermos o extranjeros; siempre contra la dureza religiosa, la explotación o lo que daña a los pequeños. <span class="conf">Alta</span></li>
+        <li><strong>El gozo explícito es raro pero real</strong>, y el gozo narrado indirectamente (fiestas, banquetes, el apodo «comilón y bebedor») es más abundante de lo que la iconografía sugiere. <span class="conf media">Media</span> en su frecuencia.</li>
+        <li><strong>El asombro tiene firma única</strong>: solo lo asombra la fe (positivamente) y la incredulidad (negativamente). <span class="conf">Alta</span></li>
+      </ol>
+    </section>
+
+    <section id="s2" class="revela">
+      <h2><span class="sec-num">Sección 2</span>Dieciséis preguntas sobre sus reacciones reales</h2>
+
+      <h4>2.1 · ¿Qué le producía alegría?</h4>
+      <p>Lo que dispara su única exultación explícita (Lc 10:21) no es un milagro propio sino un patrón del Padre: revelar a los pequeños lo que oculta a los sofisticados. La fe inesperada &mdash; del centurión, la cananea, el leproso samaritano &mdash; le produce alegría registrada con exclamaciones; y el motivo de la fiesta por lo perdido-y-hallado estructura Lucas 15 entero. Sus enemigos lo apodan «comilón y bebedor, amigo de publicanos»: nadie apoda así a un asceta sombrío. <span class="marca">E</span> gozo real <span class="conf">Alta</span> · <span class="marca">P</span> sentido del humor hiperbólico <span class="conf media">Media</span></p>
+
+      <h4>2.2 · ¿Qué lo hacía llorar?</h4>
+      <p>Los dos llantos usan verbos distintos: en Jn 11:35 es <span class="griego">edákrysen</span> (lágrimas silenciosas por un amigo muerto al que sabe que va a resucitar); en Lc 19:41 es <span class="griego">éklausen</span> (el sollozo audible por una ciudad que lo rechaza). El objeto de su llanto más fuerte no es su propio destino sino el de otros; camino a la cruz redirige el llanto ajeno («no lloréis por mí», Lc 23:28). <span class="conf">Alta</span></p>
+
+      <h4>2.3 · ¿Qué despertaba su compasión?</h4>
+      <p><span class="voz">El psicólogo:</span> emerge un patrón nítido &mdash; <strong>el desamparo</strong>. No la miseria en abstracto sino la persona <em>sin recurso</em>: ovejas sin pastor, viuda sin hijo, leproso sin comunidad, hambrientos sin comida, ciegos sin acceso. Y un segundo patrón: la compasión <strong>nunca se queda en sentimiento; en los ocho casos desemboca en acción inmediata</strong>. En el texto, <span class="griego">splanchnízomai</span> funciona casi como verbo de transición: la bisagra entre ver y actuar. <span class="conf">Alta</span></p>
+
+      <h4>2.4 · ¿Qué despertaba su enojo?</h4>
+      <p><span class="voz">El filósofo ético:</span> el mapa de su ira revela su jerarquía de valores por vía negativa. Se enoja ante (a) la religión que prefiere la regla a la persona (Mc 3:5 &mdash; enojo <em>y</em> tristeza simultáneos: ira que duele); (b) el bloqueo del acceso de los pequeños a Dios (niños; el mercado del Templo ocupaba el atrio de los gentiles); (c) la hipocresía con poder (Mt 23); (d) la explotación en nombre de Dios («devoran las casas de las viudas»); (e) el intento de desviarlo de su misión (Mc 8:33). <strong>Su ira jamás aparece por ofensas personales contra él</strong>: insultado, calla; obstaculizado el débil, estalla. <span class="conf">Alta</span></p>
+
+      <h4>2.5 · ¿Con quién era más paciente?</h4>
+      <p>La paciencia se distribuye según <strong>la disposición del corazón, no el nivel de comprensión ni el historial moral</strong>: con la torpeza sincera de los discípulos, con la duda que pide ayuda («creo, ayuda mi incredulidad»), con el fracaso que quiere volver (planifica la restauración de Pedro <em>antes</em> de la caída, Lc 22:32). Y un límite honesto: «¿Hasta cuándo os soportaré?» (Mc 9:19) muestra que esa paciencia le <em>costaba</em>. <span class="conf">Alta</span></p>
+
+      <h4>2.6 · ¿Con quién era más severo?</h4>
+      <p>La severidad es proporcional a <strong>tres variables: poder, conocimiento y pretensión religiosa</strong>. A más poder sobre otros, más luz recibida y más pretensión de representar a Dios, más dura la palabra. Él mismo lo enuncia: «a todo aquel a quien se haya dado mucho, mucho se le demandará» (Lc 12:48). Con Judas, la severidad verbal máxima («mejor le fuera no haber nacido») coexiste con gestos de acceso hasta el final: le lava los pies, le da el bocado del huésped honrado, lo llama <span class="griego">hetaîre</span> («amigo») en el arresto. <span class="conf">Alta</span></p>
+
+      <h4>2.7 · ¿Cómo trataba a los pecadores?</h4>
+      <p><span class="voz">El especialista en judaísmo:</span> hay que medir el escándalo con ojos del s. I &mdash; compartir mesa era comunión, aceptación pública, casi parentesco. El patrón es constante en las cuatro fuentes: <strong>acogida antes de la enmienda</strong>. Zaqueo restituye <em>después</em> de ser recibido. Y sin embargo Jesús nunca relativiza el pecado: «vete y no peques más». La fórmula del retrato: <strong>dureza mínima con la persona, claridad máxima con la conducta</strong>. Es uno de los datos con mejor atestación múltiple del corpus; incluso los adversarios lo confirman por vía de acusación. <span class="conf">Alta</span></p>
+
+      <h4>2.8 · ¿Cómo trataba a los hipócritas?</h4>
+      <p><span class="voz">El lingüista:</span> <span class="griego">hypokritḗs</span> es el actor de teatro, el que habla tras una máscara. Su blanco no es el que falla, sino el que <em>actúa</em> la virtud. Mt 23:23 tiene precisión quirúrgica: no condena el diezmo escrupuloso sino la inversión de jerarquías (justicia, misericordia y fidelidad son «lo de más peso»). Y un matiz que evita la caricatura: cena con fariseos, tiene interlocutores fariseos respetuosos (Nicodemo), y fariseos le avisan del peligro de Herodes. <strong>Su guerra no es contra el grupo sino contra la máscara.</strong> <span class="conf">Alta</span></p>
+
+      <h4>2.9 · ¿Cómo corregía a sus discípulos?</h4>
+      <p>Preguntas antes que sentencias («¿Por qué estáis así amedrentados?»); gestos pedagógicos (pone a un niño en medio; les lava los pies); reprensión directa e inmediata cuando el error es grave y público (Mc 8:33 a Pedro); corrección en privado de lo confuso (Mc 4:34); y <strong>restauración proactiva tras el fracaso</strong> (Lc 22:32 + Mc 16:7 + Jn 21, tres fuentes convergentes). Exigencia alta con seguridad relacional alta: la combinación que la psicología del aprendizaje considera óptima, registrada aquí mediante conductas, no etiquetas. <span class="conf">Alta</span></p>
+
+      <h4>2.10 · ¿Cómo respondía cuando era insultado?</h4>
+      <p><strong>Ofensa personal → silencio, razonamiento sereno o proverbio; jamás represalia ni insulto devuelto.</strong> El único momento en que rompe el silencio del proceso es para confesar su identidad cuando callar equivaldría a negarla (Mc 14:62): calla ante la burla y habla ante la verdad. La memoria de la primera generación coincide (1 P 2:23: «cuando le maldecían, no respondía con maldición»). <span class="conf">Alta</span></p>
+
+      <h4>2.11 · ¿Qué personas atraían su afecto?</h4>
+      <p><span class="voz">El psicólogo:</span> el común denominador no es la virtud ni el estatus: es la <strong>ausencia de máscara</strong>. Niños, enfermos que gritan, pecadores que lloran, buscadores que preguntan de verdad &mdash; gente sin nada que aparentar. El espejo exacto de lo que lo enfurecía (la hipocresía = la máscara). El eje máscara/transparencia organiza tanto sus afectos como su ira: quizá el hallazgo estructural más elegante del estudio. <span class="marca">I</span> <span class="conf">Alta</span></p>
+
+      <h4>2.12 – 2.14 · Lo que rechazaba, sus prioridades y lo innegociable</h4>
+      <p><strong>Rechazaba con más fuerza:</strong> la hipocresía religiosa, la dureza de corazón elegida, el escándalo de los pequeños (la amenaza más violenta del corpus), la religión lucrativa, el amor al dinero como señor rival, la lógica del dominio dentro de su comunidad, la autojustificación que desprecia a otros. <strong>Sus prioridades:</strong> la voluntad del Padre como alimento → la oración a solas como práctica estructural → las personas por encima de las reglas cuando chocan → los perdidos antes que los establecidos → la formación del núcleo antes que la multitud → la dirección irreversible hacia Jerusalén («afirmó su rostro», Lc 9:51). <strong>Sus principios irrenunciables:</strong> obediencia al Padre hasta la muerte; no usar jamás el poder en beneficio propio; la verdad aunque cueste la vida; la misericordia sobre el ritual; la dignidad de los pequeños como línea roja; no comprar aceptación ni retener seguidores a cualquier precio. <span class="conf">Alta</span></p>
+
+      <h4>2.15 – 2.16 · Ranking emocional y patrones constantes</h4>
+      <p>Ranking por atestación: 1º compasión visceral; 2º angustia/dolor; 3º ira selectiva; 4º amor por individuos concretos; 5º gozo/exultación; 6º asombro bidireccional; 7º suspiros de carga; 8º turbación (3× en Juan). En la cruz, el grito de desamparo con el Sal 22:1 en arameo, <span class="griego">Eloi, Eloi, lema sabachthani</span> (Mc 15:34): el texto permite a Jesús morir preguntando «¿por qué?».</p>
+      <p><strong>Los ocho bucles que se repiten en las cuatro fuentes:</strong> (1) ver → conmoverse → actuar; (2) popularidad → retirada a orar → redirección de la misión (trata el éxito como señal de peligro); (3) pregunta antes que sentencia; (4) contacto físico con lo intocable (el flujo se invierte: de él sale limpieza, no entra contaminación); (5) ofensa personal → mansedumbre, daño a terceros → confrontación; (6) acogida → transformación → llamada; (7) anti-espectáculo (el «secreto mesiánico»); (8) atención al individuo dentro de la multitud. <span class="marca">I</span> <span class="conf">Alta</span> &mdash; ninguno depende de un solo episodio.</p>
+    </section>
+
+    <section id="s3" class="revela">
+      <h2><span class="sec-num">Sección 3</span>Detalles pequeños que revelan un gran corazón</h2>
+      <p class="lede">Los gestos menores &mdash; los que no son el punto de la escena pero que el narrador conservó &mdash; son oro metodológico: los detalles incidentales tienen menos probabilidad de ser construcción teológica y más de ser memoria de conducta.</p>
+      <div class="gesto"><p><span class="g-num">1.</span><strong>«Hijo» antes que «sano».</strong> Al paralítico descolgado por el techo lo primero que le dice es <span class="griego">téknon</span> &mdash; «hijo», vocativo de ternura (Mc 2:5). Identidad antes que sanidad.</p></div>
+      <div class="gesto"><p><span class="g-num">2.</span><strong>«Hija» — la única vez.</strong> A la hemorroísa, tras doce años de impureza que la excluía de todo contacto, la llama <span class="griego">thygátēr</span>, «hija» (Mc 5:34): la única persona a la que Jesús llama así en todos los Evangelios.</p></div>
+      <div class="gesto"><p><span class="g-num">3.</span><strong>La pregunta que da voz.</strong> «¿Quién ha tocado mis vestidos?» (Mc 5:30–33). Ya la había sanado; la pregunta no busca información sino testimonio: la mujer se va con el milagro <em>y</em> con su historia dignificada en público.</p></div>
+      <div class="gesto"><p><span class="g-num">4.</span><strong>«Talitha koum» y el almuerzo.</strong> A la hija de Jairo le habla en arameo doméstico, «niñita, levántate» (Mc 5:41), y enseguida «dijo que le dieran de comer». En medio del milagro más grande, nota que una niña tiene hambre.</p></div>
+      <div class="gesto"><p><span class="g-num">5–6.</span><strong>Tocar antes de hablar; apartar de la multitud.</strong> Al leproso «lo tocó» (Mc 1:41) &mdash; el toque no era necesario para el milagro, sino para el hombre. Al sordo y al ciego los aparta del gentío antes de sanarlos, adaptando el <em>entorno</em> del milagro a su condición; al ciego lo sana en dos etapas, preguntándole cómo va.</p></div>
+      <div class="gesto"><p><span class="g-num">7–8.</span><strong>Dos miradas.</strong> «Jesús, mirándolo, lo amó» (Mc 10:21) &mdash; ama al joven rico precisamente cuando está a punto de rechazarlo. Y tras la tercera negación, «vuelto el Señor, miró a Pedro» (Lc 22:61): ni una palabra, y bastó.</p></div>
+      <div class="gesto"><p><span class="g-num">9–11.</span><strong>Se detiene, ve, recuerda.</strong> Camino a su muerte, se detiene por Bartimeo y le pregunta «¿Qué quieres que haga por ti?» (le devuelve la palabra sobre su vida). Ve a Zaqueo en el árbol y se autoinvita. A Natanael: «te vi debajo de la higuera» &mdash; mira a la gente antes de que sepa que es mirada.</p></div>
+      <div class="gesto"><p><span class="g-num">14–15.</span><strong>«No llores» y la cuenta del hambre.</strong> En Naín, antes de tocar el féretro, su primera acción es hacia la madre; y «lo dio a su madre» &mdash; el milagro se entrega. Y lleva la cuenta: «hace <em>tres días</em> que están conmigo… algunos han venido de lejos» (Mc 8:2–3): logística de la compasión.</p></div>
+      <div class="gesto"><p><span class="g-num">19.</span><strong>El cepillo del Templo.</strong> «Sentado delante del arca de la ofrenda, miraba cómo el pueblo echaba dinero» (Mc 12:41). Ve lo que nadie: dos <span class="griego">leptá</span> y, detrás, una viuda que «echó todo lo que tenía».</p></div>
+      <div class="gesto"><p><span class="g-num">20–22.</span><strong>Los suyos, por nombre.</strong> «Id, decid a sus discípulos, <em>y a Pedro</em>» (Mc 16:7). El Resucitado cocina en la playa para los que lo abandonaron: «venid, comed» (Jn 21:9). Y reconoce a la Magdalena con una sola palabra: su nombre (Jn 20:16).</p></div>
+      <div class="gesto"><p><span class="g-num">24–26.</span><strong>Hasta el final.</strong> Lava los pies del traidor ya decidido; sana la oreja de Malco &mdash; deshace el único daño que su causa infligió; y en la cruz consuela a las mujeres, adopta mutuamente a su madre y su discípulo, y promete el paraíso a un criminal. El bucle ver-conmoverse-actuar no se apaga ni en la asfixia.</p></div>
+      <div class="idea">
+        <strong><span class="marca">I</span> Confianza Alta para el patrón agregado:</strong> ningún detalle aislado probaría nada; veintiocho detalles convergentes en cuatro fuentes constituyen uno de los argumentos más fuertes del estudio. El corazón del personaje se conoce mejor por lo que el narrador conservó sin necesitarlo que por lo que predicó.
+      </div>
+    </section>
+
+    <section id="s4" class="revela">
+      <h2><span class="sec-num">Sección 4</span>Perfiles integrados</h2>
+      <p class="lede">Un perfil <em>descriptivo</em> construido sobre conductas textuales &mdash; no un diagnóstico clínico. Se describen patrones; no se etiqueta.</p>
+      <h3>4.1 · Perfil psicológico</h3>
+      <ul>
+        <li><strong>Identidad y propósito extraordinariamente estables.</strong> Ni la adulación masiva ni la hostilidad letal alteran el rumbo; la retirada a orar funciona como recalibración. <span class="conf">Alta</span></li>
+        <li><strong>Independencia radical de la aprobación ajena, sin frialdad afectiva.</strong> Baja necesidad de validación con alta capacidad de vínculo: una combinación rara. <span class="conf">Alta</span></li>
+        <li><strong>Emocionalidad plena con regulación plena.</strong> Siente ira y no agrede a la persona; siente pavor en Getsemaní y sale a la entrega, no a la fuga. La emoción nunca es negada (contra la <span class="griego">apátheia</span> estoica) ni gobierna la conducta. <span class="conf">Alta</span></li>
+        <li><strong>Costo emocional visible.</strong> Suspira, gime, se exaspera, muere preguntando por qué. La estabilidad convive con el desgaste. <span class="conf">Alta</span></li>
+      </ul>
+      <h3>4.2 · Perfil moral</h3>
+      <p><strong>Integridad total entre discurso y conducta</strong>: enseña amor al enemigo y sana la oreja del que viene a arrestarlo; enseña servicio y lava pies; enseña perder la vida y la pierde. No existe un solo episodio donde viole su propia enseñanza &mdash; dato notable porque los evangelistas <em>sí</em> registran sus emociones incómodas. La misericordia es su criterio de desempate: cuando regla y persona chocan, gana la persona, de forma tan consistente que le cuesta la reputación y contribuye a costarle la vida.</p>
+      <h3>4.3 – 4.4 · Perfil emocional y relacional</h3>
+      <p>Emocionalidad <strong>intensa, concreta y dirigida</strong>: su emoción dominante es la compasión; su dolor mayor es por otros; su ira es fiduciaria; su gozo es relacional y teológico. Pide compañía en la crisis («quedaos aquí y velad conmigo»): el dato antiheroico más humano del corpus. Relacionalmente, una <strong>estructura de círculos concéntricos</strong>: multitudes → los 72 → los Doce → los tres → el uno. Es <strong>iniciador</strong> (llama, ve, se detiene, se autoinvita), pero premia la iniciativa audaz. Constituye a los Doce primero «para que estuviesen con él» y solo después «para enviarlos». Con las mujeres, una anomalía histórica: las enseña como discípulas, viaja con ellas, las constituye primeras testigos de la resurrección &mdash; dato con alta probabilidad histórica precisamente por ser contraproducente para la apologética primitiva («criterio de dificultad»). <span class="conf">Alta</span></p>
+    </section>
+
+    <section id="s5" class="revela">
+      <h2><span class="sec-num">Sección 5</span>Valores, prioridades y principios irrenunciables</h2>
+      <p><strong>Valores fundamentales:</strong> la misericordia activa; la verdad sin máscara; la dignidad de cada persona con opción preferente por el pequeño; la comunión con el Padre; el servicio como forma del poder; el perdón y la restauración; la fe/confianza como la respuesta humana que más celebra; la justicia hacia el débil por encima del ritual.</p>
+      <p><strong>Prioridades operativas:</strong> la voluntad del Padre → la oración estructural → las personas sobre las reglas → los perdidos sobre los establecidos → el núcleo formado sobre la multitud entusiasmada → Jerusalén (la entrega) sobre la seguridad.</p>
+      <p><strong>Principios irrenunciables:</strong> obediencia al Padre hasta la muerte; el poder jamás para sí mismo; la verdad aunque despueble el auditorio; la misericordia sobre el ritual; los pequeños como línea roja; no comprar ni mendigar aceptación.</p>
+    </section>
+
+    <section id="s6" class="revela">
+      <h2><span class="sec-num">Sección 6</span>Rasgos ordenados por fuerza de la evidencia</h2>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Rasgo</th><th>Evidencia principal</th><th>Nivel</th></tr></thead>
+          <tbody>
+            <tr><td>Compasivo de forma visceral y activa</td><td>8+ pasajes en 3 fuentes + parábolas</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Misericordioso con pecadores, buscador de perdidos</td><td>Atestación cuádruple + acusación enemiga</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Frontal con la hipocresía y el abuso religioso</td><td>Mt 23; Mc 7; Lc 11; el Templo</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Íntegro (cero brecha discurso-conducta)</td><td>Corpus completo, sin contraejemplo</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Orante estructural, dependiente del Padre</td><td>Mc 1:35; Lc 5:16; 6:12; Jn 17</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Manso ante la ofensa / valiente ante el poder</td><td>§2.10 + proceso ante sanedrín y Pilato</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Atento al individuo invisible</td><td>§3 (28 gestos convergentes)</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Determinado hasta la muerte; libre del instinto de autopreservación</td><td>Lc 9:51; Getsemaní; Jn 10:18</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Contracultural con mujeres, niños, samaritanos, gentiles</td><td>Lc 8:1–3; Mc 10:13–16; Jn 4</td><td><span class="conf">Alta</span></td></tr>
+            <tr><td>Celebrador de la mesa y la fiesta</td><td>Mt 11:19; Jn 2; Lc 15</td><td><span class="conf media">Alta / Media</span></td></tr>
+            <tr><td>Irónico / humorista hiperbólico</td><td>Mt 23:24; 7:3–5; 19:24; Lc 13:32</td><td><span class="conf media">Media</span></td></tr>
+            <tr><td>Enojo en la sanación del leproso (<span class="griego">orgistheís</span>, Mc 1:41)</td><td>Codex Bezae + <em>lectio difficilior</em></td><td><span class="conf baja">Baja-Media</span></td></tr>
+            <tr><td>Perdonador de sus verdugos («Padre, perdónalos»)</td><td>Lc 23:34a — variante insegura</td><td><span class="conf baja">Baja (texto)</span></td></tr>
+            <tr><td>Temperamento (introversión, voz, apariencia)</td><td>Sin datos</td><td><span class="conf baja">Sin evidencia</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s7" class="revela">
+      <h2><span class="sec-num">Sección 7</span>Donde los estudiosos no se ponen de acuerdo</h2>
+      <p class="lede">Un estudio honesto muestra sus costuras. Estos son los puntos disputados que afectan al retrato.</p>
+      <h4>7.1 · Marcos 1:41 — ¿compasión o enojo ante el leproso?</h4>
+      <p>Casi todos los manuscritos leen «movido a compasión» (<span class="griego">splanchnistheís</span>); el Codex Bezae y parte de la tradición latina leen «enojado» (<span class="griego">orgistheís</span> / <em>iratus</em>). Ehrman defiende «enojado» por <em>lectio difficilior</em>: es más fácil que un copista suavizara «enojado» que lo contrario. Los defensores de la lectura mayoritaria alegan evidencia externa abrumadora y explicaciones plausibles del error. <strong>Veredicto del panel:</strong> cuestión genuinamente abierta &mdash; y aun si el original fuera «enojado», el objeto sería la enfermedad o la exclusión, nunca el enfermo, al que en la misma frase toca y limpia. El retrato global no cambia; cambia un matiz.</p>
+      <h4>7.2 · Juan 11:33, 38 — ¿qué siente ante la tumba de Lázaro?</h4>
+      <p><span class="griego">Enebrimḗsato tō pneúmati</span> es un verbo de resoplido animal. Tres lecturas compiten: indignación (¿contra la muerte? ¿la incredulidad?), turbación profunda sin ira, o una mezcla deliberada. Lo indiscutido: un Jesús <em>violentamente</em> afectado ante la muerte de un amigo, dos veces, más lágrimas. <strong>Disputado el matiz, no la intensidad.</strong></p>
+      <h4>7.3 – 7.4 · «Padre, perdónalos» y la adúltera</h4>
+      <p><strong>Lc 23:34a</strong> está ausente en P75, B, D*, W y otros; los editores lo imprimen entre corchetes dobles. <span class="conf baja">Baja</span> como dato textual, aunque la disposición que expresa está atestiguada por otras vías (Lc 22:51; 1 P 2:23; Mt 5:44 practicado). <strong>Jn 7:53–8:11</strong> (la adúltera) no es parte original de Juan por consenso amplio, pero puede preservar una tradición antigua auténtica: su retrato («ni condeno ni permito»; el silencio que desarma) coincide milimétricamente con el patrón del material seguro. No se usa como evidencia primaria; se cita como eco temprano coherente.</p>
+      <h4>7.5 – 7.7 · El látigo, el humor y el Jesús de Juan</h4>
+      <p>El <strong>látigo del Templo</strong> (Jn 2:15): la sintaxis permite entender que se aplicó a los animales y el vuelco de mesas al dinero; buena parte de la exégesis moderna lo lee así. <strong>El humor</strong>: que las imágenes son hipérboles deliberadas es indiscutido; que provocaran risa es interpretación sobre el tono, que el texto no conserva. <span class="conf media">Media</span> <strong>El Jesús de Juan y el de los sinópticos</strong>: el estudio da peso primario a los <em>patrones de conducta</em>, donde la convergencia entre Juan y los sinópticos es notablemente alta; las conclusiones del perfil no dependen de resolver el problema joánico.</p>
+    </section>
+
+    <section id="s8" class="revela">
+      <h2><span class="sec-num">Sección 8</span>Auditoría de sesgos y clasificación final</h2>
+      <p><span class="voz">El Investigador cierra revisando el propio trabajo.</span> Sesgos que se intentaron controlar: de <strong>armonización</strong> (fundir cuatro retratos aplana diferencias reales &mdash; el Jesús de Marcos es más áspero; el de Lucas más orante; el de Mateo más maestro; el de Juan más soberano); <strong>devocional</strong> (se conservaron los datos incómodos sin lijarlos: la exasperación, el gemido, el pavor, el grito de desamparo, el trato inicial áspero a la cananea); de <strong>selección de la fuente</strong> (los evangelistas eran creyentes escribiendo para persuadir &mdash; riesgo alto e irreducible); <strong>anacronismo psicológico</strong> y <strong>antijudío</strong>, mitigados explícitamente.</p>
+      <p><strong>Clasificación final:</strong></p>
+      <ul>
+        <li><strong>Muy sólido:</strong> la compasión como emoción dominante y siempre activa; la mesa con pecadores y la búsqueda del perdido; la confrontación con la hipocresía; la asimetría manso-ante-la-ofensa / feroz-ante-el-daño-a-terceros; la emocionalidad plena sin pérdida de control; la oración estructural; la persona sobre la regla; el trato contracultural a mujeres, niños y excluidos; la corrección por preguntas y la restauración de los caídos; la determinación libre hacia su muerte; la integridad discurso-conducta; la atención al detalle.</li>
+        <li><strong>Probable:</strong> el humor intencional; la centralidad de la fiesta; los vínculos de amistad preferencial; el costo emocional acumulativo; el látigo no dirigido a personas; el carácter pedagógico del intercambio con la cananea.</li>
+        <li><strong>Abierto:</strong> la lectura original de Mc 1:41; la autenticidad textual de Lc 23:34a y Jn 7:53–8:11; el matiz de <span class="griego">embrimáomai</span>; todo rasgo de temperamento no conductual; y la distancia entre el Jesús de los textos y el de la historia &mdash; que ningún estudio honesto puede declarar cerrada.</li>
+      </ul>
+      <div class="idea">
+        <strong>Síntesis final, con todas las cautelas dichas:</strong> el Jesús de los cuatro Evangelios es un hombre de compasión visceral que se convierte inmediatamente en acción, de veracidad sin máscara que se vuelve fuego solo ante las máscaras de los poderosos, manso con quien lo hiere y feroz con quien hiere al pequeño, libre de la necesidad de aprobación pero no del amor concreto por personas con nombre, capaz de fiesta y de llanto, que ora antes de decidir, pregunta antes de sentenciar, toca lo que nadie toca, ve a quien nadie ve, restaura a los que fallan, y camina con el rostro afirmado hacia una muerte que pudo evitar &mdash; porque su principio más innegociable fue no usar jamás el poder para salvarse a sí mismo.
+      </div>
+    </section>
+
+  </main>
+
+  <div class="fuentes revela">
+    <strong>Fuentes consultadas.</strong> Texto base: <em>Novum Testamentum Graece</em> (Nestle-Aland 28) / UBS5; citas en español cotejadas con RVR60 y ajustadas al griego donde se indica.
+    <ul>
+      <li>B. B. Warfield, <em>On the Emotional Life of Our Lord</em> (1912) &mdash; <a href="https://www.monergism.com/emotional-life-our-lord-ebook">texto completo</a>, <a href="https://www.logcollegepress.com/warfield-the-emotional-life-of-our-lord">Log College Press</a>.</li>
+      <li>Debate sobre Mc 1:41 (Ehrman, «A Leper in the Hands of an Angry Jesus», y sus críticos): <a href="http://evangelicaltextualcriticism.blogspot.com/2012/02/mark-141-and-ehrman.html">Evangelical Textual Criticism</a>, <a href="https://sundaymorninggreekblog.com/2019/01/20/indignant-jesus-the-variant-reading-of-mark-141-niv-tniv/">Sunday Morning Greek Blog</a>, <a href="https://jcalebjones.com/2020/05/06/addressing-ehrmans-mark-141-text-controversy/">J. Caleb Jones</a>.</li>
+    </ul>
+  </div>
+
+  <footer>Café con Claude · Informe de investigación · «El carácter de Jesús» · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
