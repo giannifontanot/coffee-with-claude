@@ -30,13 +30,16 @@ These are the reasons this skill exists, so don't let them slip:
 1. **A nav drawer that docks on desktop and collapses to a hamburger only on
    mobile.** The drawer holds the brand and a table of contents of the page's
    sections (see `porque-tenian-miedo.html`, `dichas-una-sola-vez.html`,
-   `vestirse-para-ser-amado.html`). Its responsive behaviour matches the house
-   convention: on wide screens (`min-width: 1180px`) the drawer is **permanently
-   docked** as a fixed left rail — always visible, no overlay — and the
-   `#nav-toggle` hamburger and its scrim are hidden; the article column is shifted
-   right to make room, then re-centres past `1500px`. Only below `1180px` does the
-   drawer go off-canvas and the top-left `☰` hamburger appear to slide it in over a
-   scrim. The template already wires the toggle, the scrim, the scroll-spy that
+   `vestirse-para-ser-amado.html`). Its responsive behaviour: on wide screens
+   (`min-width: 1000px`) the drawer is **permanently docked** as a fixed left rail —
+   always visible, no overlay — and the `#nav-toggle` hamburger and its scrim are
+   hidden; the article column is shifted right to make room, then re-centres past
+   `1500px`. Only below `1000px` does the drawer go off-canvas and the top-left `☰`
+   hamburger appear to slide it in over a scrim. Keep this breakpoint **low** (not
+   the 1180px some older pages use): laptops running OS display-scaling report a CSS
+   width well under their physical resolution — a 1366px screen at 125% is only
+   ~1093 CSS px — so a high breakpoint wrongly leaves real desktops on the collapsed
+   hamburger. The template already wires the toggle, the scrim, the scroll-spy that
    highlights the current section, **and this desktop-docked / mobile-collapsed CSS**
    — so don't ship a page where the hamburger is still collapsed on desktop. Your
    job is to fill the TOC (`{{TOC}}`) with one `<li>` per `<section>`, and to give
@@ -170,9 +173,9 @@ Before you call it done, open the file and confirm:
 
 - [ ] No `{{PLACEHOLDER}}` tokens remain.
 - [ ] The drawer's `{{TOC}}` has one entry per section, each `href="#id"` matching
-      a real `<section id>`, and the drawer **docks on desktop** (≥1180px: rail
+      a real `<section id>`, and the drawer **docks on desktop** (≥1000px: rail
       visible, hamburger + scrim hidden) while the top-left `#nav-toggle` hamburger
-      only appears below 1180px.
+      only appears below 1000px.
 - [ ] The back control is `<button class="back-link" ... onclick="...history.back()...">`
       — a button, not an `<a href>`.
 - [ ] A `<p class="model-note">` exists near the bottom with a real model name.
@@ -182,9 +185,9 @@ Before you call it done, open the file and confirm:
 - [ ] If rendered from a repo `.md` source, that file is renamed to `*.publicado.md`.
 - [ ] It's a valid, self-contained page (no unclosed tags; opens standalone).
 
-If you have a browser tool available, load the page at a **desktop width (≥1180px)**
+If you have a browser tool available, load the page at a **desktop width (≥1000px)**
 and confirm the drawer is already docked with no hamburger showing; then shrink to
-a **mobile width (<1180px)** and confirm the hamburger appears, opens the drawer,
+a **mobile width (<1000px)** and confirm the hamburger appears, opens the drawer,
 and a TOC link scrolls to its section. Also click the back control to confirm it
 navigates through history rather than to a fixed URL.
 
