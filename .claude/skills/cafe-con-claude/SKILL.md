@@ -30,8 +30,11 @@ These are the reasons this skill exists, so don't let them slip:
 1. **A nav drawer that docks on desktop and collapses to a round hamburger only
    on mobile.** The top-left toggle is a **circular** button (`border-radius:50%`)
    whose bars morph to an `✕` via an `.open` class. The drawer/left rail holds the
-   brand and a table of contents of the page's sections, plus a `← Índice` home
-   link at its foot (see `la-panza-que-habla.html`,
+   brand and a table of contents of the page's sections, plus a `← Volver` back
+   arrow at its foot — a `<button>` running `history.back()` (with the same
+   `index.html` fallback as the top back control), not a hard link. Keep the
+   drawer's mobile top padding at `5rem` so the fixed hamburger never covers the
+   brand (see `la-panza-que-habla.html`,
    `primero-invisible-despues-imparable.html`). Its responsive behaviour: on wide screens
    (`min-width: 1000px`) the drawer is **permanently docked** as a fixed left rail —
    always visible, no overlay — and the `#nav-toggle` hamburger and its scrim are
