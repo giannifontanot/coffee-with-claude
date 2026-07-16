@@ -28,12 +28,12 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
 
-  .nav-banner { background: #1a1a18; padding: 12px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .nav-banner { background: #2d261d; padding: 12px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
   .nav-series { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); }
   .nav-link { display: inline-flex; align-items: center; gap: 8px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--amber-mid); text-decoration: none; padding: 8px 18px; border: 1px solid rgba(239,159,39,0.3); border-radius: 6px; transition: background 0.2s; }
   .nav-link:hover { background: rgba(239,159,39,0.12); }
 
-  .hero { background: #1a1a18; color: #f5f3ec; padding: 80px 40px 60px; text-align: center; position: relative; overflow: hidden; }
+  .hero { background: #2d261d; color: #f5f3ec; padding: 80px 40px 60px; text-align: center; position: relative; overflow: hidden; }
   .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px); }
   .hero-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber-mid); margin-bottom: 20px; position: relative; }
   .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 52px); font-weight: 700; line-height: 1.2; margin-bottom: 16px; position: relative; }
@@ -78,7 +78,7 @@
   .concept-example strong { font-weight: 700; margin-right: 4px; }
 
   .framework { margin-top: 32px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: white; }
-  .framework-header { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; background: #1a1a18; color: #f5f3ec; padding: 14px 20px; gap: 16px; }
+  .framework-header { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; background: #2d261d; color: #f5f3ec; padding: 14px 20px; gap: 16px; }
   .framework-header span { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
   .framework-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; padding: 16px 20px; gap: 16px; border-bottom: 1px solid var(--border); align-items: start; }
   .framework-row:last-child { border-bottom: none; }
@@ -118,17 +118,17 @@
   .legend-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
   .legend-desc { font-size: 13px; color: var(--gray); line-height: 1.5; }
 
-  .footer { background: #1a1a18; color: rgba(245,243,236,0.5); padding: 40px; text-align: center; font-size: 13px; }
+  .footer { background: #2d261d; color: rgba(245,243,236,0.5); padding: 40px; text-align: center; font-size: 13px; }
   .footer strong { color: var(--amber-mid); }
 
-  .part-cta { background: #1a1a18; padding: 72px 40px; text-align: center; position: relative; overflow: hidden; }
+  .part-cta { background: #2d261d; padding: 72px 40px; text-align: center; position: relative; overflow: hidden; }
   .part-cta::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px); }
   .part-cta-inner { max-width: 620px; margin: 0 auto; position: relative; }
   .part-cta-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 18px; }
   .part-cta-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 38px); font-weight: 700; color: #f5f3ec; line-height: 1.25; margin-bottom: 14px; }
   .part-cta-title em { font-style: italic; color: var(--amber-mid); }
   .part-cta-sub { font-size: 16px; color: rgba(245,243,236,0.65); margin-bottom: 32px; line-height: 1.6; }
-  .part-cta-btn { display: inline-flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #1a1a18; background: var(--amber-mid); text-decoration: none; padding: 14px 28px; border-radius: 8px; transition: background 0.2s; }
+  .part-cta-btn { display: inline-flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #2d261d; background: var(--amber-mid); text-decoration: none; padding: 14px 28px; border-radius: 8px; transition: background 0.2s; }
   .part-cta-btn:hover { background: #f5c55a; }
 
   @media (max-width: 640px) {
@@ -146,6 +146,14 @@
     .framework-row .fw-cell:nth-child(3)::before { content: 'Musk Model'; color: var(--teal); }
     .framework-row .fw-cell:nth-child(4)::before { content: 'Disciple Beta'; color: var(--purple); }
     .flow-item { grid-template-columns: 52px 1fr; }
+  }
+
+  /* == estilo-cc-2026-x: papel calido de la casa == */
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #f7efe0 0%, rgba(247,239,224,0) 60%),
+      radial-gradient(900px 700px at -10% 30%, #f0e6d0 0%, rgba(240,230,208,0) 55%),
+      #f2e8d6 !important;
   }
 </style>
 </head>
@@ -354,7 +362,7 @@
     <div class="wheel-section">
       <div class="wheel-svg">
         <svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="140" cy="140" r="36" fill="#1a1a18"></circle>
+          <circle cx="140" cy="140" r="36" fill="#2d261d"></circle>
           <text x="140" y="136" text-anchor="middle" fill="#EF9F27" font-family="Playfair Display, serif" font-size="11" font-weight="700">LOOP</text>
           <text x="140" y="150" text-anchor="middle" fill="rgba(245,243,236,0.6)" font-family="Lato, sans-serif" font-size="9">iteration</text>
           <path d="M140 104 A36 36 0 0 1 176 140 L140 140 Z" fill="#FAEEDA" stroke="white" stroke-width="2"></path>
@@ -512,7 +520,7 @@
         </div>
       </div>
     </div>
-    <div style="margin-top:40px; padding:32px; border-radius:12px; background:#1a1a18; color:#f5f3ec;">
+    <div style="margin-top:40px; padding:32px; border-radius:12px; background:#2d261d; color:#f5f3ec;">
       <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--amber-mid); margin-bottom:12px;">The Big Idea</div>
       <p style="font-family:'Playfair Display',serif; font-size:22px; line-height:1.5; max-width:640px;">
         Elon Musk doesn't win because he's smarter.<br>
