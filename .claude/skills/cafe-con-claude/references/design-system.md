@@ -36,41 +36,65 @@ prefer Fraunces + Spectral unless the user asks otherwise.
 
 These are the most frequent hex values across the corpus. Put them in `:root`:
 
+The current palette (from `primero-invisible-despues-imparable.html` — a warmer,
+deeper cut of the cream/terracotta system). Put it in `:root`:
+
 ```css
 :root {
-  --cream:     #f7f1e5;  /* page background (paper) */
-  --ink:       #2b2118;  /* primary text */
-  --terracotta:#b4532a;  /* primary accent: links, rules, back-link */
-  --amber:     #c98a2d;  /* secondary accent / highlights */
-  --olive:     #6b7a3f;  /* tertiary accent */
-  --plum:      #6e4a6e;  /* tertiary accent */
-  --line:      #d9cdb8;  /* hairline borders */
-  --muted:     #6a5b48;  /* muted / secondary text */
-  --card:      #fcf8ef;  /* card & panel backgrounds */
+  --bg:        #f2e8d6;  /* page background (paper) */
+  --bg-deep:   #ecdfc8;
+  --card:      #f9f3e6;  /* card & panel backgrounds */
+  --card-2:    #f6efdf;
+  --ink:       #2d261d;  /* primary text */
+  --ink-soft:  #5b4f40;  /* secondary text */
+  --ink-faint: #8a7c68;  /* faint text / numerals */
+  --terracotta:#b04e29;  /* primary accent: links, rules, back-link */
+  --rust:      #963c20;  /* deep accent / h1 <em> */
+  --amber:     #cf9136;  /* secondary accent / highlights */
+  --ochre:     #b9853a;
+  --olive:     #6c7240;  /* tertiary accent */
+  --olive-deep:#525830;
+  --plum:      #6c3a4f;  /* tertiary accent */
+  --plum-deep: #502635;
+  --line:      #d9cdb8;  /* hairline borders on cards */
+  --line-soft: rgba(45,38,29,.07);
+  --shadow:    0 1px 2px rgba(45,38,29,.05), 0 14px 38px -22px rgba(45,38,29,.34);
+  /* compatibility aliases for older component CSS */
+  --cream:     #f2e8d6;
+  --muted:     #5b4f40;
 }
 ```
 
-Optional extras seen in the wild: `--steel/--teal #4a6b7a`, and a near-black
-`#1a1a18` for occasional dark hero headers. Accent tints are made with `rgba`,
-e.g. `rgba(180,83,42,0.06)` (terracotta wash) for source boxes and hover states.
+The paper is not flat: the body carries two soft radial gradients over `--bg`
+(see the template's `body` rule). Optional extras seen in the wild:
+`--steel #4a6b7a`, `--teal #3d7068`, `--cacao #8a5a3b` for multi-voice panels.
+Accent tints are made with `rgba`, e.g. `rgba(176,78,41,0.06)` (terracotta wash)
+for source boxes and hover states.
 
 ### Layout
 
 - Centered single column. Article width `max-width: 820px` (long-form) or `640px`
   (tight essays). Wrap in `.wrap { max-width: 820px; margin: 0 auto; }`.
-- `body { background: var(--cream); color: var(--ink); font-family: 'Spectral', serif;
-  line-height: 1.65; padding: 3rem 1.25rem 5rem; }`
+- `body`: the warm gradient paper over `--bg` (two `radial-gradient`s + `var(--bg)`),
+  `color: var(--ink)`, `font-family: 'Spectral', Georgia, serif`, `line-height: 1.72`,
+  `padding: 4.5rem 1.25rem 5rem` (top room for the fixed hamburger). Copy the
+  exact `body` rule from `assets/template.html`.
 - `html { scroll-behavior: smooth; }`
 
 ### Recurring components
 
-- **Hamburger + nav drawer** — a fixed `☰` button in the **top-left** corner
-  (`#nav-toggle`, dark `--ink` on `--cream`) toggles an off-canvas `nav.sidebar`
-  that slides in from the left over a dim scrim. The drawer holds the brand mark
-  (`Café con Claude`, plain — no emoji), a series sub-line, and an `<ol>` table of contents whose
-  links (`#s1`, `#s2`, …) point at the page's section ids; a scroll-spy adds
-  `.active` to the current one. This is the site's standard navigation for any
-  multi-section piece — see `porque-tenian-miedo.html`, `dichas-una-sola-vez.html`.
+- **Round hamburger + nav drawer / left rail** — a fixed **circular** button
+  (`#nav-toggle`, `border-radius: 50%`, light `--card` face with a thin `--line`
+  border) in the **top-left** corner; its three bars morph into an `✕` via an
+  `.open` class (not a text swap). It toggles an off-canvas `nav.sidebar` that
+  slides in from the left over a dim scrim. The drawer/rail (styled after
+  `crecer es pelear` / `Episode 58`) holds the brand mark (`Café con Claude`,
+  small-caps terracotta, plain — no emoji), an italic series sub-line, an `<ol>`
+  table of contents whose links (`#s1`, `#s2`, …) point at the page's section ids
+  (Fraunces numerals + title, a scroll-spy adds `.active` to the current one),
+  and a `.rail-tools` foot with a `← Índice` home link. This is the site's
+  standard navigation for any multi-section piece — see `la-panza-que-habla.html`,
+  `primero-invisible-despues-imparable.html`.
   The drawer is **responsive**: on desktop (`min-width: 1000px`) it docks as a
   fixed left rail — always visible, no overlay — with the hamburger and scrim
   hidden and the article column shifted right (re-centring past `1500px`); below
@@ -91,7 +115,7 @@ e.g. `rgba(180,83,42,0.06)` (terracotta wash) for source boxes and hover states.
 - **Sections** — `h2` in Fraunces; body paragraphs in Spectral. Give each
   `<section>` an `id` so the nav drawer's TOC can link to it.
 - **Sources box (`.fuentes`)** — `border-left: 4px solid var(--terracotta)`,
-  `background: rgba(180,83,42,0.06)`, links in terracotta with a faint underline.
+  `background: rgba(176,78,41,0.06)`, links in terracotta with a faint underline.
 - **Footer** — italic, `--muted`, small, usually centered, ending with the brand
   line: `Café con Claude · «Serie» · Mes Año`.
 - **Reveal-on-scroll** — elements with `.revela` fade/translate in via
