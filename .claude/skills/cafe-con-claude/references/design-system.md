@@ -14,10 +14,13 @@ the index register is documented at the end for when you touch `index.html`.
 Loaded from Google Fonts. This exact pairing appears on 40+ pages and *is* the
 house style:
 
-- **Display / headings — `Fraunces`, serif.** Weights 400/600/700, optical size
-  axis. Used for `h1`, `h2`, eyebrows, brand marks. Headline sizing uses
-  `clamp()`, e.g. `h1 { font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1; }`.
-- **Body — `Spectral`, serif.** Weights 400/600 plus italics. `line-height: 1.65`.
+- **Display / headings — `Fraunces`, serif.** Variable weights 300–700 (+ italic
+  axis), optical size axis pushed to display (`font-optical-sizing: 144`). Used
+  for `h1`, `h2`, brand marks. The `h1` is **big and tight** (from
+  `primero-invisible`): `font-size: clamp(42px, 8vw, 72px); line-height: 1.02;
+  letter-spacing: -.018em; font-weight: 600;` — with `h1 em { font-style: italic;
+  font-weight: 500; color: var(--rust); }` for the accented word.
+- **Body — `Spectral`, serif.** Weights 400/500/600 plus italics. `line-height: 1.72`.
 - **Eyebrows / labels / mono accents — `DM Mono`, monospace** (optional). Uppercase,
   wide letter-spacing.
 
@@ -26,7 +29,7 @@ Standard `<head>` load:
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 ```
 
 `Playfair Display` is an acceptable alternative display face on a few pages, but
@@ -110,8 +113,11 @@ for source boxes and hover states.
   in this skill it is a `<button>` that runs `history.back()`, NOT an `<a href>`.
   Visual style is the classic `.home-link`: small, terracotta text with a
   terracotta bottom-border, `← ` glyph prefix, `margin-bottom: 2.2rem`.
-- **Header** — optional `eyebrow`/`kicker` (uppercase, accent, letter-spaced) +
-  `h1` (Fraunces, clamp) + `subtitle` (italic, `--muted`, `max-width: 34em`).
+- **Header** — optional `eyebrow`/`kicker` in **Spectral italic** (15px,
+  terracotta, `letter-spacing: .06em`, sentence case — NOT uppercase Fraunces)
+  finished by a short `::after` rule (46×1px terracotta at 50% opacity) +
+  the big tight `h1` (see Type above) + `subtitle`/dek (Spectral upright, 21px,
+  `--ink-soft`, `max-width: 30ch`, `margin-top: 18px`).
 - **Sections** — `h2` in Fraunces; body paragraphs in Spectral. Give each
   `<section>` an `id` so the nav drawer's TOC can link to it.
 - **Sources box (`.fuentes`)** — `border-left: 4px solid var(--terracotta)`,
