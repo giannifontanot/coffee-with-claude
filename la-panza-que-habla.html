@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La panza que habla · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f1e5;
+    --ink:       #2b2118;
+    --terracotta:#b4532a;
+    --amber:     #c98a2d;
+    --olive:     #6b7a3f;
+    --plum:      #6e4a6e;
+    --steel:     #4a6b7a;
+    --teal:      #3d7068;
+    --cacao:     #8a5a3b;
+    --line:      #d9cdb8;
+    --muted:     #6a5b48;
+    --card:      #fcf8ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Spectral', serif;
+    line-height: 1.68;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--plum), var(--terracotta), var(--ink));
+    z-index: 100;
+  }
+
+  /* ── Top-left hamburger ───────────────────────────── */
+  #nav-toggle {
+    position: fixed; top: 1rem; left: 1rem;
+    z-index: 80;
+    width: 2.5rem; height: 2.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 4px;
+    font-size: 1.15rem; line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(43,33,24,0.18);
+    transition: background 0.2s;
+  }
+  #nav-toggle:hover { background: var(--terracotta); }
+
+  /* ── Off-canvas nav drawer ────────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 4.5rem 1.6rem 2rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    box-shadow: 6px 0 24px rgba(43,33,24,0.14);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.78rem; font-style: italic; color: var(--muted);
+    margin-bottom: 1.8rem;
+  }
+  nav.sidebar ol { list-style: none; }
+  nav.sidebar ol li { margin-bottom: 0.85rem; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.86rem; line-height: 1.35;
+    transition: color 0.2s;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.8rem;
+    min-width: 1.5rem; color: var(--line); transition: color 0.2s;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(43,33,24,0.38);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Back control — browser history, not a hard link. */
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Fraunces', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--terracotta); font-weight: 600;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { font-style: italic; color: var(--muted); font-size: 1.05rem; max-width: 36em; }
+
+  .panel-roster { margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    font-size: 0.78rem; padding: 0.25rem 0.75rem;
+    border-radius: 999px; border: 1px solid currentColor;
+    background: var(--card); white-space: nowrap;
+  }
+  .c-estigma   { color: var(--plum); }
+  .c-antro     { color: var(--olive); }
+  .c-kinesico  { color: var(--steel); }
+  .c-fisio     { color: var(--teal); }
+  .c-sastre    { color: var(--cacao); }
+  .c-pastor    { color: var(--amber); }
+  .c-esceptico { color: var(--terracotta); }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.4rem;
+  }
+  .sec-sub {
+    font-style: italic; color: var(--muted);
+    font-size: 0.95rem; margin-bottom: 1.5rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  .divider {
+    text-align: center; margin: 3rem 0 0.5rem;
+    font-family: 'Fraunces', serif; font-style: italic;
+    color: var(--line); font-size: 1rem; letter-spacing: 0.5em;
+    user-select: none;
+  }
+
+  /* ── Diálogo del panel ────────────────────────────── */
+  .dialogue { margin: 1.6rem 0; }
+  .turn {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 1.1rem 1.3rem; margin-bottom: 0.9rem;
+    box-shadow: 0 1px 3px rgba(43,33,24,0.05);
+  }
+  .turn .who {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.86rem; letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .turn .who::before {
+    content: ""; width: 9px; height: 9px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  .turn p { margin-bottom: 0.7rem; font-size: 1.0rem; }
+  .turn p:last-child { margin-bottom: 0; }
+  .turn.t-estigma   .who { color: var(--plum); }
+  .turn.t-antro     .who { color: var(--olive); }
+  .turn.t-kinesico  .who { color: var(--steel); }
+  .turn.t-fisio     .who { color: var(--teal); }
+  .turn.t-sastre    .who { color: var(--cacao); }
+  .turn.t-pastor    .who { color: var(--amber); }
+  .turn.t-esceptico .who { color: var(--terracotta); }
+  .turn.t-moderador {
+    background: transparent; border: none; box-shadow: none;
+    padding: 0.4rem 1.3rem;
+  }
+  .turn.t-moderador .who { color: var(--muted); }
+  .turn.t-moderador p { font-style: italic; color: var(--muted); }
+
+  /* ── Cajas clave y citas ──────────────────────────── */
+  blockquote {
+    border-left: 3px solid var(--amber);
+    padding: 0.4rem 0 0.4rem 1.3rem; margin: 1.6rem 0;
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 1.12rem; color: var(--muted);
+  }
+  blockquote .cite-line {
+    display: block; font-family: 'Spectral', serif; font-style: normal;
+    font-size: 0.82rem; margin-top: 0.5rem; letter-spacing: 0.04em;
+  }
+  .keybox {
+    background: rgba(180,83,42,0.05); border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 1.6rem 0;
+    border: 1px solid var(--line);
+  }
+  .keybox h3 {
+    font-family: 'Fraunces', serif; font-size: 1rem;
+    font-weight: 700; margin-bottom: 0.5rem; color: var(--terracotta);
+  }
+  .keybox ul { list-style: none; }
+  .keybox li {
+    padding-left: 1.3rem; position: relative; margin-bottom: 0.5rem;
+    font-size: 0.97rem;
+  }
+  .keybox li::before {
+    content: "✳"; position: absolute; left: 0; color: var(--amber);
+    font-size: 0.8rem; top: 0.25rem;
+  }
+
+  .src-inline {
+    font-size: 0.83rem; color: var(--muted); margin-top: -0.3rem;
+    margin-bottom: 1.4rem;
+  }
+  .src-inline a { font-size: inherit; text-decoration: none; border-bottom: 1px dotted var(--terracotta); }
+  .src-inline a:hover { border-bottom-style: solid; }
+
+  /* ── Tabla problema → solución ────────────────────── */
+  .tabla-ps { width: 100%; border-collapse: collapse; margin: 1.6rem 0; font-size: 0.95rem; }
+  .tabla-ps th {
+    font-family: 'Fraunces', serif; font-size: 0.82rem; letter-spacing: 0.06em;
+    text-transform: uppercase; text-align: left; color: var(--terracotta);
+    border-bottom: 2px solid var(--line); padding: 0.5rem 0.7rem;
+  }
+  .tabla-ps td {
+    border-bottom: 1px solid var(--line); padding: 0.65rem 0.7rem;
+    vertical-align: top;
+  }
+  .tabla-ps td:first-child { font-weight: 600; width: 46%; }
+  .tabla-scroll { overflow-x: auto; }
+
+  /* ── Fuentes finales ──────────────────────────────── */
+  .sources ul { list-style: none; font-size: 0.92rem; }
+  .sources li { margin-bottom: 0.6rem; padding-left: 1.2rem; position: relative; }
+  .sources li::before { content: "↗"; position: absolute; left: 0; color: var(--terracotta); font-size: 0.85rem; }
+  .sources a { text-decoration: none; border-bottom: 1px dotted var(--terracotta); }
+  .sources a:hover { border-bottom-style: solid; }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--muted); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--muted); opacity: 0.85; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle { transition: none; }
+  }
+
+  /* Desktop: dock the drawer as a fixed left rail; the hamburger is mobile-only. */
+  @media (min-width: 1000px) {
+    #nav-toggle, #nav-scrim { display: none; }
+    nav.sidebar, nav.sidebar.open {
+      transform: none; box-shadow: none; padding-top: 2.6rem;
+    }
+    .wrap { margin-left: max(324px, calc(50% - 360px)); margin-right: auto; }
+  }
+  @media (min-width: 1500px) {
+    .wrap { margin: 0 auto; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+    .turn { padding: 1rem 1.05rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top-left hamburger + off-canvas drawer -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">La panza que habla · panel de expertos</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>Obertura: la panza en la sala</a></li>
+    <li><a href="#s2"><span class="num">II</span>La Psicóloga: el prejuicio llega primero</a></li>
+    <li><a href="#s3"><span class="num">III</span>El Antropólogo: el hombre grande</a></li>
+    <li><a href="#s4"><span class="num">IV</span>El Kinésico: los gestos que delatan</a></li>
+    <li><a href="#s5"><span class="num">V</span>La Fisioterapeuta: la mecánica del centro</a></li>
+    <li><a href="#s6"><span class="num">VI</span>El Sastre: vestir el cuerpo que existe</a></li>
+    <li><a href="#s7"><span class="num">VII</span>El Pastor: la dignidad del cuerpo presente</a></li>
+    <li><a href="#s8"><span class="num">VIII</span>El Escéptico: objeciones</a></li>
+    <li><a href="#s9"><span class="num">IX</span>Mesa redonda: problemas y soluciones</a></li>
+    <li><a href="#s10"><span class="num">X</span>Fuentes</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Sala de lectura
+  </button>
+
+  <header>
+    <span class="eyebrow">Cuaderno de estudio · Panel de expertos</span>
+    <h1>La panza que habla</h1>
+    <p class="subtitle">Comunicación no verbal del hombre con panza: qué dice el abdomen antes de que su dueño abra la boca, qué problemas crea — y qué se puede hacer al respecto. Siete voces a la mesa, café de por medio.</p>
+    <div class="panel-roster">
+      <span class="chip c-estigma">La Psicóloga del Estigma</span>
+      <span class="chip c-antro">El Antropólogo</span>
+      <span class="chip c-kinesico">El Kinésico</span>
+      <span class="chip c-fisio">La Fisioterapeuta</span>
+      <span class="chip c-sastre">El Sastre</span>
+      <span class="chip c-pastor">El Pastor</span>
+      <span class="chip c-esceptico">El Escéptico Honesto</span>
+    </div>
+  </header>
+
+  <main>
+
+  <!-- ============ I. OBERTURA ============ -->
+  <section id="s1">
+    <h2>Obertura: la panza en la sala</h2>
+    <p class="sec-sub">Donde el moderador nombra lo que todos ven y nadie estudia</p>
+
+    <p>Hay un cuerpo masculino que las estadísticas describen como mayoritario y que los manuales de comunicación tratan como si no existiera. Los libros de lenguaje corporal se ilustran con siluetas atléticas; los cursos de oratoria enseñan a «ocupar el escenario» asumiendo un torso de maniquí. Pero el hombre real que se para frente a la sala de juntas, el púlpito o la parrilla del domingo lleva, con enorme frecuencia, una panza. Y esa panza comunica — le pidan opinión o no.</p>
+
+    <p>La pregunta de hoy tiene tres capas, y el panel las irá separando: qué <em>proyecta el observador</em> sobre esa panza (prejuicio), qué hace la panza <em>con la mecánica del cuerpo</em> (física), y qué hace el hombre <em>alrededor de su panza</em> (gestos). Como siempre, abrimos con una ronda de una sola frase.</p>
+
+    <div class="dialogue">
+      <div class="turn t-moderador">
+        <div class="who">Moderador</div>
+        <p>Panel: ¿qué dice una panza masculina antes de que su dueño hable? Una frase cada uno. Una.</p>
+      </div>
+      <div class="turn t-estigma">
+        <div class="who">La Psicóloga del Estigma</div>
+        <p>Dice lo que el observador ya creía: el estereotipo habla más fuerte que el cuerpo.</p>
+      </div>
+      <div class="turn t-antro">
+        <div class="who">El Antropólogo</div>
+        <p>Durante casi toda la historia humana dijo «abundancia, éxito, poder» — el desprecio es un invento reciente.</p>
+      </div>
+      <div class="turn t-kinesico">
+        <div class="who">El Kinésico</div>
+        <p>La panza dice poco; lo que el hombre <em>hace</em> alrededor de ella lo dice casi todo.</p>
+      </div>
+      <div class="turn t-fisio">
+        <div class="who">La Fisioterapeuta</div>
+        <p>Es una palanca: inclina la pelvis, recoloca el centro de gravedad y reescribe el andar — física antes que semiótica.</p>
+      </div>
+      <div class="turn t-sastre">
+        <div class="who">El Sastre</div>
+        <p>Un cuerpo no se esconde: se enmarca — y la mayoría de las panzas van mal enmarcadas.</p>
+      </div>
+      <div class="turn t-pastor">
+        <div class="who">El Pastor</div>
+        <p>Dice que ahí hay un ser humano; todo lo demás son notas al pie.</p>
+      </div>
+      <div class="turn t-esceptico">
+        <div class="who">El Escéptico Honesto</div>
+        <p>De momento lo único verificable es que en esta mesa hay por lo menos tres panzas y ninguna fue consultada para este panel.</p>
+      </div>
+      <div class="turn t-moderador">
+        <div class="who">Moderador</div>
+        <p>(risas; el Kinésico anota quién se cubrió el abdomen al reírse)</p>
+      </div>
+    </div>
+
+    <p>Esa es la mesa. Vamos por capas: primero el problema que vive en los ojos ajenos, luego la sorpresa histórica, después los gestos, la mecánica, la ropa — y al final, como siempre, las soluciones puestas en fila.</p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ II. PSICÓLOGA ============ -->
+  <section id="s2" class="revela">
+    <h2>La Psicóloga: el prejuicio llega antes que el saludo</h2>
+    <p class="sec-sub">El estigma de peso, lo que proyecta el observador, y el bucle que se cierra solo</p>
+
+    <div class="dialogue">
+      <div class="turn t-estigma">
+        <div class="who">La Psicóloga del Estigma</div>
+        <p>Empiezo con la parte incómoda: el primer «mensaje no verbal» de la panza no lo emite el hombre — lo fabrica el observador. Décadas de investigación sobre estigma de peso, con Rebecca Puhl a la cabeza, documentan un paquete de estereotipos notablemente estable: a las personas con sobrepeso se les atribuye pereza, desorden, falta de autocontrol y <em>menor competencia</em> — antes de que hayan dicho una palabra o movido un dedo. La panza funciona como un currículum falso que otros leen por ti.</p>
+        <p>Y hay un matiz que nos toca directamente hoy: durante años se asumió que el estigma de peso era «un tema de mujeres», así que a los hombres casi no se les estudió. Cuando Himmelstein, Puhl y Quinn lo midieron en 2018 en una muestra grande de hombres, encontraron que alrededor del 40% reportaba experiencias de estigma por su peso — burlas, trato desigual, comentarios «en broma» — y que muchos lo cargaban en silencio, precisamente porque «quejarse del cuerpo» viola otra norma masculina. El hombre con panza recibe el prejuicio dos veces: una por el peso y otra por no poder nombrarlo.</p>
+      </div>
+      <div class="turn t-moderador">
+        <div class="who">Moderador</div>
+        <p>¿Y eso qué tiene que ver con la comunicación no verbal? El prejuicio está en el otro.</p>
+      </div>
+      <div class="turn t-estigma">
+        <div class="who">La Psicóloga del Estigma</div>
+        <p>Todo, porque el estigma no se queda en el otro: se <strong>internaliza</strong>. El hombre que anticipa la mirada burlona edita su propio repertorio corporal — encoge los hombros, cruza los brazos sobre el abdomen, evita el perfil en las fotos, se sienta al fondo, gesticula menos. Y ese repertorio de ocultamiento es exactamente el que los demás leen como inseguridad, apatía o falta de presencia. El bucle se cierra solo: el prejuicio produce los gestos que luego «confirman» el prejuicio. Ese es el problema número uno de este estudio, y conviene decirlo con claridad: <em>no empieza en la panza; empieza en la vergüenza.</em></p>
+      </div>
+      <div class="turn t-esceptico">
+        <div class="who">El Escéptico Honesto</div>
+        <p>Anoto para mi turno que buena parte de esa literatura se basa en viñetas y fotos evaluadas en laboratorio, no en interacciones reales. Pero concedo desde ya que el estigma de peso es de lo mejor documentado que traerá esta mesa.</p>
+      </div>
+    </div>
+
+    <div class="keybox">
+      <h3>Problema nº 1 — el bucle del estigma</h3>
+      <ul>
+        <li><strong>Fuera:</strong> el observador infiere pereza, indisciplina y baja competencia a partir de la silueta.</li>
+        <li><strong>Dentro:</strong> el hombre lo sabe, lo anticipa, y adopta gestos de ocultamiento y retirada.</li>
+        <li><strong>El cierre:</strong> esos gestos — no la panza — son lo que la sala termina leyendo como «falta de confianza».</li>
+      </ul>
+    </div>
+    <p class="src-inline">Fuentes: <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/oby.22162" target="_blank" rel="noopener">Himmelstein, Puhl &amp; Quinn, «Weight Stigma in Men» — Obesity (2018)</a>; <a href="https://onlinelibrary.wiley.com/doi/full/10.1038/oby.2006.208" target="_blank" rel="noopener">Puhl &amp; Brownell, «Confronting and Coping with Weight Stigma» — Obesity (2006)</a>; <a href="https://www.psychologytoday.com/us/blog/finding-new-home/202109/research-suggests-we-assume-overweight-people-lack-self-control" target="_blank" rel="noopener">Psychology Today — el supuesto de falta de autocontrol</a></p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ III. ANTROPÓLOGO ============ -->
+  <section id="s3" class="revela">
+    <h2>El Antropólogo: el hombre grande</h2>
+    <p class="sec-sub">Donde la historia le lleva la contraria al gimnasio: tamaño, estatus y persuasión</p>
+
+    <div class="dialogue">
+      <div class="turn t-antro">
+        <div class="who">El Antropólogo</div>
+        <p>Ahora déjenme complicar el cuadro, porque la panza no siempre fue una acusación. En 1963 Marshall Sahlins publicó su célebre ensayo sobre los <em>big men</em> de Melanesia: líderes cuyo poder no se heredaba sino que se acumulaba a fuerza de generosidad — banquetes, cerdos, redistribución. El idioma lo delata: en decenas de culturas, del Pacífico a los Andes, al hombre de influencia se le llama literalmente «hombre grande». Y la asociación entre tamaño corporal y estatus aparece una y otra vez en registros transculturales: donde la comida es escasa, el volumen del cuerpo es un anuncio ambulante de éxito.</p>
+        <p>¿Reliquia del pasado? No tan rápido. En 2019, Kniffin, Bogan y Just publicaron en <em>PLOS One</em> una serie de seis estudios con un hallazgo incómodo para la modernidad: a mayor masa corporal en <strong>hombres</strong>, mayor <em>persuasividad percibida</em>. El efecto es específico de género — a las mujeres no se les concede ese bono, lo cual es una injusticia que la Psicóloga sabrá comentar. Y la psicología evolutiva añade su capa: el tamaño corporal masculino se lee espontáneamente como formidabilidad; estudios recientes muestran que los juicios de dominancia rastrean con precisión la capacidad física real asociada al tamaño.</p>
+        <p>Hasta el castellano testifica a mi favor: decimos que un señor «tiene peso» en la conversación, que es «un hombre de peso», que habla «con gravedad» — <em>gravitas</em>, literalmente, pesadez. La lengua guarda memoria de un mundo donde la panza era un argumento.</p>
+      </div>
+      <div class="turn t-estigma">
+        <div class="who">La Psicóloga del Estigma</div>
+        <p>Y comento, en efecto: ese «bono del hombre grande» confirma que el estigma no castiga el tejido adiposo sino el <em>significado cultural</em> que se le asigna — y que se le asigna con doble vara. El mismo kilo que a él lo hace «contundente», a ella la descalifica.</p>
+      </div>
+      <div class="turn t-antro">
+        <div class="who">El Antropólogo</div>
+        <p>Exacto. Y la moraleja para nuestro hombre con panza es liberadora: la señal es <strong>ambivalente</strong>, no uniformemente negativa. La misma silueta puede leerse como descuido o como solidez, según qué más comunique el cuerpo que la lleva. Lo cual nos entrega, servido en bandeja, al Kinésico.</p>
+      </div>
+    </div>
+    <p class="src-inline">Fuentes: <a href="https://en.wikipedia.org/wiki/Big_man_(anthropology)" target="_blank" rel="noopener">«Big man (anthropology)» — sobre Sahlins (1963)</a>; <a href="https://www.gertstulp.com/pdf/2016_Stulp_Encyclopedia%20of%20Evolutionary%20Psychological%20Science_Big_Man.pdf" target="_blank" rel="noopener">Stulp, «Big Man» — Encyclopedia of Evolutionary Psychological Science</a>; <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0222761" target="_blank" rel="noopener">Kniffin, Bogan &amp; Just, «“Big men” in the office» — PLOS One (2019)</a>; <a href="https://link.springer.com/article/10.1007/s12110-024-09473-7" target="_blank" rel="noopener">«Male Body Size Predicts Increased Knockout Power…» — Human Nature (2024)</a></p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ IV. KINÉSICO ============ -->
+  <section id="s4" class="revela">
+    <h2>El Kinésico: los gestos que delatan</h2>
+    <p class="sec-sub">El repertorio de ocultamiento — cinco hábitos que gritan lo que la panza solo susurra</p>
+
+    <div class="dialogue">
+      <div class="turn t-kinesico">
+        <div class="who">El Kinésico</div>
+        <p>Mi disciplina — la kinésica, bautizada por Ray Birdwhistell — estudia el movimiento corporal como comunicación. Y mi tesis de hoy es simple: <strong>la panza casi nunca es el mensaje; el mensaje son las maniobras alrededor de la panza.</strong> Observen a un hombre incómodo con su abdomen durante veinte minutos y verán un repertorio completo, ejecutado en bucle:</p>
+      </div>
+    </div>
+
+    <div class="keybox">
+      <h3>Problema nº 2 — el repertorio de ocultamiento</h3>
+      <ul>
+        <li><strong>Barreras:</strong> brazos cruzados justo sobre el abdomen; la carpeta, el teléfono o el vaso sostenidos a la altura del estómago como escudo; el cuerpo siempre detrás de la mesa o el podio.</li>
+        <li><strong>Adaptadores:</strong> estirarse la camisa hacia abajo, subirse el pantalón, abotonarse y desabotonarse el saco — micro-gestos de auto-apaciguamiento que las salas leen, con razón o sin ella, como ansiedad.</li>
+        <li><strong>Encogimiento:</strong> hombros caídos y torso plegado para «ocupar menos» — que además de leerse como sumisión, dobla el tronco sobre el abdomen y hace la panza <em>más</em> visible, no menos.</li>
+        <li><strong>La retirada del perfil:</strong> girarse en las fotos, esquivar la silla lateral, hablar siempre de frente-cerrado — leído como evasión.</li>
+        <li><strong>El chiste perpetuo:</strong> la broma sobre la propia panza, que dosificada comunica seguridad, y en bucle comunica un hombre pidiendo perdón por existir.</li>
+      </ul>
+    </div>
+
+    <div class="dialogue">
+      <div class="turn t-kinesico">
+        <div class="who">El Kinésico</div>
+        <p>La paradoja es cruel: cada una de esas maniobras existe para esconder la panza, y cada una emite una señal más corrosiva que la panza misma. Nadie descarta a un hombre por su circunferencia; lo descartan por parecer incómodo en su propio cuerpo — porque la incomodidad es contagiosa.</p>
+        <p>¿La dirección de la solución? La inversa exacta: manos visibles y sueltas, gestos que se abren desde el esternón, quietud sin rigidez, aceptar el perfil y la foto. La literatura sobre posturas abiertas versus cerradas es consistente al menos en esto: la expansión calmada se <em>percibe</em> como seguridad y estatus. Sobre lo que la expansión hace por dentro — hormonas y demás — cedo prudentemente el micrófono al Escéptico, que ya está afilando el lápiz.</p>
+      </div>
+      <div class="turn t-esceptico">
+        <div class="who">El Escéptico Honesto</div>
+        <p>Afilado está. Pero registre la sala que el Kinésico ha dicho «se percibe como» y no «te convierte en». Ese matiz le va a ahorrar una paliza en la sección octava.</p>
+      </div>
+    </div>
+    <p class="src-inline">Sobre posturas expansivas y percepción: <a href="https://en.wikipedia.org/wiki/Power_posing" target="_blank" rel="noopener">Power posing — estado de la cuestión</a>; el estudio original: <a href="https://faculty.haas.berkeley.edu/dana_carney/power.poses.PS.2010.pdf" target="_blank" rel="noopener">Carney, Cuddy &amp; Yap — Psychological Science (2010)</a></p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ V. FISIOTERAPEUTA ============ -->
+  <section id="s5" class="revela">
+    <h2>La Fisioterapeuta: la mecánica del centro</h2>
+    <p class="sec-sub">Pelvis, equilibrio y por qué «pararse derecho» vale más que cinco kilos</p>
+
+    <div class="dialogue">
+      <div class="turn t-fisio">
+        <div class="who">La Fisioterapeuta</div>
+        <p>Mis colegas hablan de significados; yo traigo palancas. El abdomen prominente no es solo una imagen: es una masa colocada por delante del eje del cuerpo, y el cuerpo la compensa sin pedir permiso. La investigación biomecánica es consistente: el exceso de peso abdominal se asocia a una <strong>báscula pélvica anterior</strong> aumentada — la pelvis se vuelca hacia adelante —, con más carga sobre la zona lumbar baja y mayor oscilación postural: más balanceo al estar de pie, sobre todo con los ojos cerrados o en superficie blanda.</p>
+        <p>Tradúzcanlo a comunicación no verbal: la pelvis volcada empuja el vientre hacia adelante y las lumbares se arquean; el tronco se echa levemente atrás para contrapesar; el andar se hace más ancho y pendular. El conjunto se lee desde fuera como pesadez o desgana — cuando en realidad es física pura, no carácter. El problema número tres es mecánico, y por eso tiene soluciones mecánicas, que es la mejor noticia del panel:</p>
+      </div>
+    </div>
+
+    <div class="keybox">
+      <h3>Soluciones de la camilla — baratas, probadas, aburridas</h3>
+      <ul>
+        <li><strong>Glúteos y abdomen profundo:</strong> fortalecerlos endereza la báscula pélvica — puentes de glúteo, planchas, respiración con abdomen activo. La silueta cambia antes que el peso.</li>
+        <li><strong>Estirar los flexores de cadera</strong> (psoas, cuádriceps): acortados por la silla, son cómplices del vuelco pélvico.</li>
+        <li><strong>Elongación axial:</strong> crecer desde el esternón, como colgado de un hilo. Dos centímetros de altura percibida hacen por la silueta más que cinco kilos de dieta — y se instalan hoy mismo.</li>
+        <li><strong>Sentarse al fondo de la silla,</strong> ambos pies plantados: el hombre encaramado al borde parece a punto de huir, y su lumbar lo paga.</li>
+        <li><strong>Y la letra pequeña honesta:</strong> la circunferencia abdominal es también un marcador de salud metabólica. Este panel mejora tu presencia; tu médico, tu pronóstico. Las dos citas valen.</li>
+      </ul>
+    </div>
+    <p class="src-inline">Fuentes: <a href="https://jneuroengrehab.biomedcentral.com/articles/10.1186/1743-0003-7-3" target="_blank" rel="noopener">Vismara et al., «Effect of obesity… on spinal mobility» — J. NeuroEng. Rehab. (2010)</a>; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5194219/" target="_blank" rel="noopener">«Influence of Obesity on Postural Stability in Young Adults» — PMC</a>; <a href="https://www.researchgate.net/publication/6982583_Effect_of_obesity_on_posture_and_hip_joint_moments_during_a_standing_task_and_trunk_forward_flexion_motion" target="_blank" rel="noopener">Gilleard &amp; Smith, «Effect of obesity on posture…»</a></p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ VI. SASTRE ============ -->
+  <section id="s6" class="revela">
+    <h2>El Sastre: vestir el cuerpo que existe</h2>
+    <p class="sec-sub">La ropa como intervención no verbal — hacia fuera y hacia dentro</p>
+
+    <div class="dialogue">
+      <div class="turn t-sastre">
+        <div class="who">El Sastre</div>
+        <p>Cuarenta años midiendo caballeros me han enseñado que el hombre con panza comete, casi siempre, uno de dos errores simétricos. El primero: comprar dos tallas más «para disimular» — y más tela es más volumen; la camisa-carpa no esconde la panza, la agranda y añade descuido. El segundo: seguir comprando la talla del cuerpo que tuvo a los veinticinco — y entonces la ropa hace lo peor que puede hacer la ropa: <em>mostrar esfuerzo</em>. Los botones que tiran dibujan una X que grita lo que el hombre quería callar.</p>
+        <p>La regla de oro de mi oficio: <strong>se viste el cuerpo de hoy, no el de la nostalgia ni el del propósito de año nuevo.</strong> Y se viste desde los hombros: el hombro es la percha del cuerpo; si la prenda asienta ahí, la tela cae desde el pecho y <em>pasa</em> sobre el abdomen en lugar de pelearse con él. Pantalón a la cintura natural — no debajo de la panza, que acorta la pierna y descuelga la silueta —, líneas verticales, saco con estructura. Ningún truco esconde la panza; todos juntos la convierten en un cuerpo <em>gobernado</em>.</p>
+        <p>Y hay ciencia de mi lado, aunque yo llegué por el camino de la tiza: Adam y Galinsky llamaron <em>enclothed cognition</em> al hallazgo de que la ropa no solo cambia cómo te ven — cambia cómo piensas y actúas tú. En mi probador se ve a simple vista: el caballero cuya camisa por fin le queda deja de tirarse del faldón. La prenda correcta no decora el repertorio de ocultamiento del Kinésico: <strong>lo desinstala.</strong></p>
+      </div>
+      <div class="turn t-kinesico">
+        <div class="who">El Kinésico</div>
+        <p>Confirmo desde la observación: la mitad de los adaptadores que listé desaparecen cuando la ropa deja de necesitar mantenimiento. El sastre es, técnicamente, mi colega más eficaz.</p>
+      </div>
+    </div>
+    <p class="src-inline">Fuente: <a href="https://www.sciencedirect.com/science/article/abs/pii/S0022103112000200" target="_blank" rel="noopener">Adam &amp; Galinsky, «Enclothed cognition» — J. Exp. Soc. Psych. (2012)</a></p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ VII. PASTOR ============ -->
+  <section id="s7" class="revela">
+    <h2>El Pastor: la dignidad del cuerpo presente</h2>
+    <p class="sec-sub">Contra la vergüenza y contra el descuido — una tercera vía</p>
+
+    <div class="dialogue">
+      <div class="turn t-pastor">
+        <div class="who">El Pastor</div>
+        <p>Escuché con atención a la Psicóloga, porque la Escritura conoce ese problema desde hace tres mil años. Cuando Samuel va a ungir rey y se deslumbra con la estampa del hijo mayor de Isaí, Dios lo corrige con una frase que es, si me lo permiten, el primer tratado sobre el estigma:</p>
+      </div>
+    </div>
+
+    <blockquote>
+      «El hombre mira lo que está delante de sus ojos, pero Jehová mira el corazón.»
+      <span class="cite-line">— 1 Samuel 16:7 (RVR1960)</span>
+    </blockquote>
+
+    <div class="dialogue">
+      <div class="turn t-pastor">
+        <div class="who">El Pastor</div>
+        <p>Noten el realismo: el versículo no dice que el hombre <em>no debería</em> mirar la apariencia — constata que lo hace, siempre lo ha hecho. Por eso este panel existe. Pero le pone al lado una segunda mirada que no negocia con la báscula. El salmista lo canta desde dentro del cuerpo que le tocó: «te alabaré porque formidables, maravillosas son tus obras» (Salmo 139:14) — y lo dice de <em>su</em> cuerpo, no del de un atleta.</p>
+        <p>Mi aporte a las soluciones es distinguir dos motores que producen lenguajes corporales opuestos. El hombre que se cuida <strong>desde la vergüenza</strong> — para dejar de ser inaceptable — ejecuta exactamente el repertorio del Kinésico: se esconde mientras se corrige. El hombre que se cuida <strong>desde la gratitud</strong> — porque el cuerpo es un encargo, «templo» lo llama Pablo (1 Corintios 6:19) — puede hacer los mismos ejercicios de la Fisioterapeuta y ponerse la camisa del Sastre, pero entra a la sala <em>ya aprobado</em>, y eso se ve. La paz no es un accesorio del lenguaje corporal: es su fuente. Un hombre en paz con su panza comunica más solidez que un hombre plano en guerra consigo mismo.</p>
+      </div>
+      <div class="turn t-moderador">
+        <div class="who">Moderador</div>
+        <p>«Entrar a la sala ya aprobado.» El Sastre está asintiendo con una cinta métrica en la mano, lo cual cuenta como amén gremial.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ VIII. ESCÉPTICO ============ -->
+  <section id="s8" class="revela">
+    <h2>El Escéptico Honesto: objeciones antes del brindis</h2>
+    <p class="sec-sub">Mitos porcentuales, poses de poder caídas, y lo que sí sobrevive</p>
+
+    <div class="dialogue">
+      <div class="turn t-esceptico">
+        <div class="who">El Escéptico Honesto</div>
+        <p>Procedo a aguar el café. <strong>Objeción uno:</strong> toda la industria del lenguaje corporal vive de un mito: el famoso «93% de la comunicación es no verbal». Es una lectura abusiva de dos estudios de Mehrabian de 1967 sobre palabras sueltas con tono contradictorio — el propio Mehrabian lleva décadas rogando que dejen de citarlo así. Si el 93% fuera cierto, ustedes entenderían casi todo el cine mudo en finlandés.</p>
+        <p><strong>Objeción dos:</strong> las «poses de poder». El estudio de 2010 prometía que dos minutos de postura expansiva cambiaban testosterona y cortisol; llegó la crisis de replicación y en 2016 la propia primera autora, Dana Carney, publicó que ya no cree en el efecto. Sobrevive, con evidencia modesta, que la postura abierta te hace <em>sentirte</em> algo más seguro y que los demás la <em>perciben</em> mejor — que es justo lo único que el Kinésico reclamó. Esta mesa aprende.</p>
+        <p><strong>Objeción tres:</strong> no existe diccionario de gestos. Brazos cruzados a veces significa inseguridad, a veces frío, a veces que la silla no tiene apoyabrazos. Cualquier lectura seria es de <em>racimos y contexto</em>, no de gesto suelto. Y <strong>objeción cuatro:</strong> el «bono de persuasión» del Antropólogo viene de viñetas de laboratorio con efectos pequeños; no firmen contratos sobre esa base.</p>
+        <p>Y ahora mi concesión, que para eso soy el honesto: el estigma de peso está sólidamente documentado; la biomecánica de la pelvis es física medible; y las recetas centrales de esta mesa — fortalécete, párate erguido, viste tu talla, haz las paces contigo — son intervenciones baratas, sin efectos secundarios, que ninguna crisis de replicación ha tocado, entre otras cosas porque las abuelas las publicaron siglos antes que las revistas.</p>
+      </div>
+      <div class="turn t-moderador">
+        <div class="who">Moderador</div>
+        <p>Un escéptico que termina recetando lo mismo que la abuela. En esta mesa eso cuenta como consenso.</p>
+      </div>
+    </div>
+    <p class="src-inline">Fuentes: <a href="https://www.npr.org/2016/10/01/496093672/power-poses-co-author-i-do-not-believe-the-effects-are-real" target="_blank" rel="noopener">NPR — «Power Poses' Co-Author: I Do Not Believe The Effects Are Real» (2016)</a>; <a href="https://faculty.haas.berkeley.edu/dana_carney/pdf_my%20position%20on%20power%20poses.pdf" target="_blank" rel="noopener">Carney, «My position on Power Poses»</a>; <a href="https://en.wikipedia.org/wiki/Power_posing" target="_blank" rel="noopener">Power posing — Wikipedia</a></p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ============ IX. MESA REDONDA ============ -->
+  <section id="s9" class="revela">
+    <h2>Mesa redonda: los problemas en una columna, las soluciones en la otra</h2>
+    <p class="sec-sub">Donde el panel ordena la vajilla antes de levantarse</p>
+
+    <p>El moderador pide el cierre de rigor: cada problema identificado, emparejado con su mejor respuesta disponible. El panel, por una vez, no discute.</p>
+
+    <div class="tabla-scroll">
+    <table class="tabla-ps">
+      <thead>
+        <tr><th>El problema</th><th>La solución</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>El prejuicio del observador: pereza y baja competencia inferidas de la silueta.</td>
+          <td>No se controla del todo — es del observador. Se amortigua con las señales que sí gobiernas: arreglo, puntualidad, apertura, competencia visible. Y se combate en voz alta, como todo prejuicio.</td>
+        </tr>
+        <tr>
+          <td>El repertorio de ocultamiento: barreras, tirones de camisa, encogimiento, huida del perfil.</td>
+          <td>Manos visibles y sueltas, gestos desde el esternón, quietud serena, aceptar la foto. La apertura calmada se percibe como solidez — y es gratis.</td>
+        </tr>
+        <tr>
+          <td>La mecánica pélvica: báscula anterior, lumbar cargada, andar pendular leído como desgana.</td>
+          <td>Glúteos y core fuertes, flexores de cadera estirados, elongación axial, sentarse al fondo de la silla. Y el médico para lo que la postura no arregla.</td>
+        </tr>
+        <tr>
+          <td>La ropa equivocada: la carpa que agranda o la talla-nostalgia que muestra esfuerzo.</td>
+          <td>Vestir el cuerpo de hoy: hombros primero, tela que cae, cintura natural, líneas verticales. La prenda correcta desinstala medio repertorio de ocultamiento.</td>
+        </tr>
+        <tr>
+          <td>El chiste perpetuo: el humor como disculpa permanente por el propio cuerpo.</td>
+          <td>Humor dosificado y hospitalario: una broma que invita a la mesa, no una letanía que pide perdón.</td>
+        </tr>
+        <tr>
+          <td>La guerra interna: cuidarse desde la vergüenza, esconderse mientras uno se corrige.</td>
+          <td>Cuidarse desde la gratitud: el cuerpo como encargo, no como enemigo. La paz es la fuente del lenguaje corporal, no su maquillaje.</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="dialogue">
+      <div class="turn t-moderador">
+        <div class="who">Moderador</div>
+        <p>Última palabra, una frase cada uno. Ahora sí, de verdad una.</p>
+      </div>
+      <div class="turn t-estigma">
+        <div class="who">La Psicóloga del Estigma</div>
+        <p>El prejuicio es del que mira; no lo adoptes como autobiografía.</p>
+      </div>
+      <div class="turn t-antro">
+        <div class="who">El Antropólogo</div>
+        <p>Media humanidad llamó «grande» a lo que tú llamas problema: la señal es tuya para gobernarla.</p>
+      </div>
+      <div class="turn t-kinesico">
+        <div class="who">El Kinésico</div>
+        <p>Deja de esconder la panza y nadie volverá a mirarla: miraban el esfuerzo, no el volumen.</p>
+      </div>
+      <div class="turn t-fisio">
+        <div class="who">La Fisioterapeuta</div>
+        <p>Crece dos centímetros desde el esternón hoy; la báscula puede esperar al lunes.</p>
+      </div>
+      <div class="turn t-sastre">
+        <div class="who">El Sastre</div>
+        <p>La talla de hoy, caballero — la nostalgia no tiene percha.</p>
+      </div>
+      <div class="turn t-pastor">
+        <div class="who">El Pastor</div>
+        <p>Entra a la sala ya aprobado: el resto es sastrería.</p>
+      </div>
+      <div class="turn t-esceptico">
+        <div class="who">El Escéptico Honesto</div>
+        <p>Desconfíen de todo porcentaje sobre lenguaje corporal — y aun así, párense derechos, que eso no ha fallado nunca.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ X. FUENTES ============ -->
+  <section id="s10" class="sources revela">
+    <h2>Fuentes consultadas</h2>
+    <p class="sec-sub">Para seguir tirando del hilo</p>
+    <ul>
+      <li><a href="https://onlinelibrary.wiley.com/doi/full/10.1002/oby.22162" target="_blank" rel="noopener">Himmelstein, Puhl &amp; Quinn, «Weight Stigma in Men: What, When, and by Whom?» — <em>Obesity</em> (2018)</a></li>
+      <li><a href="https://onlinelibrary.wiley.com/doi/full/10.1038/oby.2006.208" target="_blank" rel="noopener">Puhl &amp; Brownell, «Confronting and Coping with Weight Stigma» — <em>Obesity</em> (2006)</a></li>
+      <li><a href="https://www.psychologytoday.com/us/blog/finding-new-home/202109/research-suggests-we-assume-overweight-people-lack-self-control" target="_blank" rel="noopener">«We Assume Overweight People Lack Self-Control» — Psychology Today (2021)</a></li>
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0749597815000035" target="_blank" rel="noopener">«The affective and interpersonal consequences of obesity» — <em>Org. Behavior and Human Decision Processes</em></a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Big_man_(anthropology)" target="_blank" rel="noopener">«Big man (anthropology)» — sobre Sahlins, «Poor Man, Rich Man, Big Man, Chief» (1963)</a></li>
+      <li><a href="https://www.gertstulp.com/pdf/2016_Stulp_Encyclopedia%20of%20Evolutionary%20Psychological%20Science_Big_Man.pdf" target="_blank" rel="noopener">Stulp, «Big Man» — <em>Encyclopedia of Evolutionary Psychological Science</em> (2016)</a></li>
+      <li><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0222761" target="_blank" rel="noopener">Kniffin, Bogan &amp; Just, «“Big men” in the office: The gender-specific influence of weight upon persuasiveness» — <em>PLOS One</em> (2019)</a></li>
+      <li><a href="https://link.springer.com/article/10.1007/s12110-024-09473-7" target="_blank" rel="noopener">«Human Male Body Size Predicts Increased Knockout Power…» — <em>Human Nature</em> (2024)</a></li>
+      <li><a href="https://jneuroengrehab.biomedcentral.com/articles/10.1186/1743-0003-7-3" target="_blank" rel="noopener">Vismara et al., «Effect of obesity and low back pain on spinal mobility» — <em>J. NeuroEngineering &amp; Rehab.</em> (2010)</a></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5194219/" target="_blank" rel="noopener">«Influence of Obesity on Postural Stability in Young Adults» — PMC (2016)</a></li>
+      <li><a href="https://www.researchgate.net/publication/6982583_Effect_of_obesity_on_posture_and_hip_joint_moments_during_a_standing_task_and_trunk_forward_flexion_motion" target="_blank" rel="noopener">Gilleard &amp; Smith, «Effect of obesity on posture and hip joint moments» (2007)</a></li>
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0022103112000200" target="_blank" rel="noopener">Adam &amp; Galinsky, «Enclothed cognition» — <em>J. Experimental Social Psychology</em> (2012)</a></li>
+      <li><a href="https://faculty.haas.berkeley.edu/dana_carney/power.poses.PS.2010.pdf" target="_blank" rel="noopener">Carney, Cuddy &amp; Yap, «Power Posing» — <em>Psychological Science</em> (2010)</a></li>
+      <li><a href="https://www.npr.org/2016/10/01/496093672/power-poses-co-author-i-do-not-believe-the-effects-are-real" target="_blank" rel="noopener">NPR — la retractación de Dana Carney (2016)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Power_posing" target="_blank" rel="noopener">«Power posing» — Wikipedia (crisis de replicación)</a></li>
+    </ul>
+    <p style="margin-top:1.4rem; font-size:0.88rem; font-style:italic; color:var(--muted);">Citas bíblicas: 1 Samuel 16:7; Salmo 139:14; 1 Corintios 6:19 (RVR1960).</p>
+  </section>
+
+  </main>
+
+  <footer>Café con Claude · Cuaderno de estudio · Panel de expertos · Julio 2026
+    <p class="model-note">Generada por Claude Fable 5</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.textContent = open ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
