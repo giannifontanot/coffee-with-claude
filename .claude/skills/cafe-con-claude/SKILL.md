@@ -85,6 +85,9 @@ These are the reasons this skill exists, so don't let them slip:
    | `{{SERIES}}`     | Drawer sub-line: the series/section, e.g. `América a los 250` |
    | `{{TOC}}`        | One `<li>` per section, e.g. `<li><a href="#s1"><span class="num">I</span>Section title</a></li>` — the `href` must match each `<section>`'s `id` |
    | `{{BACK_LABEL}}` | Back-control text, e.g. `Volver al índice`, `Sala de lectura`, `Back to the index` |
+   | `{{ORIGIN_LABEL}}` | Origin-chip text: where the page came from. Default **`De la casa`** — a house original, born of your own study rather than a Fable question batch. If it descends from a batch, use `Fable-14`, `Fable-25`, or `Fable-100`. |
+   | `{{ORIGIN_CLASS}}` | Matching chip class: `origin-casa` (default), or `origin-f14` / `origin-f25` / `origin-f100`. |
+   | `{{ORIGIN_TITLE}}` | Chip tooltip, e.g. `De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable`. |
    | `{{EYEBROW}}`    | Kicker/series label, or delete the `<span class="eyebrow">` line |
    | `{{H1}}`         | Headline |
    | `{{SUBTITLE}}`   | One-line italic subtitle |
@@ -117,7 +120,10 @@ These are the reasons this skill exists, so don't let them slip:
    `<span class="tag">…</span>` label — to the end of that section's list. Fill
    `data-tags` with 1–4 themes from the index's controlled vocabulary (see the
    index register in `references/design-system.md`) so the page appears under
-   the right filter chips; also bump the section's `.count`. If no
+   the right filter chips; **also append the page's origin token** to `data-tags`
+   — `casa` for a house original (the default), or `f14` / `f25` / `f100` if it
+   came from a Fable batch — so it lines up with the origin filter chips and the
+   chip on the page itself. Also bump the section's `.count`. If no
    section genuinely fits, add a new one in the index's existing style. Don't
    restyle the index or reorder the entries that are already there. Note the
    index's sections may be plain `<section>`s or collapsible `<details>`
@@ -178,6 +184,10 @@ Before you call it done, open the file and confirm:
       only appears below 1000px.
 - [ ] The back control is `<button class="back-link" ... onclick="...history.back()...">`
       — a button, not an `<a href>`.
+- [ ] The origin chip (top-right) has a real label + class — default
+      `De la casa` / `origin-casa`, or a `Fable-14/25/100` batch — and the page's
+      `data-tags` in `index.html` carries the matching origin token
+      (`casa`/`f14`/`f25`/`f100`).
 - [ ] A `<p class="model-note">` exists near the bottom with a real model name.
 - [ ] Fonts are Fraunces + Spectral; the `:root` palette matches the reference.
 - [ ] `<html lang>` matches the content language.

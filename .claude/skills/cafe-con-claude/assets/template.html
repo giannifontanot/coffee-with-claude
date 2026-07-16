@@ -114,6 +114,23 @@
   }
   #nav-scrim.open { opacity: 1; pointer-events: auto; }
 
+  /* ── Origin chip ──────────────────────────────────────
+     States which question-batch the page came from; mirrors the origin filter
+     in index.html. Fixed top-right, so it never collides with the top-left ☰. */
+  .origin-chip {
+    position: fixed; top: 10px; right: 10px; z-index: 90;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--muted); background: var(--cream);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 11px; text-decoration: none; line-height: 1;
+    box-shadow: 0 1px 5px rgba(43,33,24,0.10);
+  }
+  .origin-chip.origin-f14  { color: var(--terracotta); border-color: var(--terracotta); }
+  .origin-chip.origin-f25  { color: var(--olive);      border-color: var(--olive); }
+  .origin-chip.origin-f100 { color: var(--plum);       border-color: var(--plum); }
+  .origin-chip.origin-casa { color: var(--muted);      border-color: var(--line); }
+
   .wrap { max-width: 720px; margin: 0 auto; }
 
   /* Back control — browser history, not a hard link. */
@@ -200,6 +217,11 @@
 </head>
 <body>
 <div class="progress-bar" id="progressBar"></div>
+
+<!-- Origin chip: which question-batch this page came from. Default is a house
+     original ("De la casa"). If it descends from a Fable batch, swap the label
+     and class: Fable-14/origin-f14, Fable-25/origin-f25, Fable-100/origin-f100. -->
+<a href="index.html" class="origin-chip {{ORIGIN_CLASS}}" title="{{ORIGIN_TITLE}}">{{ORIGIN_LABEL}}</a>
 
 <!-- Top-left hamburger + off-canvas drawer -->
 <button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">☰</button>
