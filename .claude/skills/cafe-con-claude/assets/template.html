@@ -25,7 +25,7 @@
 <title>{{TITLE}} · Café con Claude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root {
     /* palette from "primero invisible, después imparable" */
@@ -185,19 +185,26 @@
   .back-link:hover { color: var(--ink); border-color: var(--ink); }
 
   header .eyebrow {
-    font-family: 'Fraunces', serif; font-size: 0.78rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--terracotta); font-weight: 600;
-    display: block; margin-bottom: 0.5rem;
+    font-family: 'Spectral', serif; font-style: italic;
+    font-size: 15px; color: var(--terracotta); letter-spacing: 0.06em;
+    display: block; margin: 0 0 22px;
+  }
+  header .eyebrow::after {
+    content: ""; display: block; width: 46px; height: 1px;
+    background: var(--terracotta); opacity: 0.5; margin-top: 14px;
   }
   header h1 {
     font-family: 'Fraunces', serif; font-weight: 600;
     font-optical-sizing: 144;
-    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.06; letter-spacing: -0.018em;
-    margin-bottom: 0.6rem;
+    font-size: clamp(42px, 8vw, 72px); line-height: 1.02; letter-spacing: -0.018em;
+    margin: 0 0 6px; color: var(--ink);
   }
   header h1 em { font-style: italic; font-weight: 500; color: var(--rust); }
-  .subtitle { font-style: italic; color: var(--ink-soft); font-size: 1.05rem; max-width: 34em; }
+  .subtitle {
+    font-size: 21px; line-height: 1.5; color: var(--ink-soft);
+    font-weight: 400; max-width: 30ch; margin: 18px 0 0;
+  }
+  .subtitle b { color: var(--ink); font-weight: 600; }
 
   main { margin-top: 2.6rem; }
   section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
