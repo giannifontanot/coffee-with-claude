@@ -6,7 +6,7 @@
 <title>Ver antes de arreglar — Marcos 2 y el arte de mirar a una persona</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#f3e8cf;
@@ -306,11 +306,97 @@
     .scripture{padding:24px 22px;}
     .verdict{padding:28px 24px;}
   }
+
+  /* == estilo-cc-2026 · paleta primero-invisible + riel episode-58 == */
+  :root{
+    --bg:#f2e8d6; --bg-deep:#ecdfc8; --card:#f9f3e6; --card-2:#f6efdf;
+    --ink:#2d261d; --ink-soft:#5b4f40; --ink-faint:#8a7c68;
+    --terracotta:#b04e29; --rust:#963c20; --amber:#cf9136; --ochre:#b9853a;
+    --olive:#6c7240; --olive-deep:#525830; --plum:#6c3a4f; --plum-deep:#502635;
+    --line:#d9cdb8; --line-soft:rgba(45,38,29,.07);
+    --shadow:0 1px 2px rgba(45,38,29,.05),0 14px 38px -22px rgba(45,38,29,.34);
+    --cream:#f2e8d6; --muted:#5b4f40;
+  }
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #f7efe0 0%, rgba(247,239,224,0) 60%),
+      radial-gradient(900px 700px at -10% 30%, #f0e6d0 0%, rgba(240,230,208,0) 55%),
+      var(--bg) !important;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  .progress-bar, .progress, #progress{
+    background:linear-gradient(90deg,var(--olive),var(--amber),var(--terracotta)) !important;
+  }
+  /* hamburguesa redonda */
+  #nav-toggle{
+    width:46px; height:46px; border-radius:50%;
+    background:var(--card); color:var(--ink);
+    border:1px solid var(--line);
+    box-shadow:0 2px 10px rgba(45,38,29,.12);
+  }
+  #nav-toggle:hover{ background:var(--card-2); color:var(--ink); }
+  /* riel / drawer */
+  nav.sidebar{
+    background:linear-gradient(180deg,rgba(249,243,230,.9),rgba(249,243,230,.45)),var(--bg);
+    border-right-color:var(--line-soft);
+  }
+  nav.sidebar .brand{
+    font-family:'Fraunces',serif; font-weight:600; font-size:.78rem;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--terracotta);
+  }
+  nav.sidebar .brand-sub{ font-size:.82rem; font-style:italic; color:var(--ink-soft); }
+  nav.sidebar ol a, nav.sidebar nav.toc a{ color:var(--ink-soft); }
+  nav.sidebar ol a .num{ font-family:'Fraunces',serif; color:var(--ink-faint); }
+  nav.sidebar ol a:hover{ color:var(--ink); }
+  nav.sidebar ol a.active{ color:var(--terracotta); }
+  nav.sidebar ol a.active .num{ color:var(--terracotta); }
+  nav.sidebar .rail-tools{
+    border-top:1px solid var(--line); padding-top:1.1rem; margin-top:1.2rem;
+  }
+  nav.sidebar .rail-tools .home{
+    font-family:'Spectral',serif; font-size:1rem;
+    color:var(--ink-soft); background:none; border:none; padding:0;
+    cursor:pointer; letter-spacing:.02em; text-align:left;
+    transition:color .2s;
+  }
+  nav.sidebar .rail-tools .home:hover{ color:var(--terracotta); }
+  @media (max-width:999px){
+    nav.sidebar{ padding-top:5rem; }
+  }
+  @media (min-width:1000px){
+    nav.sidebar, nav.sidebar.open{
+      background:linear-gradient(180deg,rgba(249,243,230,.55),rgba(249,243,230,0));
+      box-shadow:none;
+    }
+  }
+  /* hero */
+  header .eyebrow, .hero .eyebrow, header .kicker, .hero .kicker{
+    font-family:'Spectral',serif; font-style:italic; font-weight:400;
+    font-size:15px; color:var(--terracotta); letter-spacing:.06em;
+    text-transform:none; display:block; margin:0 0 22px;
+  }
+  header .eyebrow::after, .hero .eyebrow::after, header .kicker::after, .hero .kicker::after{
+    content:""; display:block; width:46px; height:1px;
+    background:var(--terracotta); opacity:.5; margin-top:14px;
+  }
+  header h1, .hero h1{
+    font-family:'Fraunces',serif; font-weight:600; font-optical-sizing:144;
+    font-size:clamp(42px,8vw,72px); line-height:1.02; letter-spacing:-.018em;
+    margin:0 0 6px; color:var(--ink);
+  }
+  header h1 em, .hero h1 em{ font-style:italic; font-weight:500; color:var(--rust); }
+  header .subtitle, .hero .subtitle, .hero .sub{
+    font-size:21px; line-height:1.5; color:var(--ink-soft);
+    font-style:normal; max-width:34ch; margin:18px 0 0;
+  }
+  a.origin-chip{ background:var(--card) !important; }
 </style>
 </head>
 <body>
 <!-- origin-chip -->
-<a href="index.html" class="origin-chip" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable" style="position:fixed;top:10px;right:10px;z-index:2147483000;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#7d786e;background:#f7f1e5;border:1px solid #cfc9bd;border-radius:999px;padding:5px 11px;text-decoration:none;line-height:1;box-shadow:0 1px 5px rgba(43,33,24,0.10);">De la casa</a>
+<a href="index.html" class="origin-chip" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable" style="position:fixed;top:10px;right:10px;z-index:2147483000;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#8a7c68;background:#f9f3e6;border:1px solid #d9cdb8;border-radius:999px;padding:5px 11px;text-decoration:none;line-height:1;box-shadow:0 1px 5px rgba(43,33,24,0.10);">De la casa</a>
 
 
 <button class="burger" id="burger" aria-label="Abrir menú">
