@@ -97,7 +97,8 @@
   nav.sidebar {
     position: fixed; top: 0; left: 0;
     width: 280px; max-width: 82vw; height: 100vh;
-    padding: 2.6rem 1.6rem 2rem 2rem;
+    /* mobile: extra top room so the fixed round hamburger never covers the brand */
+    padding: 5rem 1.6rem 2rem 2rem;
     display: flex; flex-direction: column;
     background: linear-gradient(180deg, rgba(249,243,230,0.9), rgba(249,243,230,0.45)), var(--bg);
     border-right: 1px solid var(--line-soft);
@@ -135,8 +136,11 @@
   nav.sidebar .rail-tools {
     border-top: 1px solid var(--line); padding-top: 1.1rem; margin-top: 1rem;
   }
+  /* Back arrow at the rail's foot: history, not a hard link (see .back-link) */
   nav.sidebar .rail-tools .home {
-    color: var(--ink-soft); text-decoration: none; letter-spacing: 0.02em;
+    font-family: 'Spectral', serif; font-size: 1rem;
+    color: var(--ink-soft); background: none; border: none; padding: 0;
+    cursor: pointer; letter-spacing: 0.02em; text-align: left;
     transition: color 0.2s;
   }
   nav.sidebar .rail-tools .home:hover { color: var(--terracotta); }
@@ -329,7 +333,7 @@
   @media (min-width: 1000px) {
     #nav-toggle, #nav-scrim { display: none; }
     nav.sidebar, nav.sidebar.open {
-      transform: none; box-shadow: none;
+      transform: none; box-shadow: none; padding-top: 2.6rem;
       background: linear-gradient(180deg, rgba(249,243,230,0.55), rgba(249,243,230,0));
     }
     .wrap { margin-left: max(324px, calc(50% - 360px)); margin-right: auto; }
@@ -368,7 +372,10 @@
     <li><a href="#s10"><span class="num">X</span>Fuentes</a></li>
   </ol>
   <div class="rail-tools">
-    <a class="home" href="index.html">← Índice</a>
+    <button class="home" type="button"
+            onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+      ← Volver
+    </button>
   </div>
 </nav>
 

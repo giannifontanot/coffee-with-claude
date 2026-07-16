@@ -95,7 +95,11 @@ for source boxes and hover states.
   small-caps terracotta, plain — no emoji), an italic series sub-line, an `<ol>`
   table of contents whose links (`#s1`, `#s2`, …) point at the page's section ids
   (Fraunces numerals + title, a scroll-spy adds `.active` to the current one),
-  and a `.rail-tools` foot with a `← Índice` home link. This is the site's
+  and a `.rail-tools` foot with a `← Volver` back arrow — a `<button>` running
+  `history.back()` (fallback to `index.html` only when `history.length <= 1`),
+  NOT a hard link, same philosophy as the top back control. On mobile the drawer
+  carries extra top padding (`5rem`) so the fixed round hamburger never covers
+  the brand; the desktop rail tightens it back to `2.6rem`. This is the site's
   standard navigation for any multi-section piece — see `la-panza-que-habla.html`,
   `primero-invisible-despues-imparable.html`.
   The drawer is **responsive**: on desktop (`min-width: 1000px`) it docks as a
