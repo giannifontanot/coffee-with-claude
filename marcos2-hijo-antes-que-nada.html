@@ -418,6 +418,17 @@
     font-style:normal; max-width:34ch; margin:18px 0 0;
   }
   a.origin-chip{ background:var(--card) !important; }
+
+  /* fix: el chrome móvil (topbar/burger/mobnav/scrim) solo existe bajo 900px;
+     sin esto se pintaba crudo como tira de enlaces en escritorio */
+  @media (min-width:901px){
+    .topbar, .burger, .mobnav, .scrim{ display:none; }
+  }
+  /* fix: en móvil el chip de origen (fijo arriba a la derecha) tapaba el
+     burger; se corre el burger a la izquierda del chip */
+  @media (max-width:900px){
+    .topbar{ padding-right:110px; }
+  }
 </style>
 </head>
 <body>
