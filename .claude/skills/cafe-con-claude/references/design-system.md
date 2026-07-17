@@ -120,10 +120,11 @@ for source boxes and hover states.
   when the page has its own docked rail. New pages must NOT rely on it — use
   the template's real drawer; the snippet exists only so every already-published
   page has the house menu.
-- **Back control (top)** — a link-styled control at the very top. See SKILL.md:
-  in this skill it is a `<button>` that runs `history.back()`, NOT an `<a href>`.
-  Visual style is the classic `.home-link`: small, terracotta text with a
-  terracotta bottom-border, `← ` glyph prefix, `margin-bottom: 2.2rem`.
+- **Back control (drawer foot only)** — the `← Volver` `<button>` in the
+  drawer's `.rail-tools`, running `history.back()` (fallback to `index.html`
+  only with no history), NOT an `<a href>`. The old top-of-article back links
+  (`.back-link`, `.home-link`, «← Thread Learning Notes») were removed site-wide;
+  never reintroduce one — the drawer is the back control's single home.
 - **Header** — optional `eyebrow`/`kicker` in **Spectral italic** (15px,
   terracotta, `letter-spacing: .06em`, sentence case — NOT uppercase Fraunces)
   finished by a short `::after` rule (46×1px terracotta at 50% opacity) +

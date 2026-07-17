@@ -52,13 +52,15 @@ These are the reasons this skill exists, so don't let them slip:
    sections) a TOC adds nothing; it's fine to drop the drawer then, but that's the
    exception, not the default.
 
-2. **The back control runs browser history, not a hard link.** The reader arrives
-   at a page from many places — the index, another article, a search result, a
-   shared link. A fixed `<a href="index.html">` would yank them somewhere they
-   didn't come from. So the control is a `<button>` calling `history.back()`,
-   which returns them to wherever they actually were, with a graceful fallback to
-   `index.html` *only* when `history.length <= 1` (a cold-opened tab with nothing
-   to go back to). Keep it a `<button>`; don't "simplify" it into a plain link.
+2. **The back control lives at the drawer's foot — and only there.** It is the
+   `← Volver` `<button>` in the drawer's `.rail-tools`, running `history.back()`:
+   the reader arrives from many places (the index, another article, a shared
+   link), and a fixed `<a href="index.html">` would yank them somewhere they
+   didn't come from. It falls back to `index.html` *only* when
+   `history.length <= 1` (a cold-opened tab with nothing to go back to). Keep it
+   a `<button>`; don't "simplify" it into a plain link. **Do not add a second
+   back link at the top of the article** — the site used to have one and it was
+   removed everywhere; the drawer is the back control's only home.
 
 3. **A small colophon at the bottom names the model and effort.** These pages are
    made by a model, and the author wants that on the record. Right under the
@@ -89,7 +91,6 @@ These are the reasons this skill exists, so don't let them slip:
    | `{{BRAND}}`      | Drawer brand mark: `Café con Claude` (plain — no emoji) |
    | `{{SERIES}}`     | Drawer sub-line: the series/section, e.g. `América a los 250` |
    | `{{TOC}}`        | One `<li>` per section, e.g. `<li><a href="#s1"><span class="num">I</span>Section title</a></li>` — the `href` must match each `<section>`'s `id` |
-   | `{{BACK_LABEL}}` | Back-control text, e.g. `Volver al índice`, `Sala de lectura`, `Back to the index` |
    | `{{ORIGIN_LABEL}}` | Origin-chip text: where the page came from. Default **`De la casa`** — a house original, born of your own study rather than a Fable question batch. If it descends from a batch, use `Fable-14`, `Fable-25`, or `Fable-100`. |
    | `{{ORIGIN_CLASS}}` | Matching chip class: `origin-casa` (default), or `origin-f14` / `origin-f25` / `origin-f100`. |
    | `{{ORIGIN_TITLE}}` | Chip tooltip, e.g. `De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable`. |
@@ -211,8 +212,9 @@ Before you call it done, open the file and confirm:
       a real `<section id>`, and the drawer **docks on desktop** (≥1000px: rail
       visible, hamburger + scrim hidden) while the top-left `#nav-toggle` hamburger
       only appears below 1000px.
-- [ ] The back control is `<button class="back-link" ... onclick="...history.back()...">`
-      — a button, not an `<a href>`.
+- [ ] The back control is the `← Volver` `<button>` at the drawer's foot
+      (`.rail-tools .home`, `onclick="...history.back()..."`), and there is NO
+      separate back link at the top of the article.
 - [ ] The origin chip (top-right) has a real label + class — default
       `De la casa` / `origin-casa`, or a `Fable-14/25/100` batch — and the page's
       `data-tags` in `index.html` carries the matching origin token
