@@ -3,855 +3,709 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hijo, antes que nada — Marcos 2</title>
+<title>Hijo, antes que nada · Café con Claude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#f3e8cf;
-    --paper-2:#eee0c1;
-    --paper-card:#fbf5e7;
-    --paper-card-2:#f7eedb;
-    --ink:#2f2620;
-    --ink-soft:#5b4d40;
-    --ink-faint:#8c7c69;
-    --clay:#b5532b;
-    --clay-deep:#8e3f1f;
-    --clay-soft:#dfa180;
-    --gold:#a87d31;
-    --gold-soft:#c8a458;
-    --gold-wash:#f0e3bf;
-    --line:#dcc8a0;
-    --line-soft:#e6d7b6;
-    --espresso:#28201a;
-    --espresso-2:#352b22;
-    --shadow:rgba(58,42,28,.10);
-    --shadow-2:rgba(58,42,28,.18);
-    --maxw:760px;
-    --rail:248px;
+  :root {
+    --bg:        #f2e8d6;
+    --bg-deep:   #ecdfc8;
+    --card:      #f9f3e6;
+    --card-2:    #f6efdf;
+    --ink:       #2d261d;
+    --ink-soft:  #5b4f40;
+    --ink-faint: #8a7c68;
+    --terracotta:#b04e29;
+    --rust:      #963c20;
+    --amber:     #cf9136;
+    --ochre:     #b9853a;
+    --olive:     #6c7240;
+    --olive-deep:#525830;
+    --plum:      #6c3a4f;
+    --plum-deep: #502635;
+    --line:      #d9cdb8;
+    --line-soft: rgba(45,38,29,.07);
+    --shadow:    0 1px 2px rgba(45,38,29,.05), 0 14px 38px -22px rgba(45,38,29,.34);
+    --cream:     #f2e8d6;
+    --muted:     #5b4f40;
   }
 
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:
-      radial-gradient(120% 80% at 80% -10%, #f7eed4 0%, rgba(247,238,212,0) 55%),
-      radial-gradient(120% 90% at -10% 110%, #ecdcb9 0%, rgba(236,220,185,0) 50%),
-      var(--paper);
-    color:var(--ink);
-    font-family:"Spectral",Georgia,serif;
-    font-weight:400;
-    font-size:19px;
-    line-height:1.72;
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
-  }
-  /* paper grain */
-  body::before{
-    content:"";
-    position:fixed;inset:0;z-index:0;pointer-events:none;
-    opacity:.05;mix-blend-mode:multiply;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
 
-  a{color:var(--clay-deep);text-decoration-thickness:1px;text-underline-offset:3px;}
-
-  /* ====== LAYOUT ====== */
-  .shell{position:relative;z-index:1;display:flex;gap:0;max-width:1180px;margin:0 auto;}
-  .rail{
-    width:var(--rail);flex:0 0 var(--rail);
-    position:sticky;top:0;align-self:flex-start;height:100vh;
-    padding:46px 26px 40px 34px;
-    border-right:1px solid var(--line);
-    display:flex;flex-direction:column;
-  }
-  .rail .mark{
-    font-family:"Fraunces",serif;font-weight:600;font-size:.78rem;letter-spacing:.34em;
-    text-transform:uppercase;color:var(--clay-deep);margin-bottom:4px;
-  }
-  .rail .mark-sub{font-size:.82rem;color:var(--ink-faint);font-style:italic;margin-bottom:38px;line-height:1.4;}
-  .rail nav{display:flex;flex-direction:column;gap:2px;}
-  .rail nav a{
-    text-decoration:none;color:var(--ink-soft);font-size:.95rem;line-height:1.32;
-    padding:9px 0 9px 18px;position:relative;transition:color .25s, transform .25s;
-  }
-  .rail nav a .n{
-    font-family:"Fraunces",serif;font-size:.74rem;color:var(--gold);
-    letter-spacing:.05em;display:block;margin-bottom:1px;
-  }
-  .rail nav a::before{
-    content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
-    width:2px;height:0;background:var(--clay);transition:height .28s ease;
-  }
-  .rail nav a:hover{color:var(--ink);transform:translateX(2px);}
-  .rail nav a.active{color:var(--ink);}
-  .rail nav a.active::before{height:62%;}
-  .rail nav a.active .n{color:var(--clay);}
-  .rail .foot{margin-top:auto;font-size:.74rem;color:var(--ink-faint);font-style:italic;padding-top:24px;line-height:1.5;}
-
-  .main{flex:1 1 auto;min-width:0;padding:0 clamp(20px,5vw,64px);}
-  .wrap{max-width:var(--maxw);margin:0 auto;}
-
-  /* ====== MOBILE TOPBAR ====== */
-  .topbar{display:none;}
-
-  /* ====== HERO ====== */
-  header.hero{padding:96px 0 22px;}
-  .kicker{
-    font-family:"Fraunces",serif;font-weight:600;font-size:.8rem;letter-spacing:.32em;
-    text-transform:uppercase;color:var(--clay-deep);display:flex;align-items:center;gap:14px;margin-bottom:26px;
-  }
-  .kicker::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);}
-  h1.title{
-    font-family:"Fraunces",serif;font-optical-sizing:auto;font-weight:560;
-    font-size:clamp(3.1rem,8.5vw,5.4rem);line-height:.96;letter-spacing:-.02em;
-    margin:0 0 6px;color:var(--ink);
-  }
-  h1.title em{font-style:italic;color:var(--clay);font-weight:500;}
-  .subtitle{
-    font-size:1.28rem;color:var(--ink-soft);font-style:italic;line-height:1.5;
-    max-width:30ch;margin:18px 0 0;
-  }
-  .ref-tab{
-    display:inline-block;margin-top:30px;font-family:"Fraunces",serif;font-weight:600;
-    font-size:.86rem;letter-spacing:.08em;color:var(--ink);
-    border:1px solid var(--line);border-radius:999px;padding:8px 20px;background:var(--paper-card);
-  }
-
-  /* ====== SCRIPTURE BANNER ====== */
-  .scripture{
-    margin:54px 0 8px;padding:38px 40px;border-radius:6px;position:relative;
-    background:linear-gradient(180deg,var(--paper-card),var(--paper-card-2));
-    border:1px solid var(--line);box-shadow:0 1px 0 #fff inset, 0 18px 40px -28px var(--shadow-2);
-  }
-  .scripture::before{
-    content:"”";position:absolute;top:-22px;left:24px;font-family:"Fraunces",serif;
-    font-size:6rem;color:var(--clay-soft);opacity:.5;line-height:1;
-  }
-  .scripture p{margin:0 0 14px;font-size:1.16rem;line-height:1.7;}
-  .scripture p:last-of-type{margin-bottom:0;}
-  .scripture .v{font-family:"Fraunces",serif;font-size:.72rem;color:var(--clay);font-weight:600;vertical-align:super;margin-right:5px;letter-spacing:.04em;}
-  .scripture .hijo{color:var(--clay);font-style:italic;font-weight:500;}
-
-  /* ====== SECTIONS ====== */
-  section.part{padding:70px 0 18px;scroll-margin-top:24px;}
-  .part-head{margin-bottom:26px;}
-  .part-num{
-    font-family:"Fraunces",serif;font-weight:300;font-size:1rem;color:var(--gold);
-    letter-spacing:.28em;text-transform:uppercase;display:block;margin-bottom:10px;
-  }
-  .part-head h2{
-    font-family:"Fraunces",serif;font-weight:540;font-size:clamp(1.9rem,4.6vw,2.7rem);
-    line-height:1.06;letter-spacing:-.015em;margin:0;color:var(--ink);
-  }
-  .lede{font-size:1.12rem;color:var(--ink-soft);margin:0 0 30px;line-height:1.66;}
-  .lede em{color:var(--clay-deep);font-style:italic;}
-  p.body{margin:0 0 22px;}
-  p.body em{color:var(--clay-deep);}
-
-  /* divider */
-  .rule{display:flex;align-items:center;gap:16px;margin:8px 0 0;color:var(--gold-soft);}
-  .rule::before,.rule::after{content:"";flex:1;height:1px;background:var(--line);}
-  .rule span{font-family:"Fraunces",serif;font-size:1.2rem;}
-
-  /* ====== KEY IDEA CALLOUT ====== */
-  .keyidea{
-    margin:6px 0 34px;padding:26px 30px 26px 34px;border-radius:5px;position:relative;
-    background:var(--gold-wash);border:1px solid var(--line);
-    border-left:4px solid var(--gold);
-  }
-  .keyidea .tag{
-    font-family:"Fraunces",serif;font-weight:600;font-size:.72rem;letter-spacing:.26em;
-    text-transform:uppercase;color:var(--gold);margin:0 0 10px;
-  }
-  .keyidea p{margin:0;font-size:1.05rem;line-height:1.62;color:var(--ink);}
-  .keyidea em{color:var(--clay-deep);font-style:italic;}
-
-  /* ====== ACCORDION ====== */
-  .panel-intro{font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-family:"Fraunces",serif;font-weight:600;margin:0 0 14px;}
-  .accordion{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
-  .acc{
-    border:1px solid var(--line);border-radius:5px;overflow:hidden;
-    background:var(--paper-card);transition:border-color .25s, box-shadow .25s;
-  }
-  .acc.open{border-color:var(--clay-soft);box-shadow:0 14px 34px -26px var(--shadow-2);}
-  .acc-btn{
-    width:100%;border:0;background:none;cursor:pointer;text-align:left;
-    padding:18px 22px;display:flex;align-items:center;gap:16px;font-family:inherit;color:var(--ink);
-  }
-  .acc-emoji{font-size:1.25rem;line-height:1;flex:0 0 auto;filter:saturate(.85);}
-  .acc-role{flex:1;}
-  .acc-role .who{font-family:"Fraunces",serif;font-weight:560;font-size:1.12rem;line-height:1.2;letter-spacing:-.01em;}
-  .acc-role .what{font-size:.86rem;color:var(--ink-faint);font-style:italic;margin-top:1px;}
-  .chev{flex:0 0 auto;width:22px;height:22px;position:relative;transition:transform .32s cubic-bezier(.4,0,.2,1);color:var(--clay);}
-  .chev::before,.chev::after{content:"";position:absolute;top:10px;width:11px;height:2px;background:currentColor;border-radius:2px;}
-  .chev::before{left:1px;transform:rotate(45deg);}
-  .chev::after{right:1px;transform:rotate(-45deg);}
-  .acc.open .chev{transform:rotate(180deg);}
-  .acc-body{max-height:0;overflow:hidden;transition:max-height .42s cubic-bezier(.4,0,.2,1);}
-  .acc-body-inner{padding:2px 24px 24px 62px;font-size:1.02rem;line-height:1.66;color:var(--ink-soft);}
-  .acc-body-inner em{color:var(--clay-deep);font-style:italic;}
-  .acc-body-inner strong{color:var(--ink);font-weight:600;}
-
-  .closing-line{
-    margin:22px 0 0;font-style:italic;color:var(--ink-soft);font-size:1.06rem;
-    padding-left:20px;border-left:2px solid var(--clay-soft);line-height:1.6;
-  }
-
-  /* ====== TWO-POLE CONTRAST ====== */
-  .poles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:4px 0 30px;}
-  .pole{border-radius:5px;padding:24px 26px;border:1px solid var(--line);}
-  .pole.no{background:#f6e6df;border-color:var(--clay-soft);}
-  .pole.yes{background:var(--paper-card);}
-  .pole .ptag{font-family:"Fraunces",serif;font-weight:600;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px;display:flex;align-items:center;gap:8px;}
-  .pole.no .ptag{color:var(--clay-deep);}
-  .pole.yes .ptag{color:var(--gold);}
-  .pole p{margin:0;font-size:1rem;line-height:1.58;color:var(--ink-soft);}
-  .pole em{font-style:italic;color:var(--clay-deep);}
-
-  /* ====== VERDICT ====== */
-  .verdict{
-    margin:8px 0 0;padding:32px 34px;border-radius:6px;position:relative;
-    background:linear-gradient(180deg,#3a2e1d,#2c2218);color:#f3e6c6;
-    box-shadow:0 26px 50px -34px rgba(40,28,12,.7);
-    border:1px solid #4a3a23;
-  }
-  .verdict .seal{
-    font-family:"Fraunces",serif;font-weight:600;font-size:.72rem;letter-spacing:.28em;
-    text-transform:uppercase;color:var(--gold-soft);margin:0 0 12px;
-  }
-  .verdict h3{font-family:"Fraunces",serif;font-weight:500;font-style:italic;font-size:1.7rem;margin:0 0 14px;color:#fbf2da;line-height:1.15;}
-  .verdict p{margin:0;font-size:1.04rem;line-height:1.66;color:#e7d8b4;}
-  .verdict strong{color:var(--gold-soft);font-weight:600;}
-  .verdict em{color:#f0dca8;font-style:italic;}
-
-  /* ====== HIJO BLOCK ====== */
-  .hijo-block{
-    margin:6px 0 30px;padding:54px 40px;border-radius:6px;text-align:center;position:relative;overflow:hidden;
-    background:linear-gradient(165deg,#b5532b,#9a4421 70%);color:#fbeede;
-    box-shadow:0 30px 60px -36px rgba(120,50,20,.7);
-  }
-  .hijo-block::after{
-    content:"";position:absolute;inset:0;opacity:.14;pointer-events:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");
-  }
-  .hijo-block .pre{position:relative;font-family:"Fraunces",serif;font-style:italic;font-size:1.02rem;color:#f6d8c2;margin:0 0 8px;letter-spacing:.02em;}
-  .hijo-block .word{position:relative;font-family:"Fraunces",serif;font-weight:560;font-size:clamp(3.4rem,12vw,6rem);line-height:.9;letter-spacing:-.02em;margin:0;}
-  .hijo-block .greek{position:relative;margin:18px 0 0;font-size:.96rem;color:#f6d8c2;font-style:italic;}
-  .hijo-block .greek b{color:#fff;font-style:normal;font-weight:600;letter-spacing:.04em;}
-
-  /* evangelists row */
-  .gospels{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:4px 0 30px;}
-  .gcard{border:1px solid var(--line);border-radius:5px;padding:22px 20px;background:var(--paper-card);text-align:center;}
-  .gcard .gname{font-family:"Fraunces",serif;font-weight:600;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 10px;}
-  .gcard .gword{font-family:"Fraunces",serif;font-style:italic;font-size:1.32rem;color:var(--ink);line-height:1.2;}
-  .gcard.mark{background:#f6e6df;border-color:var(--clay-soft);}
-  .gcard.mark .gword{color:var(--clay-deep);font-weight:500;}
-  .gcard .note{font-size:.78rem;color:var(--ink-faint);font-style:italic;margin-top:8px;}
-
-  /* confirm detail */
-  .confirm{
-    margin:6px 0 28px;padding:26px 30px;border-radius:5px;background:var(--gold-wash);
-    border:1px solid var(--line);border-left:4px solid var(--clay);
-  }
-  .confirm .tag{font-family:"Fraunces",serif;font-weight:600;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);margin:0 0 12px;}
-  .confirm p{margin:0;font-size:1.02rem;line-height:1.64;color:var(--ink);}
-  .confirm em{color:var(--clay-deep);font-style:italic;}
-  .confirm .vtag{font-family:"Fraunces",serif;font-weight:600;color:var(--clay);font-size:.82rem;}
-
-  .finale{
-    margin:20px 0 0;text-align:center;font-family:"Fraunces",serif;font-style:italic;
-    font-weight:400;font-size:clamp(1.3rem,3.4vw,1.75rem);line-height:1.4;color:var(--ink);
-    max-width:24ch;margin-left:auto;margin-right:auto;
-  }
-  .finale b{font-style:normal;font-weight:560;color:var(--clay);}
-
-  /* ====== CLASS / FURTHER ====== */
-  .closing-section{padding:70px 0 30px;scroll-margin-top:24px;}
-  .qlist{list-style:none;padding:0;margin:24px 0 0;counter-reset:q;display:flex;flex-direction:column;gap:14px;}
-  .qlist li{
-    counter-increment:q;position:relative;padding:18px 22px 18px 64px;
-    background:var(--paper-card);border:1px solid var(--line);border-radius:5px;
-    font-size:1.04rem;line-height:1.55;color:var(--ink-soft);
-  }
-  .qlist li::before{
-    content:counter(q);position:absolute;left:20px;top:16px;
-    width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
-    font-family:"Fraunces",serif;font-weight:600;font-size:.95rem;color:#fff;background:var(--clay);
-  }
-  .qlist li em{color:var(--clay-deep);font-style:italic;}
-
-  .further{margin-top:40px;padding-top:26px;border-top:1px solid var(--line);}
-  .further h4{font-family:"Fraunces",serif;font-weight:600;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 12px;}
-  .further p{margin:0;font-size:.96rem;color:var(--ink-soft);line-height:1.7;}
-
-  footer.page{padding:48px 0 70px;text-align:center;color:var(--ink-faint);font-size:.84rem;font-style:italic;}
-  footer.page .dot{margin:0 10px;color:var(--clay-soft);}
-
-  /* ====== RESPONSIVE ====== */
-  @media (max-width:900px){
-    :root{--rail:0px;}
-    .rail{display:none;}
-    .topbar{
-      display:flex;align-items:center;justify-content:space-between;
-      position:sticky;top:0;z-index:50;padding:14px 20px;
-      background:rgba(243,232,207,.92);backdrop-filter:blur(8px);
-      border-bottom:1px solid var(--line);
-    }
-    .topbar .tb-title{font-family:"Fraunces",serif;font-weight:600;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--clay-deep);}
-    .burger{width:30px;height:24px;border:0;background:none;cursor:pointer;position:relative;padding:0;}
-    .burger span{position:absolute;left:0;width:100%;height:2px;background:var(--ink);border-radius:2px;transition:transform .3s, opacity .3s;}
-    .burger span:nth-child(1){top:3px;}
-    .burger span:nth-child(2){top:11px;}
-    .burger span:nth-child(3){top:19px;}
-    .burger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
-    .burger.open span:nth-child(2){opacity:0;}
-    .burger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
-    .mobnav{
-      position:fixed;inset:0 0 0 auto;width:min(82%,320px);z-index:60;
-      background:var(--paper-2);border-left:1px solid var(--line);
-      transform:translateX(100%);transition:transform .34s cubic-bezier(.4,0,.2,1);
-      padding:80px 30px 40px;display:flex;flex-direction:column;gap:4px;
-      box-shadow:-20px 0 50px -30px var(--shadow-2);
-    }
-    .mobnav.open{transform:translateX(0);}
-    .mobnav a{text-decoration:none;color:var(--ink);font-family:"Fraunces",serif;font-size:1.1rem;padding:12px 0;border-bottom:1px solid var(--line-soft);}
-    .mobnav a .n{display:block;font-size:.68rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:2px;}
-    .scrim{position:fixed;inset:0;background:rgba(40,32,26,.4);z-index:55;opacity:0;visibility:hidden;transition:opacity .3s;}
-    .scrim.open{opacity:1;visibility:visible;}
-    header.hero{padding:54px 0 18px;}
-    body{font-size:18px;}
-  }
-  @media (max-width:560px){
-    .poles{grid-template-columns:1fr;}
-    .gospels{grid-template-columns:1fr;}
-    .scripture{padding:32px 24px;}
-    .acc-body-inner{padding-left:24px;}
-    .keyidea,.confirm{padding-left:24px;}
-    .hijo-block{padding:42px 24px;}
-  }
-
-  /* == estilo-cc-2026 · paleta primero-invisible + riel episode-58 == */
-  :root{
-    --bg:#f2e8d6; --bg-deep:#ecdfc8; --card:#f9f3e6; --card-2:#f6efdf;
-    --ink:#2d261d; --ink-soft:#5b4f40; --ink-faint:#8a7c68;
-    --terracotta:#b04e29; --rust:#963c20; --amber:#cf9136; --ochre:#b9853a;
-    --olive:#6c7240; --olive-deep:#525830; --plum:#6c3a4f; --plum-deep:#502635;
-    --line:#d9cdb8; --line-soft:rgba(45,38,29,.07);
-    --shadow:0 1px 2px rgba(45,38,29,.05),0 14px 38px -22px rgba(45,38,29,.34);
-    --cream:#f2e8d6; --muted:#5b4f40;
-  }
-  body{
+  body {
     background:
       radial-gradient(1200px 600px at 80% -10%, #f7efe0 0%, rgba(247,239,224,0) 60%),
       radial-gradient(900px 700px at -10% 30%, #f0e6d0 0%, rgba(240,230,208,0) 55%),
-      var(--bg) !important;
-    color:var(--ink);
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
+      var(--bg);
+    color: var(--ink);
+    font-family: 'Spectral', Georgia, serif;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding: 4.5rem 1.25rem 5rem;
   }
-  .progress-bar, .progress, #progress{
-    background:linear-gradient(90deg,var(--olive),var(--amber),var(--terracotta)) !important;
-  }
-  /* hamburguesa redonda */
-  #nav-toggle{
-    width:46px; height:46px; border-radius:50%;
-    background:var(--card); color:var(--ink);
-    border:1px solid var(--line);
-    box-shadow:0 2px 10px rgba(45,38,29,.12);
-  }
-  #nav-toggle:hover{ background:var(--card-2); color:var(--ink); }
-  /* riel / drawer */
-  nav.sidebar{
-    background:linear-gradient(180deg,rgba(249,243,230,.9),rgba(249,243,230,.45)),var(--bg);
-    border-right-color:var(--line-soft);
-  }
-  nav.sidebar .brand{
-    font-family:'Fraunces',serif; font-weight:600; font-size:.78rem;
-    letter-spacing:.16em; text-transform:uppercase; color:var(--terracotta);
-  }
-  nav.sidebar .brand-sub{ font-size:.82rem; font-style:italic; color:var(--ink-soft); }
-  nav.sidebar ol a, nav.sidebar nav.toc a{ color:var(--ink-soft); }
-  nav.sidebar ol a .num{ font-family:'Fraunces',serif; color:var(--ink-faint); }
-  nav.sidebar ol a:hover{ color:var(--ink); }
-  nav.sidebar ol a.active{ color:var(--terracotta); }
-  nav.sidebar ol a.active .num{ color:var(--terracotta); }
-  nav.sidebar .rail-tools{
-    border-top:1px solid var(--line); padding-top:1.1rem; margin-top:1.2rem;
-  }
-  nav.sidebar .rail-tools .home{
-    font-family:'Spectral',serif; font-size:1rem;
-    color:var(--ink-soft); background:none; border:none; padding:0;
-    cursor:pointer; letter-spacing:.02em; text-align:left;
-    transition:color .2s;
-  }
-  nav.sidebar .rail-tools .home:hover{ color:var(--terracotta); }
-  @media (max-width:999px){
-    nav.sidebar{ padding-top:5rem; }
-  }
-  @media (min-width:1000px){
-    nav.sidebar, nav.sidebar.open{
-      background:linear-gradient(180deg,rgba(249,243,230,.55),rgba(249,243,230,0));
-      box-shadow:none;
-    }
-  }
-  /* hero */
-  header .eyebrow, .hero .eyebrow, header .kicker, .hero .kicker{
-    font-family:'Spectral',serif; font-style:italic; font-weight:400;
-    font-size:15px; color:var(--terracotta); letter-spacing:.06em;
-    text-transform:none; display:block; margin:0 0 22px;
-  }
-  header .eyebrow::after, .hero .eyebrow::after, header .kicker::after, .hero .kicker::after{
-    content:""; display:block; width:46px; height:1px;
-    background:var(--terracotta); opacity:.5; margin-top:14px;
-  }
-  header h1, .hero h1{
-    font-family:'Fraunces',serif; font-weight:600; font-optical-sizing:144;
-    font-size:clamp(42px,8vw,72px); line-height:1.02; letter-spacing:-.018em;
-    margin:0 0 6px; color:var(--ink);
-  }
-  header h1 em, .hero h1 em{ font-style:italic; font-weight:500; color:var(--rust); }
-  header .subtitle, .hero .subtitle, .hero .sub{
-    font-size:21px; line-height:1.5; color:var(--ink-soft);
-    font-style:normal; max-width:34ch; margin:18px 0 0;
-  }
-  a.origin-chip{ background:var(--card) !important; }
 
-  /* fix: el chrome móvil (topbar/burger/mobnav/scrim) solo existe bajo 900px;
-     sin esto se pintaba crudo como tira de enlaces en escritorio */
-  @media (min-width:901px){
-    .topbar, .burger, .mobnav, .scrim{ display:none; }
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--terracotta));
+    z-index: 100; transition: width .08s linear;
   }
-  /* fix: en móvil el chip de origen (fijo arriba a la derecha) tapaba el
-     burger; se corre el burger a la izquierda del chip */
-  @media (max-width:900px){
-    .topbar{ padding-right:110px; }
+
+  /* ── Origin chip ──────────────────────────────────── */
+  .origin-chip {
+    position: fixed; top: 10px; right: 10px; z-index: 90;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--muted); background: var(--card);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 11px; text-decoration: none; line-height: 1;
+    box-shadow: 0 1px 5px rgba(45,38,29,0.10);
+  }
+
+  /* ── Top-left round hamburger (mobile only) ───────── */
+  #nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: fixed; top: 1rem; left: 1rem; z-index: 80;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--line);
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(45,38,29,0.12);
+  }
+  #nav-toggle span,
+  #nav-toggle span::before,
+  #nav-toggle span::after {
+    display: block; width: 20px; height: 2px;
+    background: var(--ink); border-radius: 2px; transition: transform .3s, background .3s, top .3s;
+  }
+  #nav-toggle span { position: relative; }
+  #nav-toggle span::before { content: ""; position: absolute; left: 0; top: -6px; }
+  #nav-toggle span::after  { content: ""; position: absolute; left: 0; top: 6px; }
+  #nav-toggle.open span { background: transparent; }
+  #nav-toggle.open span::before { top: 0; transform: rotate(45deg); }
+  #nav-toggle.open span::after  { top: 0; transform: rotate(-45deg); }
+
+  /* ── Nav drawer / left rail ───────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh;
+    padding: 5rem 1.6rem 2rem 2rem;
+    display: flex; flex-direction: column;
+    background: linear-gradient(180deg, rgba(249,243,230,0.9), rgba(249,243,230,0.45)), var(--bg);
+    border-right: 1px solid var(--line-soft);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70; box-shadow: 6px 0 24px rgba(45,38,29,0.14);
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.82rem; font-style: italic; color: var(--ink-soft);
+    line-height: 1.4; margin-bottom: 1.9rem;
+  }
+  nav.sidebar ol { list-style: none; flex: 1; overflow-y: auto; }
+  nav.sidebar ol li { margin: 0; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.7rem;
+    color: var(--ink-soft); text-decoration: none;
+    padding: 0.34rem 0; line-height: 1.32;
+    transition: color 0.2s ease;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    letter-spacing: 0.05em; color: var(--ink-faint);
+    min-width: 2.1em; flex-shrink: 0; font-variant-numeric: tabular-nums;
+    font-size: 0.85em;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  nav.sidebar .rail-tools {
+    border-top: 1px solid var(--line); padding-top: 1.1rem; margin-top: 1rem;
+  }
+  nav.sidebar .rail-tools .home {
+    font-family: 'Spectral', serif; font-size: 1rem;
+    color: var(--ink-soft); background: none; border: none; padding: 0;
+    cursor: pointer; letter-spacing: 0.02em; text-align: left;
+    transition: color 0.2s ease;
+  }
+  nav.sidebar .rail-tools .home:hover { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(45,38,29,0.4);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'Spectral', serif; font-size: 0.85rem;
+    color: var(--terracotta);
+    background: none; border: none;
+    border-bottom: 1px solid var(--terracotta);
+    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  header .eyebrow {
+    font-family: 'Spectral', serif; font-style: italic;
+    font-size: 15px; color: var(--terracotta); letter-spacing: 0.06em;
+    display: block; margin: 0 0 22px;
+  }
+  header .eyebrow::after {
+    content: ""; display: block; width: 46px; height: 1px;
+    background: var(--terracotta); opacity: 0.5; margin-top: 14px;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-optical-sizing: 144;
+    font-size: clamp(42px, 8vw, 72px); line-height: 1.02; letter-spacing: -0.018em;
+    margin: 0 0 6px; color: var(--ink);
+  }
+  header h1 em { font-style: italic; font-weight: 500; color: var(--rust); }
+  .subtitle {
+    font-size: 21px; line-height: 1.5; color: var(--ink-soft);
+    font-weight: 400; max-width: 32ch; margin: 18px 0 0;
+  }
+  .ref-tab {
+    display: inline-block; margin-top: 20px;
+    font-family: 'Fraunces', serif; font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.06em; color: var(--ink-soft);
+    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 16px;
+  }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 3.2rem; scroll-margin-top: 1.5rem; }
+
+  /* ── Pasaje ───────────────────────────────────────── */
+  .scripture {
+    background: linear-gradient(180deg, var(--card), var(--card-2));
+    border: 1px solid var(--line); border-left: 4px solid var(--terracotta);
+    border-radius: 12px; padding: 1.6rem 1.8rem; margin-bottom: 3.2rem;
+    box-shadow: var(--shadow); scroll-margin-top: 1.5rem;
+  }
+  .scripture p { margin-bottom: 0.9rem; font-size: 1.05rem; }
+  .scripture p:last-child { margin-bottom: 0; }
+  .scripture .v {
+    font-family: 'Fraunces', serif; font-size: 0.72em; font-weight: 700;
+    color: var(--amber); vertical-align: super; margin-right: 0.35em;
+  }
+  .scripture .hijo { color: var(--rust); font-weight: 600; font-style: italic; }
+
+  /* ── Cabezas de parte ─────────────────────────────── */
+  .part-head { margin-bottom: 1.2rem; }
+  .part-num {
+    display: block; font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 0.5rem;
+  }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(1.6rem, 4.5vw, 2.2rem); line-height: 1.12; letter-spacing: -0.01em;
+  }
+  .lede { font-size: 1.08rem; color: var(--ink-soft); margin-bottom: 1.6rem; }
+  .lede em { color: var(--rust); }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+
+  /* ── La idea clave / cajas ────────────────────────── */
+  .keyidea, .confirm {
+    border-radius: 12px; padding: 1.3rem 1.5rem; margin: 1.8rem 0;
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .keyidea { background: rgba(207,145,54,0.09); }
+  .confirm { background: rgba(108,114,64,0.08); }
+  .keyidea .tag, .confirm .tag {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.76rem;
+    letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .keyidea .tag { color: var(--ochre); }
+  .confirm .tag { color: var(--olive-deep); }
+  .keyidea p:last-child, .confirm p:last-child { margin-bottom: 0; }
+  .confirm .vtag {
+    font-family: 'Fraunces', serif; font-size: 0.8em; color: var(--olive-deep);
+    white-space: nowrap;
+  }
+
+  /* ── Acordeón del panel ───────────────────────────── */
+  .panel-intro {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.78rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint);
+    margin: 2rem 0 0.9rem;
+  }
+  .acc {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; margin-bottom: 0.7rem; overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .acc-btn {
+    width: 100%; display: flex; align-items: center; gap: 0.9rem;
+    background: none; border: none; cursor: pointer; text-align: left;
+    padding: 1rem 1.2rem; font-family: 'Spectral', serif; color: var(--ink);
+  }
+  .acc-emoji { font-size: 1.25rem; flex-shrink: 0; }
+  .acc-role { flex: 1; display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+  .acc-role .who {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.02rem;
+    line-height: 1.25;
+  }
+  .acc-role .what { font-style: italic; font-size: 0.86rem; color: var(--ink-faint); line-height: 1.3; }
+  .acc .chev {
+    flex-shrink: 0; width: 10px; height: 10px;
+    border-right: 2px solid var(--terracotta); border-bottom: 2px solid var(--terracotta);
+    transform: rotate(45deg); transition: transform 0.25s; margin-top: -4px;
+  }
+  .acc.open .chev { transform: rotate(-135deg); margin-top: 4px; }
+  .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .acc-body-inner {
+    padding: 0 1.2rem 1.2rem 3.35rem; font-size: 0.99rem; color: var(--ink-soft);
+  }
+  .acc-body-inner strong { color: var(--ink); }
+  .acc-body-inner em { color: var(--rust); }
+  @media (max-width: 560px) { .acc-body-inner { padding-left: 1.2rem; } }
+
+  .closing-line {
+    font-style: italic; color: var(--ink-soft); font-size: 1.05rem;
+    border-left: 3px solid var(--amber); padding-left: 1.2rem; margin-top: 1.8rem;
+  }
+
+  /* ── Polos ✗ / ✓ ─────────────────────────────────── */
+  .poles { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.8rem 0; }
+  .pole {
+    border-radius: 12px; padding: 1.2rem 1.4rem;
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .pole.no  { background: rgba(108,58,79,0.07); }
+  .pole.yes { background: rgba(108,114,64,0.08); }
+  .pole .ptag {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.76rem;
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .pole.no .ptag  { color: var(--plum-deep); }
+  .pole.yes .ptag { color: var(--olive-deep); }
+  .pole p:last-child { margin-bottom: 0; }
+  @media (max-width: 560px) { .poles { grid-template-columns: 1fr; } }
+
+  /* ── Veredicto ────────────────────────────────────── */
+  .verdict {
+    background: linear-gradient(180deg, var(--card), var(--card-2));
+    border: 1px solid var(--line); border-left: 4px solid var(--plum);
+    border-radius: 12px; padding: 1.5rem 1.7rem; margin-top: 2rem;
+    box-shadow: var(--shadow);
+  }
+  .verdict .seal {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.76rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--plum);
+    margin-bottom: 0.5rem;
+  }
+  .verdict h3 {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.35rem;
+    margin-bottom: 0.7rem;
+  }
+  .verdict p:last-child { margin-bottom: 0; }
+
+  /* ── El bloque «Hijo» ─────────────────────────────── */
+  .hijo-block {
+    text-align: center; margin: 2.4rem 0;
+    background: linear-gradient(180deg, var(--card), var(--card-2));
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 2.6rem 1.5rem 2.2rem; box-shadow: var(--shadow);
+  }
+  .hijo-block .pre { font-style: italic; color: var(--ink-faint); margin-bottom: 0.6rem; }
+  .hijo-block .word {
+    font-family: 'Fraunces', serif; font-weight: 600; font-optical-sizing: 144;
+    font-size: clamp(3rem, 10vw, 4.6rem); line-height: 1; color: var(--rust);
+    margin-bottom: 1rem; letter-spacing: -0.02em;
+  }
+  .hijo-block .greek { font-size: 0.95rem; color: var(--ink-soft); margin-bottom: 0; }
+  .hijo-block .greek b { color: var(--ink); }
+
+  /* ── Los tres evangelios ──────────────────────────── */
+  .gospels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.8rem 0; }
+  .gcard {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.1rem 1rem; text-align: center; box-shadow: var(--shadow);
+  }
+  .gcard.mark { border-color: var(--terracotta); background: rgba(176,78,41,0.06); }
+  .gcard .gname {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.76rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint);
+    margin-bottom: 0.5rem;
+  }
+  .gcard.mark .gname { color: var(--terracotta); }
+  .gcard .gword {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.15rem;
+    margin-bottom: 0.3rem;
+  }
+  .gcard.mark .gword { color: var(--rust); }
+  .gcard .note { font-style: italic; font-size: 0.82rem; color: var(--ink-faint); margin-bottom: 0; }
+  @media (max-width: 560px) { .gospels { grid-template-columns: 1fr; } }
+
+  .finale {
+    text-align: center; font-family: 'Fraunces', serif; font-size: 1.25rem;
+    line-height: 1.5; margin: 2.4rem 0 0; color: var(--ink-soft);
+  }
+  .finale b { color: var(--ink); font-weight: 600; }
+
+  /* ── Cierre ───────────────────────────────────────── */
+  .qlist { list-style: none; margin: 1.4rem 0 2rem; }
+  .qlist li {
+    position: relative; padding-left: 1.5rem; margin-bottom: 0.9rem;
+    font-size: 1.03rem;
+  }
+  .qlist li::before {
+    content: "✳"; position: absolute; left: 0; top: 0.25rem;
+    color: var(--amber); font-size: 0.85rem;
+  }
+  .qlist em { color: var(--rust); }
+  .further {
+    background: rgba(176,78,41,0.06); border-left: 4px solid var(--terracotta);
+    border-radius: 0 12px 12px 0; padding: 1.2rem 1.4rem;
+  }
+  .further h4 {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.95rem;
+    margin-bottom: 0.5rem; color: var(--terracotta);
+  }
+  .further p { margin-bottom: 0; font-size: 0.95rem; color: var(--ink-soft); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--ink-soft); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--ink-faint); opacity: 0.9; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle span, #nav-toggle span::before, #nav-toggle span::after,
+    .acc-body, .acc .chev { transition: none; }
+  }
+
+  @media (min-width: 1000px) {
+    #nav-toggle, #nav-scrim { display: none; }
+    nav.sidebar, nav.sidebar.open {
+      transform: none; box-shadow: none; padding-top: 2.6rem;
+      background: linear-gradient(180deg, rgba(249,243,230,0.55), rgba(249,243,230,0));
+    }
+    .wrap { margin-left: max(324px, calc(50% - 360px)); margin-right: auto; }
+  }
+  @media (min-width: 1500px) {
+    .wrap { margin: 0 auto; }
+  }
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
   }
 </style>
 </head>
 <body>
-<!-- origin-chip -->
-<a href="index.html" class="origin-chip" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable" style="position:fixed;top:10px;right:10px;z-index:2147483000;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#8a7c68;background:#f9f3e6;border:1px solid #d9cdb8;border-radius:999px;padding:5px 11px;text-decoration:none;line-height:1;box-shadow:0 1px 5px rgba(43,33,24,0.10);">De la casa</a>
+<div class="progress-bar" id="progressBar"></div>
 
+<a href="index.html" class="origin-chip" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable">De la casa</a>
 
-<!-- MOBILE TOPBAR -->
-<div class="topbar">
-  <span class="tb-title">Marcos 2</span>
-  <button class="burger" id="burger" aria-label="Abrir menú"><span></span><span></span><span></span></button>
-</div>
-<div class="scrim" id="scrim"></div>
-<nav class="mobnav" id="mobnav">
-  <a href="#pasaje"><span class="n">El texto</span>El pasaje</a>
-  <a href="#porque"><span class="n">Parte I</span>¿Por qué perdona primero?</a>
-  <a href="#conexion"><span class="n">Parte II</span>¿Pecado = parálisis?</a>
-  <a href="#hijo"><span class="n">Parte III</span>«Hijo»</a>
-  <a href="#clase"><span class="n">Cierre</span>Para tu clase</a>
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar"><span></span></button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">Marcos 2 · 1–12 — El paralítico, el perdón y una sola palabra</div>
+  <ol class="toc">
+    <li><a href="#pasaje"><span class="num">I</span>El pasaje</a></li>
+    <li><a href="#porque"><span class="num">II</span>¿Por qué perdona primero?</a></li>
+    <li><a href="#conexion"><span class="num">III</span>¿Pecado y parálisis?</a></li>
+    <li><a href="#hijo"><span class="num">IV</span>«Hijo»</a></li>
+    <li><a href="#clase"><span class="num">V</span>Para tu clase</a></li>
+  </ol>
+  <div class="rail-tools">
+    <button class="home" type="button"
+            onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+      ← Volver
+    </button>
+  </div>
 </nav>
 
-<div class="shell">
+<div class="wrap">
 
-  <!-- SIDE RAIL -->
-  <aside class="rail">
-    <div class="mark">Marcos 2 · 1–12</div>
-    <div class="mark-sub">El paralítico, el perdón<br>y una sola palabra.</div>
-    <nav id="railnav">
-      <a href="#pasaje"><span class="n">El texto</span>El pasaje</a>
-      <a href="#porque"><span class="n">Parte I</span>¿Por qué perdona primero?</a>
-      <a href="#conexion"><span class="n">Parte II</span>¿Pecado y parálisis?</a>
-      <a href="#hijo"><span class="n">Parte III</span>«Hijo»</a>
-      <a href="#clase"><span class="n">Cierre</span>Para tu clase</a>
-    </nav>
-    <div class="foot">Estudio en tres capas,<br>una sola mesa de voces.</div>
-  </aside>
+  <button class="back-link" type="button"
+          onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+    ← Sala de lectura
+  </button>
 
-  <!-- MAIN -->
-  <main class="main">
-    <div class="wrap">
+  <header>
+    <span class="eyebrow">Un estudio sobre Marcos 2 · en tres capas</span>
+    <h1>Hijo, <em>antes que nada</em></h1>
+    <p class="subtitle">Por qué Jesús perdona primero, qué tiene que ver el pecado con la parálisis, y la palabra que casi se nos escapa.</p>
+    <span class="ref-tab">Marcos 2:5, 10–12</span>
+  </header>
 
-      <!-- HERO -->
-      <header class="hero">
-        <div class="kicker">Un estudio sobre Marcos 2</div>
-        <h1 class="title">Hijo,<br><em>antes que nada</em></h1>
-        <p class="subtitle">Por qué Jesús perdona primero, qué tiene que ver el pecado con la parálisis, y la palabra que casi se nos escapa.</p>
-        <span class="ref-tab">Marcos 2:5, 10–12</span>
-      </header>
+  <main>
 
-      <!-- SCRIPTURE -->
-      <div class="scripture" id="pasaje">
-        <p><span class="v">5</span>Al ver Jesús la fe de ellos, dijo al paralítico: «<span class="hijo">Hijo</span>, tus pecados te son perdonados.»</p>
-        <p><span class="v">10</span>«Pues para que sepáis que el Hijo del Hombre tiene potestad en la tierra para perdonar pecados <span class="v">11</span>—a ti te digo: levántate, toma tu lecho, y vete a tu casa.»</p>
-        <p><span class="v">12</span>Entonces él se levantó en seguida, y tomando su lecho, salió delante de todos; de manera que todos se asombraron y glorificaron a Dios.</p>
-      </div>
+  <div class="scripture" id="pasaje">
+    <p><span class="v">5</span>Al ver Jesús la fe de ellos, dijo al paralítico: «<span class="hijo">Hijo</span>, tus pecados te son perdonados.»</p>
+    <p><span class="v">10</span>«Pues para que sepáis que el Hijo del Hombre tiene potestad en la tierra para perdonar pecados <span class="v">11</span>—a ti te digo: levántate, toma tu lecho, y vete a tu casa.»</p>
+    <p><span class="v">12</span>Entonces él se levantó en seguida, y tomando su lecho, salió delante de todos; de manera que todos se asombraron y glorificaron a Dios.</p>
+  </div>
 
-      <!-- PART I -->
-      <section class="part" id="porque">
-        <div class="part-head">
-          <span class="part-num">Parte I</span>
-          <h2>¿Por qué perdona primero y luego sana?</h2>
-        </div>
-        <p class="lede">El hombre llega en camilla, bajado por el techo. Lo obvio es que necesita piernas. Y lo primero que Jesús le dice es: «tus pecados te son perdonados». ¿Por qué ese orden? Cinco voces se sientan a la misma mesa —y la regla es que <em>nadie predica solo</em>.</p>
-
-        <div class="keyidea">
-          <p class="tag">La idea clave</p>
-          <p>Perdonar es facilísimo de <em>decir</em>, porque es invisible: nadie lo verifica. Mandar a un paralítico a caminar es lo más arriesgado de decir, porque si no se levanta, quedas expuesto. Jesús hace lo verificable —sanar, frente a todos— para probar que también tiene autoridad sobre lo invisible. El milagro visible es el recibo de la transacción invisible.</p>
-        </div>
-
-        <p class="panel-intro">El panel de expertos</p>
-        <div class="accordion" data-acc>
-          <div class="acc open">
-            <button class="acc-btn"><span class="acc-emoji">📜</span><span class="acc-role"><span class="who">La exégeta</span><span class="what">el texto y el griego</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Mira el versículo 9: «¿Qué es más fácil: decir <em>tus pecados te son perdonados</em>, o decir <em>levántate y anda</em>?». La llave está en el verbo <strong>decir</strong>. Jesús no esquiva lo evidente: ordena las cosas de menor a mayor riesgo público para que no te quede duda de quién es. Y, de paso, no lo llama «paralítico» sino <em>téknon</em>, «hijo»: ternura, no diagnóstico.</div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">✝️</span><span class="acc-role"><span class="who">El teólogo</span><span class="what">la raíz y la cruz</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Que algo sea más fácil de <em>decir</em> no significa que sea más fácil de <em>hacer</em>. Al revés: lo verdaderamente caro del universo no fue volver a poner unas piernas en marcha —Dios crea cuerpos con una palabra— sino el perdón, que le costaría la cruz. Sanar fue el milagro barato de esa tarde; perdonar fue el que lo llevaría al Gólgota. Y lo que enfureció a los escribas: <strong>solo Dios perdona pecados</strong>. Al perdonar, Jesús no se mete en el papel de Dios… lo ocupa.</div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">🏛️</span><span class="acc-role"><span class="who">La historiadora</span><span class="what">el escándalo en su contexto</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Para entender el escándalo, siéntate en el banco de los escribas. En aquel mundo el perdón tenía dirección de tránsito: pasaba por el Templo, el sacerdote, el sacrificio, el Día de la Expiación. Y de pronto un carpintero, en una casa con el techo roto, sin altar ni credenciales, reparte lo que solo se entregaba en Jerusalén. No eran malvados; eran teológicamente alfabetizados y vieron clarísimo el reclamo: <strong>o este hombre es Dios, o es un blasfemo</strong>. No hay opción tibia. Y al llamarse «Hijo del Hombre» evoca a la figura de Daniel 7, a quien se le da autoridad eterna.</div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">🕊️</span><span class="acc-role"><span class="who">La pastora</span><span class="what">la persona entera</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">En «la persona entera» está la ternura que no quiero que se pierda. Jesús no le dice «paralítico» ni «caso 47». Le dice <em>hijo</em> —lo nombra antes de arreglarlo: <strong>relación antes que reparación</strong>—. El hombre vino por unas piernas; Jesús atiende algo que ni se atrevió a pedir. Y fíjate en el verbo del v. 11: «levántate» (<em>egeíre</em>) es de la misma familia que «resucitar». Esa sanación es una pequeña resurrección.</div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">🔥</span><span class="acc-role"><span class="who">Daniel, el escéptico honesto</span><span class="what">la objeción sin anestesia</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Lo digo sin anestesia: parecía que Jesús esquivaba lo evidente, como un plomero que entra a una casa inundada… y se pone a limpiar los vidrios. Pero me rindo ante la lógica del texto: hace <em>lo difícil de fingir</em> para respaldar <em>lo imposible de ver</em>. Mi única advertencia para quien predique esto: no convirtamos «primero el alma, luego el cuerpo» en excusa para ignorar cuerpos. <strong>Jesús sanó los dos.</strong></div></div>
-          </div>
-        </div>
-
-        <p class="closing-line">El orden no es desprecio por el cuerpo, sino revelación de quién es Jesús. Atiende la raíz, prueba su autoridad con el fruto visible, y deja a una sala entera preguntándose si acaba de ver a Dios remangándose en una casa con el techo abierto.</p>
-      </section>
-
-      <!-- PART II -->
-      <section class="part" id="conexion">
-        <div class="part-head">
-          <span class="part-num">Parte II</span>
-          <h2>¿Están conectados el pecado y la parálisis?</h2>
-        </div>
-        <p class="lede">Si Jesús perdona y luego sana… ¿será que el pecado de este hombre <em>causó</em> su parálisis? La mesa vuelve a sentarse —y esta vez no se ponen de acuerdo tan rápido, que es justo lo que una buena pregunta debería provocar—.</p>
-
-        <div class="poles">
-          <div class="pole no">
-            <p class="ptag">✗ Lo que el texto niega</p>
-            <p>Que esta parálisis fuera el <em>castigo</em> por un pecado concreto de este hombre. Marcos no lo dice; Jesús no lo reprocha; lo llama «hijo».</p>
-          </div>
-          <div class="pole yes">
-            <p class="ptag">✓ Lo que el texto supone</p>
-            <p>Que vivimos en un mundo herido por el pecado —<em>no la culpa de uno, la fractura de todos</em>— donde enfermedad, deterioro y muerte son astillas de esa ruptura.</p>
-          </div>
-        </div>
-
-        <p class="panel-intro">El panel de expertos · segunda ronda</p>
-        <div class="accordion" data-acc>
-          <div class="acc open">
-            <button class="acc-btn"><span class="acc-emoji">📜</span><span class="acc-role"><span class="who">La exégeta</span><span class="what">emparejar no es causar</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Empecemos por lo que el texto dice… y por lo que no dice. Marcos nunca afirma que el pecado causó la parálisis. Empareja perdón y sanidad, sí, pero <strong>emparejar no es causar</strong>. El orden marca prioridad —la necesidad más honda primero—, no un diagnóstico. Si Jesús hubiera querido decir «tu pecado te dejó así», lo habría dicho; en cambio lo llama hijo, sin una sola palabra de reproche.</div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">🔥</span><span class="acc-role"><span class="who">El escéptico honesto</span><span class="what">el texto es ambiguo a propósito</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">No tan rápido, doctora. Lectores serios —de Cornelio à Lapide a comentaristas de hoy— leen lo contrario: que Jesús fue a la raíz porque la raíz <em>era</em> el pecado. Y no es disparate: en un texto de Qumrán (la Oración de Nabónido) algunos judíos ya unían perdón y sanación. Decir «aquí no hay ninguna conexión» afirma más de lo que el texto permite probar. <strong>El pasaje es ambiguo a propósito.</strong></div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">🏛️</span><span class="acc-role"><span class="who">La historiadora</span><span class="what">la teología de la retribución</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Lo que sí podemos probar es la teología de fondo en esa sala: la <strong>retribución</strong>. Si sufres, pecaste tú o tus padres. Por eso, ante el ciego de nacimiento, los discípulos preguntan «¿quién pecó?» (Juan 9:2). La respuesta de Jesús es demoledora: ni este ni sus padres (Juan 9:3). Lo mismo con los galileos y los muertos por la torre de Siloé: no eran peores pecadores (Lucas 13:1-5). Una y otra vez desactiva el «dolor = factura de un pecado». Eso obliga a ser cautos antes de leerlo en Marcos 2.</div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">✝️</span><span class="acc-role"><span class="who">El teólogo</span><span class="what">conexión cósmica, no biográfica</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Aquí está el matiz que reconcilia casi todo. Hay una conexión real… pero <strong>a otra escala</strong>. No la biografía de este hombre, sino la herida de todo el mundo: la enfermedad y la muerte entraron por la caída (Romanos 5:12), y toda la creación «gime» esperando ser liberada (Romanos 8:20-22). La parálisis es una astilla de esa fractura. Jesús no dice «tú causaste esto»: está deshaciendo el daño completo del pecado, <em>raíz y rama</em>.</div></div>
-          </div>
-          <div class="acc">
-            <button class="acc-btn"><span class="acc-emoji">🕊️</span><span class="acc-role"><span class="who">La pastora</span><span class="what">nunca un martillo</span></span><span class="chev"></span></button>
-            <div class="acc-body"><div class="acc-body-inner">Y no nos saltemos lo más urgente. Decirle a alguien que sufre «esto te pasó por tu pecado» es exactamente lo que hicieron los amigos de Job… y Dios los reprende al final. Hoy hay personas con discapacidad a quienes les han cargado esa culpa toda la vida; es crueldad disfrazada de teología. Jesús da perdón y sanidad <strong>sin un solo sermón de culpa</strong>. Lo llama hijo. La conexión más honda jamás debe volverse un martillo sobre quien ya está en el suelo.</div></div>
-          </div>
-        </div>
-
-        <div class="verdict">
-          <p class="seal">El veredicto de la mesa</p>
-          <h3>Sí y no —y el matiz lo es todo.</h3>
-          <p><strong>No</strong> en el sentido que asustaba a los discípulos: nada en Marcos 2 dice que esta parálisis fuera el recibo de un pecado puntual. <strong>Sí</strong> en el sentido más hondo: toda dolencia respira el aire de un mundo quebrado —no la culpa de uno, la herida de todos—. La parálisis no probaba culpa; era síntoma de un mundo que espera ser sanado entero. Y la pista final está en el verbo: «levántate» (<em>egeíre</em>) es palabra de resurrección.</p>
-        </div>
-      </section>
-
-      <!-- PART III -->
-      <section class="part" id="hijo">
-        <div class="part-head">
-          <span class="part-num">Parte III</span>
-          <h2>La palabra que casi se nos escapa</h2>
-        </div>
-        <p class="lede">Lo teníamos delante de los ojos. Antes del pecado, antes de las piernas, antes de la camilla, Jesús dice una sola palabra que lo cambia todo.</p>
-
-        <div class="hijo-block">
-          <p class="pre">Antes de perdonar. Antes de sanar.</p>
-          <p class="word">«Hijo.»</p>
-          <p class="greek">En griego: <b>τέκνον · téknon</b> — «niño», «hijo mío». Palabra de familia, no de diagnóstico.</p>
-        </div>
-
-        <p class="body">El griego le da la razón con una ternura casi escandalosa. <em>Téknon</em> no dice nada de su edad —Lucas aclara que era un hombre adulto—; dice todo de cómo lo <em>mira</em> Jesús. Mientras la sala entera veía «el paralítico» —una camilla, un caso, un problema a resolver—, Jesús eligió la palabra que lo sacaba de su condición y lo metía en su casa.</p>
-
-        <div class="gospels">
-          <div class="gcard">
-            <p class="gname">Mateo 9:2</p>
-            <p class="gword">«¡Ten ánimo, hijo!»</p>
-          </div>
-          <div class="gcard">
-            <p class="gname">Lucas 5:20</p>
-            <p class="gword">«Hombre…»</p>
-            <p class="note">más distante</p>
-          </div>
-          <div class="gcard mark">
-            <p class="gname">Marcos 2:5</p>
-            <p class="gword">«Hijo.»</p>
-            <p class="note">el más desnudo de todos</p>
-          </div>
-        </div>
-
-        <p class="body">Lo que ese hombre más deseaba quizá no era caminar: era dejar de ser un objeto que otros cargaban, bajaban por el techo, movían de un lado a otro. ¿Cuánto hacía que alguien lo miraba como persona y no como un <em>mueble</em>? Antes de arreglar nada, Cristo se niega a tratarlo como algo que reparar y lo recibe como hijo.</p>
-
-        <div class="confirm">
-          <p class="tag">El detalle que lo confirma</p>
-          <p>Mira el <em>orden</em> del relato. Jesús perdona <span class="vtag">(v.5)</span> y… del cuerpo, ni una palabra. Pasan los versículos y nada de piernas. Solo cuando los escribas objetan en su corazón <span class="vtag">(v.6–7)</span> Jesús sana —y lo dice expresamente como <em>prueba</em>: «para que sepáis que el Hijo del Hombre tiene autoridad» <span class="vtag">(v.10)</span>—. La sanación física entra casi como un <em>epílogo</em>, provocada por la discusión, no por la urgencia del cuerpo. Si nadie hubiera reclamado, la escena podía cerrar con un hijo perdonado y amado, todavía sobre su camilla —y eso ya habría sido el milagro—.</p>
-        </div>
-
-        <p class="body">No es que a Cristo se le «olvidara» —lo sabía todo—, pero Marcos lo narra de tal modo que sí te queda esa sensación. Y eso no es descuido del evangelista: es teología.</p>
-
-        <p class="finale">Lo más grande ya estaba dado: <b>un nombre, un lugar, un Padre.</b><br>Lo demás vino por añadidura.</p>
-      </section>
-
-      <!-- CLOSING -->
-      <section class="closing-section" id="clase">
-        <div class="part-head">
-          <span class="part-num">Para tu clase</span>
-          <h2>Cuatro preguntas para el grupo</h2>
-        </div>
-        <ul class="qlist">
-          <li>¿Qué <em>parálisis invisible</em> cargas que ni te atreves a pedir que sane?</li>
-          <li>¿A quién tratas como un <em>mueble</em> —un caso, un problema— en lugar de como persona?</li>
-          <li>¿Dónde has confundido el dolor de alguien con un castigo, como los amigos de Job?</li>
-          <li>Si Jesús te nombrara hoy con una sola palabra antes de arreglar nada, ¿cuál necesitas oír?</li>
-        </ul>
-
-        <div class="further">
-          <h4>Para profundizar</h4>
-          <p>Voces y referencias reunidas en las tres conversaciones que dieron origen a este estudio: The Gospel Coalition, Enduring Word, BibleRef, BYU New Testament Commentary, Working Preacher, y la lectura de Ireneo de Lyon (s. II) sobre cómo, al perdonar los pecados, Jesús sanó al hombre; y al sanarlo, manifestó quién era.</p>
-        </div>
-      </section>
-
-      <footer class="page">
-        Marcos 2 · 1–12 <span class="dot">•</span> Hijo, antes que nada <span class="dot">•</span> un estudio en tres capas
-      </footer>
-
+  <!-- ============ PARTE I ============ -->
+  <section id="porque">
+    <div class="part-head">
+      <span class="part-num">Parte I</span>
+      <h2>¿Por qué perdona primero y luego sana?</h2>
     </div>
+    <p class="lede">El hombre llega en camilla, bajado por el techo. Lo obvio es que necesita piernas. Y lo primero que Jesús le dice es: «tus pecados te son perdonados». ¿Por qué ese orden? Cinco voces se sientan a la misma mesa —y la regla es que <em>nadie predica solo</em>.</p>
+
+    <div class="keyidea revela">
+      <p class="tag">La idea clave</p>
+      <p>Perdonar es facilísimo de <em>decir</em>, porque es invisible: nadie lo verifica. Mandar a un paralítico a caminar es lo más arriesgado de decir, porque si no se levanta, quedas expuesto. Jesús hace lo verificable —sanar, frente a todos— para probar que también tiene autoridad sobre lo invisible. El milagro visible es el recibo de la transacción invisible.</p>
+    </div>
+
+    <p class="panel-intro">El panel de expertos</p>
+    <div class="accordion" data-acc>
+      <div class="acc open">
+        <button class="acc-btn" type="button"><span class="acc-emoji">📜</span><span class="acc-role"><span class="who">La exégeta</span><span class="what">el texto y el griego</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Mira el versículo 9: «¿Qué es más fácil: decir <em>tus pecados te son perdonados</em>, o decir <em>levántate y anda</em>?». La llave está en el verbo <strong>decir</strong>. Jesús no esquiva lo evidente: ordena las cosas de menor a mayor riesgo público para que no te quede duda de quién es. Y, de paso, no lo llama «paralítico» sino <em>téknon</em>, «hijo»: ternura, no diagnóstico.</div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">✝️</span><span class="acc-role"><span class="who">El teólogo</span><span class="what">la raíz y la cruz</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Que algo sea más fácil de <em>decir</em> no significa que sea más fácil de <em>hacer</em>. Al revés: lo verdaderamente caro del universo no fue volver a poner unas piernas en marcha —Dios crea cuerpos con una palabra— sino el perdón, que le costaría la cruz. Sanar fue el milagro barato de esa tarde; perdonar fue el que lo llevaría al Gólgota. Y lo que enfureció a los escribas: <strong>solo Dios perdona pecados</strong>. Al perdonar, Jesús no se mete en el papel de Dios… lo ocupa.</div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">🏛️</span><span class="acc-role"><span class="who">La historiadora</span><span class="what">el escándalo en su contexto</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Para entender el escándalo, siéntate en el banco de los escribas. En aquel mundo el perdón tenía dirección de tránsito: pasaba por el Templo, el sacerdote, el sacrificio, el Día de la Expiación. Y de pronto un carpintero, en una casa con el techo roto, sin altar ni credenciales, reparte lo que solo se entregaba en Jerusalén. No eran malvados; eran teológicamente alfabetizados y vieron clarísimo el reclamo: <strong>o este hombre es Dios, o es un blasfemo</strong>. No hay opción tibia. Y al llamarse «Hijo del Hombre» evoca a la figura de Daniel 7, a quien se le da autoridad eterna.</div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">🕊️</span><span class="acc-role"><span class="who">La pastora</span><span class="what">la persona entera</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">En «la persona entera» está la ternura que no quiero que se pierda. Jesús no le dice «paralítico» ni «caso 47». Le dice <em>hijo</em> —lo nombra antes de arreglarlo: <strong>relación antes que reparación</strong>—. El hombre vino por unas piernas; Jesús atiende algo que ni se atrevió a pedir. Y fíjate en el verbo del v. 11: «levántate» (<em>egeíre</em>) es de la misma familia que «resucitar». Esa sanación es una pequeña resurrección.</div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">🔥</span><span class="acc-role"><span class="who">Daniel, el escéptico honesto</span><span class="what">la objeción sin anestesia</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Lo digo sin anestesia: parecía que Jesús esquivaba lo evidente, como un plomero que entra a una casa inundada… y se pone a limpiar los vidrios. Pero me rindo ante la lógica del texto: hace <em>lo difícil de fingir</em> para respaldar <em>lo imposible de ver</em>. Mi única advertencia para quien predique esto: no convirtamos «primero el alma, luego el cuerpo» en excusa para ignorar cuerpos. <strong>Jesús sanó los dos.</strong></div></div>
+      </div>
+    </div>
+
+    <p class="closing-line">El orden no es desprecio por el cuerpo, sino revelación de quién es Jesús. Atiende la raíz, prueba su autoridad con el fruto visible, y deja a una sala entera preguntándose si acaba de ver a Dios remangándose en una casa con el techo abierto.</p>
+  </section>
+
+  <!-- ============ PARTE II ============ -->
+  <section id="conexion">
+    <div class="part-head">
+      <span class="part-num">Parte II</span>
+      <h2>¿Están conectados el pecado y la parálisis?</h2>
+    </div>
+    <p class="lede">Si Jesús perdona y luego sana… ¿será que el pecado de este hombre <em>causó</em> su parálisis? La mesa vuelve a sentarse —y esta vez no se ponen de acuerdo tan rápido, que es justo lo que una buena pregunta debería provocar—.</p>
+
+    <div class="poles revela">
+      <div class="pole no">
+        <p class="ptag">✗ Lo que el texto niega</p>
+        <p>Que esta parálisis fuera el <em>castigo</em> por un pecado concreto de este hombre. Marcos no lo dice; Jesús no lo reprocha; lo llama «hijo».</p>
+      </div>
+      <div class="pole yes">
+        <p class="ptag">✓ Lo que el texto supone</p>
+        <p>Que vivimos en un mundo herido por el pecado —<em>no la culpa de uno, la fractura de todos</em>— donde enfermedad, deterioro y muerte son astillas de esa ruptura.</p>
+      </div>
+    </div>
+
+    <p class="panel-intro">El panel de expertos · segunda ronda</p>
+    <div class="accordion" data-acc>
+      <div class="acc open">
+        <button class="acc-btn" type="button"><span class="acc-emoji">📜</span><span class="acc-role"><span class="who">La exégeta</span><span class="what">emparejar no es causar</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Empecemos por lo que el texto dice… y por lo que no dice. Marcos nunca afirma que el pecado causó la parálisis. Empareja perdón y sanidad, sí, pero <strong>emparejar no es causar</strong>. El orden marca prioridad —la necesidad más honda primero—, no un diagnóstico. Si Jesús hubiera querido decir «tu pecado te dejó así», lo habría dicho; en cambio lo llama hijo, sin una sola palabra de reproche.</div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">🔥</span><span class="acc-role"><span class="who">El escéptico honesto</span><span class="what">el texto es ambiguo a propósito</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">No tan rápido, doctora. Lectores serios —de Cornelio à Lapide a comentaristas de hoy— leen lo contrario: que Jesús fue a la raíz porque la raíz <em>era</em> el pecado. Y no es disparate: en un texto de Qumrán (la Oración de Nabónido) algunos judíos ya unían perdón y sanación. Decir «aquí no hay ninguna conexión» afirma más de lo que el texto permite probar. <strong>El pasaje es ambiguo a propósito.</strong></div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">🏛️</span><span class="acc-role"><span class="who">La historiadora</span><span class="what">la teología de la retribución</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Lo que sí podemos probar es la teología de fondo en esa sala: la <strong>retribución</strong>. Si sufres, pecaste tú o tus padres. Por eso, ante el ciego de nacimiento, los discípulos preguntan «¿quién pecó?» (Juan 9:2). La respuesta de Jesús es demoledora: ni este ni sus padres (Juan 9:3). Lo mismo con los galileos y los muertos por la torre de Siloé: no eran peores pecadores (Lucas 13:1-5). Una y otra vez desactiva el «dolor = factura de un pecado». Eso obliga a ser cautos antes de leerlo en Marcos 2.</div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">✝️</span><span class="acc-role"><span class="who">El teólogo</span><span class="what">conexión cósmica, no biográfica</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Aquí está el matiz que reconcilia casi todo. Hay una conexión real… pero <strong>a otra escala</strong>. No la biografía de este hombre, sino la herida de todo el mundo: la enfermedad y la muerte entraron por la caída (Romanos 5:12), y toda la creación «gime» esperando ser liberada (Romanos 8:20-22). La parálisis es una astilla de esa fractura. Jesús no dice «tú causaste esto»: está deshaciendo el daño completo del pecado, <em>raíz y rama</em>.</div></div>
+      </div>
+      <div class="acc">
+        <button class="acc-btn" type="button"><span class="acc-emoji">🕊️</span><span class="acc-role"><span class="who">La pastora</span><span class="what">nunca un martillo</span></span><span class="chev"></span></button>
+        <div class="acc-body"><div class="acc-body-inner">Y no nos saltemos lo más urgente. Decirle a alguien que sufre «esto te pasó por tu pecado» es exactamente lo que hicieron los amigos de Job… y Dios los reprende al final. Hoy hay personas con discapacidad a quienes les han cargado esa culpa toda la vida; es crueldad disfrazada de teología. Jesús da perdón y sanidad <strong>sin un solo sermón de culpa</strong>. Lo llama hijo. La conexión más honda jamás debe volverse un martillo sobre quien ya está en el suelo.</div></div>
+      </div>
+    </div>
+
+    <div class="verdict revela">
+      <p class="seal">El veredicto de la mesa</p>
+      <h3>Sí y no —y el matiz lo es todo.</h3>
+      <p><strong>No</strong> en el sentido que asustaba a los discípulos: nada en Marcos 2 dice que esta parálisis fuera el recibo de un pecado puntual. <strong>Sí</strong> en el sentido más hondo: toda dolencia respira el aire de un mundo quebrado —no la culpa de uno, la herida de todos—. La parálisis no probaba culpa; era síntoma de un mundo que espera ser sanado entero. Y la pista final está en el verbo: «levántate» (<em>egeíre</em>) es palabra de resurrección.</p>
+    </div>
+  </section>
+
+  <!-- ============ PARTE III ============ -->
+  <section id="hijo">
+    <div class="part-head">
+      <span class="part-num">Parte III</span>
+      <h2>La palabra que casi se nos escapa</h2>
+    </div>
+    <p class="lede">Lo teníamos delante de los ojos. Antes del pecado, antes de las piernas, antes de la camilla, Jesús dice una sola palabra que lo cambia todo.</p>
+
+    <div class="hijo-block revela">
+      <p class="pre">Antes de perdonar. Antes de sanar.</p>
+      <p class="word">«Hijo.»</p>
+      <p class="greek">En griego: <b>τέκνον · téknon</b> — «niño», «hijo mío». Palabra de familia, no de diagnóstico.</p>
+    </div>
+
+    <p>El griego le da la razón con una ternura casi escandalosa. <em>Téknon</em> no dice nada de su edad —Lucas aclara que era un hombre adulto—; dice todo de cómo lo <em>mira</em> Jesús. Mientras la sala entera veía «el paralítico» —una camilla, un caso, un problema a resolver—, Jesús eligió la palabra que lo sacaba de su condición y lo metía en su casa.</p>
+
+    <div class="gospels revela">
+      <div class="gcard">
+        <p class="gname">Mateo 9:2</p>
+        <p class="gword">«¡Ten ánimo, hijo!»</p>
+      </div>
+      <div class="gcard">
+        <p class="gname">Lucas 5:20</p>
+        <p class="gword">«Hombre…»</p>
+        <p class="note">más distante</p>
+      </div>
+      <div class="gcard mark">
+        <p class="gname">Marcos 2:5</p>
+        <p class="gword">«Hijo.»</p>
+        <p class="note">el más desnudo de todos</p>
+      </div>
+    </div>
+
+    <p>Lo que ese hombre más deseaba quizá no era caminar: era dejar de ser un objeto que otros cargaban, bajaban por el techo, movían de un lado a otro. ¿Cuánto hacía que alguien lo miraba como persona y no como un <em>mueble</em>? Antes de arreglar nada, Cristo se niega a tratarlo como algo que reparar y lo recibe como hijo.</p>
+
+    <div class="confirm revela">
+      <p class="tag">El detalle que lo confirma</p>
+      <p>Mira el <em>orden</em> del relato. Jesús perdona <span class="vtag">(v.5)</span> y… del cuerpo, ni una palabra. Pasan los versículos y nada de piernas. Solo cuando los escribas objetan en su corazón <span class="vtag">(v.6–7)</span> Jesús sana —y lo dice expresamente como <em>prueba</em>: «para que sepáis que el Hijo del Hombre tiene autoridad» <span class="vtag">(v.10)</span>—. La sanación física entra casi como un <em>epílogo</em>, provocada por la discusión, no por la urgencia del cuerpo. Si nadie hubiera reclamado, la escena podía cerrar con un hijo perdonado y amado, todavía sobre su camilla —y eso ya habría sido el milagro—.</p>
+    </div>
+
+    <p>No es que a Cristo se le «olvidara» —lo sabía todo—, pero Marcos lo narra de tal modo que sí te queda esa sensación. Y eso no es descuido del evangelista: es teología.</p>
+
+    <p class="finale">Lo más grande ya estaba dado: <b>un nombre, un lugar, un Padre.</b><br>Lo demás vino por añadidura.</p>
+  </section>
+
+  <!-- ============ CIERRE ============ -->
+  <section id="clase">
+    <div class="part-head">
+      <span class="part-num">Para tu clase</span>
+      <h2>Cuatro preguntas para el grupo</h2>
+    </div>
+    <ul class="qlist">
+      <li>¿Qué <em>parálisis invisible</em> cargas que ni te atreves a pedir que sane?</li>
+      <li>¿A quién tratas como un <em>mueble</em> —un caso, un problema— en lugar de como persona?</li>
+      <li>¿Dónde has confundido el dolor de alguien con un castigo, como los amigos de Job?</li>
+      <li>Si Jesús te nombrara hoy con una sola palabra antes de arreglar nada, ¿cuál necesitas oír?</li>
+    </ul>
+
+    <div class="further revela">
+      <h4>Para profundizar</h4>
+      <p>Voces y referencias reunidas en las tres conversaciones que dieron origen a este estudio: The Gospel Coalition, Enduring Word, BibleRef, BYU New Testament Commentary, Working Preacher, y la lectura de Ireneo de Lyon (s. II) sobre cómo, al perdonar los pecados, Jesús sanó al hombre; y al sanarlo, manifestó quién era.</p>
+    </div>
+  </section>
+
   </main>
+
+  <footer>Café con Claude · Marcos 2 · 1–12 · Hijo, antes que nada · un estudio en tres capas
+    <p class="model-note">Generada por Claude Fable 5 · esfuerzo alto</p>
+  </footer>
+
 </div>
 
 <script>
-  // ===== ACCORDION (independent toggles) =====
-  document.querySelectorAll('[data-acc] .acc-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Cerrar índice' : 'Abrir índice');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id], main .scripture[id]').forEach(function (s) { spy.observe(s); });
+
+  // Acordeón del panel (toggles independientes)
+  document.querySelectorAll('[data-acc] .acc-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
       var acc = btn.closest('.acc');
       var body = acc.querySelector('.acc-body');
       var isOpen = acc.classList.contains('open');
-      if(isOpen){
+      if (isOpen) {
         body.style.maxHeight = body.scrollHeight + 'px';
-        requestAnimationFrame(function(){ body.style.maxHeight = '0px'; });
+        requestAnimationFrame(function () { body.style.maxHeight = '0px'; });
         acc.classList.remove('open');
       } else {
         acc.classList.add('open');
         body.style.maxHeight = body.scrollHeight + 'px';
-        body.addEventListener('transitionend', function te(){
-          if(acc.classList.contains('open')) body.style.maxHeight = 'none';
+        body.addEventListener('transitionend', function te() {
+          if (acc.classList.contains('open')) body.style.maxHeight = 'none';
           body.removeEventListener('transitionend', te);
         });
       }
     });
   });
-  // open the default-open panels on load
-  window.addEventListener('load', function(){
-    document.querySelectorAll('.acc.open .acc-body').forEach(function(b){ b.style.maxHeight = 'none'; });
+  window.addEventListener('load', function () {
+    document.querySelectorAll('.acc.open .acc-body').forEach(function (b) { b.style.maxHeight = 'none'; });
   });
 
-  // ===== SCROLL-SPY (IntersectionObserver) =====
-  var sections = document.querySelectorAll('section[id], div.scripture[id]');
-  var railLinks = document.querySelectorAll('#railnav a');
-  function setActive(id){
-    railLinks.forEach(function(a){
-      a.classList.toggle('active', a.getAttribute('href') === '#'+id);
-    });
-  }
-  var spy = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting) setActive(e.target.id);
-    });
-  }, {rootMargin:'-40% 0px -55% 0px', threshold:0});
-  sections.forEach(function(s){ spy.observe(s); });
-
-  // ===== MOBILE NAV =====
-  var burger = document.getElementById('burger');
-  var mobnav = document.getElementById('mobnav');
-  var scrim = document.getElementById('scrim');
-  function closeNav(){ burger.classList.remove('open'); mobnav.classList.remove('open'); scrim.classList.remove('open'); }
-  if(burger){
-    burger.addEventListener('click', function(){
-      var open = mobnav.classList.toggle('open');
-      burger.classList.toggle('open', open);
-      scrim.classList.toggle('open', open);
-    });
-    scrim.addEventListener('click', closeNav);
-    mobnav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeNav); });
+  // Reveal on scroll (respeta prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
   }
 </script>
-
-<!-- menu-cc-2026: hamburguesa redonda de la casa + indice autogenerado -->
-<style>
-  .cc-burger{
-    position:fixed; top:1rem; left:1rem; z-index:2147482000;
-    display:flex; align-items:center; justify-content:center;
-    width:46px; height:46px; border-radius:50%;
-    background:#f9f3e6; border:1px solid #d9cdb8; cursor:pointer;
-    box-shadow:0 2px 10px rgba(45,38,29,.12); padding:0;
-  }
-  .cc-burger i, .cc-burger i::before, .cc-burger i::after{
-    content:""; display:block; width:20px; height:2px; background:#2d261d;
-    border-radius:2px; transition:transform .3s, background .3s, top .3s;
-    font-style:normal;
-  }
-  .cc-burger i{ position:relative; }
-  .cc-burger i::before{ position:absolute; left:0; top:-6px; }
-  .cc-burger i::after{ position:absolute; left:0; top:6px; }
-  .cc-burger.open i{ background:transparent; }
-  .cc-burger.open i::before{ top:0; transform:rotate(45deg); }
-  .cc-burger.open i::after{ top:0; transform:rotate(-45deg); }
-  .cc-scrim{
-    position:fixed; inset:0; background:rgba(45,38,29,.4); z-index:2147481000;
-    opacity:0; pointer-events:none; transition:opacity .3s;
-  }
-  .cc-scrim.open{ opacity:1; pointer-events:auto; }
-  .cc-drawer{
-    position:fixed; top:0; left:0; width:280px; max-width:82vw; height:100vh;
-    padding:5rem 1.6rem 2rem 2rem; display:flex; flex-direction:column;
-    background:linear-gradient(180deg, rgba(249,243,230,.96), rgba(249,243,230,.88)), #f2e8d6;
-    border-right:1px solid rgba(45,38,29,.07);
-    box-shadow:6px 0 24px rgba(45,38,29,.14);
-    transform:translateX(-100%); transition:transform .32s cubic-bezier(.4,0,.2,1);
-    z-index:2147481500; overflow-y:auto;
-    font-family:'Spectral', Georgia, serif; color:#5b4f40; text-align:left;
-  }
-  .cc-drawer.open{ transform:translateX(0); }
-  .cc-drawer .cc-brand{
-    font-family:'Fraunces', Georgia, serif; font-weight:600; font-size:.78rem;
-    letter-spacing:.16em; text-transform:uppercase; color:#b04e29; margin:0 0 .2rem;
-  }
-  .cc-drawer .cc-sub{
-    font-size:.82rem; font-style:italic; color:#5b4f40; line-height:1.4; margin:0 0 1.9rem;
-  }
-  .cc-drawer ol{ list-style:none; margin:0; padding:0; flex:1; }
-  .cc-drawer ol li{ margin:0; padding:0; }
-  .cc-drawer ol a{
-    display:flex; align-items:baseline; gap:.7rem; color:#5b4f40;
-    text-decoration:none; padding:.34rem 0; line-height:1.32; font-size:.95rem;
-    border:none; background:none;
-  }
-  .cc-drawer ol a .cc-num{
-    font-family:'Fraunces', Georgia, serif; font-weight:600; letter-spacing:.05em;
-    color:#8a7c68; min-width:2.1em; flex-shrink:0; font-variant-numeric:tabular-nums;
-    font-size:.85em;
-  }
-  .cc-drawer ol a:hover{ color:#2d261d; }
-  .cc-drawer .cc-foot{ border-top:1px solid #d9cdb8; padding-top:1.1rem; margin-top:1.2rem; }
-  .cc-drawer .cc-volver{
-    font-family:'Spectral', Georgia, serif; font-size:1rem; color:#5b4f40;
-    background:none; border:none; padding:0; cursor:pointer; letter-spacing:.02em;
-    text-align:left;
-  }
-  .cc-drawer .cc-volver:hover{ color:#b04e29; }
-  /* los burgers viejos del lado derecho quedan retirados */
-  .topbar .burger, button#burger, #menu-toggle, #hamb, #menuBtn, #menu-btn, #btnMenu{ display:none !important; }
-  @media (prefers-reduced-motion:reduce){
-    .cc-drawer, .cc-scrim, .cc-burger i, .cc-burger i::before, .cc-burger i::after{ transition:none; }
-  }
-</style>
-<script>
-(function(){
-  if (document.querySelector('.cc-burger')) return;
-  var hs = [].slice.call(document.querySelectorAll('main section[id] h2'));
-  if (hs.length < 2) hs = [].slice.call(document.querySelectorAll('section[id] h2'));
-  if (hs.length < 2) hs = [].slice.call(document.querySelectorAll('h2'));
-  hs = hs.slice(0, 14);
-  var items = hs.map(function(h, i){
-    var t = h.closest('section[id]') || h;
-    if (!t.id) t.id = 'cc-s' + (i + 1);
-    return { id: t.id, text: (h.textContent || '').trim().replace(/\s+/g, ' ').replace(/^[IVXLCDM]+[.\u00b7\s\u2013\u2014-]+\s*/, '').replace(/^\d+[.\u00b7\s\u2013\u2014-]+\s*/, '').slice(0, 64) };
-  });
-  var roman = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV'];
-  var btn = document.createElement('button');
-  btn.className = 'cc-burger'; btn.type = 'button';
-  btn.setAttribute('aria-label', 'Abrir \u00edndice');
-  btn.setAttribute('aria-expanded', 'false');
-  btn.appendChild(document.createElement('i'));
-  var scrim = document.createElement('div'); scrim.className = 'cc-scrim';
-  var drawer = document.createElement('nav');
-  drawer.className = 'cc-drawer';
-  drawer.setAttribute('aria-label', 'Indice de la pagina');
-  var brand = document.createElement('div'); brand.className = 'cc-brand';
-  brand.textContent = 'Caf\u00e9 con Claude';
-  var sub = document.createElement('div'); sub.className = 'cc-sub';
-  sub.textContent = (document.title || '').split('\u00b7')[0].trim() || document.title;
-  var ol = document.createElement('ol');
-  items.forEach(function(it, i){
-    var li = document.createElement('li');
-    var a = document.createElement('a');
-    a.href = '#' + it.id;
-    var num = document.createElement('span'); num.className = 'cc-num';
-    num.textContent = roman[i] || (i + 1);
-    a.appendChild(num);
-    a.appendChild(document.createTextNode(it.text));
-    a.addEventListener('click', function(){ setOpen(false); });
-    li.appendChild(a); ol.appendChild(li);
-  });
-  var foot = document.createElement('div'); foot.className = 'cc-foot';
-  var volver = document.createElement('button');
-  volver.className = 'cc-volver'; volver.type = 'button';
-  volver.textContent = '\u2190 Volver';
-  volver.addEventListener('click', function(){
-    if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }
-  });
-  foot.appendChild(volver);
-  drawer.appendChild(brand); drawer.appendChild(sub); drawer.appendChild(ol); drawer.appendChild(foot);
-  document.body.appendChild(scrim); document.body.appendChild(drawer); document.body.appendChild(btn);
-  function setOpen(open){
-    drawer.classList.toggle('open', open);
-    scrim.classList.toggle('open', open);
-    btn.classList.toggle('open', open);
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  }
-  btn.addEventListener('click', function(){ setOpen(!drawer.classList.contains('open')); });
-  scrim.addEventListener('click', function(){ setOpen(false); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setOpen(false); });
-  // si la pagina ya tiene su propio riel visible en escritorio, el burger solo vive en movil
-  function railVisible(){
-    var cands = document.querySelectorAll('nav, aside');
-    for (var i = 0; i < cands.length; i++){
-      var el = cands[i];
-      if (el === drawer) continue;
-      var r = el.getBoundingClientRect(); var cs = getComputedStyle(el);
-      if (r.width > 120 && r.height > 250 && r.left < 80 &&
-          (cs.position === 'fixed' || cs.position === 'sticky')) return true;
-    }
-    return false;
-  }
-  function sync(){
-    btn.style.display = (window.innerWidth >= 1000 && railVisible()) ? 'none' : 'flex';
-  }
-  window.addEventListener('resize', sync);
-  sync();
-})();
-</script>
-
-<style>/* espacio-cc-2026: aire para la hamburguesa */
-@media (max-width:999px){ .topbar{ padding-left:4.4rem !important; } }
-</style>
 </body>
 </html>

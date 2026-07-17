@@ -161,6 +161,30 @@ These are the reasons this skill exists, so don't let them slip:
    let the owner decide. This overrides the default "open the PR and watch it"
    flow *for pages produced by this skill*.
 
+## Renovating an old page
+
+When the user says an existing page "looks ugly", "has no design", or asks to
+bring it up to the house style, diagnose before patching: if the page's bones
+come from an older design system (its own palette vars, its own nav pattern,
+its own component CSS), **do not stack override layers on top** — cascade
+patches compound into a page with no voice. Instead, **rebuild it on
+`assets/template.html`**:
+
+1. Inventory the content (sections, panel dialogues, cards, verdict boxes,
+   scripture quotes, closing questions) and port it **verbatim** — renovation
+   changes the clothes, never the words.
+2. Re-express its special components in house tokens (card backgrounds
+   `--card`/`--card-2`, hairlines `--line`, one accent per component family:
+   terracotta for structure, amber for key-idea boxes, olive for confirmations,
+   plum for verdicts). Keep beloved interactions (accordions, reveals) by
+   porting their JS, restyled — don't flatten them into plain text.
+3. Keep the same filename, anchors (`#ids`), origin chip, and index entry, so
+   no link breaks; strip any injected retrofit snippets (`menu-cc-2026`,
+   `espacio-cc-2026`, `estilo-cc-2026` blocks) — the rebuilt page has the real
+   drawer and needs none of them.
+4. Verify like a new page (checklist below), including that the old page's
+   interactive pieces still work.
+
 ## The model note
 
 Fill `{{MODEL_NOTE}}` with the model that is generating the page right now and the
