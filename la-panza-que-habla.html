@@ -117,7 +117,7 @@
     font-size: 0.82rem; font-style: italic; color: var(--ink-soft);
     line-height: 1.4; margin-bottom: 1.9rem;
   }
-  nav.sidebar ol.toc { list-style: none; flex: 1; overflow-y: auto; }
+  nav.sidebar ol.toc { list-style: none; flex: 1; overflow-y: auto; min-height: 0; }
   nav.sidebar ol li { margin: 0; }
   nav.sidebar ol a {
     display: flex; align-items: baseline; gap: 0.7rem;
@@ -152,17 +152,6 @@
   #nav-scrim.open { opacity: 1; pointer-events: auto; }
 
   .wrap { max-width: 720px; margin: 0 auto; }
-
-  /* Back control — browser history, not a hard link. */
-  .back-link {
-    display: inline-block;
-    font-family: 'Spectral', serif; font-size: 0.85rem;
-    color: var(--terracotta);
-    background: none; border: none;
-    border-bottom: 1px solid var(--terracotta);
-    padding: 0 0 1px; margin-bottom: 2.2rem; cursor: pointer;
-  }
-  .back-link:hover { color: var(--ink); border-color: var(--ink); }
 
   header .eyebrow {
     font-family: 'Spectral', serif; font-style: italic;
