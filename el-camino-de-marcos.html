@@ -585,5 +585,151 @@
     revelables.forEach(el => obs.observe(el));
   }
 </script>
+
+<!-- menu-cc-2026: hamburguesa redonda de la casa + indice autogenerado -->
+<style>
+  .cc-burger{
+    position:fixed; top:1rem; left:1rem; z-index:2147482000;
+    display:flex; align-items:center; justify-content:center;
+    width:46px; height:46px; border-radius:50%;
+    background:#f9f3e6; border:1px solid #d9cdb8; cursor:pointer;
+    box-shadow:0 2px 10px rgba(45,38,29,.12); padding:0;
+  }
+  .cc-burger i, .cc-burger i::before, .cc-burger i::after{
+    content:""; display:block; width:20px; height:2px; background:#2d261d;
+    border-radius:2px; transition:transform .3s, background .3s, top .3s;
+    font-style:normal;
+  }
+  .cc-burger i{ position:relative; }
+  .cc-burger i::before{ position:absolute; left:0; top:-6px; }
+  .cc-burger i::after{ position:absolute; left:0; top:6px; }
+  .cc-burger.open i{ background:transparent; }
+  .cc-burger.open i::before{ top:0; transform:rotate(45deg); }
+  .cc-burger.open i::after{ top:0; transform:rotate(-45deg); }
+  .cc-scrim{
+    position:fixed; inset:0; background:rgba(45,38,29,.4); z-index:2147481000;
+    opacity:0; pointer-events:none; transition:opacity .3s;
+  }
+  .cc-scrim.open{ opacity:1; pointer-events:auto; }
+  .cc-drawer{
+    position:fixed; top:0; left:0; width:280px; max-width:82vw; height:100vh;
+    padding:5rem 1.6rem 2rem 2rem; display:flex; flex-direction:column;
+    background:linear-gradient(180deg, rgba(249,243,230,.96), rgba(249,243,230,.88)), #f2e8d6;
+    border-right:1px solid rgba(45,38,29,.07);
+    box-shadow:6px 0 24px rgba(45,38,29,.14);
+    transform:translateX(-100%); transition:transform .32s cubic-bezier(.4,0,.2,1);
+    z-index:2147481500; overflow-y:auto;
+    font-family:'Spectral', Georgia, serif; color:#5b4f40; text-align:left;
+  }
+  .cc-drawer.open{ transform:translateX(0); }
+  .cc-drawer .cc-brand{
+    font-family:'Fraunces', Georgia, serif; font-weight:600; font-size:.78rem;
+    letter-spacing:.16em; text-transform:uppercase; color:#b04e29; margin:0 0 .2rem;
+  }
+  .cc-drawer .cc-sub{
+    font-size:.82rem; font-style:italic; color:#5b4f40; line-height:1.4; margin:0 0 1.9rem;
+  }
+  .cc-drawer ol{ list-style:none; margin:0; padding:0; flex:1; }
+  .cc-drawer ol li{ margin:0; padding:0; }
+  .cc-drawer ol a{
+    display:flex; align-items:baseline; gap:.7rem; color:#5b4f40;
+    text-decoration:none; padding:.34rem 0; line-height:1.32; font-size:.95rem;
+    border:none; background:none;
+  }
+  .cc-drawer ol a .cc-num{
+    font-family:'Fraunces', Georgia, serif; font-weight:600; letter-spacing:.05em;
+    color:#8a7c68; min-width:2.1em; flex-shrink:0; font-variant-numeric:tabular-nums;
+    font-size:.85em;
+  }
+  .cc-drawer ol a:hover{ color:#2d261d; }
+  .cc-drawer .cc-foot{ border-top:1px solid #d9cdb8; padding-top:1.1rem; margin-top:1.2rem; }
+  .cc-drawer .cc-volver{
+    font-family:'Spectral', Georgia, serif; font-size:1rem; color:#5b4f40;
+    background:none; border:none; padding:0; cursor:pointer; letter-spacing:.02em;
+    text-align:left;
+  }
+  .cc-drawer .cc-volver:hover{ color:#b04e29; }
+  /* los burgers viejos del lado derecho quedan retirados */
+  .topbar .burger, button#burger, #menu-toggle{ display:none !important; }
+  @media (prefers-reduced-motion:reduce){
+    .cc-drawer, .cc-scrim, .cc-burger i, .cc-burger i::before, .cc-burger i::after{ transition:none; }
+  }
+</style>
+<script>
+(function(){
+  if (document.querySelector('.cc-burger')) return;
+  var hs = [].slice.call(document.querySelectorAll('main section[id] h2'));
+  if (hs.length < 2) hs = [].slice.call(document.querySelectorAll('section[id] h2'));
+  if (hs.length < 2) hs = [].slice.call(document.querySelectorAll('h2'));
+  hs = hs.slice(0, 14);
+  var items = hs.map(function(h, i){
+    var t = h.closest('section[id]') || h;
+    if (!t.id) t.id = 'cc-s' + (i + 1);
+    return { id: t.id, text: (h.textContent || '').trim().replace(/\s+/g, ' ').replace(/^[IVXLCDM]+[.\u00b7\s\u2013\u2014-]+\s*/, '').replace(/^\d+[.\u00b7\s\u2013\u2014-]+\s*/, '').slice(0, 64) };
+  });
+  var roman = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV'];
+  var btn = document.createElement('button');
+  btn.className = 'cc-burger'; btn.type = 'button';
+  btn.setAttribute('aria-label', 'Abrir \u00edndice');
+  btn.setAttribute('aria-expanded', 'false');
+  btn.appendChild(document.createElement('i'));
+  var scrim = document.createElement('div'); scrim.className = 'cc-scrim';
+  var drawer = document.createElement('nav');
+  drawer.className = 'cc-drawer';
+  drawer.setAttribute('aria-label', 'Indice de la pagina');
+  var brand = document.createElement('div'); brand.className = 'cc-brand';
+  brand.textContent = 'Caf\u00e9 con Claude';
+  var sub = document.createElement('div'); sub.className = 'cc-sub';
+  sub.textContent = (document.title || '').split('\u00b7')[0].trim() || document.title;
+  var ol = document.createElement('ol');
+  items.forEach(function(it, i){
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + it.id;
+    var num = document.createElement('span'); num.className = 'cc-num';
+    num.textContent = roman[i] || (i + 1);
+    a.appendChild(num);
+    a.appendChild(document.createTextNode(it.text));
+    a.addEventListener('click', function(){ setOpen(false); });
+    li.appendChild(a); ol.appendChild(li);
+  });
+  var foot = document.createElement('div'); foot.className = 'cc-foot';
+  var volver = document.createElement('button');
+  volver.className = 'cc-volver'; volver.type = 'button';
+  volver.textContent = '\u2190 Volver';
+  volver.addEventListener('click', function(){
+    if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }
+  });
+  foot.appendChild(volver);
+  drawer.appendChild(brand); drawer.appendChild(sub); drawer.appendChild(ol); drawer.appendChild(foot);
+  document.body.appendChild(scrim); document.body.appendChild(drawer); document.body.appendChild(btn);
+  function setOpen(open){
+    drawer.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  btn.addEventListener('click', function(){ setOpen(!drawer.classList.contains('open')); });
+  scrim.addEventListener('click', function(){ setOpen(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setOpen(false); });
+  // si la pagina ya tiene su propio riel visible en escritorio, el burger solo vive en movil
+  function railVisible(){
+    var cands = document.querySelectorAll('nav, aside');
+    for (var i = 0; i < cands.length; i++){
+      var el = cands[i];
+      if (el === drawer) continue;
+      var r = el.getBoundingClientRect(); var cs = getComputedStyle(el);
+      if (r.width > 120 && r.height > 250 && r.left < 80 &&
+          (cs.position === 'fixed' || cs.position === 'sticky')) return true;
+    }
+    return false;
+  }
+  function sync(){
+    btn.style.display = (window.innerWidth >= 1000 && railVisible()) ? 'none' : 'flex';
+  }
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
 </body>
 </html>

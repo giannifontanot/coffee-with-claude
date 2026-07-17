@@ -113,6 +113,13 @@ for source boxes and hover states.
   desktop.
 - **Reading progress bar** — fixed, full-width, 3px, gradient of the accents,
   `z-index:100`. Width driven by scroll in JS. Common but optional.
+- **Legacy retrofit (`menu-cc-2026`)** — older pages that predate the drawer
+  carry an injected self-contained snippet (marker comment `menu-cc-2026`,
+  classes `cc-burger`/`cc-drawer`/`cc-scrim`) that builds the same round
+  top-left hamburger + auto-TOC drawer at runtime, hiding itself on desktop
+  when the page has its own docked rail. New pages must NOT rely on it — use
+  the template's real drawer; the snippet exists only so every already-published
+  page has the house menu.
 - **Back control (top)** — a link-styled control at the very top. See SKILL.md:
   in this skill it is a `<button>` that runs `history.back()`, NOT an `<a href>`.
   Visual style is the classic `.home-link`: small, terracotta text with a
