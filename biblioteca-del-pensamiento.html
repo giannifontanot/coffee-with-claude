@@ -412,7 +412,7 @@ document.querySelectorAll('.explore').forEach(btn => {
   }
   .cc-drawer .cc-volver:hover{ color:#b04e29; }
   /* los burgers viejos del lado derecho quedan retirados */
-  .topbar .burger, button#burger, #menu-toggle{ display:none !important; }
+  .topbar .burger, button#burger, #menu-toggle, #hamb, #menuBtn, #menu-btn, #btnMenu{ display:none !important; }
   @media (prefers-reduced-motion:reduce){
     .cc-drawer, .cc-scrim, .cc-burger i, .cc-burger i::before, .cc-burger i::after{ transition:none; }
   }
@@ -493,5 +493,9 @@ document.querySelectorAll('.explore').forEach(btn => {
   sync();
 })();
 </script>
+
+<style>/* espacio-cc-2026: aire para la hamburguesa */
+@media (max-width:999px){ header{ padding-left:4.4rem !important; } }
+</style>
 </body>
 </html>
