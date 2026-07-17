@@ -40,7 +40,7 @@ main{padding:0 3rem 6rem;min-width:0}
 
 /* ---------- Side rail ---------- */
 .riel{
-  position:sticky;top:0;height:100vh;
+  position:sticky;top:0;height:100vh;height:100dvh;
   padding:3rem 1.5rem 2rem 2rem;
   border-right:1px solid var(--borde);
   display:flex;flex-direction:column;gap:.4rem;
@@ -171,7 +171,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--teja);outline-offse
   main{padding:0 1.4rem 4rem}
   .boton-menu{display:block}
   .riel{
-    position:fixed;inset:0;height:100vh;width:min(78vw,320px);
+    position:fixed;inset:0;height:100vh;height:100dvh;width:min(78vw,320px);
     background:var(--papel-suave);z-index:50;border-right:1px solid var(--borde);
     transform:translateX(-100%);transition:transform .32s ease;
     box-shadow:8px 0 30px var(--sombra);overflow-y:auto;
@@ -607,7 +607,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--teja);outline-offse
   .cc-scrim.open{ opacity:1; pointer-events:auto; }
   .cc-drawer, .cc-drawer *{ box-sizing:border-box; }
   .cc-drawer{
-    position:fixed; top:0; left:0; width:280px; max-width:82vw; height:100vh;
+    position:fixed; top:0; left:0; width:280px; max-width:82vw; height:100vh;height:100dvh;
     padding:5rem 1.6rem 2rem 2rem; display:flex; flex-direction:column;
     background:linear-gradient(180deg, rgba(249,243,230,.96), rgba(249,243,230,.88)), #f2e8d6;
     border-right:1px solid rgba(45,38,29,.07);
