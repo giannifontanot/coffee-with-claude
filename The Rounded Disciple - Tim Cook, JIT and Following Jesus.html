@@ -103,11 +103,13 @@ nav.toc a.active .num{color:var(--terracotta)}
   border-top:1px solid var(--rule);padding-top:1.1rem;
   display:flex;flex-direction:column;gap:.85rem;
 }
-.rail-tools a.home{
+.rail-tools .home{
   font-size:.82rem;color:var(--ink-soft);text-decoration:none;
   letter-spacing:.02em;transition:color .2s ease;
+  background:none;border:none;padding:0;cursor:pointer;
+  font-family:var(--body);text-align:left;
 }
-.rail-tools a.home:hover{color:var(--terracotta)}
+.rail-tools .home:hover{color:var(--terracotta)}
 
 /* ---- contenido ---- */
 main{padding:3.4rem 4.2rem 6rem;max-width:760px}
@@ -272,6 +274,11 @@ ul.clean li strong{color:var(--terracotta);font-weight:600}
   font-style:normal;font-size:.86rem;letter-spacing:.1em;
   text-transform:uppercase;color:var(--terracotta);
 }
+.coda .model-note{
+  display:block;margin-top:.7rem;font-family:var(--display);
+  font-style:normal;font-size:.72rem;letter-spacing:.04em;
+  color:var(--ink-soft);opacity:.8;
+}
 
 /* ---- móvil ---- */
 .hamburger{
@@ -348,7 +355,8 @@ body.menu-open .hamburger span::after{top:0;transform:rotate(-45deg)}
     </nav>
 
     <div class="rail-tools">
-      <a class="home" href="index.html">← Volver a la sala</a>
+      <button class="home" type="button"
+        onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">← Volver a la sala</button>
     </div>
   </aside>
 
@@ -527,6 +535,7 @@ body.menu-open .hamburger span::after{top:0;transform:rotate(-45deg)}
     <div class="coda">
       Empezamos hablando de fábricas, inventarios y márgenes; terminamos hablando del carácter, de la comunidad y del pan de cada día. La estrategia de Cupertino resultó ser un buen espejo —siempre que el Evangelio corrija sus bordes—: no se trata de hacerlo todo solo ni de brillar en una sola cosa, sino de estar lo bastante redondo para seguir girando, día tras día, detrás de Aquel que marca el rumbo.
       <span class="signoff">Café con Claude · de Cupertino a Cristo</span>
+      <span class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</span>
     </div>
 
   </main>
