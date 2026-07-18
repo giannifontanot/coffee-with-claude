@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El discípulo bien redondeado — Tim Cook, el JIT y la vida de quien sigue a Jesús</title>
+
+<!-- ===================================================================
+  CAFÉ CON CLAUDE · "El discípulo bien redondeado"
+  Estrategia y discipulado · de Cupertino a Cristo · el episodio contado desde su centro
+  Página autocontenida · persianas (acordeones) para lectura pausada
+  Tipografía: Fraunces (display) + Spectral (cuerpo)
+  ==================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --terracotta:#b04e29;
+  --amber:#cf9136;
+  --olive:#6c7240;
+  --plum:#6c3a4f;
+  --ink:#2d261d;
+  --cream:#f2e8d6;
+  --paper:#f7efe0;
+  --paper-deep:#ece0c9;
+  --rule:#d8c7a6;
+  --ink-soft:#5b5142;
+
+  --fs-base:1.16rem;
+  --display:"Fraunces",Georgia,serif;
+  --body:"Spectral",Georgia,serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);
+  font-size:var(--fs-base);
+  line-height:1.72;
+  color:var(--ink);
+  background:var(--cream);
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(176,78,41,.035), transparent 45%),
+    radial-gradient(circle at 85% 78%, rgba(108,114,64,.045), transparent 50%);
+}
+
+/* ---- barra de progreso de lectura ---- */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--terracotta),var(--amber));
+  z-index:60;transition:width .12s ease-out;
+}
+
+/* ---- estructura ---- */
+.wrap{
+  display:grid;
+  grid-template-columns:268px minmax(0,1fr);
+  max-width:1180px;margin:0 auto;
+}
+
+/* ---- riel lateral ---- */
+.rail{
+  position:sticky;top:0;align-self:start;
+  height:100vh;overflow-y:auto;scrollbar-width:none;
+  padding:2.6rem 1.6rem 2rem 2rem;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--rule);
+}
+.rail::-webkit-scrollbar{display:none}
+.rail .mark{
+  font-family:var(--display);
+  font-weight:500;font-size:.78rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--terracotta);
+  margin-bottom:.2rem;
+}
+.rail .mark-sub{
+  font-size:.82rem;color:var(--ink-soft);font-style:italic;
+  margin-bottom:1.9rem;line-height:1.4;
+}
+nav.toc{margin-bottom:1.2rem}
+nav.toc a{
+  display:flex;gap:.7rem;align-items:baseline;
+  text-decoration:none;color:var(--ink-soft);
+  padding:.32rem 0;font-size:.92rem;line-height:1.32;
+  border:none;background:none;cursor:pointer;text-align:left;width:100%;
+  transition:color .2s ease;
+}
+nav.toc a .num{
+  font-family:var(--display);font-variant:small-caps;
+  font-size:.74rem;letter-spacing:.05em;
+  color:var(--amber);min-width:2.1em;flex-shrink:0;
+  font-feature-settings:"smcp";
+}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.active{color:var(--terracotta)}
+nav.toc a.active .num{color:var(--terracotta)}
+
+.rail-tools{
+  border-top:1px solid var(--rule);padding-top:1.1rem;
+  display:flex;flex-direction:column;gap:.85rem;
+}
+.rail-tools a.home{
+  font-size:.82rem;color:var(--ink-soft);text-decoration:none;
+  letter-spacing:.02em;transition:color .2s ease;
+}
+.rail-tools a.home:hover{color:var(--terracotta)}
+
+/* ---- contenido ---- */
+main{padding:3.4rem 4.2rem 6rem;max-width:760px}
+
+.hero{margin-bottom:3rem}
+.hero .eyebrow{
+  font-family:var(--display);font-variant:small-caps;
+  letter-spacing:.13em;color:var(--olive);
+  font-size:.92rem;margin-bottom:.9rem;
+}
+.hero h1{
+  font-family:var(--display);
+  font-weight:400;font-size:clamp(2.5rem,5.5vw,3.7rem);
+  line-height:1.04;letter-spacing:-.015em;color:var(--ink);
+  margin-bottom:1.1rem;
+}
+.hero h1 em{font-style:italic;color:var(--terracotta)}
+.hero .sub{
+  font-size:1.22rem;color:var(--ink-soft);font-style:italic;
+  line-height:1.5;max-width:34em;
+}
+.hero .lede{
+  margin-top:1.7rem;font-size:1.12rem;line-height:1.7;
+  padding-left:1.2rem;border-left:2px solid var(--amber);
+  color:var(--ink);
+}
+
+/* ---- las persianas ---- */
+.slat-rule{
+  display:flex;align-items:center;gap:1rem;
+  margin:0 0 1.6rem;color:var(--ink-soft);
+  font-family:var(--display);font-size:.82rem;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.slat-rule::before,.slat-rule::after{
+  content:"";flex:1;height:0;border-top:1px solid var(--rule);
+}
+
+.persiana{
+  border-bottom:1px solid var(--rule);
+}
+.persiana:first-of-type{border-top:1px solid var(--rule)}
+
+.persiana > button.lever{
+  width:100%;text-align:left;cursor:pointer;
+  background:none;border:none;color:var(--ink);
+  display:flex;align-items:baseline;gap:1.1rem;
+  padding:1.5rem .3rem 1.5rem 0;
+  font-family:var(--display);transition:color .2s ease;
+}
+.persiana > button.lever:hover{color:var(--terracotta)}
+.persiana > button.lever:focus-visible{
+  outline:2px solid var(--amber);outline-offset:4px;border-radius:3px;
+}
+.lever .roman{
+  font-variant:small-caps;font-feature-settings:"smcp";
+  color:var(--amber);font-size:1rem;letter-spacing:.06em;
+  min-width:2.6em;flex-shrink:0;padding-top:.18em;
+}
+.persiana[data-open="true"] .lever .roman{color:var(--terracotta)}
+.lever .title{
+  flex:1;font-weight:400;font-size:1.42rem;line-height:1.18;
+  letter-spacing:-.01em;
+}
+/* el tirador de la persiana: listones que se pliegan */
+.lever .pull{
+  flex-shrink:0;align-self:center;width:22px;height:14px;
+  position:relative;transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.lever .pull span{
+  position:absolute;left:0;right:0;height:2px;border-radius:2px;
+  background:var(--ink-soft);transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.lever .pull span:nth-child(1){top:0}
+.lever .pull span:nth-child(2){top:6px;opacity:.55}
+.lever .pull span:nth-child(3){top:12px;opacity:.25}
+.persiana[data-open="true"] .lever .pull span{background:var(--terracotta)}
+.persiana[data-open="true"] .lever .pull span:nth-child(1){top:6px;transform:rotate(0)}
+.persiana[data-open="true"] .lever .pull span:nth-child(2){opacity:0;transform:scaleX(.2)}
+.persiana[data-open="true"] .lever .pull span:nth-child(3){top:6px;opacity:1}
+
+/* el cuerpo plegable */
+.persiana .blinds{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .42s cubic-bezier(.4,0,.2,1);
+}
+.persiana[data-open="true"] .blinds{grid-template-rows:1fr}
+.persiana .blinds-inner{
+  overflow:hidden;
+  opacity:0;transform:translateY(-4px);
+  transition:opacity .35s ease .05s,transform .35s ease .05s;
+}
+.persiana[data-open="true"] .blinds-inner{opacity:1;transform:none}
+.panel-body{padding:.2rem 0 2.2rem 3.7rem}
+
+@media(max-width:680px){
+  .panel-body{padding-left:0}
+}
+
+.panel-body p{margin-bottom:1.05rem}
+.panel-body p:last-child{margin-bottom:0}
+.panel-body .lead{
+  font-size:1.12rem;color:var(--ink);font-style:italic;
+  color:var(--plum);
+}
+.panel-body strong{font-weight:600;color:var(--ink)}
+.panel-body em{font-style:italic}
+
+/* sub-bloques */
+.facet{
+  margin:1.4rem 0;padding:1rem 1.3rem;
+  background:var(--paper);border-radius:3px;
+  border-left:3px solid var(--olive);
+}
+.facet h4{
+  font-family:var(--display);font-weight:500;font-size:1.06rem;
+  color:var(--ink);margin-bottom:.35rem;letter-spacing:-.005em;
+}
+.facet h4 .kicker{
+  display:block;font-size:.72rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--olive);
+  font-variant:normal;margin-bottom:.25rem;
+}
+.facet p{margin-bottom:0;font-size:1.04rem;line-height:1.6}
+.facet p+p{margin-top:.7rem}
+.facet.amber{border-left-color:var(--amber)}
+.facet.amber h4 .kicker{color:var(--amber)}
+.facet.plum{border-left-color:var(--plum)}
+.facet.plum h4 .kicker{color:var(--plum)}
+.facet.terra{border-left-color:var(--terracotta)}
+.facet.terra h4 .kicker{color:var(--terracotta)}
+
+ul.clean{list-style:none;margin:1.1rem 0}
+ul.clean li{
+  padding-left:1.5rem;position:relative;margin-bottom:.85rem;line-height:1.6;
+}
+ul.clean li::before{
+  content:"";position:absolute;left:0;top:.62em;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--amber);
+}
+ul.clean li strong{color:var(--terracotta);font-weight:600}
+
+.refs{
+  margin-top:1.5rem;padding-top:.9rem;border-top:1px dotted var(--rule);
+  font-size:.88rem;color:var(--ink-soft);font-style:italic;
+}
+.refs a{color:var(--olive);text-decoration:none;border-bottom:1px solid var(--rule)}
+.refs a:hover{color:var(--terracotta);border-color:var(--terracotta)}
+
+.scripture{
+  font-style:italic;color:var(--plum);
+}
+
+/* cierre */
+.coda{
+  margin-top:3.4rem;padding-top:2rem;border-top:1px solid var(--rule);
+  font-style:italic;color:var(--ink-soft);font-size:1.06rem;line-height:1.7;
+}
+.coda .signoff{
+  display:block;margin-top:1.2rem;font-family:var(--display);
+  font-style:normal;font-size:.86rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--terracotta);
+}
+
+/* ---- móvil ---- */
+.hamburger{
+  display:none;position:fixed;top:1rem;left:1rem;z-index:55;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--paper);border:1px solid var(--rule);
+  cursor:pointer;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(45,38,29,.12);
+}
+.hamburger span{
+  display:block;width:20px;height:2px;background:var(--ink);
+  position:relative;transition:.3s;
+}
+.hamburger span::before,.hamburger span::after{
+  content:"";position:absolute;left:0;width:20px;height:2px;
+  background:var(--ink);transition:.3s;
+}
+.hamburger span::before{top:-6px}
+.hamburger span::after{top:6px}
+body.menu-open .hamburger span{background:transparent}
+body.menu-open .hamburger span::before{top:0;transform:rotate(45deg)}
+body.menu-open .hamburger span::after{top:0;transform:rotate(-45deg)}
+
+.scrim{
+  display:none;position:fixed;inset:0;background:rgba(45,38,29,.4);
+  z-index:48;
+}
+
+@media(max-width:880px){
+  .wrap{grid-template-columns:1fr}
+  .hamburger{display:flex}
+  .rail{
+    position:fixed;top:0;left:0;z-index:50;width:280px;height:100vh;overflow-y:auto;
+    background:var(--cream);
+    transform:translateX(-100%);transition:transform .32s ease;
+    box-shadow:4px 0 24px rgba(45,38,29,.16);
+  }
+  body.menu-open .rail{transform:translateX(0)}
+  body.menu-open .scrim{display:block}
+  main{padding:4.4rem 1.6rem 4rem}
+  .panel-body{padding-left:0}
+  .lever .roman{min-width:2em}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Abrir índice">
+  <span></span>
+</button>
+<div class="scrim" id="scrim"></div>
+
+<div class="wrap">
+
+  <!-- ===================== RIEL ===================== -->
+  <aside class="rail" id="rail">
+    <div class="mark">Café con Claude</div>
+    <div class="mark-sub">Sala de lectura · de Cupertino a Cristo</div>
+
+    <nav class="toc" id="toc">
+      <a data-target="s1"><span class="num">I</span><span>Para rodar lejos hay que estar redondo</span></a>
+      <a data-target="s2"><span class="num">II</span><span>De dónde viene la analogía</span></a>
+      <a data-target="s3"><span class="num">III</span><span>El círculo bien redondeado</span></a>
+      <a data-target="s4"><span class="num">IV</span><span>Subcontratación santa: el Cuerpo</span></a>
+      <a data-target="s5"><span class="num">V</span><span>JIT del alma: el pan de hoy</span></a>
+      <a data-target="s6"><span class="num">VI</span><span>Tú, COO de tu propia vida</span></a>
+      <a data-target="s7"><span class="num">VII</span><span>Preguntas para rodar más lejos</span></a>
+    </nav>
+
+    <div class="rail-tools">
+      <a class="home" href="index.html">← Volver a la sala</a>
+    </div>
+  </aside>
+
+  <!-- ===================== CONTENIDO ===================== -->
+  <main>
+
+    <header class="hero">
+      <div class="eyebrow">Estrategia y discipulado · de Cupertino a Cristo</div>
+      <h1>El discípulo <em>bien redondeado</em></h1>
+      <p class="sub">Una conversación empezó hablando de Tim Cook, del Just In Time y de por qué Apple no fabrica sus propios teléfonos. Terminó hablando de cómo se sigue a Jesús sin quemarse ni quedarse a mitad de camino.</p>
+      <p class="lede">Un cuadrado no rueda; un triángulo se atasca. Para llegar lejos con Cristo hace falta estar redondo —crecer en todo el carácter— sin dejar de girar sobre las fortalezas que Dios te confió.</p>
+    </header>
+
+    <div class="slat-rule">Abre cada persiana a tu ritmo</div>
+
+    <!-- ===== I ===== -->
+    <section class="persiana" id="s1" data-open="true">
+      <button class="lever" aria-expanded="true">
+        <span class="roman">I</span>
+        <span class="title">Para rodar lejos hay que estar redondo</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="lead">«Tengo que estar bien redondeado para poder rodar y llegar lejos. Un cuadrado o un triángulo no llegan a ningún lado».</p>
+        <p>Esa frase es el corazón de todo lo que sigue. Nació al final de una charla sobre estrategia empresarial, cuando la pregunta dejó de ser <em>cómo gestiona Apple su cadena de suministro</em> y pasó a ser <em>cómo vivo yo como discípulo de Jesucristo</em>.</p>
+        <p>La tentación fácil era decir: «enfócate solo en tus dones y delega el resto». Suena sabio, pero escondía una trampa. Si me limito a lo que me gusta y se me da fácil, <strong>ya ganó el enemigo</strong>. Jesús no dijo «sé bueno en lo tuyo»; dijo <span class="scripture">«sean ustedes perfectos, como su Padre que está en el cielo es perfecto»</span>.</p>
+        <p>Y aquí entra la imagen de la rueda. La perfección a la que somos llamados no es ser un <em>pico afilado</em> —brillante en una sola cosa, con huecos enormes en todo lo demás—. Un discípulo así se atasca a la primera piedra. La madurez cristiana es <strong>redondez</strong>: una vida sin bordes muertos, que gira entera y por eso avanza.</p>
+        <div class="facet amber">
+          <h4><span class="kicker">La tensión que resuelve</span>Redondo, no perfecto en todo a la vez</h4>
+          <p>Estar redondo <strong>no</strong> es intentar ser excelente en todo al mismo nivel y al mismo tiempo —eso agota y es imposible—. Es no tener zonas planas: crecer en el carácter en todas las direcciones, aunque cueste, mientras se afila con excelencia aquello para lo que Dios te dio más gracia.</p>
+        </div>
+        <div class="refs">
+          Pasajes (DHH):
+          <a href="https://www.biblegateway.com/passage/?search=Mateo+5%3A48&version=DHH" target="_blank" rel="noopener">Mateo 5:48</a>.
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== II ===== -->
+    <section class="persiana" id="s2" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">II</span>
+        <span class="title">De dónde viene la analogía</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="lead">Antes de la rueda, hubo una fábrica cerrada.</p>
+        <p>La conversación arrancó con una intuición que casi todos compartimos: tener el control de todo, en todo momento, <em>debería</em> ser lo mejor. Y sin embargo, Tim Cook hizo justo lo contrario en Apple y funcionó. Cerró fábricas propias, apostó por la subcontratación, redujo el inventario de un mes a apenas días, y con eso disparó los márgenes.</p>
+        <p>La lógica es contraintuitiva pero limpia: quien intenta hacerlo todo termina siendo <strong>medio bueno</strong> en fabricar y <strong>medio bueno</strong> en innovar. Al soltar el control operativo y quedarse con el estratégico, Apple pudo ser <em>excelente</em> en lo que de verdad la diferencia —diseño, software, ecosistema— y dejar la producción a especialistas como Foxconn.</p>
+        <div class="facet">
+          <h4><span class="kicker">El vocabulario prestado</span>Cuatro ideas que cruzan de la empresa a la vida</h4>
+          <p><strong>Ventaja competitiva:</strong> ser el mejor donde de verdad aportas, no en todo. <strong>Subcontratación:</strong> apoyarte en quien hace mejor lo que tú no dominas. <strong>Just In Time (JIT):</strong> mover justo lo necesario, justo a tiempo, sin acumular. <strong>El COO:</strong> quien convierte la visión en operación diaria para que la máquina no se rompa por el camino.</p>
+        </div>
+        <p>El salto que dio esta charla fue preguntarse: <em>¿y si estas mismas ventajas se aplican a la vida de quien sigue a Jesús?</em> La analogía funciona porque la vida cristiana no es «hacerlo todo solo», sino vivir con sabiduría, enfoque y dependencia. Pero —como veremos— hubo que corregirla en un punto clave para que no traicionara el Evangelio.</p>
+      </div></div></div>
+    </section>
+
+    <!-- ===== III ===== -->
+    <section class="persiana" id="s3" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">III</span>
+        <span class="title">El círculo bien redondeado</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="lead">Aquí es donde la analogía casi se rompe —y donde se vuelve más honesta.</p>
+        <p>La primera versión decía: «no eres llamado a ser excelente en todo, enfócate en tus dones». Pero eso choca con el llamado a la perfección. La corrección fue distinguir dos planos que no se pueden confundir:</p>
+        <ul class="clean">
+          <li><strong>Carácter y obediencia.</strong> Amor, integridad, humildad, autodominio, oración, fidelidad. Aquí <em>no hay excusas</em>: todos somos llamados a crecer hacia la perfección, aunque nos cueste. Esta es la redondez obligatoria de la rueda.</li>
+          <li><strong>Dones y vocación.</strong> Aquí Dios reparte distinto —a propósito— para que el Cuerpo funcione de forma interdependiente. Estos son los que desarrollas con excelencia especial, sin pretender igualarlos todos.</li>
+        </ul>
+        <p>Si eres brillante predicando pero tienes mal carácter, tu rueda está <strong>deformada</strong> y no rodará bien. El don no es coartada para descuidar lo que cuesta. Jesús mismo fue el equilibrio perfecto: fuerte en enseñanza, en compasión, en confrontación, en oración, en sabiduría y en acción.</p>
+        <div class="facet plum">
+          <h4><span class="kicker">La analogía de Bezos</span>Suficientemente bueno en muchas cosas, excelente en las que mueven la aguja</h4>
+          <p>Jeff Bezos no era experto en logística, finanzas ni tecnología cuando empezó. Se volvió <em>bastante redondo</em> —aprendió de todo— pero nunca pretendió ser el mejor programador ni el mejor contador de su empresa. Fue suficientemente bueno en muchas cosas y excelente en las pocas que decidían el juego. Así el discípulo: primero la base redonda, luego la velocidad sobre las fortalezas.</p>
+        </div>
+        <div class="refs">
+          Pasajes (DHH):
+          <a href="https://www.biblegateway.com/passage/?search=Romanos+12%3A3-8&version=DHH" target="_blank" rel="noopener">Romanos 12:3-8</a> ·
+          <a href="https://www.biblegateway.com/passage/?search=1+Corintios+12&version=DHH" target="_blank" rel="noopener">1 Corintios 12</a> ·
+          <a href="https://www.biblegateway.com/passage/?search=Efesios+4%3A7-16&version=DHH" target="_blank" rel="noopener">Efesios 4:7-16</a>.
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== IV ===== -->
+    <section class="persiana" id="s4" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">IV</span>
+        <span class="title">Subcontratación santa: el Cuerpo de Cristo</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="lead">Estar redondo no significa estar solo.</p>
+        <p>Apple no monta su propia fábrica porque otro lo hace mejor. El discípulo no tiene que «fabricar en casa» todo lo espiritual, porque la Iglesia <strong>es</strong> el Cuerpo de Cristo: cada miembro tiene su función, y ninguno es el cuerpo entero.</p>
+        <p>Eso significa «subcontratar» con sabiduría lo que no dominas: pedir consejo a un mentor en oración, unirte a un grupo que te sostenga y te pida cuentas, dejar que otro lidere donde su don brilla más que el tuyo. No es pereza; es <em>mayordomía</em> del Cuerpo.</p>
+        <div class="facet terra">
+          <h4><span class="kicker">El control que no se delega</span>Estratégico dentro, operativo compartido</h4>
+          <p>Apple cedió lo operativo pero jamás lo estratégico: diseño, calidad, dirección. Igual tú: apóyate en la comunidad para lo que no dominas, pero <strong>nunca subcontrates el centro</strong> —tu relación personal con Jesús, tu obediencia diaria, tu carácter—. Eso no lo puede vivir nadie por ti.</p>
+        </div>
+        <div class="refs">
+          Pasajes (DHH):
+          <a href="https://www.biblegateway.com/passage/?search=1+Corintios+12%3A12-27&version=DHH" target="_blank" rel="noopener">1 Corintios 12:12-27</a>.
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== V ===== -->
+    <section class="persiana" id="s5" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">V</span>
+        <span class="title">JIT del alma: el pan de hoy</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="lead">Cook consideraba el inventario «fundamentalmente malo», como leche que se pudre pasada su fecha.</p>
+        <p>El alma también acumula inventario que se echa a perder: preocupaciones, resentimientos, pecados no confesados, ofensas guardadas, planes a diez años que paralizan el hoy, conocimiento bíblico que nunca se aplica. Todo eso inmoviliza capital espiritual y genera riesgo.</p>
+        <p>El <strong>Just In Time</strong> del discípulo es vivir un día a la vez, confiando en la provisión diaria: <span class="scripture">«el pan nuestro de cada día»</span>. No producir angustia por adelantado. Confesar <em>rápido</em>, perdonar <em>rápido</em>, obedecer según la luz que tienes hoy sin esperar a tenerlo todo perfecto.</p>
+        <div class="facet amber">
+          <h4><span class="kicker">El inventario que sí vale</span>Lo poco que conviene atesorar</h4>
+          <p>No todo stock es malo. La Palabra escondida en el corazón, una relación viva con Cristo, hábitos simples y sostenidos de oración y obediencia: ese es el «inventario» que no caduca y que hace girar la rueda día tras día.</p>
+        </div>
+        <div class="refs">
+          Pasajes (DHH):
+          <a href="https://www.biblegateway.com/passage/?search=Mateo+6%3A34&version=DHH" target="_blank" rel="noopener">Mateo 6:34</a>.
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== VI ===== -->
+    <section class="persiana" id="s6" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">VI</span>
+        <span class="title">Tú, COO de tu propia vida</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p class="lead">El CEO dice a dónde vamos; el COO se asegura de cómo llegamos y de que el motor no se rompa por el camino.</p>
+        <p>En la vida del discípulo el reparto es claro: <strong>Jesús es el CEO</strong> —el Señor, la Cabeza, quien define la visión—. El <strong>Espíritu Santo</strong> es el director de operaciones interno que convence, guía y da poder. Y tú eres el <strong>COO de tu propia vida</strong>: el responsable de que la visión de Dios se ejecute en lo concreto, día a día.</p>
+        <p>Porque la fe no es solo oír; es <em>hacer</em>. La visión grande —santidad, amor a Dios y al prójimo, la Gran Comisión— no se cumple en grandes gestos heroicos, sino en operaciones pequeñas: hábitos diarios, integridad en el trabajo, amabilidad en casa, fidelidad en lo poco.</p>
+        <div class="facet">
+          <h4><span class="kicker">Fiel en lo poco</span>Donde de verdad se ejecuta la estrategia</h4>
+          <p>«El que es fiel en lo muy poco, también en lo más es fiel». El COO no gana con un plan brillante en la pizarra, sino con mil decisiones diarias bien ejecutadas. Ahí, en lo cotidiano y sin público, es donde la rueda realmente rueda.</p>
+        </div>
+        <div class="refs">
+          Pasajes (DHH):
+          <a href="https://www.biblegateway.com/passage/?search=Santiago+1%3A22-25&version=DHH" target="_blank" rel="noopener">Santiago 1:22-25</a> ·
+          <a href="https://www.biblegateway.com/passage/?search=Lucas+16%3A10&version=DHH" target="_blank" rel="noopener">Lucas 16:10</a>.
+        </div>
+      </div></div></div>
+    </section>
+
+    <!-- ===== VII ===== -->
+    <section class="persiana" id="s7" data-open="false">
+      <button class="lever" aria-expanded="false">
+        <span class="roman">VII</span>
+        <span class="title">Preguntas para rodar más lejos</span>
+        <span class="pull"><span></span><span></span><span></span></span>
+      </button>
+      <div class="blinds"><div class="blinds-inner"><div class="panel-body">
+        <p>Toda esta analogía no sirve de nada si se queda en teoría —sería justo el «inventario» que se pudre—. Cuatro preguntas para ejecutarla esta semana:</p>
+        <ul class="clean">
+          <li><strong>¿Dónde estoy plano?</strong> ¿Qué área de mi carácter necesita crecer con urgencia, aunque me cueste, para que la rueda deje de atascarse?</li>
+          <li><strong>¿Cuáles son mis fortalezas?</strong> ¿Qué dones y responsabilidades me confió Dios para desarrollar con excelencia y aportar algo único al Cuerpo?</li>
+          <li><strong>¿Qué estoy fabricando en casa que debería delegar?</strong> ¿Dónde necesito apoyarme en un mentor, un grupo o la comunidad de fe?</li>
+          <li><strong>¿Qué inventario debo soltar hoy?</strong> ¿Qué preocupación, ofensa o pecado acumulado necesito confesar, perdonar o entregar «justo a tiempo»?</li>
+        </ul>
+        <p>Buscar primero la redondez básica; luego, sobre esa base, acelerar en los dones. Nunca dejar de crecer en lo débil, pero tampoco exigir que todo llegue al mismo nivel. Ni un pico afilado y desequilibrado, ni un círculo plano y mediocre: <strong>una rueda bien redondeada que rueda lejos en el propósito de Dios.</strong></p>
+        <div class="refs">
+          Pasajes (DHH):
+          <a href="https://www.biblegateway.com/passage/?search=Mateo+6%3A33&version=DHH" target="_blank" rel="noopener">Mateo 6:33</a>.
+        </div>
+      </div></div></div>
+    </section>
+
+    <div class="coda">
+      Empezamos hablando de fábricas, inventarios y márgenes; terminamos hablando del carácter, de la comunidad y del pan de cada día. La estrategia de Cupertino resultó ser un buen espejo —siempre que el Evangelio corrija sus bordes—: no se trata de hacerlo todo solo ni de brillar en una sola cosa, sino de estar lo bastante redondo para seguir girando, día tras día, detrás de Aquel que marca el rumbo.
+      <span class="signoff">Café con Claude · de Cupertino a Cristo</span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* ---- 1 · persianas (acordeón con grid-rows) ---- */
+document.querySelectorAll('.persiana > .lever').forEach(function(lever){
+  lever.addEventListener('click', function(){
+    var p = lever.closest('.persiana');
+    var open = p.getAttribute('data-open') === 'true';
+    p.setAttribute('data-open', String(!open));
+    lever.setAttribute('aria-expanded', String(!open));
+  });
+});
+
+/* ---- 2 · índice: abre la persiana y baja a ella ---- */
+document.querySelectorAll('#toc a').forEach(function(link){
+  link.addEventListener('click', function(){
+    var id = link.getAttribute('data-target');
+    var p = document.getElementById(id);
+    if(p){
+      p.setAttribute('data-open','true');
+      p.querySelector('.lever').setAttribute('aria-expanded','true');
+      p.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+    document.body.classList.remove('menu-open'); /* cierra menú móvil */
+  });
+});
+
+/* ---- 3 · scroll-spy del riel ---- */
+var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var id = e.target.id;
+      links.forEach(function(l){
+        l.classList.toggle('active', l.getAttribute('data-target') === id);
+      });
+    }
+  });
+},{rootMargin:'-15% 0px -70% 0px', threshold:0});
+document.querySelectorAll('.persiana').forEach(function(s){spy.observe(s);});
+
+/* ---- 4 · barra de progreso ---- */
+var bar = document.getElementById('progress');
+function onScroll(){
+  var h = document.documentElement;
+  var scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  bar.style.width = (scrolled*100) + '%';
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+/* ---- 5 · menú móvil ---- */
+var ham = document.getElementById('hamburger');
+var scrim = document.getElementById('scrim');
+ham.addEventListener('click', function(){ document.body.classList.toggle('menu-open'); });
+scrim.addEventListener('click', function(){ document.body.classList.remove('menu-open'); });
+</script>
+</body>
+</html>
