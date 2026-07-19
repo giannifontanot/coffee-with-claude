@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belén, los pastores y el censo · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* palette from "primero invisible, después imparable" */
+    --bg:        #f2e8d6;
+    --bg-deep:   #ecdfc8;
+    --card:      #f9f3e6;
+    --card-2:    #f6efdf;
+    --ink:       #2d261d;
+    --ink-soft:  #5b4f40;
+    --ink-faint: #8a7c68;
+    --terracotta:#b04e29;
+    --rust:      #963c20;
+    --amber:     #cf9136;
+    --ochre:     #b9853a;
+    --olive:     #6c7240;
+    --olive-deep:#525830;
+    --plum:      #6c3a4f;
+    --plum-deep: #502635;
+    --line:      #d9cdb8;
+    --line-soft: rgba(45,38,29,.07);
+    --shadow:    0 1px 2px rgba(45,38,29,.05), 0 14px 38px -22px rgba(45,38,29,.34);
+    /* compatibility aliases for older component CSS */
+    --cream:     #f2e8d6;
+    --muted:     #5b4f40;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #f7efe0 0%, rgba(247,239,224,0) 60%),
+      radial-gradient(900px 700px at -10% 30%, #f0e6d0 0%, rgba(240,230,208,0) 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: 'Spectral', Georgia, serif;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* top padding leaves room under the fixed hamburger */
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  /* Reading progress bar (optional) */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--terracotta));
+    z-index: 100; transition: width .08s linear;
+  }
+
+  /* ── Top-left round hamburger (mobile only) ───────── */
+  #nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: fixed; top: 1rem; left: 1rem; z-index: 80;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--line);
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(45,38,29,0.12);
+  }
+  #nav-toggle span,
+  #nav-toggle span::before,
+  #nav-toggle span::after {
+    content: ""; display: block; width: 20px; height: 2px;
+    background: var(--ink); border-radius: 2px; transition: transform .3s, background .3s, top .3s;
+  }
+  #nav-toggle span { position: relative; }
+  #nav-toggle span::before { content: ""; position: absolute; left: 0; top: -6px; }
+  #nav-toggle span::after  { content: ""; position: absolute; left: 0; top: 6px; }
+  #nav-toggle.open span { background: transparent; }
+  #nav-toggle.open span::before { top: 0; transform: rotate(45deg); }
+  #nav-toggle.open span::after  { top: 0; transform: rotate(-45deg); }
+
+  /* ── Nav drawer / left rail ───────────────────────── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 280px; max-width: 82vw; height: 100vh; height: 100dvh;
+    /* mobile: extra top room so the fixed round hamburger never covers the brand */
+    padding: 5rem 1.6rem 2rem 2rem;
+    display: flex; flex-direction: column;
+    background: linear-gradient(180deg, rgba(249,243,230,0.9), rgba(249,243,230,0.45)), var(--bg);
+    border-right: 1px solid var(--line-soft);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70; box-shadow: 6px 0 24px rgba(45,38,29,0.14);
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.82rem; font-style: italic; color: var(--ink-soft);
+    line-height: 1.4; margin-bottom: 1.9rem;
+  }
+  nav.sidebar ol { list-style: none; flex: 1; overflow-y: auto; min-height: 0; }
+  nav.sidebar ol li { margin: 0; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.7rem;
+    color: var(--ink-soft); text-decoration: none;
+    padding: 0.34rem 0; line-height: 1.32;
+    transition: color 0.2s ease;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    letter-spacing: 0.05em; color: var(--ink-faint);
+    min-width: 2.1em; flex-shrink: 0; font-variant-numeric: tabular-nums;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  /* home tool pinned at the foot of the rail */
+  nav.sidebar .rail-tools {
+    border-top: 1px solid var(--line); padding-top: 1.1rem; margin-top: 1rem;
+  }
+  /* Back arrow at the rail's foot: history, not a hard link */
+  nav.sidebar .rail-tools .home {
+    font-family: 'Spectral', serif; font-size: 1rem;
+    color: var(--ink-soft); background: none; border: none; padding: 0;
+    cursor: pointer; letter-spacing: 0.02em; text-align: left;
+    transition: color 0.2s ease;
+  }
+  nav.sidebar .rail-tools .home:hover { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(45,38,29,0.4);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  /* ── Origin chip ──────────────────────────────────────
+     States which question-batch the page came from; mirrors the origin filter
+     in index.html. Fixed top-right, so it never collides with the top-left ☰. */
+  .origin-chip {
+    position: fixed; top: 10px; right: 10px; z-index: 90;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--muted); background: var(--card);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 11px; text-decoration: none; line-height: 1;
+    box-shadow: 0 1px 5px rgba(45,38,29,0.10);
+  }
+  .origin-chip.origin-f14  { color: var(--terracotta); border-color: var(--terracotta); }
+  .origin-chip.origin-f25  { color: var(--olive);      border-color: var(--olive); }
+  .origin-chip.origin-f100 { color: var(--plum);       border-color: var(--plum); }
+  .origin-chip.origin-casa { color: var(--muted);      border-color: var(--line); }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+
+  header .eyebrow {
+    font-family: 'Spectral', serif; font-style: italic;
+    font-size: 15px; color: var(--terracotta); letter-spacing: 0.06em;
+    display: block; margin: 0 0 22px;
+  }
+  header .eyebrow::after {
+    content: ""; display: block; width: 46px; height: 1px;
+    background: var(--terracotta); opacity: 0.5; margin-top: 14px;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-optical-sizing: 144;
+    font-size: clamp(42px, 8vw, 72px); line-height: 1.02; letter-spacing: -0.018em;
+    margin: 0 0 6px; color: var(--ink);
+  }
+  header h1 em { font-style: italic; font-weight: 500; color: var(--rust); }
+  .subtitle {
+    font-size: 21px; line-height: 1.5; color: var(--ink-soft);
+    font-weight: 400; max-width: 30ch; margin: 18px 0 0;
+  }
+  .subtitle b { color: var(--ink); font-weight: 600; }
+
+  main { margin-top: 2.6rem; }
+  section { margin-bottom: 2.4rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.6rem;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+
+  /* citas y notas del cuaderno */
+  blockquote {
+    margin: 1.4rem 0; padding: 0.2rem 0 0.2rem 1.2rem;
+    border-left: 3px solid var(--amber);
+    font-style: italic; color: var(--plum); font-size: 1.05rem;
+  }
+  blockquote .cita-ref { display: block; margin-top: 0.3rem; font-style: normal; font-size: 0.85rem; color: var(--ink-faint); }
+  main ul, main ol { margin: 0 0 1.1rem 1.4rem; }
+  main li { margin-bottom: 0.55rem; }
+  .nota {
+    margin: 1.4rem 0; padding: 1rem 1.3rem;
+    background: var(--card); border-left: 3px solid var(--terracotta);
+    border-radius: 3px; box-shadow: var(--shadow);
+  }
+  .nota h4 {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.04rem;
+    margin-bottom: 0.4rem; color: var(--ink);
+  }
+  .nota p:last-child, .nota ol:last-child { margin-bottom: 0; }
+  .nota.olive { border-left-color: var(--olive); }
+  .nota.plum { border-left-color: var(--plum); }
+  .metodo { font-size: 0.9rem; color: var(--ink-soft); margin-top: 1.6rem; }
+
+  /* Sources box (optional) */
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(176, 78, 41, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(176,78,41,0.4); }
+  .fuentes a:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--ink-soft); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--ink-faint); opacity: 0.9; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle span, #nav-toggle span::before, #nav-toggle span::after { transition: none; }
+  }
+
+  /* Desktop: dock the drawer as a fixed left rail; the hamburger is mobile-only.
+     Breakpoint kept low (1000px) so laptops running OS display-scaling — which
+     report a CSS width well below their physical pixels — still get the rail. */
+  @media (min-width: 1000px) {
+    #nav-toggle, #nav-scrim { display: none; }
+    nav.sidebar, nav.sidebar.open {
+      transform: none; box-shadow: none; padding-top: 2.6rem;
+      background: linear-gradient(180deg, rgba(249,243,230,0.55), rgba(249,243,230,0));
+    }
+    .wrap { margin-left: max(324px, calc(50% - 360px)); margin-right: auto; }
+  }
+  @media (min-width: 1500px) {
+    .wrap { margin: 0 auto; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Origin chip: which question-batch this page came from. Default is a house
+     original ("De la casa"). If it descends from a Fable batch, swap the label
+     and class: Fable-14/origin-f14, Fable-25/origin-f25, Fable-100/origin-f100. -->
+<a href="index.html" class="origin-chip origin-casa" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable">De la casa</a>
+
+<!-- Top-left round hamburger + off-canvas drawer / left rail -->
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar"><span></span></button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">Cuaderno de estudio · el contexto del nacimiento</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>Un pueblo de pastores</a></li>
+    <li><a href="#s2"><span class="num">II</span>Corderos para el sacrificio</a></li>
+    <li><a href="#s3"><span class="num">III</span>La profecía de Belén</a></li>
+    <li><a href="#s4"><span class="num">IV</span>¿Por qué José fue a Belén?</a></li>
+    <li><a href="#s5"><span class="num">V</span>El censo de Quirino</a></li>
+    <li><a href="#s6"><span class="num">VI</span>El viaje desde Nazaret</a></li>
+    <li><a href="#s7"><span class="num">VII</span>Cómo llegó Roma a Judea</a></li>
+    <li><a href="#s8"><span class="num">VIII</span>¿Y si Roma no hubiera estado?</a></li>
+    <li><a href="#s9"><span class="num">IX</span>Reflexión final</a></li>
+    <!-- e.g. <li><a href="#s1"><span class="num">I</span>Section title</a></li> -->
+  </ol>
+  <div class="rail-tools">
+    <button class="home" type="button"
+            onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+      ← Volver
+    </button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+
+  <header>
+    <span class="eyebrow">Cuaderno de estudio · historia y Biblia</span>
+    <h1>Belén, los pastores y el <em>censo</em></h1>
+    <p class="subtitle">El contexto histórico del nacimiento de Jesús: un pueblo de pastores, una profecía exacta, un empadronamiento debatido y el imperio que, sin querer, pavimentó el camino del evangelio.</p>
+  </header>
+
+  <main>
+    <section id="s1" class="revela">
+      <h2>Un pueblo de pastores</h2>
+      <p>¿Era Belén un pueblo de pastores? <b>Sí, con matices.</b> Era una pequeña población en la región montañosa de Judea, a unos 8–9 km al sur de Jerusalén y a unos 775 metros sobre el nivel del mar, rodeada de colinas ideales para el pastoreo. Su economía combinaba agricultura de secano —cereal, olivos, viñas— con la cría de ovejas y cabras.</p>
+      <p>Su propio nombre refleja esa doble vocación: en hebreo, <em>Bet Léjem</em> (בֵּית לֶחֶם) significa «casa de pan». La Biblia la vincula también con <strong>Efrata</strong> («fructífera»), el nombre antiguo de la zona (Génesis 35:19; Rut 4:11). Era común encontrar rebaños de ovejas y cabras, pastores viviendo en los campos cercanos, y producción de lana, leche y queso.</p>
+      <blockquote>«Había pastores en la misma región, que velaban y guardaban las vigilias de la noche sobre su rebaño.» <span class="cita-ref">— Lucas 2:8</span></blockquote>
+      <div class="nota">
+        <h4>La condición social de los pastores</h4>
+        <p>En el judaísmo del siglo I, el pastoreo era un oficio humilde y, en algunas fuentes rabínicas posteriores, incluso mal visto: los pastores pasaban semanas fuera, no podían cumplir con rigor las normas de pureza ritual y a veces se les asociaba con el hurto de pastos ajenos. Que el anuncio del nacimiento se hiciera <strong>primero a pastores</strong> —y no a sacerdotes, escribas o autoridades— encaja con un motivo recurrente en Lucas: la buena noticia llega antes a los pequeños y marginados (Lucas 1:52).</p>
+      </div>
+      <div class="nota olive">
+        <h4>Nota sobre la fecha</h4>
+        <p>Que hubiera pastores «al raso» de noche ha alimentado el debate sobre si Jesús nació realmente en diciembre. No es concluyente: en el clima relativamente templado de Judea, el pastoreo nocturno era posible buena parte del año, y el 25 de diciembre se fijó siglos después por razones litúrgicas. El evangelio no indica el mes.</p>
+      </div>
+    </section>
+
+    <section id="s2" class="revela">
+      <h2>Corderos para el sacrificio</h2>
+      <p>¿Se criaban corderos especialmente para los sacrificios? Sí, aunque conviene separar el dato firme de la tradición devocional. La Ley de Moisés exigía numerosos sacrificios durante todo el año: el <em>tamid</em> diario (dos corderos cada día, mañana y tarde — Números 28:3-4), la Pascua (un cordero por familia — Éxodo 12), Pentecostés, Tabernáculos, ofrendas por el pecado y ofrendas voluntarias.</p>
+      <p>Los animales debían cumplir requisitos estrictos: machos en muchos casos, de un año, sin heridas, sin enfermedades, sin defecto físico («sin mancha», Éxodo 12:5; Levítico 22:20-24). El volumen era enorme: solo en Pascua, Jerusalén concentraba a decenas de miles de peregrinos, y Josefo llega a dar cifras de cientos de miles de corderos (probablemente exageradas, pero indicativas de la escala). Por ello existían ganaderos especializados, y muchos estudiosos creen que los alrededores de Belén, por su cercanía a Jerusalén, abastecían parte de esos animales.</p>
+      <div class="nota plum">
+        <h4>La tradición de <em>Migdal Eder</em>, la Torre del Rebaño</h4>
+        <p>Cerca de Belén el Antiguo Testamento menciona un lugar llamado <strong>Migdal Eder</strong> (Génesis 35:21; Miqueas 4:8). El erudito del siglo XIX <strong>Alfred Edersheim</strong> popularizó la idea de que los rebaños de esa torre estaban destinados a los sacrificios del Templo — y que los pastores de Lucas 2 serían «pastores del Templo» cuidando corderos sagrados: el Cordero de Dios nacido entre corderos criados para el sacrificio.</p>
+        <p><strong>Es una imagen hermosa, pero hay que manejarla con honestidad histórica.</strong> Edersheim se apoyó en la Misná (<em>Shekalim</em> 7:4), pero ese pasaje no dice que allí se criaran corderos del Templo: usa el lugar como marcador de distancia alrededor de Jerusalén. Varios estudiosos actuales consideran la conexión una lectura ampliada, no un dato documentado, y la ubicación exacta de Migdal Eder tampoco es segura.</p>
+      </div>
+      <blockquote>La Biblia nunca afirma que los pastores de Lucas cuidaran precisamente esos corderos destinados al sacrificio.</blockquote>
+      <p>Es una interpretación antigua y sugerente —y teológicamente resonante, dado que Juan llama a Jesús «el Cordero de Dios» (Juan 1:29) y Pedro habla de «un cordero sin mancha y sin contaminación» (1 Pedro 1:19)—, pero <strong>no</strong> una afirmación explícita del texto ni un hecho históricamente probado.</p>
+    </section>
+
+    <section id="s3" class="revela">
+      <h2>La profecía de Belén</h2>
+      <blockquote>«Pero tú, Belén Efrata, pequeña para estar entre las familias de Judá, de ti me saldrá el que será Señor en Israel; y sus salidas son desde el principio, desde los días de la eternidad.» <span class="cita-ref">— Miqueas 5:2</span></blockquote>
+      <ul>
+        <li><strong>Especifica el pueblo exacto</strong>, no solo la tribu o la región.</li>
+        <li>Lo identifica como <strong>Belén Efrata</strong>, distinguiéndola de otra Belén en el territorio de Zabulón, al norte (Josué 19:15). El añadido «Efrata» fija la Belén de Judá, la ciudad de David.</li>
+        <li>Relaciona al futuro gobernante con la <strong>ciudad de David</strong>: David había sido ungido allí siendo pastor (1 Samuel 16), de modo que el Mesías «hijo de David» nacería en el mismo lugar.</li>
+        <li>«Sus salidas son desde… los días de la eternidad» insinúa un origen que trasciende lo histórico — el cristianismo lo leyó como anticipo de la preexistencia del Mesías.</li>
+      </ul>
+      <p>Los líderes religiosos del tiempo de Jesús conocían bien esta profecía. Cuando Herodes preguntó a los principales sacerdotes y escribas dónde debía nacer el Mesías, respondieron inmediatamente citando a Miqueas: «En Belén de Judea; porque así está escrito por el profeta» (Mateo 2:4-6).</p>
+      <p>Es un detalle notable: los expertos sabían <strong>dónde</strong>, pero no fueron a ver; los magos extranjeros y los pastores locales sí.</p>
+    </section>
+
+    <section id="s4" class="revela">
+      <h2>¿Por qué José fue a Belén?</h2>
+      <p>Lucas explica: «…por cuanto era de la casa y familia de David» (Lucas 2:4). El viaje está relacionado con el censo ordenado por Roma y con su pertenencia al linaje de David, que lo vinculaba a Belén como ciudad de origen familiar.</p>
+      <p>Un matiz histórico: los censos <strong>romanos</strong> habituales registraban a las personas en su lugar de <strong>residencia</strong>, no en su ciudad ancestral. Que Lucas presente un censo que envía a cada uno «a su ciudad» de origen ha hecho pensar que el procedimiento pudo adaptarse a las costumbres locales judías, donde la propiedad y la identidad tribal seguían ligadas al pueblo de los antepasados. No hay consenso.</p>
+      <p>No sabemos qué consecuencias habría tenido ignorar el censo — posiblemente problemas administrativos, fiscales o legales; la Biblia no especifica ninguna sanción.</p>
+      <div class="nota">
+        <h4>¿José quería honrar su linaje?</h4>
+        <p>Es una hipótesis interesante. Pertenecer a la casa de David significaba prestigio histórico, identidad tribal, derechos familiares y esperanza mesiánica: la promesa de que de David saldría un rey eterno (2 Samuel 7:12-16). Ambos evangelios que dan genealogías (Mateo 1 y Lucas 3) se esfuerzan por anclar a Jesús en la línea davídica. Sin embargo, Lucas nunca afirma que «honrar el linaje» fuera el motivo del viaje; presenta el censo como la causa inmediata. Es una interpretación posible, pero no demostrable.</p>
+      </div>
+    </section>
+
+    <section id="s5" class="revela">
+      <h2>El censo de Quirino</h2>
+      <p>Aquí encontramos uno de los mayores debates históricos. <strong>Lo que sí sabemos:</strong> los romanos realizaban censos regularmente para cobrar impuestos, registrar propiedades y organizar la administración. En Egipto se conservan papiros de censos romanos que muestran un <strong>ciclo de censo cada 14 años</strong> y, en algunos casos, la orden de regresar al lugar de origen o residencia para registrarse: censos con desplazamiento de población existían de verdad.</p>
+      <p><strong>El problema:</strong> Lucas dice que el censo se hizo «siendo Cirenio gobernador de Siria» (Lucas 2:2). Pero Herodes el Grande murió alrededor del año <strong>4 a.C.</strong> (y Jesús nace en su reinado, según Mateo 2), mientras que el censo bien documentado de <strong>Publio Sulpicio Quirino</strong> ocurrió cuando Judea se convirtió en provincia romana, hacia el año <strong>6 d.C.</strong> — unos diez años después. Aquel censo provocó incluso la revuelta de Judas el Galileo (Hechos 5:37).</p>
+      <div class="nota olive">
+        <h4>Las cinco soluciones propuestas</h4>
+        <ol>
+          <li><strong>Un censo anterior, hoy poco documentado.</strong> Lucas 2:2 puede leerse como «este fue el <em>primer</em> censo», dando a entender que hubo otro previo en tiempos de Herodes.</li>
+          <li><strong>La traducción de <em>prōtē</em>.</strong> El griego <em>prōtos</em> puede significar «primero» pero también «anterior a»: «este censo fue <em>anterior</em> al de Cirenio». Gramaticalmente discutido.</li>
+          <li><strong>Quirino con un papel doble o previo.</strong> Justino Mártir lo llama <em>procurator</em> encargado de censos; algunos historiadores (como William Ramsay) sostienen que tuvo funciones en Siria antes del año 6.</li>
+          <li><strong>Otro gobernador: Tertuliano.</strong> Hacia el 200 d.C. afirmó que el censo se realizó bajo <strong>Sencio Saturnino</strong>, legado de Siria hacia el 9–7 a.C. — fechas mucho más compatibles con Herodes.</li>
+          <li><strong>Un error de Lucas.</strong> Parte de la crítica sostiene, sencillamente, que Lucas se equivocó.</li>
+        </ol>
+      </div>
+      <p>Hasta hoy no existe consenso. Conviene notar que Lucas, en su prólogo (Lucas 1:1-4), se presenta como un autor que «investigó con diligencia» y en otros datos administrativos ha resultado sorprendentemente preciso; por eso muchos historiadores prefieren suspender el juicio antes que dar por sentado un error.</p>
+    </section>
+
+    <section id="s6" class="revela">
+      <h2>El viaje desde Nazaret</h2>
+      <p>En línea recta, unos <strong>110 km</strong>; por caminos antiguos transitables, <strong>145–165 km</strong>; entre <strong>7 y 10 días</strong> a pie. La ruta probable —la más segura, evitando Samaria— iba de Nazaret al valle de Jezreel, bajaba por el valle del Jordán hasta Jericó, subía a Jerusalén y remataba en Belén.</p>
+      <p>El tramo más duro era la <strong>subida de Jericó a Jerusalén</strong>: en apenas ~25 km el camino asciende desde unos 250 metros <em>bajo</em> el nivel del mar hasta unos 750 metros <em>sobre</em> él — casi <strong>1.000 metros de desnivel</strong> por un desfiladero árido y peligroso, el mismo escenario de la parábola del Buen Samaritano (Lucas 10:30). Desde Jerusalén, Belén quedaba a dos o tres horas más al sur.</p>
+      <div class="nota">
+        <h4>Sobre el «burrito» — y una comparación mexicana</h4>
+        <p>La imagen de María montada en un asno es plausible, pero <strong>el texto bíblico no menciona ningún animal</strong>: es una reconstrucción razonable, no un dato del evangelio.</p>
+        <p>En distancia, el viaje no era CDMX → Cuernavaca: se parece más a <strong>CDMX → Cuautla o CDMX → Puebla</strong>… pero caminando una semana, sin pavimento, con desniveles fuertes, calor de día, frío de noche y riesgo de asaltantes. No un fin de semana: una travesía dura, especialmente para una mujer a punto de dar a luz.</p>
+      </div>
+    </section>
+
+    <section id="s7" class="revela">
+      <h2>Cómo llegó Roma a Judea</h2>
+      <p>La conquista no empezó con una invasión sin motivo, sino con una <strong>guerra civil judía</strong>. En el <strong>63 a.C.</strong>, tras la muerte de la reina Salomé Alejandra, dos hermanos de la dinastía <strong>asmonea</strong> luchaban por el poder: <strong>Hircano II</strong> (apoyado por el astuto consejero idumeo Antípater) y <strong>Aristóbulo II</strong>. Ambos bandos pidieron el arbitraje de Roma — entonces la potencia dominante en Oriente tras las campañas de <strong>Pompeyo</strong>.</p>
+      <p>Pompeyo intervino, tomó partido y terminó <strong>sitiando y conquistando Jerusalén</strong>. Se cuenta que entró en el Lugar Santísimo del Templo, lo que escandalizó a los judíos. Restituyó a Hircano II como sumo sacerdote pero le quitó el título real: Judea quedó como estado sometido y tributario.</p>
+      <ul>
+        <li>El poder real fue pasando a la familia de <strong>Antípater</strong>.</li>
+        <li>Roma nombró rey a <strong>Herodes el Grande</strong>, hijo de Antípater, hacia el 40 a.C.; tomó Jerusalén en el 37 a.C. y gobernó como <strong>rey cliente</strong> hasta su muerte, c. 4 a.C. Bajo su reinado nace Jesús.</li>
+        <li>En el <strong>6 d.C.</strong>, Roma depuso a su hijo Arquelao y convirtió Judea en <strong>provincia romana</strong> administrada por prefectos —el cargo que ocuparía Poncio Pilato— y sujeta al censo directo: el censo de Quirino.</li>
+      </ul>
+    </section>
+
+    <section id="s8" class="revela">
+      <h2>¿Y si Roma no hubiera estado?</h2>
+      <p>Históricamente, muchas cosas habrían sido distintas. Probablemente no habría existido el censo de Lucas ni el viaje a Belén tal como lo narra; Jesús difícilmente habría muerto crucificado, pues la crucifixión era un <strong>castigo específicamente romano</strong> (la ejecución judía habría sido la lapidación); y el cristianismo quizá se habría expandido mucho más lentamente.</p>
+      <p>Desde la perspectiva cristiana, muchos creen que Dios utilizó el contexto político existente para cumplir sus propósitos — lo que Pablo llama «el cumplimiento del tiempo» (Gálatas 4:4). Roma aportó, sin proponérselo, una infraestructura que favoreció el evangelio: <strong>carreteras</strong> que conectaban el Mediterráneo, la <em>Pax Romana</em>, un <strong>idioma común</strong> (el griego koiné, en el que se escribió el Nuevo Testamento), y la <strong>ciudadanía romana</strong> que Pablo usó para apelar al César y llegar hasta Roma.</p>
+      <blockquote>El imperio que crucificó a Jesús terminó siendo el mismo por cuyas carreteras el cristianismo se extendió hasta transformar —y, tres siglos después, hasta adoptar oficialmente— la fe que había condenado.</blockquote>
+    </section>
+
+    <section id="s9" class="revela">
+      <h2>Reflexión final</h2>
+      <p>Es interesante pensar que un conflicto político entre gobernantes judíos terminó abriendo la puerta al Imperio Romano. Sin la guerra civil asmonea no habría habido intervención de Pompeyo; sin Roma, ni censo, ni cruz, ni calzadas.</p>
+      <p>Desde la perspectiva de la fe cristiana, Dios no necesitó eliminar ese contexto político; <strong>actuó dentro de él</strong>. Así, el viaje de José y María, el nacimiento en Belén, la crucifixión y la expansión del evangelio ocurrieron en un mundo profundamente moldeado por Roma.</p>
+      <p class="metodo"><em>Nota metodológica: este estudio distingue deliberadamente entre (a) datos firmes del texto bíblico, (b) datos históricos externos bien documentados y (c) tradiciones devocionales o interpretaciones plausibles pero no demostradas — como la conexión Migdal Eder–corderos del sacrificio. Donde no hay consenso, se dice.</em></p>
+    </section>
+  </main>
+
+  <div class="fuentes revela">
+    <strong>Fuentes:</strong> Génesis 35; Éxodo 12; Levítico 22; Números 28; Rut 4; 1–2 Samuel; Miqueas 4–5; Mateo 1–2; Lucas 1–2; Juan 1:29; Hechos 5:37; Gálatas 4:4; 1 Pedro 1:19 · Flavio Josefo, <em>Antigüedades judías</em> y <em>Guerra de los judíos</em> · Tertuliano, <em>Contra Marción</em> · Justino Mártir, <em>Apología</em> · Misná, <em>Shekalim</em> 7:4 · Alfred Edersheim, <em>The Life and Times of Jesus the Messiah</em> (1883) ·
+    <a href="https://en.wikipedia.org/wiki/Census_of_Quirinius" target="_blank" rel="noopener">Census of Quirinius — Wikipedia</a> ·
+    <a href="https://biblearchaeology.org/research/new-testament-era/2839-once-more-quiriniuss-census" target="_blank" rel="noopener">«Once More: Quirinius's Census» — Associates for Biblical Research</a> ·
+    <a href="https://www.walkingwithgiants.net/bible/troublesome-texts/luke-21f-quirinius-and-the-first-registration/" target="_blank" rel="noopener">«Quirinius and the first registration» — Walking With Giants</a> ·
+    <a href="https://en.wikipedia.org/wiki/Migdal_Eder_(biblical_location)" target="_blank" rel="noopener">Migdal Eder — Wikipedia</a> ·
+    <a href="https://www.1517.org/articles/debunking-popular-christmastime-myths-temple-shepherds-migdal-eder-and-swaddling-lambs" target="_blank" rel="noopener">«Debunking Popular Christmastime Myths» — 1517</a> ·
+    <a href="https://en.wikipedia.org/wiki/Siege_of_Jerusalem_(63_BC)" target="_blank" rel="noopener">Siege of Jerusalem (63 BC) — Wikipedia</a> ·
+    <a href="https://www.livius.org/articles/concept/roman-jewish-wars/" target="_blank" rel="noopener">Roman-Jewish wars — Livius</a>
+  </div>
+
+  <footer>Café con Claude · Cuaderno de estudio · «Pero tú, Belén Efrata…» — Miqueas 5:2 · Julio 2026
+    <p class="model-note">Generada por Claude Fable 5 · esfuerzo bajo</p>
+  </footer>
+
+</div>
+
+<script>
+  // Reading progress bar
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  // Hamburger drawer (round toggle morphs to ✕ via the .open class)
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Cerrar índice' : 'Abrir índice');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // Scroll-spy: highlight the current section in the drawer, close on link click
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // Reveal sections on scroll (respects prefers-reduced-motion)
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
