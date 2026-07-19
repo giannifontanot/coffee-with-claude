@@ -87,9 +87,34 @@
   }
   /* 4/5 del renglón para Buscar, 1/5 para la pastilla Filtrar */
   .buscador-top {
+    position: relative;
     flex: 1 1 0;
     min-width: 0;
   }
+  /* La × de limpiar: visible siempre que haya texto, en todos los navegadores */
+  #buscador::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+  #buscador-clear {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  #buscador-clear.visible { display: inline-flex; }
+  #buscador-clear:hover { color: #FAFAF7; background: var(--accent); }
+  .buscador-top:has(#buscador-clear.visible) #buscador { padding-right: 38px; }
   details.persiana-filtros {
     flex: 0 1 20%;
     min-width: max-content;
@@ -321,6 +346,7 @@
 
 <div class="buscador-top">
   <input id="buscador" type="search" placeholder="Buscar…" aria-label="Buscar en los títulos">
+  <button id="buscador-clear" type="button" aria-label="Borrar búsqueda">✕</button>
 </div>
 
 <details class="persiana-filtros" id="filtros-persiana">
@@ -567,7 +593,9 @@
     return chips.filter(function (c) { return c !== chipTodo && c.classList.contains('activo'); })
                 .map(function (c) { return c.dataset.filtro; });
   }
+  var buscadorClear = document.getElementById('buscador-clear');
   function aplicarFiltro() {
+    buscadorClear.classList.toggle('visible', buscador.value !== '');
     var activos = filtrosActivos();
     var texto = normaliza(buscador.value.trim());
     var modoTodo = activos.length === 0 && texto === '';
@@ -616,6 +644,11 @@
     });
   });
   buscador.addEventListener('input', aplicarFiltro);
+  buscadorClear.addEventListener('click', function () {
+    buscador.value = '';
+    aplicarFiltro();
+    buscador.focus();
+  });
 
   // El panel de filtros es un desplegable: se cierra al hacer clic fuera o con Escape
   var persianaFiltros = document.getElementById('filtros-persiana');
