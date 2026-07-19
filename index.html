@@ -78,6 +78,7 @@
   }
   /* Renglón de controles: buscador + filtros en una sola línea */
   .top-controls {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -93,8 +94,20 @@
     flex: 0 1 20%;
     min-width: max-content;
   }
-  /* al abrir, los chips bajan a su propio bloque de ancho completo */
-  details.persiana-filtros[open] { flex-basis: 100%; min-width: 0; }
+  /* al abrir, la pastilla no se mueve: los chips se despliegan como
+     panel flotante anclado bajo el renglón, a todo su ancho */
+  details.persiana-filtros .filtros {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 8px);
+    z-index: 20;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 28px rgba(45, 38, 29, 0.16);
+  }
   #buscador {
     display: block;
     width: 100%;
@@ -156,8 +169,10 @@
   }
   details.persiana-filtros > summary::-webkit-details-marker { display: none; }
   details.persiana-filtros > summary:hover { color: var(--ink); border-color: var(--muted); }
-  details.persiana-filtros[open] > summary { justify-content: flex-start; }
-  details.persiana-filtros .filtros { padding: 12px 0 6px; }
+  details.persiana-filtros[open] > summary {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
   @media (max-width: 640px) {
     .top-controls { gap: 10px 12px; }
   }
@@ -601,6 +616,15 @@
     });
   });
   buscador.addEventListener('input', aplicarFiltro);
+
+  // El panel de filtros es un desplegable: se cierra al hacer clic fuera o con Escape
+  var persianaFiltros = document.getElementById('filtros-persiana');
+  document.addEventListener('click', function (e) {
+    if (persianaFiltros.open && !persianaFiltros.contains(e.target)) persianaFiltros.open = false;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') persianaFiltros.open = false;
+  });
 </script>
 
 </body>
