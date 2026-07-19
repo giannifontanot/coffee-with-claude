@@ -67,7 +67,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
     gap: 8px 16px;
-    margin-bottom: 14px;
+    padding-top: 4px;
   }
   .chips-wrap {
     display: flex;
@@ -76,14 +76,25 @@
     flex: 1 1 480px;
     min-width: 0;
   }
-  /* Buscador: vive arriba de la página, siempre visible */
-  .buscador-top {
+  /* Renglón de controles: buscador + filtros en una sola línea */
+  .top-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px 18px;
     margin: 2px 0 14px;
+  }
+  .buscador-top {
+    flex: 0 0 230px;
+    min-width: 0;
+  }
+  details.persiana-filtros {
+    flex: 1 1 320px;
+    min-width: 0;
   }
   #buscador {
     display: block;
     width: 100%;
-    max-width: 420px;
     font-family: ui-sans-serif, system-ui, sans-serif;
     font-size: 0.85rem;
     color: var(--ink);
@@ -124,24 +135,31 @@
      en móvil se pliega como cualquier otra persiana */
   details.persiana-filtros > summary { display: none; }
   @media (max-width: 640px) {
-    details.persiana-filtros { border-bottom: 1px solid var(--rule); margin-bottom: 10px; }
+    /* renglón compacto: [ Buscar… ] [ › Filtrar ]; al abrir, los chips
+       bajan a su propio bloque de ancho completo */
+    .buscador-top { flex: 1 1 120px; }
+    details.persiana-filtros { flex: 0 0 auto; }
+    .top-controls { gap: 10px 12px; }
+    details.persiana-filtros[open] { flex-basis: 100%; }
     details.persiana-filtros > summary {
       list-style: none;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 0;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
       font-family: ui-sans-serif, system-ui, sans-serif;
       font-size: 0.72rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--muted);
-      transition: color 0.15s;
+      transition: color 0.15s, border-color 0.15s;
     }
     details.persiana-filtros > summary::-webkit-details-marker { display: none; }
-    details.persiana-filtros > summary:hover { color: var(--ink); }
-    details.persiana-filtros .filtros { padding-bottom: 16px; margin-bottom: 0; }
+    details.persiana-filtros > summary:hover { color: var(--ink); border-color: var(--muted); }
+    details.persiana-filtros .filtros { padding: 12px 0 6px; }
   }
 
   /* Toolbar: expand / collapse all */
@@ -284,6 +302,8 @@
 
 <main>
 
+<div class="top-controls">
+
 <div class="buscador-top">
   <input id="buscador" type="search" placeholder="Buscar…" aria-label="Buscar en los títulos">
 </div>
@@ -310,6 +330,8 @@
   </div>
 </div>
 </details>
+
+</div>
 
 <div class="toolbar"><button id="toggle-all" type="button">Expandir todo</button></div>
 
