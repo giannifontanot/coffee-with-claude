@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Efecto Madonna · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f2e8d6;
+    --bg-deep:   #ecdfc8;
+    --card:      #f9f3e6;
+    --card-2:    #f6efdf;
+    --ink:       #2d261d;
+    --ink-soft:  #5b4f40;
+    --ink-faint: #8a7c68;
+    --terracotta:#b04e29;
+    --rust:      #963c20;
+    --amber:     #cf9136;
+    --ochre:     #b9853a;
+    --olive:     #6c7240;
+    --olive-deep:#525830;
+    --plum:      #6c3a4f;
+    --plum-deep: #502635;
+    --line:      #d9cdb8;
+    --line-soft: rgba(45,38,29,.07);
+    --shadow:    0 1px 2px rgba(45,38,29,.05), 0 14px 38px -22px rgba(45,38,29,.34);
+    --cream:     #f2e8d6;
+    --muted:     #5b4f40;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #f7efe0 0%, rgba(247,239,224,0) 60%),
+      radial-gradient(900px 700px at -10% 30%, #f0e6d0 0%, rgba(240,230,208,0) 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: 'Spectral', Georgia, serif;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding: 4.5rem 1.25rem 5rem;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--terracotta));
+    z-index: 100; transition: width .08s linear;
+  }
+
+  #nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: fixed; top: 1rem; left: 1rem; z-index: 80;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--line);
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(45,38,29,0.12);
+  }
+  #nav-toggle span,
+  #nav-toggle span::before,
+  #nav-toggle span::after {
+    content: ""; display: block; width: 20px; height: 2px;
+    background: var(--ink); border-radius: 2px; transition: transform .3s, background .3s, top .3s;
+  }
+  #nav-toggle span { position: relative; }
+  #nav-toggle span::before { content: ""; position: absolute; left: 0; top: -6px; }
+  #nav-toggle span::after  { content: ""; position: absolute; left: 0; top: 6px; }
+  #nav-toggle.open span { background: transparent; }
+  #nav-toggle.open span::before { top: 0; transform: rotate(45deg); }
+  #nav-toggle.open span::after  { top: 0; transform: rotate(-45deg); }
+
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 290px; max-width: 82vw; height: 100vh; height: 100dvh;
+    padding: 5rem 1.6rem 2rem 2rem;
+    display: flex; flex-direction: column;
+    background: linear-gradient(180deg, rgba(249,243,230,0.9), rgba(249,243,230,0.45)), var(--bg);
+    border-right: 1px solid var(--line-soft);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70; box-shadow: 6px 0 24px rgba(45,38,29,0.14);
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.82rem; font-style: italic; color: var(--ink-soft);
+    line-height: 1.4; margin-bottom: 1.9rem;
+  }
+  nav.sidebar ol { list-style: none; flex: 1; overflow-y: auto; min-height: 0; }
+  nav.sidebar ol li { margin: 0; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.7rem;
+    color: var(--ink-soft); text-decoration: none;
+    padding: 0.3rem 0; line-height: 1.28; font-size: 0.92rem;
+    transition: color 0.2s ease;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    letter-spacing: 0.05em; color: var(--ink-faint);
+    min-width: 1.9em; flex-shrink: 0; font-variant-numeric: tabular-nums;
+    font-size: 0.76rem;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  nav.sidebar .rail-tools {
+    border-top: 1px solid var(--line); padding-top: 1.1rem; margin-top: 1rem;
+  }
+  nav.sidebar .rail-tools .home {
+    font-family: 'Spectral', serif; font-size: 1rem;
+    color: var(--ink-soft); background: none; border: none; padding: 0;
+    cursor: pointer; letter-spacing: 0.02em; text-align: left;
+    transition: color 0.2s ease;
+  }
+  nav.sidebar .rail-tools .home:hover { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(45,38,29,0.4);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  .origin-chip {
+    position: fixed; top: 10px; right: 10px; z-index: 90;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--muted); background: var(--card);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 11px; text-decoration: none; line-height: 1;
+    box-shadow: 0 1px 5px rgba(45,38,29,0.10);
+  }
+  .origin-chip.origin-casa { color: var(--muted); border-color: var(--line); }
+
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header .eyebrow {
+    font-family: 'Spectral', serif; font-style: italic;
+    font-size: 15px; color: var(--terracotta); letter-spacing: 0.06em;
+    display: block; margin: 0 0 22px;
+  }
+  header .eyebrow::after {
+    content: ""; display: block; width: 46px; height: 1px;
+    background: var(--terracotta); opacity: 0.5; margin-top: 14px;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-optical-sizing: 144;
+    font-size: clamp(40px, 7.6vw, 68px); line-height: 1.03; letter-spacing: -0.018em;
+    margin: 0 0 6px; color: var(--ink);
+  }
+  header h1 em { font-style: italic; font-weight: 500; color: var(--rust); }
+  .subtitle {
+    font-size: 20px; line-height: 1.5; color: var(--ink-soft);
+    font-weight: 400; max-width: 40ch; margin: 18px 0 0;
+  }
+
+  main { margin-top: 2.8rem; }
+  section { margin-bottom: 2.8rem; scroll-margin-top: 1.5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.15; margin: 0 0 0.9rem;
+  }
+  section h2 .sec-num {
+    display: block; font-size: 0.7rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--terracotta); font-weight: 600;
+    margin-bottom: 0.4rem; font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  p { margin-bottom: 1.1rem; }
+  a { color: var(--terracotta); }
+  em { color: var(--ink); }
+  strong { font-weight: 600; }
+  main ul, main ol { margin: 0 0 1.1rem 1.2rem; }
+  main li { margin-bottom: 0.7rem; }
+  main li strong { color: var(--ink); }
+
+  .era { margin: 0 0 1rem; padding-left: 1rem; border-left: 2px solid var(--line); }
+  .era .era-h {
+    font-family: 'Fraunces', serif; font-weight: 600; color: var(--rust);
+    display: block; margin-bottom: 0.2rem;
+  }
+
+  blockquote.pull {
+    margin: 1.6rem 0; padding: 0 0 0 1.3rem;
+    border-left: 3px solid var(--terracotta);
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 400;
+    font-size: 1.2rem; line-height: 1.42; color: var(--rust);
+  }
+
+  .cita {
+    margin: 0 0 1.2rem; padding: 0.9rem 1.1rem;
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  }
+  .cita .q { font-style: italic; color: var(--ink); }
+  .cita .ctx { display: block; margin-top: 0.35rem; font-size: 0.86rem; color: var(--ink-soft); }
+
+  .tabla-wrap { overflow-x: auto; margin: 0.4rem 0 1.5rem; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.86rem; min-width: 32rem; }
+  th, td { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 0.82rem;
+    color: var(--terracotta); border-bottom: 2px solid var(--line);
+  }
+  tbody tr:hover { background: rgba(176,78,41,0.04); }
+
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.3rem;
+    border-left: 4px solid var(--terracotta);
+    background: rgba(176, 78, 41, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; }
+  .fuentes ol { margin: 0.6rem 0 0 1.2rem; }
+  .fuentes li { margin-bottom: 0.4rem; }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--ink-soft); text-align: center;
+  }
+  .model-note {
+    margin-top: 0.8rem;
+    font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em;
+    color: var(--ink-faint); opacity: 0.9; text-align: center;
+  }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle span, #nav-toggle span::before, #nav-toggle span::after { transition: none; }
+  }
+
+  @media (min-width: 1000px) {
+    #nav-toggle, #nav-scrim { display: none; }
+    nav.sidebar, nav.sidebar.open {
+      transform: none; box-shadow: none; padding-top: 2.6rem;
+      background: linear-gradient(180deg, rgba(249,243,230,0.55), rgba(249,243,230,0));
+    }
+    .wrap { margin-left: max(324px, calc(50% - 380px)); margin-right: auto; }
+  }
+  @media (min-width: 1520px) {
+    .wrap { margin: 0 auto; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 4.2rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<a href="index.html" class="origin-chip origin-casa" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable">De la casa</a>
+
+<button id="nav-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar"><span></span></button>
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">Análisis cultural y sociológico</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">1</span>Introducción</a></li>
+    <li><a href="#s2"><span class="num">2</span>EE. UU. antes de Madonna</a></li>
+    <li><a href="#s3"><span class="num">3</span>Antes de la fama</a></li>
+    <li><a href="#s4"><span class="num">4</span>Cronología de su carrera</a></li>
+    <li><a href="#s5"><span class="num">5</span>Qué cambió en la cultura</a></li>
+    <li><a href="#s6"><span class="num">6</span>Like a Virgin: la TV</a></li>
+    <li><a href="#s7"><span class="num">7</span>Controversias</a></li>
+    <li><a href="#s8"><span class="num">8</span>Estratega de marketing</a></li>
+    <li><a href="#s9"><span class="num">9</span>Madonna y el feminismo</a></li>
+    <li><a href="#s10"><span class="num">10</span>Madonna y la religión</a></li>
+    <li><a href="#s11"><span class="num">11</span>Comunidad LGBTQ+</a></li>
+    <li><a href="#s12"><span class="num">12</span>Como empresaria</a></li>
+    <li><a href="#s13"><span class="num">13</span>Influencia sobre otros</a></li>
+    <li><a href="#s14"><span class="num">14</span>Frases célebres</a></li>
+    <li><a href="#s15"><span class="num">15</span>Críticas académicas</a></li>
+    <li><a href="#s16"><span class="num">16</span>Cronología de controversias</a></li>
+    <li><a href="#s17"><span class="num">17</span>Madonna hoy</a></li>
+    <li><a href="#s18"><span class="num">18</span>Conclusiones</a></li>
+    <li><a href="#fuentes"><span class="num">·</span>Bibliografía</a></li>
+  </ol>
+  <div class="rail-tools">
+    <button class="home" type="button"
+            onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+      ← Volver
+    </button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Análisis multidisciplinario · Cultura popular estadounidense</span>
+    <h1>El <em>Efecto</em> Madonna</h1>
+    <p class="subtitle">Transformación cultural y sociológica en Estados Unidos: el impacto de Madonna Louise Ciccone en la cultura moderna.</p>
+  </header>
+
+  <main>
+
+    <section id="s1" class="revela">
+      <h2><span class="sec-num">1</span>Introducción</h2>
+      <p>Madonna Louise Ciccone no es simplemente una cantante de música pop; es uno de los fenómenos sociológicos, culturales y comerciales más complejos del siglo XX. Es considerada un icono cultural supremo porque fue la primera artista femenina en manipular activamente los medios de comunicación de masas para deconstruir y redefinir la feminidad, la sexualidad y el poder en el ojo público.</p>
+      <p>Sigue siendo relevante décadas después porque estableció el "código fuente" de la estrella pop moderna. El modelo de negocio, la reinvención estética por "eras", el uso de la controversia como herramienta de marketing y la integración de las subculturas underground al mainstream (como el <em>voguing</em> o la estética BDSM) fueron perfeccionados por ella.</p>
+      <p>El impacto de Madonna es tan profundo que originó un subcampo de estudios culturales y de medios en la academia conocido como <strong>"Madonna Studies"</strong> en la década de 1990. Universidades en todo el mundo estudian su figura no por su virtuosismo musical en un sentido clásico, sino por su magistral semiótica: su capacidad para codificar mensajes políticos, sexuales y religiosos en productos de consumo masivo de tres minutos de duración.</p>
+    </section>
+
+    <section id="s2" class="revela">
+      <h2><span class="sec-num">2</span>Estados Unidos antes de Madonna</h2>
+      <p>Para comprender el impacto de Madonna, es necesario situarse en el tejido social y político de Estados Unidos entre finales de los 60 y principios de los 80.</p>
+      <ul>
+        <li><strong>Moral dominante, religión y conservadurismo:</strong> a principios de los 80, Estados Unidos experimentaba un resurgimiento conservador liderado por el presidente Ronald Reagan. La "Mayoría Moral" (<em>Moral Majority</em>), una organización política cristiana conservadora, dictaba gran parte del discurso público, promoviendo los "valores familiares" tradicionales, oponiéndose al aborto, a los derechos homosexuales y al feminismo.</li>
+        <li><strong>Feminismo de segunda ola:</strong> el movimiento feminista estaba fracturado. Las "guerras del sexo" (<em>Feminist Sex Wars</em>) dividían a las feministas entre aquellas que veían la pornografía y la expresión sexual abierta como inherentemente degradantes para las mujeres (Andrea Dworkin, Catharine MacKinnon) y las feministas pro-sexo que abogaban por la liberación y la agencia sexual.</li>
+        <li><strong>Cultura MTV y el papel de la mujer:</strong> MTV nació en 1981 y, en sus primeros años, era un club de chicos. La programación estaba dominada por bandas de rock blanco (Aerosmith, Def Leppard, Van Halen). Las mujeres en los videos musicales aparecían mayoritariamente en dos roles: como novias pasivas o como objetos sexuales (modelos en traje de baño) bajo la "mirada masculina" (<em>male gaze</em>). La imagen esperada de una cantante femenina era la de una baladista sufrida o una rockera con actitudes masculinizadas para ser tomada en serio.</li>
+        <li><strong>Censura y el tabú del sexo:</strong> el sexo explícito, la fluidez de género o la mezcla de erotismo y religión eran tabúes absolutos en la televisión abierta. Había una clara línea que separaba a las mujeres "buenas" de las "malas", una dicotomía que la cultura pop reforzaba constantemente.</li>
+      </ul>
+    </section>
+
+    <section id="s3" class="revela">
+      <h2><span class="sec-num">3</span>¿Quién era Madonna antes de hacerse famosa?</h2>
+      <ul>
+        <li><strong>Infancia y educación:</strong> nacida en 1958 en Bay City, Michigan, en el seno de una familia católica estricta de clase media. El evento que definió su psique fue la muerte de su madre (también llamada Madonna) por cáncer de mama cuando ella tenía solo cinco años. Esta pérdida generó en ella un pavor profundo a la vulnerabilidad y una necesidad patológica de control.</li>
+        <li><strong>Formación en danza:</strong> contrario al mito de que Madonna no tenía talento inicial, era una bailarina rigurosamente entrenada. Estudió danza contemporánea en la Universidad de Michigan y fue fuertemente influenciada por la técnica de Martha Graham. Esto le dio una comprensión espacial y escénica que la mayoría de los cantantes carecían.</li>
+        <li><strong>Llegada a Nueva York y dificultades (1978):</strong> llegó a Nueva York con 35 dólares, trabajando en Dunkin' Donuts y modelando desnuda para clases de arte para sobrevivir. Vivió en edificios abandonados y sufrió un asalto sexual a punta de cuchillo, un trauma que, según ella, la endureció aún más.</li>
+        <li><strong>Las primeras bandas y el underground:</strong> tocó la batería y cantó en bandas de post-punk y new wave (Breakfast Club, Emmy). Se sumergió en la cultura de clubes de Nueva York (Danceteria, CBGB), absorbiendo la música disco, el punk, el hip-hop naciente y el arte callejero (amistades con Jean-Michel Basquiat y Keith Haring).</li>
+        <li><strong>Personalidad y ambición:</strong> era descrita por sus contemporáneos como un "tanque con faldas". Su ambición era despiadada, directa y poco femenina para los estándares de la época. No esperaba ser descubierta; ella exigía ser escuchada.</li>
+      </ul>
+    </section>
+
+    <section id="s4" class="revela">
+      <h2><span class="sec-num">4</span>Cronología completa de su carrera</h2>
+      <p>Un análisis por eras, la unidad de obra que ella misma inventó.</p>
+      <div class="era"><span class="era-h">1982&ndash;1983 · <em>Madonna</em> (el álbum debut)</span><em>Contexto:</em> la música disco había "muerto", reemplazada por el dance-pop sintetizado. <em>Imagen/estrategia:</em> ropa de segunda mano, encajes rasgados, rosarios como joyería, crucifijos, cinturones de "Boy Toy". Atrajo a la juventud urbana (negros, latinos y gays) en los clubes antes de saltar al mainstream blanco de MTV. <em>Impacto:</em> inventó el estilo <em>street urchin</em> (erizo de calle). Las adolescentes ("Wannabes") comenzaron a vestirse como ella, desatando el pánico moral entre los padres.</div>
+      <div class="era"><span class="era-h">1984 · <em>Like a Virgin</em></span><em>Imagen:</em> novia sexualizada. <em>Análisis:</em> subvirtió el concepto de pureza (el vestido de novia blanco) mezclándolo con deseo explícito. La crítica musical la desestimó como una moda pasajera con una voz aguda (Minnie Mouse en helio, decían), pero vendió 21 millones de copias, estableciendo que la imagen y la música pop eran inseparables.</div>
+      <div class="era"><span class="era-h">1986 · <em>True Blue</em></span><em>Imagen:</em> inspiración en el glamour de Hollywood clásico (Marilyn Monroe, Grace Kelly). <em>Análisis:</em> su movimiento hacia la legitimidad. Canciones como "Papa Don't Preach" (embarazo adolescente) y "Open Your Heart" (voyeurismo) demostraron que Madonna usaba la música pop para comentar sobre temas sociales. Fue el disco más vendido de la década de los 80 por una mujer.</div>
+      <div class="era"><span class="era-h">1989 · <em>Like a Prayer</em></span><em>Análisis:</em> el punto de inflexión artístico. Abordó el catolicismo, el abuso infantil y el empoderamiento femenino. El video de la canción homónima incluía cruces en llamas, estigmas y un Cristo negro, causando la cancelación de su contrato de $5 millones con Pepsi y condenas del Papa Juan Pablo II. Comercializó el escándalo de manera magistral.</div>
+      <div class="era"><span class="era-h">1990 · <em>Blond Ambition Tour</em> y <em>I'm Breathless</em></span><em>Innovación:</em> transformó las giras de pop en teatro de Broadway en cinco actos. El corsé de conos de Jean Paul Gaultier se convirtió en un artefacto histórico del feminismo pop (la mujer como agresora sexual, armadura y lencería).</div>
+      <div class="era"><span class="era-h">1992 · <em>Erotica</em> y el libro <em>Sex</em></span><em>Contexto:</em> plena crisis del VIH/SIDA. Censura y puritanismo en alza. <em>Análisis:</em> Madonna lanzó un álbum conceptual sobre el sexo y un libro de mesa con fotografías explícitas de ella en fantasías sadomasoquistas y homosexuales. La reacción fue brutal; la sociedad estadounidense, los críticos e incluso sus fans se volvieron en su contra, marcando su primer gran bache comercial, aunque hoy es defendido como una obra maestra pro-sexo y de los derechos queer.</div>
+      <div class="era"><span class="era-h">1998 · <em>Ray of Light</em></span><em>Imagen:</em> misticismo, Cabalá, maternidad, música electrónica underground. <em>Análisis:</em> la madurez crítica. Ganó el respeto unánime que se le había negado. Trajo la música electrónica y el techno europeo al pop mainstream americano.</div>
+      <div class="era"><span class="era-h">2003 · <em>American Life</em></span><em>Controversia:</em> una crítica al sueño americano, el materialismo y, sobre todo, a la invasión de Irak. Su video musical mostraba a Madonna lanzando una granada al presidente George W. Bush. Fue censurada en la radio estadounidense y sufrió un boicot masivo (prefigurando el de las Dixie Chicks).</div>
+      <div class="era"><span class="era-h">2005 · <em>Confessions on a Dance Floor</em></span><em>Impacto:</em> un retorno monumental al dance y al disco. A los 47 años, demostró que una mujer madura podía seguir dominando las pistas de baile, iniciando su lucha contra el edadismo en la industria.</div>
+      <div class="era"><span class="era-h">2023&ndash;presente · <em>The Celebration Tour</em></span><em>Legado:</em> una revisión autobiográfica. Sigue enfrentando escrutinio público por sus cirugías estéticas y su negativa a envejecer bajo las normas sociales tradicionales, convirtiendo su propio cuerpo envejecido en un nuevo campo de batalla cultural.</div>
+    </section>
+
+    <section id="s5" class="revela">
+      <h2><span class="sec-num">5</span>¿Qué cambió Madonna en la cultura estadounidense?</h2>
+      <ul>
+        <li><strong>La sexualidad femenina.</strong> <em>Antes:</em> la mujer era objeto del deseo masculino pasivo. <em>Qué hizo:</em> reclamó la agencia sexual. Fue sujeto, no objeto. Ella miraba a la cámara, ella controlaba el juego. Enseñó a las mujeres que ser un ser sexual y tener el control intelectual no eran excluyentes.</li>
+        <li><strong>MTV y los videoclips.</strong> <em>Antes:</em> videos como interpretaciones de la banda tocando sus instrumentos. <em>Qué hizo:</em> convirtió el videoclip en cine. Introdujo narrativa, provocación subversiva, coreografía compleja y edición rápida.</li>
+        <li><strong>La moda como lenguaje.</strong> Madonna no solo seguía tendencias, las dictaba y las desechaba cada 12 meses. Validó a diseñadores marginados o vanguardistas (Gaultier, Dolce &amp; Gabbana en sus inicios) y democratizó el estilo "ropa interior como ropa exterior".</li>
+        <li><strong>El marketing musical (el escándalo monetizado).</strong> Antes, un escándalo (drogas, sexo) destruía una carrera. Madonna institucionalizó la controversia como estrategia de relaciones públicas. Ella programaba sus provocaciones justo antes de los lanzamientos de álbumes o giras.</li>
+        <li><strong>La cultura LGBTQ+.</strong> En los 80, mientras el gobierno de Reagan ignoraba la crisis del SIDA, Madonna ponía folletos sobre sexo seguro en sus discos, organizaba conciertos benéficos y daba visibilidad a la cultura queer (el <em>voguing</em> de Harlem) llevándola al número uno de Billboard.</li>
+        <li><strong>La relación entre religión y arte pop.</strong> Profanó el arte sagrado católico para criticar su patriarcado y homofobia, apropiándose de sus símbolos estéticos pero subvirtiendo su mensaje represivo.</li>
+      </ul>
+    </section>
+
+    <section id="s6" class="revela">
+      <h2><span class="sec-num">6</span>Like a Virgin: el momento que cambió la televisión</h2>
+      <p><strong>El contexto.</strong> La primera edición de los MTV Video Music Awards (1984). Nadie sabía la importancia que tendrían estos premios.</p>
+      <p><strong>La presentación.</strong> Madonna descendió de un gigantesco pastel de bodas (una sátira de la virginidad tradicional) vistiendo un vestido de novia de tul y encaje, un cinturón con la inscripción "Boy Toy" (juguete de chico) y ligueros visibles. Durante la interpretación, uno de sus zapatos de tacón se salió de su pie. En lugar de detenerse, se tiró al suelo del escenario, rodando, exponiendo su ropa interior y gimiendo la canción de manera sugestiva contra el piso.</p>
+      <p><strong>Reacciones.</strong> El público y la prensa quedaron atónitos: su publicista le dijo en el backstage que su carrera había terminado esa noche, que había arruinado todo. Los conservadores exigieron que MTV dejara de emitirla. Los jóvenes, en cambio, vieron un acto de rebelión suprema: en cuestión de semanas, millones adoptaron su estética.</p>
+      <p><strong>El análisis.</strong> Hoy, la presentación parece cómicamente inocente en comparación con los estándares actuales de Cardi B, Miley Cyrus o Megan Thee Stallion. Sin embargo, en 1984, una mujer fingiendo masturbación y orgasmos en televisión nacional en vivo mientras vestía de novia era un acto terrorista contra la moral puritana. <strong>Cambió la televisión</strong> porque demostró a la industria que la imprevisibilidad y la transgresión sexual generaban ratings estratosféricos y ventas de discos astronómicas. MTV dejó de ser un canal de música para convertirse en el epicentro de la provocación cultural, un modelo que la cadena exprimiría durante las siguientes tres décadas.</p>
+    </section>
+
+    <section id="s7" class="revela">
+      <h2><span class="sec-num">7</span>Controversias más importantes</h2>
+      <ul>
+        <li><strong>Like a Prayer (1989).</strong> <em>Motivo:</em> video musical que mostraba a un santo negro (inspirado en San Martín de Porres) siendo besado por Madonna, estigmas en sus manos y cruces ardiendo al estilo del Ku Klux Klan. <em>Consecuencias:</em> Pepsi canceló la campaña global, pero le pagó los 5 millones de dólares. El Papa llamó a un boicot. El álbum fue un éxito masivo. Historiadores lo ven como el primer gran texto de pop que mezcla racismo, justicia penal, religión y erotismo.</li>
+        <li><strong>Papa Don't Preach (1986).</strong> <em>Motivo:</em> canción sobre una adolescente que decide quedarse con su bebé tras quedar embarazada. <em>Consecuencias:</em> grupos provida (antiaborto) la usaron como himno, mientras que Planned Parenthood y feministas la atacaron. Madonna se negó a tomar partido públicamente, demostrando su habilidad para generar debate manteniendo la ambigüedad ideológica.</li>
+        <li><strong>Libro "Sex" y álbum "Erotica" (1992).</strong> <em>Motivo:</em> publicación de un libro de arte con fotos pornográficas de Madonna con celebridades como Vanilla Ice, Naomi Campbell y hombres gay. <em>Consecuencias:</em> rechazo masivo del público general, alienó a gran parte de sus fans. Sin embargo, los investigadores de estudios de género lo consideran hoy el ápice de la liberación sexual femenina en los medios masivos, allanando el camino para la cultura pro-sexo del siglo XXI.</li>
+        <li><strong>Justify My Love (1990).</strong> <em>Motivo:</em> video musical con estética de voyeurismo, bisexualidad, sadomasoquismo leve. <em>Consecuencias:</em> fue el <strong>primer video musical prohibido por MTV</strong>. La respuesta de Madonna fue brillante: lanzó el video como un "video-sencillo" en VHS, vendiendo más de un millón de copias y ganando millones de dólares con algo que MTV se negó a transmitir gratis.</li>
+      </ul>
+    </section>
+
+    <section id="s8" class="revela">
+      <h2><span class="sec-num">8</span>Madonna como estratega de marketing</h2>
+      <p>Si Madonna hubiera nacido hombre, se la estudiaría en las escuelas de negocios de Harvard al nivel de Steve Jobs.</p>
+      <ul>
+        <li><strong>Reinvención constante.</strong> Entendió antes que nadie que el ciclo de atención del público es corto. Institucionalizó la "era" pop. Cada álbum venía con un nuevo peinado, nuevo sonido, nuevo vocabulario estético y nuevo equipo de productores (por ejemplo, de geisha gótica en "Nothing Really Matters" a vaquera country en "Music").</li>
+        <li><strong>Generación deliberada de controversia.</strong> La controversia no era un accidente; era un producto secundario calculado de sus lanzamientos. Usaba a la prensa moralista como promotores gratuitos de su obra.</li>
+        <li><strong>Control maestro.</strong> A diferencia de las cantantes femeninas anteriores, que eran moldeadas por productores y ejecutivos masculinos, Madonna controlaba cada aspecto: las letras, los directores de video, los fotógrafos, el vestuario y los contratos financieros.</li>
+      </ul>
+    </section>
+
+    <section id="s9" class="revela">
+      <h2><span class="sec-num">9</span>Madonna y el feminismo</h2>
+      <p>La figura de Madonna fracturó a la academia feminista en los años 90.</p>
+      <p><strong>Argumento A: liberadora de la mujer (feminismo pro-sexo).</strong> Académicas como Camille Paglia la defienden a ultranza. Sostienen que Madonna encarnó el feminismo verdadero al tomar el control absoluto de su narrativa, su cuerpo y su dinero. Mostró que la sexualidad femenina no tiene por qué ser pasiva o victimizante, sino que puede ser un arma de empoderamiento y dominación. "Madonna es el verdadero rostro del feminismo, no la queja puritana del establecimiento", dijo Paglia.</p>
+      <p><strong>Argumento B: reafirmación del patriarcado (feminismo crítico).</strong> Pensadoras como bell hooks criticaron duramente a Madonna, argumentando que su "liberación" estaba enraizada en el capitalismo y la supremacía blanca. Para hooks, Madonna no liberó a las mujeres, sino que mercantilizó aún más el cuerpo femenino y se apropió de la cultura gay y negra (como en el <em>voguing</em>) para beneficio de una mujer blanca, rubia y privilegiada. Afirman que su rebeldía estaba limitada por los cánones de belleza patriarcales.</p>
+    </section>
+
+    <section id="s10" class="revela">
+      <h2><span class="sec-num">10</span>Madonna y la religión</h2>
+      <p>Madonna (nombrada así por la Virgen María) creció en un ambiente católico devoto. Su arte está obsesionado con la dicotomía entre la santa y la puta, el pecado y la redención.</p>
+      <p>No utilizaba la simbología católica simplemente por "blasfemia barata", sino porque era el lenguaje de su infancia. Al llevar cruces con ropa interior de encaje, estaba desacralizando la religión institucional para democratizar lo divino. Para ella, el sexo y el éxtasis religioso (como canta en <em>Like a Prayer</em>) eran diferentes caminos hacia una misma trascendencia espiritual.</p>
+    </section>
+
+    <section id="s11" class="revela">
+      <h2><span class="sec-num">11</span>Madonna y la comunidad LGBTQ+</h2>
+      <p>El impacto de Madonna en la comunidad LGBTQ+ es incalculable.</p>
+      <p>En la década de 1980, durante el apogeo del VIH/SIDA, la homosexualidad era vilipendiada y asociada con la enfermedad y la muerte. Reagan se negó a mencionar la palabra "SIDA" durante años. En ese clima hostil, la mujer más famosa del planeta incluía bailarines gay en sus giras y videos, hablaba abiertamente sobre la crisis del SIDA, insertaba información sobre sexo seguro en sus casetes (álbum <em>Like a Prayer</em>) y honraba a sus amigos fallecidos, como Keith Haring y su maestro de danza Christopher Flynn. Para una generación marginada, Madonna fue su mayor y, a veces, su única aliada de alto perfil, actuando como un puente entre la subcultura queer y el corazón de América.</p>
+    </section>
+
+    <section id="s12" class="revela">
+      <h2><span class="sec-num">12</span>Madonna como empresaria</h2>
+      <ul>
+        <li><strong>Maverick (1992).</strong> Fundó Maverick, una empresa conjunta de entretenimiento con Time Warner, un acuerdo multimillonario que le dio su propio sello discográfico. Maverick Records lanzó el álbum <em>Jagged Little Pill</em> de Alanis Morissette, uno de los discos más vendidos de la historia, demostrando su agudo ojo empresarial para el talento.</li>
+        <li><strong>Contrato de 360 grados (2007).</strong> Fue la primera superestrella en abandonar el modelo tradicional discográfico para firmar un contrato integral de $120 millones con Live Nation. Este contrato cubría discos, giras, merchandising y patrocinios bajo un mismo techo, anticipando el futuro de la industria musical por una década.</li>
+        <li><strong>Giras y rentabilidad.</strong> Es la artista femenina solista con mayores ingresos por giras de todos los tiempos (más de $1.5 mil millones), transformando el concierto de rock tradicional en un espectáculo teatral masivo y altamente coreografiado, sentando las bases comerciales para las mega-giras actuales.</li>
+      </ul>
+    </section>
+
+    <section id="s13" class="revela">
+      <h2><span class="sec-num">13</span>Influencia sobre otros artistas</h2>
+      <p>No hay estrella pop femenina actual cuyo ADN artístico no contenga elementos introducidos por Madonna:</p>
+      <ul>
+        <li><strong>Britney Spears:</strong> heredó la transición calculada de "niña buena" a mujer hipersexualizada, el uso intensivo de coreografía, los micrófonos de diadema y la provocación en televisión nacional (fomentada en su icónico beso en los VMAs de 2003).</li>
+        <li><strong>Lady Gaga:</strong> la heredera más directa de la teatralidad de Madonna, su fusión de música y alta costura, y la apelación agresiva a los "monstruos" marginados (comunidad LGBTQ+). El uso de la religión (Alejandro) es puramente <em>Madonnesco</em>.</li>
+        <li><strong>Beyoncé:</strong> heredó la ética de trabajo militar, la creación de álbumes visuales con narrativas sociales profundas y la necesidad de tener el control absoluto de sus negocios (Parkwood Entertainment como el sucesor espiritual de Maverick).</li>
+        <li><strong>Christina Aguilera:</strong> la era <em>Dirrty/Stripped</em> es descendiente directa de la era <em>Erotica</em> de Madonna: una declaración de independencia sexual violenta y criticada que luego se vuelve icónica.</li>
+        <li><strong>Rihanna:</strong> el desapego emocional y la actitud de "no me importa" frente al escándalo y la desnudez, usando la moda como su armadura principal.</li>
+        <li><strong>Taylor Swift:</strong> dominó el arte de las "Eras", una estrategia de marketing inventada por Madonna donde cada disco requiere una paleta de colores, un género musical y una estética completamente nueva y aislada.</li>
+        <li><strong>Dua Lipa:</strong> el renacimiento del disco-pop y la estética de las pistas de baile continuas de "Future Nostalgia" bebe directamente de "Confessions on a Dance Floor".</li>
+        <li><strong>Miley Cyrus:</strong> usó la controversia (VMAs 2013) como un mazo para destruir su imagen infantil (Hannah Montana), táctica sacada directamente del libro de jugadas de Madonna.</li>
+        <li><strong>Sabrina Carpenter:</strong> ha heredado la estética de picardía pop, la ironía en las letras y el uso de los "outros" provocativos en el escenario para generar clips virales, demostrando un control narrativo sobre la percepción pública que Madonna estableció como el estándar para las divas del pop.</li>
+        <li><strong>Olivia Rodrigo:</strong> la angustia adolescente y el pop-punk se benefician de la rabia cruda y directa que Madonna introdujo en temas emocionales para las mujeres jóvenes en la industria.</li>
+      </ul>
+    </section>
+
+    <section id="s14" class="revela">
+      <h2><span class="sec-num">14</span>Frases célebres</h2>
+      <div class="cita"><span class="q">"I'm tough, I'm ambitious, and I know exactly what I want. If that makes me a bitch, okay."</span> <span class="ctx">Soy dura, soy ambiciosa, y sé exactamente lo que quiero. Si eso me convierte en una perra, está bien. — Entrevista temprana, definiendo su postura frente a las críticas sexistas a su ambición.</span></div>
+      <div class="cita"><span class="q">"Crucifixes are sexy because there's a naked man on them."</span> <span class="ctx">Los crucifijos son sexys porque hay un hombre desnudo en ellos. — Entrevista de 1989 justificando el uso de iconografía religiosa en su imagen.</span></div>
+      <div class="cita"><span class="q">"Poor is the man whose pleasures depend on the permission of another."</span> <span class="ctx">Pobre del hombre cuyos placeres dependan del permiso de otro. — Frase en off de su video <em>Justify My Love</em> (1990), un himno a la liberación y agencia sexual.</span></div>
+      <div class="cita"><span class="q">"I will not be told how to age. I have never conformed."</span> <span class="ctx">No dejaré que me digan cómo envejecer. Nunca me he conformado. — Discursos recientes abordando el salvaje edadismo y misoginia que enfrenta hoy.</span></div>
+    </section>
+
+    <section id="s15" class="revela">
+      <h2><span class="sec-num">15</span>Críticas académicas (Madonna Studies)</h2>
+      <p>En los 90, académicos como <strong>John Fiske</strong> argumentaban que Madonna le daba a las jóvenes el poder de subvertir el patriarcado usando los propios medios de comunicación que tradicionalmente las reprimían. <strong>E. Ann Kaplan</strong> (1993) la analizó a través del prisma de MTV, notando cómo deconstruía los roles de género al alternar entre posiciones femeninas tradicionales y dominio andrógino.</p>
+      <p>Por otro lado, teóricos marxistas argumentaron que Madonna es el triunfo final del capitalismo de consumo: un camaleón corporativo que cooptaba la rebeldía del underground (punk, cultura gay negra de baile) despojándola de su peligro político real para vender zapatillas y cosméticos.</p>
+    </section>
+
+    <section id="s16" class="revela">
+      <h2><span class="sec-num">16</span>Cronología de controversias</h2>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>Año</th><th>Evento</th><th>Reacción pública</th><th>Consecuencia / impacto</th></tr></thead>
+          <tbody>
+            <tr><td>1984</td><td>VMAs: <em>Like a Virgin</em> en vestido de novia rodando en el piso.</td><td>Indignación conservadora; prensa vaticina su fin.</td><td>Catapulta su carrera a la estratosfera; define los VMAs.</td></tr>
+            <tr><td>1989</td><td>Video <em>Like a Prayer</em> (estigmas, cruces ardiendo).</td><td>Boicot liderado por el Vaticano; pánico corporativo.</td><td>Pepsi rompe contrato; MTV defiende a la artista. Eleva a Madonna de ídolo pop a figura política.</td></tr>
+            <tr><td>1990</td><td><em>Blond Ambition Tour</em>: masturbación simulada en <em>Like a Virgin</em>.</td><td>La policía de Toronto amenaza con arrestarla; el Papa pide boicot.</td><td>El tour se convierte en el estándar de oro de la historia del pop en vivo.</td></tr>
+            <tr><td>1990</td><td>Video <em>Justify My Love</em> censurado.</td><td>Prohibición absoluta en MTV.</td><td>Lanza el primer "video-single" en VHS; gana millones burlando la censura televisiva.</td></tr>
+            <tr><td>1992</td><td>Libro fotográfico explícito <em>SEX</em>.</td><td>Rechazo crítico abrumador; alienación de fans mainstream.</td><td>Cierra la puerta de los 90, pero redefine los límites del erotismo mainstream para las futuras generaciones.</td></tr>
+            <tr><td>2003</td><td>Video <em>American Life</em> (crítica a Bush e Irak).</td><td>Censura masiva por radiofórmulas patrióticas; boicot mediático.</td><td>Único fracaso pop notable, pero revalorizado hoy como un movimiento de gran integridad artística antibélica.</td></tr>
+            <tr><td>2023</td><td>Críticas a su apariencia en los Grammys.</td><td>Escrutinio salvaje por su rostro operado y negativa a envejecer pasivamente.</td><td>Inicia un nuevo debate sobre el edadismo sistémico, donde la sociedad castiga a la mujer tanto por envejecer como por intentar evitarlo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s17" class="revela">
+      <h2><span class="sec-num">17</span>Madonna hoy</h2>
+      <p>Actualmente, la percepción pública de Madonna está dividida. Para las generaciones mayores y los estudiosos culturales, es una leyenda intocable que abrió los caminos que hoy transitan Beyoncé, Taylor Swift y Lady Gaga. Sin embargo, en el ecosistema actual de redes sociales, a menudo es víctima de burlas por su negativa a abrazar una "vejez digna" y por su uso, a veces caótico, de TikTok y filtros de Instagram.</p>
+      <p>Sin embargo, las cosas iniciadas por Madonna que hoy parecen normales incluyen: estrellas del pop hablando de sus derechos sexuales, colaboraciones entre músicos pop de estadio y artistas vanguardistas visuales, hablar abiertamente sobre la comunidad LGBTQ+, que una mujer dirija su propia compañía discográfica de entretenimiento y usar los premios MTV como plataformas para escandalizar.</p>
+    </section>
+
+    <section id="s18" class="revela">
+      <h2><span class="sec-num">18</span>Conclusiones</h2>
+      <p><strong>¿Por qué cambió la cultura estadounidense?</strong> Madonna cambió la cultura estadounidense porque obligó a una sociedad puritana e hipócrita a confrontar sus prejuicios sobre el sexo, la religión, la homosexualidad y el rol de las mujeres, utilizando la música pop, la melodía pegadiza y el baile de MTV como caballos de Troya.</p>
+      <p><strong>¿Qué habría sido diferente si nunca hubiera existido?</strong> Sin ella, la música pop habría continuado siendo un género mucho más unidimensional, donde los intérpretes cantaban pero no controlaban su narrativa visual o comercial. La libertad sexual de la mujer en los medios habría tardado décadas más en materializarse.</p>
+      <p><strong>Aportaciones positivas:</strong></p>
+      <ul>
+        <li>Empoderamiento femenino y agencia sexual.</li>
+        <li>Aliada fundamental en la visibilidad del VIH/SIDA y derechos LGBTQ+.</li>
+        <li>Destrucción del modelo de "cantante pasiva" en favor del de "mujer empresaria y productora".</li>
+      </ul>
+      <p><strong>Consecuencias negativas:</strong></p>
+      <ul>
+        <li>Aceleró la hipersexualización requerida para tener éxito en la música pop, estableciendo un estándar casi obligatorio de exposición corporal y provocación.</li>
+        <li>Explotó, empaquetó y vendió subculturas marginadas (a menudo afroamericanas y queer) al público blanco mainstream.</li>
+      </ul>
+      <blockquote class="pull">Madonna no se rebeló contra la sociedad; ella rehizo la sociedad a su propia imagen.</blockquote>
+      <p><strong>Opinión de historiadores.</strong> Hoy en día, su legado es incuestionable. Los historiadores no la estudian como a una cantante, sino como a un "agente provocador" sociológico. La frase anterior es como resumió el Salón de la Fama del Rock and Roll su figura al inducirla.</p>
+    </section>
+
+  </main>
+
+  <div class="fuentes revela" id="fuentes">
+    <strong>Bibliografía y fuentes recomendadas.</strong>
+    <ol>
+      <li>Fiske, John (1989). <em>Reading the Popular</em>. (Para análisis del consumo de Madonna en la cultura de masas).</li>
+      <li>Paglia, Camille (1992). <em>Sex, Art, and American Culture: Essays</em>. (Defensa pro-sexo de Madonna).</li>
+      <li>hooks, bell (1992). <em>Black Looks: Race and Representation</em>. (Capítulo de crítica sobre la apropiación cultural en los videos de Madonna).</li>
+      <li>O'Brien, Lucy (2007). <em>Madonna: Like an Icon</em>. (Biografía histórica profunda).</li>
+      <li>Taraborrelli, J. Randy (2001). <em>Madonna: An Intimate Biography</em>.</li>
+      <li>Kaplan, E. Ann (1993). <em>Madonna and Post-Modernism</em>. En "The Madonna Connection".</li>
+      <li><em>En la cama con Madonna</em> (<em>Truth or Dare</em>, 1991) — documental cinematográfico esencial para entender su manejo del poder y la fama.</li>
+    </ol>
+  </div>
+
+  <footer>Café con Claude · «El Efecto Madonna» · Análisis cultural · Julio 2026
+    <p class="model-note">Generada por Claude Opus 4.8 · esfuerzo alto</p>
+  </footer>
+
+</div>
+
+<script>
+  var bar = document.getElementById('progressBar');
+  if (bar) {
+    var onScroll = function () {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Cerrar índice' : 'Abrir índice');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
