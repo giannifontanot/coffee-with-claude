@@ -5,6 +5,8 @@ eyebrow: "Investigación · Panel multidisciplinario · Cultura popular estadoun
 lang: "es"
 status: "Documento vivo · edición 1"
 date: "2026-07-20"
+rendered_to: madonna-influencia-cultural.html
+rendered_on: 2026-07-20
 sources_at_a_glance:
   - "Paglia, NYT (1990)"
   - "hooks, Black Looks (1992)"
