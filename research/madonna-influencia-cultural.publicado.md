@@ -11,6 +11,8 @@ sources_at_a_glance:
   - "Schwichtenberg, The Madonna Connection (1993)"
   - "Fiske, Reading the Popular (1989)"
   - "Gabriel, Madonna: A Rebel Life (2023)"
+rendered_to: "madonna-influencia-cultural.html"
+rendered_on: "2026-07-20"
 ---
 
 # Madonna: la mujer que corrió los límites
