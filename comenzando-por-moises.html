@@ -104,7 +104,13 @@
     -webkit-tap-highlight-color: transparent;
   }
   #nav-toggle { left: 12px; }
-  #btn-letra  { right: 12px; font-family: 'Fraunces', serif; font-weight: 600; letter-spacing: 0; }
+  /* AAA y chip viven dentro del menú, arriba a la derecha */
+  nav.sidebar .rail-top {
+    position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  nav.sidebar .rail-top .redondo { position: static; box-shadow: 0 1px 6px rgba(45,38,29,0.10); }
+  #btn-letra  { font-family: 'Fraunces', serif; font-weight: 600; letter-spacing: 0; }
   #btn-letra .aaa span { display: inline-block; line-height: 1; }
   #btn-letra .aaa span:nth-child(1) { font-size: 12px; }
   #btn-letra .aaa span:nth-child(2) { font-size: 15px; }
@@ -175,7 +181,6 @@
 
   /* Chip de origen: a la izquierda del botón Aa para no encimarse */
   .origin-chip {
-    position: fixed; top: calc(25px + env(safe-area-inset-top)); right: 72px; z-index: 79;
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: 10px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
     color: var(--muted); background: var(--card);
@@ -361,7 +366,7 @@
   @media (min-width: 1000px) {
     #nav-toggle, #nav-scrim, .barra-top { display: none; }
     nav.sidebar, nav.sidebar.open {
-      transform: none; box-shadow: none; padding-top: 2.6rem;
+      transform: none; box-shadow: none; padding-top: 5rem;
       background: linear-gradient(180deg, rgba(249,243,230,0.55), rgba(249,243,230,0));
     }
     .wrap { margin-left: max(330px, calc(50% - 20rem)); margin-right: auto; }
@@ -373,13 +378,14 @@
 <div class="progress-bar" id="progressBar"></div>
 <div class="barra-top" aria-hidden="true"></div>
 
-<a href="index.html" class="origin-chip origin-casa" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable">De la casa</a>
-
 <button id="nav-toggle" class="redondo" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar"><span></span></button>
-<button id="btn-letra" class="redondo" type="button" aria-label="Letra: fuente, tamaño y espacio"><span class="aaa"><span>A</span><span>A</span><span>A</span></span></button>
 
 <div id="nav-scrim"></div>
 <nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="rail-top">
+    <a href="index.html" class="origin-chip origin-casa" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable">De la casa</a>
+    <button id="btn-letra" class="redondo" type="button" aria-label="Letra: fuente, tamaño y espacio"><span class="aaa"><span>A</span><span>A</span><span>A</span></span></button>
+  </div>
   <div class="brand">Café con Claude</div>
   <div class="brand-sub">Cuaderno de estudio · El camino a Emaús</div>
   <ol class="toc">
