@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coffee with Claude</title>
+<meta name="theme-color" content="#2d261d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+  /* Misma letra que eligió el lector en las páginas (AAA), antes de pintar */
+  (function () {
+    var FAM = { spectral: "'Spectral', Georgia, serif", fraunces: "'Fraunces', Georgia, serif",
+                atkinson: "'Atkinson Hyperlegible', system-ui, sans-serif", sistema: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" };
+    var l = { fam: 'spectral', tam: 19, esp: 0 };
+    try { var g = JSON.parse(localStorage.getItem('cafe:letra')); if (g) { for (var k in g) l[k] = g[k]; } } catch (e) {}
+    var r = document.documentElement.style;
+    r.setProperty('--fs', (+l.tam || 19) + 'px');
+    r.setProperty('--ls', (+l.esp || 0) + 'em');
+    r.setProperty('--fuente', FAM[l.fam] || FAM.spectral);
+  })();
+</script>
 <style>
   :root {
     --ink: #2C2C2A;
@@ -323,6 +340,105 @@
   .chip.origen[data-filtro="f25"].activo  { background: #6c7240; border-color: #6c7240; }
   .chip.origen[data-filtro="f100"].activo { background: #6c3a4f; border-color: #6c3a4f; }
   .chip.origen[data-filtro="casa"].activo { background: #8a7c68; border-color: #8a7c68; }
+
+  /* == rediseño-movil-2026-11: primero el teléfono, letra grande y legible ==
+     Todo cuelga de --fs (el tamaño del AAA), así que si subes la letra crece todo. */
+  html { font-size: var(--fs, 19px); -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--fuente, 'Spectral', Georgia, serif); letter-spacing: var(--ls, 0); line-height: 1.55; }
+  header {
+    position: relative; padding: calc(22px + env(safe-area-inset-top)) 20px 22px; margin-bottom: 20px;
+    background: linear-gradient(160deg, #3a3126 0%, #2d261d 60%);
+    border-bottom: 3px solid #b04e29;
+  }
+  .header-inner { display: block; padding-right: 60px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.75rem; line-height: 1.1; letter-spacing: -0.01em; }
+  .sub { font-size: 1rem; margin-top: 8px; line-height: 1.4; }
+  .date { margin: 10px 0 0; font-size: 0.66rem; color: #b5a68f; }
+  #btn-letra {
+    position: absolute; top: calc(18px + env(safe-area-inset-top)); right: 16px;
+    width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
+    background: rgba(249,243,230,.08); border: 1px solid rgba(249,243,230,.35); color: #f9f3e6;
+    font-family: 'Fraunces', serif; font-weight: 600; letter-spacing: 0; -webkit-tap-highlight-color: transparent;
+  }
+  #btn-letra span span { display: inline-block; line-height: 1; }
+  #btn-letra span span:nth-child(1) { font-size: 12px; }
+  #btn-letra span span:nth-child(2) { font-size: 15px; }
+  #btn-letra span span:nth-child(3) { font-size: 19px; }
+  main { padding: 0 16px 56px; }
+
+  /* Buscar y Filtrar: grandes y fáciles de tocar */
+  .top-controls { gap: 10px; margin: 0 0 14px; flex-wrap: nowrap; }
+  #buscador { font-family: inherit; font-size: 1rem; padding: 12px 18px; min-height: 52px; background: #f9f3e6; }
+  #filtros-toggle { flex: 0 0 auto; font-size: 0.78rem; padding: 0 16px; min-height: 52px; background: #f9f3e6; }
+  .filtros { background: #f9f3e6; padding: 14px; }
+  .chip { font-size: 0.78rem; padding: 10px 15px; min-height: 44px; background: #fdf9f1; }
+  .toolbar { margin: 4px 0 10px; }
+  #toggle-all { font-size: 0.78rem; padding: 10px 2px; min-height: 44px; }
+
+  /* Grupos y persianas como tarjetas */
+  .grupos { gap: 30px 40px; }
+  section.grupo { flex: 1 1 340px; }
+  .grupo-titulo { font-size: 0.78rem; padding: 0 2px 10px; border-bottom: 2px solid #2d261d; margin-bottom: 12px; }
+  details.persiana {
+    background: #f9f3e6; border: 1px solid #d9cdb8; border-radius: 16px; margin: 0 0 12px;
+    box-shadow: 0 1px 2px rgba(45,38,29,.05), 0 14px 38px -26px rgba(45,38,29,.4); overflow: hidden;
+  }
+  details.persiana > summary {
+    font-family: 'Fraunces', serif; font-size: 1.12rem; font-weight: 600;
+    letter-spacing: 0; text-transform: none; color: #2d261d;
+    padding: 14px 16px; min-height: 60px; gap: 12px; -webkit-tap-highlight-color: transparent;
+  }
+  summary .chev { font-size: 1.25rem; }
+  summary .count {
+    font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.72rem; font-weight: 700;
+    color: #b04e29; background: rgba(176,78,41,.1); border-radius: 999px; padding: 4px 10px; letter-spacing: 0;
+  }
+  details[open].persiana > summary { border-bottom: 1px solid #d9cdb8; }
+  details.persiana > ul { padding: 4px 0 6px; }
+  details.persiana li { margin: 0; border-bottom: 1px dashed rgba(45,38,29,.12); }
+  details.persiana li:last-child { border-bottom: none; }
+  details.persiana li a {
+    display: block; font-size: 1.08rem; line-height: 1.35; padding: 13px 16px 4px; color: #963c20;
+  }
+  details.persiana li a:only-child { padding-bottom: 13px; }
+  details.persiana li .tag { display: block; margin: 0; padding: 0 16px 12px; font-size: 0.74rem; color: #8a7c68; }
+  footer { font-size: 0.8rem; text-align: center; }
+
+  /* Ventana de la letra (igual que en las páginas) */
+  dialog.dlg-letra {
+    border: none; padding: 0; margin: auto auto 0; width: 100%; max-width: 100%;
+    background: #f9f3e6; color: #2d261d; letter-spacing: 0;
+    border-radius: 20px 20px 0 0; box-shadow: 0 -10px 40px rgba(45,38,29,.25);
+    font-family: 'Spectral', Georgia, serif; font-size: 17px;
+  }
+  dialog.dlg-letra::backdrop { background: rgba(45,38,29,.35); }
+  .dlg-in { padding: 1.1rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom)); }
+  .dlg-in .asa { width: 42px; height: 4px; border-radius: 4px; background: #d9cdb8; margin: 0 auto .9rem; }
+  .dlg-in h2 { font-family: 'Fraunces', serif; font-size: 20px; margin: 0 0 .9rem; }
+  .fams { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-bottom: 1.1rem; }
+  .fam { border: 1.5px solid #d9cdb8; background: #f6efdf; color: #2d261d; border-radius: 12px; padding: .6rem .5rem; cursor: pointer; min-height: 64px; }
+  .fam .muestra { display: block; font-size: 24px; line-height: 1.1; }
+  .fam .nom { display: block; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #5b4f40; margin-top: .25rem; }
+  .fam[aria-pressed="true"] { border-color: #b04e29; background: rgba(176,78,41,.08); }
+  .fam[aria-pressed="true"] .nom { color: #b04e29; font-weight: 700; }
+  .deslizador { display: block; margin: .3rem 0 1rem; font-size: 16px; }
+  .deslizador output { float: right; color: #b04e29; font-weight: 600; }
+  .deslizador input[type="range"] { display: block; width: 100%; margin-top: .55rem; accent-color: #b04e29; height: 32px; }
+  .acciones { display: flex; gap: .6rem; justify-content: flex-end; margin-top: .4rem; }
+  .btn { font: inherit; font-size: 16px; padding: .65rem 1.1rem; min-height: 46px; border-radius: 999px; border: 1px solid #d9cdb8; background: #f6efdf; color: #2d261d; cursor: pointer; }
+  .btn.primario { background: #b04e29; border-color: #b04e29; color: #fff; font-weight: 600; }
+
+  @media (min-width: 640px) {
+    header { padding: 26px 0; }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 88px 0 28px; }
+    main { padding: 0 28px 64px; }
+    h1 { font-size: 2.1rem; }
+    dialog.dlg-letra { margin: auto; width: min(460px, calc(100vw - 32px)); border-radius: 20px; }
+    .dlg-in .asa { display: none; }
+  }
+  @media (min-width: 1000px) {
+    #btn-letra { right: max(28px, calc(50% - 600px)); }
+  }
 </style>
 </head>
 <body>
@@ -330,9 +446,10 @@
 <header>
   <div class="header-inner">
     <h1>Coffee with Claude</h1>
-    <p class="date">Actualizado · 11 de julio, 2026</p>
     <p class="sub">Reflections on interesting topics, one coffee at a time.</p>
+    <p class="date">Actualizado · 14 de noviembre, 2026</p>
   </div>
+  <button id="btn-letra" type="button" aria-label="Letra: fuente, tamaño y espacio"><span><span>A</span><span>A</span><span>A</span></span></button>
 </header>
 
 <main>
@@ -668,5 +785,59 @@
   });
 </script>
 
+<dialog id="dlgLetra" class="dlg-letra" aria-labelledby="dlgLetraTit">
+  <div class="dlg-in">
+    <div class="asa" aria-hidden="true"></div>
+    <h2 id="dlgLetraTit">Letra</h2>
+    <div class="fams" role="group" aria-label="Fuente">
+      <button type="button" class="fam" data-fam="spectral"><span class="muestra" style="font-family:'Spectral',serif">Aa</span><span class="nom">Clásica</span></button>
+      <button type="button" class="fam" data-fam="fraunces"><span class="muestra" style="font-family:'Fraunces',serif">Aa</span><span class="nom">Títulos</span></button>
+      <button type="button" class="fam" data-fam="atkinson"><span class="muestra" style="font-family:'Atkinson Hyperlegible',sans-serif">Aa</span><span class="nom">Muy legible</span></button>
+      <button type="button" class="fam" data-fam="sistema"><span class="muestra" style="font-family:system-ui,sans-serif">Aa</span><span class="nom">Del teléfono</span></button>
+    </div>
+    <label class="deslizador">Tamaño <output id="letraTamVal">19 px</output>
+      <input type="range" id="letraTam" min="15" max="30" step="1" value="19">
+    </label>
+    <label class="deslizador">Espacio entre letras <output id="letraEspVal">Normal</output>
+      <input type="range" id="letraEsp" min="0" max="0.2" step="0.01" value="0">
+    </label>
+    <div class="acciones">
+      <button class="btn" id="btnLetraReset" type="button">Restablecer</button>
+      <button class="btn primario" id="btnLetraListo" type="button">Listo</button>
+    </div>
+  </div>
+</dialog>
+<script>
+  // Letra: fuente, tamaño y espacio — compartida con las páginas (clave cafe:letra)
+  (function () {
+    var FAM = { spectral: "'Spectral', Georgia, serif", fraunces: "'Fraunces', Georgia, serif",
+                atkinson: "'Atkinson Hyperlegible', system-ui, sans-serif", sistema: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" };
+    var DEF = { fam: 'spectral', tam: 19, esp: 0 };
+    var letra = { fam: DEF.fam, tam: DEF.tam, esp: DEF.esp };
+    try { var g = JSON.parse(localStorage.getItem('cafe:letra')); if (g) { for (var k in g) letra[k] = g[k]; } } catch (e) {}
+    var dlg = document.getElementById('dlgLetra'), tam = document.getElementById('letraTam'), esp = document.getElementById('letraEsp');
+    var fams = dlg.querySelectorAll('.fam');
+    function aplicar(guardar) {
+      letra.tam = Math.min(30, Math.max(15, +letra.tam || DEF.tam));
+      letra.esp = Math.min(0.2, Math.max(0, +letra.esp || 0));
+      if (!FAM[letra.fam]) letra.fam = DEF.fam;
+      var r = document.documentElement.style;
+      r.setProperty('--fs', letra.tam + 'px'); r.setProperty('--ls', letra.esp + 'em'); r.setProperty('--fuente', FAM[letra.fam]);
+      tam.value = letra.tam; esp.value = letra.esp;
+      document.getElementById('letraTamVal').textContent = letra.tam + ' px';
+      document.getElementById('letraEspVal').textContent = letra.esp === 0 ? 'Normal' : '+' + Math.round(letra.esp * 100) + '%';
+      fams.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.fam === letra.fam ? 'true' : 'false'); });
+      if (guardar) { try { localStorage.setItem('cafe:letra', JSON.stringify(letra)); } catch (e) {} }
+    }
+    tam.addEventListener('input', function () { letra.tam = +tam.value; aplicar(true); });
+    esp.addEventListener('input', function () { letra.esp = +esp.value; aplicar(true); });
+    fams.forEach(function (b) { b.addEventListener('click', function () { letra.fam = b.dataset.fam; aplicar(true); }); });
+    document.getElementById('btnLetraReset').addEventListener('click', function () { letra = { fam: DEF.fam, tam: DEF.tam, esp: DEF.esp }; aplicar(true); });
+    document.getElementById('btnLetraListo').addEventListener('click', function () { dlg.close(); });
+    document.getElementById('btn-letra').addEventListener('click', function () { aplicar(false); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    aplicar(false);
+  })();
+</script>
 </body>
 </html>
