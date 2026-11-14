@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<!--
+  Café con Claude — «Comenzando por Moisés».
+  Primera página del sitio pensada primero para el teléfono:
+  barra de letra (fuente, tamaño, espacio entre letras) como la de Reveal,
+  todo en rem para que crezca junto, y tarjetas en vez de tablas.
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2e8d6">
+<title>Comenzando por Moisés · Café con Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+  /* Aplica la letra guardada ANTES de pintar, para que no "brinque" al cargar. */
+  (function () {
+    var FAM = {
+      spectral: "'Spectral', Georgia, serif",
+      fraunces: "'Fraunces', Georgia, serif",
+      atkinson: "'Atkinson Hyperlegible', system-ui, sans-serif",
+      sistema:  "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    };
+    var l = { fam: 'spectral', tam: 19, esp: 0 };
+    try { var g = JSON.parse(localStorage.getItem('cafe:letra')); if (g) { for (var k in g) l[k] = g[k]; } } catch (e) {}
+    var r = document.documentElement.style;
+    r.setProperty('--fs', (+l.tam || 19) + 'px');
+    r.setProperty('--ls', (+l.esp || 0) + 'em');
+    r.setProperty('--fuente', FAM[l.fam] || FAM.spectral);
+  })();
+</script>
+<style>
+  :root {
+    --bg:        #f2e8d6;
+    --bg-deep:   #ecdfc8;
+    --card:      #f9f3e6;
+    --card-2:    #f6efdf;
+    --ink:       #2d261d;
+    --ink-soft:  #5b4f40;
+    --ink-faint: #8a7c68;
+    --terracotta:#b04e29;
+    --rust:      #963c20;
+    --amber:     #cf9136;
+    --ochre:     #b9853a;
+    --olive:     #6c7240;
+    --olive-deep:#525830;
+    --plum:      #6c3a4f;
+    --plum-deep: #502635;
+    --steel:     #4a6b7a;
+    --line:      #d9cdb8;
+    --line-soft: rgba(45,38,29,.07);
+    --shadow:    0 1px 2px rgba(45,38,29,.05), 0 14px 38px -22px rgba(45,38,29,.34);
+    --cream:     #f2e8d6;
+    --muted:     #5b4f40;
+    /* La barra de letra cambia estas tres */
+    --fs: 19px;
+    --ls: 0em;
+    --fuente: 'Spectral', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Todo el sitio cuelga del tamaño base: si sube la letra, sube todo junto */
+  html { font-size: var(--fs); scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #f7efe0 0%, rgba(247,239,224,0) 60%),
+      radial-gradient(900px 700px at -10% 30%, #f0e6d0 0%, rgba(240,230,208,0) 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: var(--fuente);
+    letter-spacing: var(--ls);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding: calc(72px + 1.4rem + env(safe-area-inset-top)) 1.1rem 4rem;
+    overflow-wrap: break-word;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--olive), var(--amber), var(--terracotta));
+    z-index: 100; transition: width .08s linear;
+  }
+
+  /* Barra de arriba en el teléfono: el texto no se cruza con los botones */
+  .barra-top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+    height: calc(72px + env(safe-area-inset-top));
+    background: rgba(242,232,214,.86);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  /* ── Botones redondos de arriba: ☰ a la izquierda, Aa a la derecha ── */
+  .redondo {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: fixed; top: calc(12px + env(safe-area-inset-top)); z-index: 80;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--line); color: var(--ink);
+    cursor: pointer; box-shadow: 0 2px 10px rgba(45,38,29,0.12);
+    -webkit-tap-highlight-color: transparent;
+  }
+  #nav-toggle { left: 12px; }
+  #btn-letra  { right: 12px; font-family: 'Fraunces', serif; font-weight: 600; letter-spacing: 0; }
+  #btn-letra .aaa span { display: inline-block; line-height: 1; }
+  #btn-letra .aaa span:nth-child(1) { font-size: 12px; }
+  #btn-letra .aaa span:nth-child(2) { font-size: 15px; }
+  #btn-letra .aaa span:nth-child(3) { font-size: 19px; }
+
+  #nav-toggle span, #nav-toggle span::before, #nav-toggle span::after {
+    content: ""; display: block; width: 20px; height: 2px;
+    background: var(--ink); border-radius: 2px; transition: transform .3s, background .3s, top .3s;
+  }
+  #nav-toggle span { position: relative; }
+  #nav-toggle span::before { content: ""; position: absolute; left: 0; top: -6px; }
+  #nav-toggle span::after  { content: ""; position: absolute; left: 0; top: 6px; }
+  #nav-toggle.open span { background: transparent; }
+  #nav-toggle.open span::before { top: 0; transform: rotate(45deg); }
+  #nav-toggle.open span::after  { top: 0; transform: rotate(-45deg); }
+
+  /* ── Cajón / riel izquierdo ── */
+  nav.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 290px; max-width: 86vw; height: 100vh; height: 100dvh;
+    padding: calc(5rem + env(safe-area-inset-top)) 1.4rem 1.6rem 1.6rem;
+    display: flex; flex-direction: column;
+    background: linear-gradient(180deg, rgba(249,243,230,0.95), rgba(249,243,230,0.6)), var(--bg);
+    border-right: 1px solid var(--line-soft);
+    overflow-y: auto; letter-spacing: 0;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 70; box-shadow: 6px 0 24px rgba(45,38,29,0.14);
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  nav.sidebar .brand {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 0.2rem;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 0.85rem; font-style: italic; color: var(--ink-soft);
+    line-height: 1.4; margin-bottom: 1.6rem;
+  }
+  nav.sidebar ol { list-style: none; flex: 1; overflow-y: auto; min-height: 0; }
+  nav.sidebar ol a {
+    display: flex; align-items: baseline; gap: 0.7rem;
+    color: var(--ink-soft); text-decoration: none;
+    padding: 0.55rem 0; line-height: 1.32; min-height: 44px;
+    transition: color 0.2s ease;
+  }
+  nav.sidebar ol a .num {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    letter-spacing: 0.05em; color: var(--ink-faint);
+    min-width: 2.1em; flex-shrink: 0; font-variant-numeric: tabular-nums;
+  }
+  nav.sidebar ol a:hover { color: var(--ink); }
+  nav.sidebar ol a.active { color: var(--terracotta); font-weight: 600; }
+  nav.sidebar ol a.active .num { color: var(--terracotta); }
+  nav.sidebar .rail-tools { border-top: 1px solid var(--line); padding-top: 1rem; margin-top: 1rem; }
+  nav.sidebar .rail-tools .home {
+    font-family: 'Spectral', serif; font-size: 1rem; min-height: 44px;
+    color: var(--ink-soft); background: none; border: none; padding: 0;
+    cursor: pointer; letter-spacing: 0.02em; text-align: left;
+  }
+  nav.sidebar .rail-tools .home:hover { color: var(--terracotta); }
+
+  #nav-scrim {
+    position: fixed; inset: 0; background: rgba(45,38,29,0.4);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 65;
+  }
+  #nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+  /* Chip de origen: a la izquierda del botón Aa para no encimarse */
+  .origin-chip {
+    position: fixed; top: calc(25px + env(safe-area-inset-top)); right: 72px; z-index: 79;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--muted); background: var(--card);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 11px; text-decoration: none; line-height: 1;
+    box-shadow: 0 1px 5px rgba(45,38,29,0.10);
+  }
+
+  .wrap { max-width: 40rem; margin: 0 auto; }
+
+  /* ── Encabezado ── */
+  header .eyebrow {
+    font-style: italic; font-size: 0.85rem; color: var(--terracotta);
+    letter-spacing: 0.06em; display: block; margin: 0 0 1.1rem;
+  }
+  header .eyebrow::after {
+    content: ""; display: block; width: 46px; height: 1px;
+    background: var(--terracotta); opacity: 0.5; margin-top: 0.8rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif; font-weight: 600; font-optical-sizing: auto;
+    font-size: calc(2.15rem + 2.2vw); line-height: 1.04; letter-spacing: -0.015em;
+    margin: 0 0 0.3rem; color: var(--ink);
+  }
+  header h1 em { font-style: italic; font-weight: 500; color: var(--rust); }
+  .subtitle { font-size: 1.12rem; line-height: 1.5; color: var(--ink-soft); margin: 1rem 0 0; }
+
+  .pregunta-origen {
+    margin: 1.8rem 0 0; padding: 1rem 1.1rem;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    font-style: italic; color: var(--ink-soft); font-size: 0.98rem; box-shadow: var(--shadow);
+  }
+  .pregunta-origen b { font-style: normal; color: var(--terracotta); font-weight: 600; display: block; font-size: 0.78rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .35rem; }
+
+  main { margin-top: 2.4rem; }
+  section { margin-bottom: 2.8rem; scroll-margin-top: 5rem; }
+  section h2 {
+    font-family: 'Fraunces', serif; font-weight: 700; letter-spacing: -0.005em;
+    font-size: 1.55rem; line-height: 1.18; margin: 0 0 0.8rem;
+  }
+  section h2 .rom { display: block; font-size: 0.8rem; letter-spacing: .18em; color: var(--terracotta); font-weight: 600; margin-bottom: .3rem; }
+  section h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.15rem; line-height: 1.25; margin: 1.6rem 0 .5rem; }
+  p { margin-bottom: 1.05rem; }
+  a { color: var(--terracotta); }
+  strong { font-weight: 600; }
+
+  /* Cita bíblica */
+  blockquote.esc {
+    margin: 1.2rem 0; padding: 0.9rem 1rem 0.9rem 1.1rem;
+    border-left: 3px solid var(--amber); background: rgba(207,145,54,0.08);
+    border-radius: 0 12px 12px 0; font-style: italic; font-size: 1.02rem;
+  }
+  blockquote.esc cite { display: block; margin-top: .4rem; font-style: normal; font-size: 0.8rem; letter-spacing: .06em; color: var(--ink-faint); }
+
+  /* Tarjetas: pasaje de Moisés → dónde se cumple */
+  .pares { display: grid; gap: 0.9rem; margin: 1.2rem 0; }
+  .par {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 1rem 1.05rem; box-shadow: var(--shadow);
+  }
+  .par .tipo {
+    display: inline-block; font-family: ui-sans-serif, system-ui, sans-serif; letter-spacing: .12em;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; border-radius: 999px; padding: 4px 9px; margin-bottom: .55rem;
+  }
+  .tipo.promesa { color: var(--olive-deep); background: rgba(108,114,64,.12); }
+  .tipo.figura  { color: var(--plum); background: rgba(108,58,79,.10); }
+  .par .ref { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.1rem; line-height: 1.25; }
+  .par .que { margin: .3rem 0 .7rem; color: var(--ink-soft); }
+  .par .flecha { display: flex; gap: .55rem; align-items: baseline; padding-top: .65rem; border-top: 1px dashed var(--line); }
+  .par .flecha::before { content: "→"; color: var(--terracotta); font-weight: 700; }
+
+  /* Lista de rasgos del Siervo */
+  ul.rasgos { list-style: none; margin: 1rem 0 1.2rem; }
+  ul.rasgos li { padding: .55rem 0 .55rem 1.6rem; position: relative; border-bottom: 1px solid var(--line-soft); }
+  ul.rasgos li::before { content: "✦"; position: absolute; left: 0; top: .55rem; color: var(--amber); font-size: .85rem; }
+
+  /* Panel de voces */
+  .voz {
+    margin: 1rem 0; padding: .95rem 1.05rem; border-radius: 14px;
+    background: var(--card-2); border: 1px solid var(--line); border-left-width: 4px;
+  }
+  .voz .quien { display: block; font-family: 'Fraunces', serif; font-weight: 600; font-size: .9rem; margin-bottom: .3rem; }
+  .voz p:last-child { margin-bottom: 0; }
+  .voz.exegeta   { border-left-color: var(--terracotta); } .voz.exegeta .quien   { color: var(--terracotta); }
+  .voz.ingeniera { border-left-color: var(--olive); }      .voz.ingeniera .quien { color: var(--olive-deep); }
+  .voz.provocador{ border-left-color: var(--plum); }       .voz.provocador .quien{ color: var(--plum); }
+
+  .clave {
+    margin: 1.4rem 0; padding: 1rem 1.1rem; border-radius: 14px;
+    background: rgba(207,145,54,0.12); border: 1px solid rgba(207,145,54,0.45);
+  }
+  .clave b { display: block; font-family: 'Fraunces', serif; color: var(--ochre); font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .3rem; }
+
+  /* Persianas: los siete días */
+  details.persiana {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    margin: .7rem 0; box-shadow: var(--shadow); overflow: hidden;
+  }
+  details.persiana summary {
+    list-style: none; cursor: pointer; padding: .9rem 1rem; min-height: 52px;
+    display: flex; gap: .8rem; align-items: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  details.persiana summary::-webkit-details-marker { display: none; }
+  details.persiana summary .dia {
+    flex-shrink: 0; width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--terracotta); color: #fff; font-family: 'Fraunces', serif; font-weight: 600; font-size: .95rem; letter-spacing: 0;
+  }
+  details.persiana summary .tit { flex: 1; font-weight: 600; line-height: 1.3; }
+  details.persiana summary .chev { color: var(--ink-faint); transition: transform .25s; font-size: 1.2rem; }
+  details.persiana[open] summary .chev { transform: rotate(90deg); }
+  details.persiana .cuerpo { padding: 0 1rem 1rem 1rem; border-top: 1px solid var(--line-soft); padding-top: .8rem; }
+  details.persiana .cuerpo p:last-child { margin-bottom: 0; }
+  .marca { display: flex; gap: .6rem; align-items: center; margin-top: .7rem; font-size: .92rem; color: var(--ink-soft); cursor: pointer; min-height: 44px; }
+  .marca input { width: 1.25rem; height: 1.25rem; accent-color: var(--olive); }
+
+  .fuentes {
+    margin-top: 3rem; padding: 1.1rem 1.15rem;
+    border-left: 4px solid var(--terracotta); border-radius: 0 12px 12px 0;
+    background: rgba(176, 78, 41, 0.06); font-size: 0.9rem;
+  }
+  .fuentes strong { font-family: 'Fraunces', serif; display: block; margin-bottom: .4rem; }
+  .fuentes ul { list-style: none; }
+  .fuentes li { padding: .3rem 0; }
+  .fuentes a { text-decoration: none; border-bottom: 1px solid rgba(176,78,41,0.4); }
+  .fuentes .nota { margin-top: .7rem; color: var(--ink-soft); font-style: italic; }
+
+  footer {
+    margin-top: 3rem; padding-top: 1.4rem; border-top: 1px solid var(--line);
+    font-size: 0.85rem; font-style: italic; color: var(--ink-soft); text-align: center;
+  }
+  .model-note { margin-top: 0.8rem; font-family: 'Fraunces', serif; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink-faint); text-align: center; }
+
+  /* ── Ventana de la letra (hoja que sube desde abajo en el teléfono) ── */
+  dialog.dlg-letra {
+    border: none; padding: 0; margin: auto auto 0; width: 100%; max-width: 100%;
+    background: var(--card); color: var(--ink); letter-spacing: 0;
+    border-radius: 20px 20px 0 0; box-shadow: 0 -10px 40px rgba(45,38,29,.25);
+    font-family: 'Spectral', Georgia, serif; font-size: 17px;
+  }
+  dialog.dlg-letra::backdrop { background: rgba(45,38,29,.35); }
+  dialog.dlg-letra[open] { animation: subir .28s cubic-bezier(.2,.8,.2,1); }
+  @keyframes subir { from { transform: translateY(100%); } to { transform: none; } }
+  .dlg-in { padding: 1.1rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom)); }
+  .dlg-in .asa { width: 42px; height: 4px; border-radius: 4px; background: var(--line); margin: 0 auto .9rem; }
+  .dlg-in h2 { font-family: 'Fraunces', serif; font-size: 20px; margin-bottom: .9rem; }
+  .fams { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-bottom: 1.1rem; }
+  .fam {
+    border: 1.5px solid var(--line); background: var(--card-2); color: var(--ink);
+    border-radius: 12px; padding: .6rem .5rem; cursor: pointer; text-align: center; min-height: 64px;
+  }
+  .fam .muestra { display: block; font-size: 24px; line-height: 1.1; }
+  .fam .nom { display: block; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); margin-top: .25rem; }
+  .fam[aria-pressed="true"] { border-color: var(--terracotta); background: rgba(176,78,41,.08); }
+  .fam[aria-pressed="true"] .nom { color: var(--terracotta); font-weight: 700; }
+  .deslizador { display: block; margin: .3rem 0 1rem; font-size: 16px; }
+  .deslizador output { float: right; color: var(--terracotta); font-weight: 600; }
+  .deslizador input[type="range"] { display: block; width: 100%; margin-top: .55rem; accent-color: var(--terracotta); height: 32px; }
+  .acciones { display: flex; gap: .6rem; justify-content: flex-end; margin-top: .4rem; }
+  .btn { font: inherit; font-size: 16px; padding: .65rem 1.1rem; min-height: 46px; border-radius: 999px; border: 1px solid var(--line); background: var(--card-2); color: var(--ink); cursor: pointer; }
+  .btn.primario { background: var(--terracotta); border-color: var(--terracotta); color: #fff; font-weight: 600; }
+
+  .revela { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .revela.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revela { opacity: 1; transform: none; transition: none; }
+    nav.sidebar, #nav-scrim, #nav-toggle span, #nav-toggle span::before, #nav-toggle span::after { transition: none; }
+    dialog.dlg-letra[open] { animation: none; }
+  }
+
+  /* Pantallas medianas: la ventana de letra flota al centro */
+  @media (min-width: 640px) {
+    body { padding-left: 1.6rem; padding-right: 1.6rem; }
+    dialog.dlg-letra { margin: auto; width: min(460px, calc(100vw - 32px)); border-radius: 20px; }
+    .dlg-in .asa { display: none; }
+    .pares { grid-template-columns: 1fr 1fr; }
+    header h1 { font-size: 3.4rem; }
+  }
+
+  /* Escritorio: el cajón queda fijo como riel; el ☰ desaparece */
+  @media (min-width: 1000px) {
+    #nav-toggle, #nav-scrim, .barra-top { display: none; }
+    nav.sidebar, nav.sidebar.open {
+      transform: none; box-shadow: none; padding-top: 2.6rem;
+      background: linear-gradient(180deg, rgba(249,243,230,0.55), rgba(249,243,230,0));
+    }
+    .wrap { margin-left: max(330px, calc(50% - 20rem)); margin-right: auto; }
+  }
+  @media (min-width: 1500px) { .wrap { margin: 0 auto; } }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="barra-top" aria-hidden="true"></div>
+
+<a href="index.html" class="origin-chip origin-casa" title="De la casa: nació de tu propio estudio, no de una tanda de preguntas a Fable">De la casa</a>
+
+<button id="nav-toggle" class="redondo" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar"><span></span></button>
+<button id="btn-letra" class="redondo" type="button" aria-label="Letra: fuente, tamaño y espacio"><span class="aaa"><span>A</span><span>A</span><span>A</span></span></button>
+
+<div id="nav-scrim"></div>
+<nav class="sidebar" id="sidebar" aria-label="Índice de la página">
+  <div class="brand">Café con Claude</div>
+  <div class="brand-sub">Cuaderno de estudio · El camino a Emaús</div>
+  <ol class="toc">
+    <li><a href="#s1"><span class="num">I</span>«De mí escribió él»</a></li>
+    <li><a href="#s2"><span class="num">II</span>La lista que Lucas no dejó</a></li>
+    <li><a href="#s3"><span class="num">III</span>Moisés: promesas y figuras</a></li>
+    <li><a href="#s4"><span class="num">IV</span>Los profetas: el Siervo</a></li>
+    <li><a href="#s5"><span class="num">V</span>Los Salmos: dolor y vida</a></li>
+    <li><a href="#s6"><span class="num">VI</span>Lo que de verdad les mostró</a></li>
+    <li><a href="#s7"><span class="num">VII</span>Siete días, siete pares</a></li>
+  </ol>
+  <div class="rail-tools">
+    <button class="home" type="button"
+            onclick="if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }">
+      ← Volver
+    </button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Cuaderno de estudio · Lucas 24</span>
+    <h1>Comenzando por <em>Moisés</em></h1>
+    <p class="subtitle">Las Escrituras que Jesús abrió en el camino a Emaús, y por qué la clave no era una lista.</p>
+    <div class="pregunta-origen">
+      <b>La pregunta</b>
+      Cristo dice que Moisés escribió acerca de él, y en el camino a Emaús les explica a dos discípulos las Escrituras que hablaban de él. ¿Cuáles son esas Escrituras?
+    </div>
+  </header>
+
+  <main>
+
+    <section id="s1" class="revela">
+      <h2><span class="rom">I</span>«De mí escribió él»</h2>
+      <p>La pregunta une dos momentos. El primero está en Juan 5, en medio de una discusión con quienes estudiaban la Ley con todo cuidado. Ahí Jesús afirma que, si de verdad le creyeran a Moisés, le creerían a él, porque Moisés escribió acerca de él (Jn 5:46). Unos versículos antes lo había dicho de otra forma:</p>
+      <blockquote class="esc">«Ustedes estudian las Escrituras con mucho cuidado, porque esperan encontrar en ellas la vida eterna; sin embargo, aunque las Escrituras dan testimonio de mí, ustedes no quieren venir a mí para tener esa vida.»<cite>Juan 5:39-40 · DHH</cite></blockquote>
+      <p>El segundo momento es la tarde de la resurrección. Dos discípulos van a Emaús con la esperanza rota. Jesús camina con ellos sin que lo reconozcan y, empezando por los libros de Moisés y siguiendo por todos los profetas, les explica lo que las Escrituras decían de él (Lc 24:27).</p>
+      <p>Las dos escenas tienen algo en común: <strong>gente que conocía muy bien su Biblia y aun así no veía en ella lo que Jesús veía</strong>. El problema no era que les faltara información, sino cómo la estaban leyendo.</p>
+    </section>
+
+    <section id="s2" class="revela">
+      <h2><span class="rom">II</span>La lista que Lucas no dejó</h2>
+      <p>Hay que decirlo con honestidad antes de empezar: <strong>Lucas no anotó qué pasajes explicó Jesús aquella tarde</strong>. No podemos decir «fueron estos, uno por uno». Lo que sí podemos hacer es reunir los textos del Antiguo Testamento que el propio Jesús y los apóstoles relacionaron con él. Esa es la forma más firme de acercarse a aquella conversación.</p>
+      <p>Y Lucas sí nos dejó el tema. La noche de ese mismo día, Jesús se lo resume a todo el grupo:</p>
+      <blockquote class="esc">«Está escrito que el Mesías tenía que morir, y resucitar al tercer día, y que en su nombre se anunciará a todas las naciones que se vuelvan a Dios, para que él les perdone sus pecados. Comenzando desde Jerusalén…»<cite>Lucas 24:46-47 · DHH</cite></blockquote>
+      <p>En esa misma escena Jesús nombra las tres partes de la Biblia hebrea: la ley de Moisés, los profetas y los salmos (Lc 24:44). Ese es el mapa que seguiremos aquí.</p>
+      <div class="voz provocador">
+        <span class="quien">El Provocador</span>
+        <p>¿No es frustrante? La clase bíblica más importante de la historia y nadie tomó apuntes. Pero tal vez la falta de lista sea a propósito: si Lucas nos hubiera dejado diez versículos, los habríamos memorizado como amuleto. Sin la lista, nos toca hacer el camino nosotros.</p>
+      </div>
+    </section>
+
+    <section id="s3" class="revela">
+      <h2><span class="rom">III</span>Moisés: promesas y figuras</h2>
+      <p>Cuando Jesús dice «Moisés», se refiere a la Ley, los cinco primeros libros de la Biblia. Ahí hay dos tipos de textos que apuntan a él, y conviene no mezclarlos. Unos son <strong>promesas</strong>: Dios dice con palabras lo que va a hacer. Otros son <strong>figuras</strong>: sucesos e instituciones que el Nuevo Testamento presenta como un anticipo de su obra.</p>
+      <div class="pares">
+        <div class="par">
+          <span class="tipo promesa">Promesa</span>
+          <div class="ref">Deuteronomio 18:15-19</div>
+          <p class="que">Dios levantará de en medio del pueblo un profeta como Moisés, y el pueblo deberá escucharlo.</p>
+          <div class="flecha">Pedro aplica esa promesa a Jesús en Hechos 3:20-23.</div>
+        </div>
+        <div class="par">
+          <span class="tipo promesa">Promesa</span>
+          <div class="ref">Génesis 22:18</div>
+          <p class="que">Por medio de la descendencia de Abraham serán bendecidas todas las naciones de la tierra.</p>
+          <div class="flecha">Pablo, en Gálatas 3:16, identifica a Cristo como esa descendencia.</div>
+        </div>
+        <div class="par">
+          <span class="tipo figura">Figura</span>
+          <div class="ref">Éxodo 12</div>
+          <p class="que">El cordero de la Pascua, su sangre en las puertas y la liberación de Egipto. Al cordero no se le debía quebrar ningún hueso (Éx 12:46).</p>
+          <div class="flecha">Pablo presenta a Cristo como nuestro cordero de Pascua, ya sacrificado (1 Co 5:7), y Juan relaciona que no le quebraran los huesos con la Escritura (Jn 19:36).</div>
+        </div>
+        <div class="par">
+          <span class="tipo figura">Figura</span>
+          <div class="ref">Números 21:4-9</div>
+          <p class="que">La serpiente de bronce que Moisés levanta en el desierto: quien la mira, vive.</p>
+          <div class="flecha">Jesús mismo hace la comparación: «Y así como Moisés levantó la serpiente en el desierto, así también el Hijo del hombre tiene que ser levantado» (Jn 3:14, DHH).</div>
+        </div>
+      </div>
+      <div class="voz exegeta">
+        <span class="quien">El Exégeta</span>
+        <p>Fíjate en el detalle de Números 21. Lo que mataba al pueblo era la serpiente, y lo que lo sana es una imagen de esa misma serpiente, levantada. Jesús toma esa imagen tan incómoda para hablar de su cruz: lo que parece maldición, puesto en alto, se vuelve el lugar donde se recibe la vida.</p>
+      </div>
+      <div class="clave">
+        <b>La diferencia importa</b>
+        «Moisés escribió de mí» no quiere decir que Moisés dejara versículos con el nombre del Mesías. Quiere decir que la historia que Moisés cuenta (la promesa a Abraham, la Pascua, el desierto, el profeta que vendría) tiene la forma de lo que Jesús iba a hacer.
+      </div>
+    </section>
+
+    <section id="s4" class="revela">
+      <h2><span class="rom">IV</span>Los profetas: el Siervo que sufre por otros</h2>
+      <p>Si hubo un texto que no podía faltar esa tarde, probablemente fue el cuarto canto del Siervo, Isaías 52:13–53:12. No lo sabemos con certeza, pero ningún otro pasaje encaja tan bien con lo que Jesús les estaba explicando: sufrimiento, muerte y después gloria. En el canto, el Siervo:</p>
+      <ul class="rasgos">
+        <li>es despreciado y rechazado;</li>
+        <li>carga con los pecados de otros;</li>
+        <li>sufre injustamente y no responde con violencia;</li>
+        <li>es llevado a la muerte;</li>
+        <li>y después de su sufrimiento es reivindicado y exaltado.</li>
+      </ul>
+      <blockquote class="esc">«Pero fue traspasado a causa de nuestra rebeldía, fue atormentado a causa de nuestras maldades; el castigo que sufrió nos trajo la paz, por sus heridas alcanzamos la salud.»<cite>Isaías 53:5 · DHH</cite></blockquote>
+      <blockquote class="esc">«Fue maltratado, pero se sometió humildemente, y ni siquiera abrió la boca; lo llevaron como cordero al matadero, y él se quedó callado, sin abrir la boca, como una oveja cuando la trasquilan.»<cite>Isaías 53:7 · DHH</cite></blockquote>
+      <p>Esta conexión no es algo que la iglesia inventó siglos después; el Nuevo Testamento la hace explícita. En Hechos 8, un funcionario etíope va leyendo justo el pasaje del cordero llevado al matadero, y Felipe, partiendo de ese texto, le anuncia la buena noticia de Jesús (Hch 8:32-35). Y la noche en que lo arrestan, Jesús se aplica a sí mismo una frase de Isaías 53:12: lo contaron entre los malhechores (Lc 22:37).</p>
+      <blockquote class="esc">«Después de tanta aflicción verá la luz, y quedará satisfecho al saberlo; el justo siervo del Señor liberará a muchos, pues cargará con la maldad de ellos.»<cite>Isaías 53:11 · DHH</cite></blockquote>
+    </section>
+
+    <section id="s5" class="revela">
+      <h2><span class="rom">V</span>Los Salmos: el dolor del justo y la vida que no se queda en la tumba</h2>
+      <h3>Salmo 22: el grito que Jesús hizo suyo</h3>
+      <p>Jesús lo pronunció en la cruz (Mt 27:46). El salmo empieza así:</p>
+      <blockquote class="esc">«Dios mío, Dios mío, ¿por qué me has abandonado?, ¿por qué no vienes a salvarme?, ¿por qué no atiendes a mis lamentos?»<cite>Salmo 22:1 · DHH</cite></blockquote>
+      <p>Más adelante describe las burlas de los que rodean al justo y un detalle que los evangelios recogen al pie de la cruz (Jn 19:23-24):</p>
+      <blockquote class="esc">«se han repartido mi ropa entre sí, y sobre ella echan suertes.»<cite>Salmo 22:18 · DHH</cite></blockquote>
+      <p>Pero el salmo no termina en el abandono. Termina en alabanza y con todas las naciones volviéndose a Dios:</p>
+      <blockquote class="esc">«Razas y naciones todas, gente de todos los rincones de la tierra: acuérdense del Señor, y vengan a él; ¡arrodíllense delante de él!»<cite>Salmo 22:27 · DHH</cite></blockquote>
+      <div class="voz ingeniera">
+        <span class="quien">La Ingeniera de Sistemas</span>
+        <p>Cuando alguien citaba la primera línea de un salmo, quien lo escuchaba recordaba el salmo entero, igual que un enlace abre la página completa. Al gritar el primer verso del Salmo 22, Jesús no se queda en el abandono: está invocando también el final, donde las naciones vienen a Dios. Es exactamente lo que dice en Lucas 24:47.</p>
+      </div>
+      <h3>Salmo 16: «no me dejarás en la tumba»</h3>
+      <p>En el versículo 10, el salmista confía en que Dios no lo abandonará en el reino de los muertos ni dejará que su fiel sufra la corrupción. En Pentecostés, Pedro cita este salmo y explica que David murió y su tumba seguía ahí; por lo tanto, David hablaba como profeta de la resurrección del Mesías (Hch 2:25-32). Pablo usa el mismo argumento en Antioquía de Pisidia (Hch 13:35-37). Así se entiende cómo los apóstoles encontraban la resurrección anunciada en las Escrituras.</p>
+    </section>
+
+    <section id="s6" class="revela">
+      <h2><span class="rom">VI</span>Lo que de verdad les mostró</h2>
+      <p>La clave está en la pregunta que Jesús les hace en el camino: ¿no tenía que sufrir el Mesías todo esto antes de entrar en su gloria? (Lc 24:26). Antes, los discípulos le habían contado con tristeza que ellos tenían la esperanza de que Jesús fuera el que iba a liberar a Israel (Lc 24:21). La esperanza estaba en pasado. En su manera de leer las Escrituras, un Mesías crucificado era un Mesías derrotado.</p>
+      <p>Jesús no les da información nueva. <strong>Les vuelve a leer su propia Biblia, la que ya conocían, pero con otra clave.</strong> Lo que ellos veían como prueba de que el plan de Dios había fracasado (la cruz) resulta ser precisamente el plan. El «tenía que» de Lucas 24:26 y 24:46 no habla de un destino ciego, sino de un propósito: el camino a la gloria pasaba por el sufrimiento.</p>
+      <div class="voz exegeta">
+        <span class="quien">El Exégeta</span>
+        <p>No es que les mostrara una colección de coincidencias. Les mostró el hilo que une la Pascua, la serpiente levantada, el Siervo herido, el justo que grita y el santo que no se queda en la tumba. Todos esos textos repiten el mismo movimiento: hacia abajo primero, y después hacia arriba.</p>
+      </div>
+      <div class="voz provocador">
+        <span class="quien">El Provocador</span>
+        <p>Y aquí viene lo incómodo: ellos sabían la Biblia y aun así iban en dirección contraria, alejándose de Jerusalén. Uno puede tener todos los versículos y caminar en sentido opuesto a lo que dicen. Lo que les dio la vuelta no fue saber más, fue que Jesús les explicara las Escrituras <em>caminando con ellos</em>. Después ellos mismos dijeron que el corazón les ardía mientras él les hablaba en el camino (Lc 24:32).</p>
+      </div>
+      <div class="clave">
+        <b>Para quedarte con esto</b>
+        Una esperanza rota casi nunca se arregla con más datos. Se arregla con una historia mejor leída. Los de Emaús no regresaron a Jerusalén esa misma noche porque alguien les ganara una discusión, sino porque, a la luz de la cruz, por fin entendieron la Biblia que ya tenían.
+      </div>
+    </section>
+
+    <section id="s7" class="revela">
+      <h2><span class="rom">VII</span>Siete días, siete pares</h2>
+      <p>Una ruta para acercarte a aquella explicación: cada día lee el pasaje del Antiguo Testamento y luego el del Nuevo, uno junto al otro. Marca cada día cuando lo termines; la página lo recuerda en este teléfono.</p>
+      <p><em>Para no confundir las cosas: esta es una guía de los principales vínculos bíblicos con Cristo, no una transcripción de la conversación de Emaús.</em></p>
+
+      <details class="persiana">
+        <summary><span class="dia">1</span><span class="tit">Deuteronomio 18:15-19 → Hechos 3:20-26</span><span class="chev">›</span></summary>
+        <div class="cuerpo"><p>El profeta como Moisés. Pregúntate: ¿qué significa «escucharlo» en mi semana, y no solo admirarlo?</p>
+        <label class="marca"><input type="checkbox" data-dia="1"> Leído</label></div>
+      </details>
+      <details class="persiana">
+        <summary><span class="dia">2</span><span class="tit">Génesis 22:18 → Gálatas 3:16</span><span class="chev">›</span></summary>
+        <div class="cuerpo"><p>La bendición para las naciones. Lee todo Génesis 22: la promesa llega justo después del monte donde Abraham entrega a su hijo.</p>
+        <label class="marca"><input type="checkbox" data-dia="2"> Leído</label></div>
+      </details>
+      <details class="persiana">
+        <summary><span class="dia">3</span><span class="tit">Éxodo 12 → 1 Corintios 5:7 y Juan 19:36</span><span class="chev">›</span></summary>
+        <div class="cuerpo"><p>El cordero de la Pascua. Fíjate en lo que protege la sangre en la puerta y en quién queda a salvo.</p>
+        <label class="marca"><input type="checkbox" data-dia="3"> Leído</label></div>
+      </details>
+      <details class="persiana">
+        <summary><span class="dia">4</span><span class="tit">Números 21:4-9 → Juan 3:14-15</span><span class="chev">›</span></summary>
+        <div class="cuerpo"><p>La serpiente levantada. La sanidad llega por mirar, no por esforzarse. ¿Hacia dónde está mirando tu herida?</p>
+        <label class="marca"><input type="checkbox" data-dia="4"> Leído</label></div>
+      </details>
+      <details class="persiana">
+        <summary><span class="dia">5</span><span class="tit">Isaías 52:13–53:12 → Hechos 8:26-35</span><span class="chev">›</span></summary>
+        <div class="cuerpo"><p>El Siervo que sufre. Lee el canto en voz alta y cambia «nuestras rebeliones» por «mis rebeliones».</p>
+        <label class="marca"><input type="checkbox" data-dia="5"> Leído</label></div>
+      </details>
+      <details class="persiana">
+        <summary><span class="dia">6</span><span class="tit">Salmo 22 → Mateo 27:35-46</span><span class="chev">›</span></summary>
+        <div class="cuerpo"><p>El grito del justo. Lee el salmo completo, hasta el final: el abandono no es la última palabra.</p>
+        <label class="marca"><input type="checkbox" data-dia="6"> Leído</label></div>
+      </details>
+      <details class="persiana">
+        <summary><span class="dia">7</span><span class="tit">Salmo 16:8-11 → Hechos 2:25-32</span><span class="chev">›</span></summary>
+        <div class="cuerpo"><p>La vida que no se queda en la tumba. Termina como terminaron los de Emaús: contándole a alguien lo que entendiste.</p>
+        <label class="marca"><input type="checkbox" data-dia="7"> Leído</label></div>
+      </details>
+    </section>
+
+  </main>
+
+  <div class="fuentes revela">
+    <strong>Fuentes</strong>
+    <ul>
+      <li><a href="https://www.desiringgod.org/messages/if-you-believed-moses-you-would-believe-me-for-he-wrote-of-me?lang=es" target="_blank" rel="noopener">Desiring God · Si creyeran en Moisés, creerían en mí</a></li>
+      <li><a href="https://www.gotquestions.org/Espanol/camino-a-Emmaus.html" target="_blank" rel="noopener">GotQuestions · El camino a Emaús</a></li>
+      <li><a href="https://evangelio.blog/2013/02/13/lucas-24-y-la-hermenutica-cristolgica/" target="_blank" rel="noopener">Evangelio.blog · Lucas 24 y la hermenéutica cristológica</a></li>
+      <li><a href="https://sermons.faithlife.com/sermons/1009071-jesus-explica-las-escrituras" target="_blank" rel="noopener">Faithlife · Jesús explica las Escrituras</a></li>
+      <li><a href="https://www.bible.com/cs/bible-verses/52/ISA.53.DHH94I" target="_blank" rel="noopener">Bible.com · Isaías 53 (DHH)</a></li>
+      <li><a href="https://bible.com/bible-verses/52/PSA.22.DHH94I" target="_blank" rel="noopener">Bible.com · Salmo 22 (DHH)</a></li>
+      <li><a href="https://www.bible.com/bible-verses/52/JHN.3.DHH94I" target="_blank" rel="noopener">Bible.com · Juan 3 (DHH)</a></li>
+      <li><a href="https://bible.com/bible-verses/411/LUK.24.DHH94PC" target="_blank" rel="noopener">Bible.com · Lucas 24 (DHH)</a></li>
+      <li><a href="https://bible.com/bible-verses/411/JHN.5.DHH94PC" target="_blank" rel="noopener">Bible.com · Juan 5 (DHH)</a></li>
+    </ul>
+    <p class="nota">Nació de una conversación de Gianni con Perplexity, revisada y ampliada aquí. Las citas entre comillas son de la Biblia Dios Habla Hoy; los demás pasajes se parafrasean con su referencia.</p>
+  </div>
+
+  <footer>Café con Claude · Cuaderno de estudio · «Comenzando por Moisés» — Lc 24:27 · Noviembre 2026
+    <p class="model-note">Generada por Claude Opus 5.5 · esfuerzo bajo</p>
+  </footer>
+
+</div>
+
+<!-- Ventana de la letra: fuente, tamaño y espacio entre letras (como el AAA de Reveal) -->
+<dialog id="dlgLetra" class="dlg-letra" aria-labelledby="dlgLetraTit">
+  <div class="dlg-in">
+    <div class="asa" aria-hidden="true"></div>
+    <h2 id="dlgLetraTit">Letra</h2>
+    <div class="fams" role="group" aria-label="Fuente">
+      <button type="button" class="fam" data-fam="spectral"><span class="muestra" style="font-family:'Spectral',serif">Aa</span><span class="nom">Clásica</span></button>
+      <button type="button" class="fam" data-fam="fraunces"><span class="muestra" style="font-family:'Fraunces',serif">Aa</span><span class="nom">Títulos</span></button>
+      <button type="button" class="fam" data-fam="atkinson"><span class="muestra" style="font-family:'Atkinson Hyperlegible',sans-serif">Aa</span><span class="nom">Muy legible</span></button>
+      <button type="button" class="fam" data-fam="sistema"><span class="muestra" style="font-family:system-ui,sans-serif">Aa</span><span class="nom">Del teléfono</span></button>
+    </div>
+    <label class="deslizador">Tamaño <output id="letraTamVal">19 px</output>
+      <input type="range" id="letraTam" min="15" max="30" step="1" value="19">
+    </label>
+    <label class="deslizador">Espacio entre letras <output id="letraEspVal">Normal</output>
+      <input type="range" id="letraEsp" min="0" max="0.2" step="0.01" value="0">
+    </label>
+    <div class="acciones">
+      <button class="btn" id="btnLetraReset" type="button">Restablecer</button>
+      <button class="btn primario" id="btnLetraListo" type="button">Listo</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  // ── Letra: fuente, tamaño y espacio (se guarda en este teléfono) ──
+  (function () {
+    var FAM = {
+      spectral: "'Spectral', Georgia, serif",
+      fraunces: "'Fraunces', Georgia, serif",
+      atkinson: "'Atkinson Hyperlegible', system-ui, sans-serif",
+      sistema:  "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    };
+    var DEF = { fam: 'spectral', tam: 19, esp: 0 };
+    var letra = { fam: DEF.fam, tam: DEF.tam, esp: DEF.esp };
+    try { var g = JSON.parse(localStorage.getItem('cafe:letra')); if (g) { for (var k in g) letra[k] = g[k]; } } catch (e) {}
+    var dlg = document.getElementById('dlgLetra');
+    var tam = document.getElementById('letraTam');
+    var esp = document.getElementById('letraEsp');
+    var fams = dlg.querySelectorAll('.fam');
+
+    function aplicar(guardar) {
+      letra.tam = Math.min(30, Math.max(15, +letra.tam || DEF.tam));
+      letra.esp = Math.min(0.2, Math.max(0, +letra.esp || 0));
+      if (!FAM[letra.fam]) letra.fam = DEF.fam;
+      var r = document.documentElement.style;
+      r.setProperty('--fs', letra.tam + 'px');
+      r.setProperty('--ls', letra.esp + 'em');
+      r.setProperty('--fuente', FAM[letra.fam]);
+      tam.value = letra.tam; esp.value = letra.esp;
+      document.getElementById('letraTamVal').textContent = letra.tam + ' px';
+      document.getElementById('letraEspVal').textContent = letra.esp === 0 ? 'Normal' : '+' + Math.round(letra.esp * 100) + '%';
+      fams.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.fam === letra.fam ? 'true' : 'false'); });
+      if (guardar) { try { localStorage.setItem('cafe:letra', JSON.stringify(letra)); } catch (e) {} }
+    }
+    tam.addEventListener('input', function () { letra.tam = +tam.value; aplicar(true); });
+    esp.addEventListener('input', function () { letra.esp = +esp.value; aplicar(true); });
+    fams.forEach(function (b) { b.addEventListener('click', function () { letra.fam = b.dataset.fam; aplicar(true); }); });
+    document.getElementById('btnLetraReset').addEventListener('click', function () { letra = { fam: DEF.fam, tam: DEF.tam, esp: DEF.esp }; aplicar(true); });
+    document.getElementById('btnLetraListo').addEventListener('click', function () { dlg.close(); });
+    document.getElementById('btn-letra').addEventListener('click', function () {
+      aplicar(false);
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    });
+    // Tocar fuera de la hoja la cierra
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    // Si se cambia en otra pestaña del sitio, se aplica aquí también
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'cafe:letra') { try { letra = JSON.parse(e.newValue) || letra; } catch (x) {} aplicar(false); }
+    });
+    aplicar(false);
+  })();
+
+  // ── Barra de progreso ──
+  var bar = document.getElementById('progressBar');
+  function onScroll() {
+    var doc = document.documentElement, total = doc.scrollHeight - window.innerHeight;
+    bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  // ── Cajón (☰ se vuelve ✕) ──
+  var toggle = document.getElementById('nav-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('nav-scrim');
+  function setNav(open) {
+    sidebar.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Cerrar índice' : 'Abrir índice');
+  }
+  toggle.addEventListener('click', function () { setNav(!sidebar.classList.contains('open')); });
+  scrim.addEventListener('click', function () { setNav(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+  // ── Scroll-spy ──
+  var links = document.querySelectorAll('nav.sidebar .toc a');
+  var byId = {};
+  links.forEach(function (l) {
+    byId[l.getAttribute('href').slice(1)] = l;
+    l.addEventListener('click', function () { setNav(false); });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var lnk = byId[e.target.id];
+        if (lnk) lnk.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // ── Días leídos (se recuerdan en este teléfono) ──
+  var CLAVE = 'cafe:moises-dias';
+  var hechos = {};
+  try { hechos = JSON.parse(localStorage.getItem(CLAVE)) || {}; } catch (e) {}
+  document.querySelectorAll('.marca input').forEach(function (c) {
+    c.checked = !!hechos[c.dataset.dia];
+    c.addEventListener('change', function () {
+      hechos[c.dataset.dia] = c.checked;
+      try { localStorage.setItem(CLAVE, JSON.stringify(hechos)); } catch (e) {}
+    });
+  });
+
+  // ── Aparecer al bajar ──
+  var revelables = document.querySelectorAll('.revela');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+    revelables.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.08 });
+    revelables.forEach(function (el) { obs.observe(el); });
+  }
+</script>
+</body>
+</html>
