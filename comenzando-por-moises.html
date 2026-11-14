@@ -89,10 +89,42 @@
   .barra-top {
     position: fixed; top: 0; left: 0; right: 0; z-index: 60;
     height: calc(72px + env(safe-area-inset-top));
-    background: rgba(242,232,214,.86);
+    background: rgba(242,232,214,.94);
     -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 12px;
+    padding: env(safe-area-inset-top) 12px 0 72px;
+    letter-spacing: 0;
+    box-shadow: 0 6px 18px -14px rgba(45,38,29,.45);
   }
+  /* Centro: marca arriba, y abajo el título o la sección donde vas */
+  .barra-top .rotulo { flex: 1; min-width: 0; line-height: 1.15; }
+  .barra-top .marca-sitio {
+    display: block; font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--terracotta);
+  }
+  .barra-top .donde {
+    display: block; font-family: 'Fraunces', serif; font-weight: 600; font-size: 16.5px; color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px;
+    transition: opacity .2s ease;
+  }
+  .barra-top .donde .n { color: var(--terracotta); margin-right: 6px; }
+  .barra-top .donde.cambia { opacity: 0; }
+  /* Derecha: anillo de lectura; tocarlo te sube al principio */
+  .anillo {
+    flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; position: relative;
+    background: var(--card); border: 1px solid var(--line); cursor: pointer; padding: 0;
+    box-shadow: 0 2px 10px rgba(45,38,29,0.12); -webkit-tap-highlight-color: transparent;
+  }
+  .anillo svg { position: absolute; inset: 3px; width: 40px; height: 40px; transform: rotate(-90deg); }
+  .anillo .pista { fill: none; stroke: var(--line); stroke-width: 3; }
+  .anillo .avance { fill: none; stroke: var(--terracotta); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset .1s linear; }
+  .anillo .pct {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; font-weight: 700; color: var(--ink-soft);
+  }
+  .anillo.arriba .pct { font-size: 16px; color: var(--terracotta); }
+  @media (max-width: 999px) { .progress-bar { display: none; } }
 
   /* ── Botones redondos de arriba: ☰ a la izquierda, Aa a la derecha ── */
   .redondo {
@@ -376,7 +408,16 @@
 </head>
 <body>
 <div class="progress-bar" id="progressBar"></div>
-<div class="barra-top" aria-hidden="true"></div>
+<div class="barra-top">
+  <div class="rotulo">
+    <span class="marca-sitio">Café con Claude</span>
+    <span class="donde" id="donde">Comenzando por Moisés</span>
+  </div>
+  <button class="anillo" id="anillo" type="button" aria-label="Avance de lectura">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle class="pista" cx="20" cy="20" r="17"/><circle class="avance" id="avance" cx="20" cy="20" r="17" stroke-dasharray="106.8" stroke-dashoffset="106.8"/></svg>
+    <span class="pct" id="pct">0%</span>
+  </button>
+</div>
 
 <button id="nav-toggle" class="redondo" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar"><span></span></button>
 
@@ -672,7 +713,26 @@
   var bar = document.getElementById('progressBar');
   function onScroll() {
     var doc = document.documentElement, total = doc.scrollHeight - window.innerHeight;
-    bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+    var f = total > 0 ? Math.min(1, window.scrollY / total) : 0;
+    bar.style.width = (f * 100) + '%';
+    document.getElementById('avance').style.strokeDashoffset = (106.8 * (1 - f)).toFixed(1);
+    var an = document.getElementById('anillo'), pct = document.getElementById('pct');
+    // Ya leíste algo: el anillo ofrece subir (↑); al principio muestra 0%
+    if (f > 0.04) { an.classList.add('arriba'); pct.textContent = '↑'; an.setAttribute('aria-label', 'Leído ' + Math.round(f * 100) + '%. Subir al principio'); }
+    else { an.classList.remove('arriba'); pct.textContent = Math.round(f * 100) + '%'; an.setAttribute('aria-label', 'Avance de lectura'); }
+    if (window.scrollY < 200) ponerDonde(null);
+  }
+  document.getElementById('anillo').addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  // Título de la barra: el de la página, o la sección donde vas
+  var dondeActual = '';
+  function ponerDonde(lnk) {
+    var html = lnk ? '<span class="n">' + lnk.querySelector('.num').textContent + '</span>' + lnk.textContent.replace(lnk.querySelector('.num').textContent, '').trim()
+                   : 'Comenzando por Moisés';
+    if (html === dondeActual) return;
+    dondeActual = html;
+    var d = document.getElementById('donde');
+    d.classList.add('cambia');
+    setTimeout(function () { d.innerHTML = html; d.classList.remove('cambia'); }, 160);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
@@ -705,7 +765,7 @@
       if (e.isIntersecting) {
         links.forEach(function (l) { l.classList.remove('active'); });
         var lnk = byId[e.target.id];
-        if (lnk) lnk.classList.add('active');
+        if (lnk) { lnk.classList.add('active'); if (window.scrollY >= 200) ponerDonde(lnk); }
       }
     });
   }, { rootMargin: '-30% 0px -60% 0px' });
