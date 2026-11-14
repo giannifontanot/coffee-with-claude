@@ -379,29 +379,35 @@
   .grupos { gap: 30px 40px; }
   section.grupo { flex: 1 1 340px; }
   .grupo-titulo { font-size: 0.78rem; padding: 0 2px 10px; border-bottom: 2px solid #2d261d; margin-bottom: 12px; }
+  /* Persianas finas: renglones con líneas delgadas, que abren con suavidad */
   details.persiana {
-    background: #f9f3e6; border: 1px solid #d9cdb8; border-radius: 16px; margin: 0 0 12px;
-    box-shadow: 0 1px 2px rgba(45,38,29,.05), 0 14px 38px -26px rgba(45,38,29,.4); overflow: hidden;
+    background: transparent; border: none; border-bottom: 1px solid #d9cdb8;
+    border-radius: 0; margin: 0; box-shadow: none; overflow: hidden;
   }
+  .grupo-titulo + details.persiana, section.grupo > details.persiana:first-of-type { border-top: none; }
   details.persiana > summary {
-    font-family: 'Fraunces', serif; font-size: 1.12rem; font-weight: 600;
+    font-family: 'Fraunces', serif; font-size: 1.02rem; font-weight: 500;
     letter-spacing: 0; text-transform: none; color: #2d261d;
-    padding: 14px 16px; min-height: 60px; gap: 12px; -webkit-tap-highlight-color: transparent;
+    padding: 12px 4px; min-height: 52px; gap: 12px; -webkit-tap-highlight-color: transparent;
+    transition: background .25s ease, color .25s ease;
   }
-  summary .chev { font-size: 1.25rem; }
+  @media (hover: hover) { details.persiana > summary:hover { background: rgba(176,78,41,.04); } }
+  summary .chev { font-size: 1rem; color: #8a7c68; transition: transform .4s cubic-bezier(.2,.8,.2,1), color .3s; }
+  details[open] > summary .chev { color: #b04e29; }
+  details[open].persiana > summary { color: #963c20; }
   summary .count {
-    font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.72rem; font-weight: 700;
-    color: #b04e29; background: rgba(176,78,41,.1); border-radius: 999px; padding: 4px 10px; letter-spacing: 0;
+    font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.68rem; font-weight: 600;
+    color: #8a7c68; background: transparent; border: 1px solid #d9cdb8; border-radius: 999px; padding: 2px 9px; letter-spacing: 0;
+    transition: color .3s, border-color .3s;
   }
-  details[open].persiana > summary { border-bottom: 1px solid #d9cdb8; }
-  details.persiana > ul { padding: 4px 0 6px; }
-  details.persiana li { margin: 0; border-bottom: 1px dashed rgba(45,38,29,.12); }
-  details.persiana li:last-child { border-bottom: none; }
+  details[open] > summary .count { color: #b04e29; border-color: rgba(176,78,41,.5); }
+  details.persiana > ul { padding: 0 0 10px 28px; }
+  details.persiana li { margin: 0; border-bottom: none; }
   details.persiana li a {
-    display: block; font-size: 1.08rem; line-height: 1.35; padding: 13px 16px 4px; color: #963c20;
+    display: block; font-size: 1rem; line-height: 1.35; padding: 9px 4px 2px; color: #963c20;
   }
-  details.persiana li a:only-child { padding-bottom: 13px; }
-  details.persiana li .tag { display: block; margin: 0; padding: 0 16px 12px; font-size: 0.74rem; color: #8a7c68; }
+  details.persiana li a:only-child { padding-bottom: 9px; }
+  details.persiana li .tag { display: block; margin: 0; padding: 0 4px 8px; font-size: 0.72rem; color: #8a7c68; }
   footer { font-size: 0.8rem; text-align: center; }
 
   /* Ventana de la letra (igual que en las páginas) */
@@ -837,6 +843,30 @@
     document.getElementById('btn-letra').addEventListener('click', function () { aplicar(false); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
     dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
     aplicar(false);
+  })();
+</script>
+<script>
+  // Persianas del índice: abrir y cerrar con suavidad (la altura se anima)
+  (function () {
+    var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('details.persiana').forEach(function (d) {
+      var sum = d.querySelector('summary'), lista = d.querySelector('ul'), anim = null;
+      if (!sum || !lista) return;
+      sum.addEventListener('click', function (e) {
+        if (quieto || !lista.animate) return;
+        e.preventDefault();
+        if (anim) anim.cancel();
+        var abriendo = !d.open;
+        if (abriendo) d.open = true;
+        var h = lista.scrollHeight;
+        lista.style.overflow = 'hidden';
+        anim = lista.animate(
+          abriendo ? [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }]
+                   : [{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }],
+          { duration: abriendo ? 420 : 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        anim.onfinish = function () { if (!abriendo) d.open = false; lista.style.overflow = ''; anim = null; };
+      });
+    });
   })();
 </script>
 </body>
