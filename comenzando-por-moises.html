@@ -361,25 +361,35 @@
   .clave b { display: block; font-family: 'Fraunces', serif; color: var(--ochre); font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .3rem; }
 
   /* Persianas: los siete días */
+  /* Persianas finas: líneas delgadas, sin caja pesada, y se abren con suavidad */
   details.persiana {
-    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
-    margin: .7rem 0; box-shadow: var(--shadow); overflow: hidden;
+    background: transparent; border: none; border-bottom: 1px solid var(--line);
+    margin: 0; border-radius: 0; box-shadow: none; overflow: hidden;
   }
+  details.persiana:first-of-type { border-top: 1px solid var(--line); }
   details.persiana summary {
-    list-style: none; cursor: pointer; padding: .9rem 1rem; min-height: 52px;
-    display: flex; gap: .8rem; align-items: center;
-    -webkit-tap-highlight-color: transparent;
+    list-style: none; cursor: pointer; padding: .7rem .15rem; min-height: 48px;
+    display: flex; gap: .75rem; align-items: center;
+    -webkit-tap-highlight-color: transparent; transition: background .25s ease;
   }
+  @media (hover: hover) { details.persiana summary:hover { background: rgba(176,78,41,.04); } }
   details.persiana summary::-webkit-details-marker { display: none; }
   details.persiana summary .dia {
-    flex-shrink: 0; width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    flex-shrink: 0; width: 1.65rem; height: 1.65rem; border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
-    background: var(--terracotta); color: #fff; font-family: 'Fraunces', serif; font-weight: 600; font-size: .95rem; letter-spacing: 0;
+    background: transparent; color: var(--terracotta); border: 1px solid rgba(176,78,41,.55);
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: .8rem; letter-spacing: 0;
+    transition: background .3s ease, color .3s ease;
   }
-  details.persiana summary .tit { flex: 1; font-weight: 600; line-height: 1.3; }
-  details.persiana summary .chev { color: var(--ink-faint); transition: transform .25s; font-size: 1.2rem; }
-  details.persiana[open] summary .chev { transform: rotate(90deg); }
-  details.persiana .cuerpo { padding: 0 1rem 1rem 1rem; border-top: 1px solid var(--line-soft); padding-top: .8rem; }
+  details.persiana[open] summary .dia { background: var(--terracotta); color: #fff; }
+  details.persiana summary .tit { flex: 1; font-weight: 500; font-size: .95rem; line-height: 1.35; color: var(--ink); }
+  details.persiana summary .chev {
+    color: var(--ink-faint); font-size: 1rem; line-height: 1;
+    transition: transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  details.persiana[open] summary .chev { transform: rotate(90deg); color: var(--terracotta); }
+  details.persiana .cuerpo { padding: .15rem .15rem 1rem 2.4rem; }
+  details.persiana .cuerpo p { font-size: .95rem; }
   details.persiana .cuerpo p:last-child { margin-bottom: 0; }
   .marca { display: flex; gap: .6rem; align-items: center; margin-top: .7rem; font-size: .92rem; color: var(--ink-soft); cursor: pointer; min-height: 44px; }
   .marca input { width: 1.25rem; height: 1.25rem; accent-color: var(--olive); }
@@ -972,6 +982,28 @@
     });
   }, { rootMargin: '-30% 0px -60% 0px' });
   document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+
+  // ── Persianas: abrir y cerrar con suavidad (la altura se anima) ──
+  (function () {
+    var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('details.persiana').forEach(function (d) {
+      var sum = d.querySelector('summary'), cuerpo = d.querySelector('.cuerpo'), anim = null;
+      sum.addEventListener('click', function (e) {
+        if (quieto || !cuerpo.animate) return;          // sin animación: comportamiento normal
+        e.preventDefault();
+        if (anim) anim.cancel();
+        var abriendo = !d.open;
+        if (abriendo) d.open = true;
+        var h = cuerpo.scrollHeight;
+        anim = cuerpo.animate(
+          abriendo ? [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }]
+                   : [{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }],
+          { duration: abriendo ? 420 : 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        cuerpo.style.overflow = 'hidden';
+        anim.onfinish = function () { if (!abriendo) d.open = false; cuerpo.style.overflow = ''; anim = null; };
+      });
+    });
+  })();
 
   // ── Persianas abiertas: se recuerdan al volver (como en Cover to Cover) ──
   (function () {
